@@ -107,10 +107,15 @@ export class HomeComponent implements OnInit {
   }
 
   startEditingFounder(): void {
-    if (!this.founderConfig) return;
+    console.log('Edit button clicked, starting founder editing mode...');
+    if (!this.founderConfig) {
+      console.log('No founder config available');
+      return;
+    }
 
     this.isEditingFounder = true;
     this.originalFounderData = JSON.parse(JSON.stringify(this.founderConfig));
+    console.log('Editing mode activated');
 
     // Focus the first input after the view updates
     setTimeout(() => {
@@ -170,8 +175,44 @@ export class HomeComponent implements OnInit {
   applyDynamicStyles(): void {
     if (!this.founderConfig || typeof document === 'undefined') return;
 
+    console.log('Applying dynamic styles...', this.founderConfig);
     const root = document.documentElement;
     root.style.setProperty('--founder-background-color', this.founderConfig.backgroundColor);
+    
+    // Apply individual element styles directly
+    this.applyElementStyles();
+    
+    // Force change detection
+    setTimeout(() => {
+      console.log('Colors applied:', {
+        subtitleColor: this.founderConfig?.subtitleColor,
+        doctorNameColor: this.founderConfig?.doctorNameColor,
+        titleColor: this.founderConfig?.titleColor
+      });
+    }, 0);
+  }
+
+  private applyElementStyles(): void {
+    if (!this.founderConfig || typeof document === 'undefined') return;
+
+    // Apply styles to specific elements
+    const elements = {
+      '.founder-subtitle-small': this.founderConfig.subtitleColor,
+      '.founder-info h3': this.founderConfig.doctorNameColor,
+      '.founder-title': this.founderConfig.titleColor,
+      '.founder-description': this.founderConfig.descriptionColor,
+      '.specialties-list': this.founderConfig.specialtiesColor,
+      '.founder-philosophy-full h4': this.founderConfig.philosophyTitleColor,
+      '.founder-philosophy-full p': this.founderConfig.philosophyContentColor
+    };
+
+    Object.entries(elements).forEach(([selector, color]) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        (element as HTMLElement).style.color = color;
+        console.log(`Applied color ${color} to ${selector}`);
+      }
+    });
   }
 
   startInlineEdit(element: string): void {
@@ -181,5 +222,30 @@ export class HomeComponent implements OnInit {
 
   stopInlineEdit(): void {
     this.editingElement = null;
+  }
+
+  onColorChange(): void {
+    console.log('Color changed, triggering change detection...');
+    console.log('Current colors:', {
+      subtitleColor: this.founderConfig?.subtitleColor,
+      doctorNameColor: this.founderConfig?.doctorNameColor,
+      titleColor: this.founderConfig?.titleColor,
+      descriptionColor: this.founderConfig?.descriptionColor,
+      specialtiesColor: this.founderConfig?.specialtiesColor
+    });
+    
+    // Force Angular to detect changes and re-render
+    if (this.founderConfig) {
+      // Create a new object to trigger change detection
+      this.founderConfig = { ...this.founderConfig };
+      console.log('New config object created:', this.founderConfig);
+    }
+    
+    // Force change detection with a small delay
+    setTimeout(() => {
+      console.log('Change detection triggered');
+      // Apply the styles directly to ensure they work
+      this.applyDynamicStyles();
+    }, 10);
   }
 }

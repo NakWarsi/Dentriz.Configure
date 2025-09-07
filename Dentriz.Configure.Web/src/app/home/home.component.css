@@ -1,24 +1,104 @@
 /* Editable Founder Section Styles */
-.edit-controls {
-  text-align: center;
-  margin-bottom: 2rem;
+/* Floating Edit Button */
+.floating-edit-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
 }
 
-.edit-btn {
+.edit-btn-floating {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
   background: #2c5aa0;
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 25px;
-  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(44, 90, 160, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: manipulation;
+  outline: none;
 }
 
-.edit-btn:hover {
-  background: #1e3c72;
-  transform: translateY(-2px);
+.edit-btn-floating:hover {
+  background: #1e3f73;
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(44, 90, 160, 0.5);
+}
+
+.edit-btn-floating:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(44, 90, 160, 0.3);
+}
+
+.edit-btn-floating:focus {
+  outline: 3px solid rgba(44, 90, 160, 0.3);
+  outline-offset: 2px;
+}
+
+.edit-icon-floating {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.edit-btn-floating:hover .edit-icon-floating {
+  transform: rotate(15deg);
+}
+
+/* Pulse animation for attention */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 4px 12px rgba(44, 90, 160, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 12px rgba(44, 90, 160, 0.4), 0 0 0 10px rgba(44, 90, 160, 0.1);
+  }
+  100% {
+    box-shadow: 0 4px 12px rgba(44, 90, 160, 0.4);
+  }
+}
+
+.edit-btn-floating {
+  animation: pulse 2s infinite;
+}
+
+/* Ensure founder section has relative positioning for floating button */
+.founder-section {
+  position: relative;
+}
+
+/* Ensure inline styles take precedence for color and font changes */
+.founder-subtitle-small,
+.founder-title,
+.founder-description,
+.founder-info h3,
+.specialties-list,
+.founder-philosophy-full h4,
+.founder-philosophy-full p {
+  color: inherit;
+  font-family: inherit;
+}
+
+/* Ensure specialties list items inherit styles properly */
+.specialties-list li {
+  color: inherit !important;
+  font-family: inherit !important;
+}
+
+/* Ensure specialty edit inputs inherit styles properly */
+.specialties-edit-inline .form-input {
+  color: inherit !important;
+  font-family: inherit !important;
 }
 
 .founder-edit-container {

@@ -22,5 +22,28 @@ export const HOME_FOUNDER_SECTION_CONSTANTS = {
   DEFAULT_PHILOSOPHY: {
     TITLE: 'Our Philosophy:',
     CONTENT: '"DentRiz Dental Clinic was built on the belief that dentistry should be modern, compassionate, and patient-focused. Our philosophy is to combine cutting-edge technology with a human touch, ensuring every patient receives the highest standard of care. We strive to create smiles that are not only healthy but also filled with confidence and happiness."'
+  },
+  // Color constants - single source of truth
+  DEFAULT_COLORS: {
+    SUBTITLE: '#2c5aa0',
+    DOCTOR_NAME: '#000000',
+    TITLE: '#666666',
+    DESCRIPTION: '#333333',
+    SPECIALTIES: '#333333',
+    MISSION: '#333333',
+    PHILOSOPHY_TITLE: '#2c5aa0',
+    PHILOSOPHY_CONTENT: '#333333',
+    BACKGROUND: 'rgb(231,240,234)'
+  },
+  // Font family constants - single source of truth
+  DEFAULT_FONTS: {
+    SUBTITLE: 'Arial, sans-serif',
+    DOCTOR_NAME: 'Arial, sans-serif',
+    TITLE: 'Arial, sans-serif',
+    DESCRIPTION: 'Arial, sans-serif',
+    SPECIALTIES: 'Arial, sans-serif',
+    MISSION: 'Arial, sans-serif',
+    PHILOSOPHY_TITLE: 'Arial, sans-serif',
+    PHILOSOPHY_CONTENT: 'Arial, sans-serif'
   }
 } as const;

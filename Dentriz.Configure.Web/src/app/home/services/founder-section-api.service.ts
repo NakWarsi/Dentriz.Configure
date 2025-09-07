@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { HOME_FOUNDER_SECTION_CONSTANTS } from '../constants/home-founder-section.constants';
 
 export interface SimpleFounderConfig {
   subtitle: string;
@@ -86,26 +87,26 @@ export class FounderSectionApiService {
             credentials: data.image?.credentials || '(BDS. Govt. Dental College, Mumbai)',
             philosophyTitle: data.philosophy?.title || 'Our Philosophy:',
             philosophyContent: data.philosophy?.content || '"DentRiz Dental Clinic was built on the belief that dentistry should be modern, compassionate, and patient-focused. Our philosophy is to combine cutting-edge technology with a human touch, ensuring every patient receives the highest standard of care. We strive to create smiles that are not only healthy but also filled with confidence and happiness."',
-            // Individual color options with defaults
-            subtitleColor: data.subtitleColor || '#2c5aa0',
-            doctorNameColor: data.doctorNameColor || '#000000',
-            titleColor: data.titleColor || '#666666',
-            descriptionColor: data.descriptionColor || '#333333',
-            specialtiesColor: data.specialtiesColor || '#333333',
-            missionColor: data.missionColor || '#333333',
-            philosophyTitleColor: data.philosophyTitleColor || '#2c5aa0',
-            philosophyContentColor: data.philosophyContentColor || '#333333',
-            // Individual font family options with defaults
-            subtitleFontFamily: data.subtitleFontFamily || 'Arial, sans-serif',
-            doctorNameFontFamily: data.doctorNameFontFamily || 'Arial, sans-serif',
-            titleFontFamily: data.titleFontFamily || 'Arial, sans-serif',
-            descriptionFontFamily: data.descriptionFontFamily || 'Arial, sans-serif',
-            specialtiesFontFamily: data.specialtiesFontFamily || 'Arial, sans-serif',
-            missionFontFamily: data.missionFontFamily || 'Arial, sans-serif',
-            philosophyTitleFontFamily: data.philosophyTitleFontFamily || 'Arial, sans-serif',
-            philosophyContentFontFamily: data.philosophyContentFontFamily || 'Arial, sans-serif',
-            // Global styling options with defaults
-            backgroundColor: data.backgroundColor || 'rgb(231,240,234)'
+            // Individual color options with defaults from constants
+            subtitleColor: data.subtitleColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.SUBTITLE,
+            doctorNameColor: data.doctorNameColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.DOCTOR_NAME,
+            titleColor: data.titleColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.TITLE,
+            descriptionColor: data.descriptionColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.DESCRIPTION,
+            specialtiesColor: data.specialtiesColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.SPECIALTIES,
+            missionColor: data.missionColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.MISSION,
+            philosophyTitleColor: data.philosophyTitleColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.PHILOSOPHY_TITLE,
+            philosophyContentColor: data.philosophyContentColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.PHILOSOPHY_CONTENT,
+            // Individual font family options with defaults from constants
+            subtitleFontFamily: data.subtitleFontFamily || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_FONTS.SUBTITLE,
+            doctorNameFontFamily: data.doctorNameFontFamily || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_FONTS.DOCTOR_NAME,
+            titleFontFamily: data.titleFontFamily || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_FONTS.TITLE,
+            descriptionFontFamily: data.descriptionFontFamily || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_FONTS.DESCRIPTION,
+            specialtiesFontFamily: data.specialtiesFontFamily || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_FONTS.SPECIALTIES,
+            missionFontFamily: data.missionFontFamily || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_FONTS.MISSION,
+            philosophyTitleFontFamily: data.philosophyTitleFontFamily || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_FONTS.PHILOSOPHY_TITLE,
+            philosophyContentFontFamily: data.philosophyContentFontFamily || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_FONTS.PHILOSOPHY_CONTENT,
+            // Global styling options with defaults from constants
+            backgroundColor: data.backgroundColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.BACKGROUND
           };
         }),
         catchError(error => {

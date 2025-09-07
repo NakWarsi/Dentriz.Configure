@@ -1,9 +1,11 @@
 <!-- Meet the Founder Section -->
 <section class="founder-section" *ngIf="!founderLoading && !founderError && founderConfig">
   <div class="container">
-    <!-- Edit Button -->
-    <div class="edit-controls" *ngIf="!isEditingFounder">
-      <button class="edit-btn" (click)="startEditingFounder()">✏️ Edit Founder Section</button>
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingFounder">
+      <button class="edit-btn-floating" (click)="startEditingFounder()" title="Edit Founder Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
     </div>
 
 
@@ -44,7 +46,7 @@
             </select>
             <input type="color" 
                    [(ngModel)]="founderConfig.subtitleColor"
-                   (change)="applyDynamicStyles()"
+                   (change)="onColorChange()"
                    class="color-picker-inline"
                    title="Color">
           </div>
@@ -82,7 +84,7 @@
               </select>
               <input type="color" 
                      [(ngModel)]="founderConfig.doctorNameColor"
-                     (change)="applyDynamicStyles()"
+                     (change)="onColorChange()"
                      class="color-picker-inline"
                      title="Color">
             </div>
@@ -120,7 +122,7 @@
               </select>
               <input type="color" 
                      [(ngModel)]="founderConfig.titleColor"
-                     (change)="applyDynamicStyles()"
+                     (change)="onColorChange()"
                      class="color-picker-inline"
                      title="Color">
             </div>
@@ -158,7 +160,7 @@
               </select>
               <input type="color" 
                      [(ngModel)]="founderConfig.descriptionColor"
-                     (change)="applyDynamicStyles()"
+                     (change)="onColorChange()"
                      class="color-picker-inline"
                      title="Color">
             </div>
@@ -172,13 +174,20 @@
               <ul class="specialties-list" 
                   [style.color]="founderConfig.specialtiesColor"
                   [style.font-family]="founderConfig.specialtiesFontFamily">
-                <li *ngFor="let specialty of founderConfig.specialties">{{ specialty }}</li>
-              </ul>
+                <li *ngFor="let specialty of founderConfig.specialties"
+                    [style.color]="founderConfig.specialtiesColor"
+                    [style.font-family]="founderConfig.specialtiesFontFamily">{{ specialty }}</li>
+          </ul>
               <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
             </div>
             <div *ngIf="isEditingFounder && editingElement === 'specialties'" class="specialties-edit-inline">
               <div class="specialty-item" *ngFor="let specialty of founderConfig.specialties; let i = index">
-                <input type="text" [(ngModel)]="founderConfig.specialties[i]" class="form-input" placeholder="Enter specialty">
+                <input type="text" 
+                       [(ngModel)]="founderConfig.specialties[i]" 
+                       class="form-input" 
+                       placeholder="Enter specialty"
+                       [style.color]="founderConfig.specialtiesColor"
+                       [style.font-family]="founderConfig.specialtiesFontFamily">
                 <button type="button" (click)="removeSpecialty(i)" class="remove-btn">×</button>
               </div>
               <button type="button" (click)="addSpecialty()" class="add-btn">+ Add Specialty</button>
@@ -195,7 +204,7 @@
                 </select>
                 <input type="color" 
                        [(ngModel)]="founderConfig.specialtiesColor"
-                       (change)="applyDynamicStyles()"
+                       (change)="onColorChange()"
                        class="color-picker-inline"
                        title="Color">
               </div>
@@ -234,7 +243,7 @@
               </select>
               <input type="color" 
                      [(ngModel)]="founderConfig.missionColor"
-                     (change)="applyDynamicStyles()"
+                     (change)="onColorChange()"
                      class="color-picker-inline"
                      title="Color">
             </div>
@@ -287,7 +296,7 @@
           </select>
           <input type="color" 
                  [(ngModel)]="founderConfig.philosophyTitleColor"
-                 (change)="applyDynamicStyles()"
+                 (change)="onColorChange()"
                  class="color-picker-inline"
                  title="Color">
         </div>
@@ -324,7 +333,7 @@
           </select>
           <input type="color" 
                  [(ngModel)]="founderConfig.philosophyContentColor"
-                 (change)="applyDynamicStyles()"
+                 (change)="onColorChange()"
                  class="color-picker-inline"
                  title="Color">
         </div>
