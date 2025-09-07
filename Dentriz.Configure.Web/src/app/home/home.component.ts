@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { FounderSectionApiService, SimpleFounderConfig } from './services/founder-section-api.service';
 import { NewPatientSectionApiService, SimpleNewPatientConfig } from './services/new-patient-section-api.service';
 import { ReasonsSectionApiService, SimpleReasonsConfig } from './services/reasons-section-api.service';
+import { ServicesSectionApiService, SimpleServicesConfig } from './services/services-section-api.service';
 
 @Component({
   selector: 'app-home',
@@ -40,11 +41,20 @@ export class HomeComponent implements OnInit {
   originalReasonsData: any = {};
   editingReasonsElement: string | null = null;
 
+  // Services Section properties
+  servicesConfig: SimpleServicesConfig | null = null;
+  servicesLoading = true;
+  servicesError = false;
+  isEditingServices = false;
+  originalServicesData: any = {};
+  editingServicesElement: string | null = null;
+
   constructor(
     private http: HttpClient,
     private founderSectionApiService: FounderSectionApiService,
     private newPatientSectionApiService: NewPatientSectionApiService,
-    private reasonsSectionApiService: ReasonsSectionApiService
+    private reasonsSectionApiService: ReasonsSectionApiService,
+    private servicesSectionApiService: ServicesSectionApiService
   ) {}
 
   // Clinic images carousel
@@ -106,6 +116,7 @@ export class HomeComponent implements OnInit {
     this.loadFounderSectionConfig();
     this.loadNewPatientSectionConfig();
     this.loadReasonsSectionConfig();
+    this.loadServicesSectionConfig();
     // Auto-advance every 5 seconds
     setInterval(() => {
       this.nextImage();
@@ -691,6 +702,209 @@ export class HomeComponent implements OnInit {
     if (!this.reasonsConfig) return;
     const itemsProperty = `reason${reasonNumber}Items` as keyof SimpleReasonsConfig;
     const items = this.reasonsConfig[itemsProperty] as string[];
+    items.splice(index, 1);
+  }
+
+  // Services Section methods (following same pattern as other sections)
+  private loadServicesSectionConfig(): void {
+    this.servicesSectionApiService.loadConfig().subscribe({
+      next: (config) => {
+        console.log('Services section config loaded successfully:', config);
+        this.servicesConfig = config;
+        this.servicesLoading = false;
+        
+        // Apply styles immediately after config loads
+        this.applyServicesDynamicStyles();
+        
+        // Force apply styles with multiple attempts to ensure they stick
+        setTimeout(() => {
+          this.applyServicesElementStyles();
+        }, 100);
+        setTimeout(() => {
+          this.applyServicesElementStyles();
+        }, 500);
+      },
+      error: (error) => {
+        console.error('Error loading services section configuration:', error);
+        this.servicesError = true;
+        this.servicesLoading = false;
+      }
+    });
+  }
+
+  startEditingServices(): void {
+    console.log('Edit button clicked, starting services editing mode...');
+    if (!this.servicesConfig) {
+      console.log('No services config available');
+      return;
+    }
+
+    this.isEditingServices = true;
+    this.originalServicesData = JSON.parse(JSON.stringify(this.servicesConfig));
+    console.log('Services editing mode activated');
+  }
+
+  stopEditingServices(): void {
+    this.isEditingServices = false;
+    this.saveServicesSectionConfig();
+    console.log('Services section updated:', this.servicesConfig);
+  }
+
+  cancelEditingServices(): void {
+    this.isEditingServices = false;
+    this.servicesConfig = JSON.parse(JSON.stringify(this.originalServicesData));
+    this.applyServicesDynamicStyles(); // Reapply original styles
+  }
+
+  saveServicesSectionConfig(): void {
+    if (!this.servicesConfig) return;
+    // Implement API call to save config
+    console.log('Saving services config:', this.servicesConfig);
+    // For now, just log and exit edit mode
+    this.isEditingServices = false;
+  }
+
+  resetServicesToOriginal(): void {
+    if (!this.servicesConfig) return;
+    this.servicesConfig = JSON.parse(JSON.stringify(this.originalServicesData));
+    this.applyServicesDynamicStyles(); // Reapply original styles
+  }
+
+  startInlineEditServices(element: string): void {
+    if (!this.isEditingServices) return;
+    this.editingServicesElement = element;
+  }
+
+  stopInlineEditServices(): void {
+    this.editingServicesElement = null;
+  }
+
+  applyServicesDynamicStyles(): void {
+    if (!this.servicesConfig || typeof document === 'undefined') return;
+
+    console.log('Applying services dynamic styles...', this.servicesConfig);
+    const root = document.documentElement;
+    root.style.setProperty('--services-background-color', this.servicesConfig.backgroundColor);
+
+    // Apply individual element styles directly
+    this.applyServicesElementStyles();
+  }
+
+  private applyServicesElementStyles(): void {
+    if (!this.servicesConfig || typeof document === 'undefined') return;
+
+    console.log('Applying services element styles...', this.servicesConfig);
+
+    // Apply styles to specific elements with multiple selectors for better coverage
+    const elements = [
+      // Section Title
+      { selectors: ['.services-overview .section-title', '.section-title'], color: this.servicesConfig.sectionTitleColor, fontFamily: this.servicesConfig.sectionTitleFontFamily },
+      // Service 1
+      { selectors: ['.service-category:nth-child(1) h3'], color: this.servicesConfig.service1TitleColor, fontFamily: this.servicesConfig.service1TitleFontFamily },
+      { selectors: ['.service-category:nth-child(1) li'], color: this.servicesConfig.service1ItemsColor, fontFamily: this.servicesConfig.service1ItemsFontFamily },
+      { selectors: ['.service-category:nth-child(1) .btn-outline'], color: this.servicesConfig.service1ButtonColor, fontFamily: this.servicesConfig.service1ButtonFontFamily },
+      // Service 2
+      { selectors: ['.service-category:nth-child(2) h3'], color: this.servicesConfig.service2TitleColor, fontFamily: this.servicesConfig.service2TitleFontFamily },
+      { selectors: ['.service-category:nth-child(2) li'], color: this.servicesConfig.service2ItemsColor, fontFamily: this.servicesConfig.service2ItemsFontFamily },
+      { selectors: ['.service-category:nth-child(2) .btn-outline'], color: this.servicesConfig.service2ButtonColor, fontFamily: this.servicesConfig.service2ButtonFontFamily },
+      // Service 3
+      { selectors: ['.service-category:nth-child(3) h3'], color: this.servicesConfig.service3TitleColor, fontFamily: this.servicesConfig.service3TitleFontFamily },
+      { selectors: ['.service-category:nth-child(3) li'], color: this.servicesConfig.service3ItemsColor, fontFamily: this.servicesConfig.service3ItemsFontFamily },
+      { selectors: ['.service-category:nth-child(3) .btn-outline'], color: this.servicesConfig.service3ButtonColor, fontFamily: this.servicesConfig.service3ButtonFontFamily },
+      // Service 4
+      { selectors: ['.service-category:nth-child(4) h3'], color: this.servicesConfig.service4TitleColor, fontFamily: this.servicesConfig.service4TitleFontFamily },
+      { selectors: ['.service-category:nth-child(4) li'], color: this.servicesConfig.service4ItemsColor, fontFamily: this.servicesConfig.service4ItemsFontFamily },
+      { selectors: ['.service-category:nth-child(4) .btn-outline'], color: this.servicesConfig.service4ButtonColor, fontFamily: this.servicesConfig.service4ButtonFontFamily },
+      // Service 5
+      { selectors: ['.service-category:nth-child(5) h3'], color: this.servicesConfig.service5TitleColor, fontFamily: this.servicesConfig.service5TitleFontFamily },
+      { selectors: ['.service-category:nth-child(5) li'], color: this.servicesConfig.service5ItemsColor, fontFamily: this.servicesConfig.service5ItemsFontFamily },
+      { selectors: ['.service-category:nth-child(5) .btn-outline'], color: this.servicesConfig.service5ButtonColor, fontFamily: this.servicesConfig.service5ButtonFontFamily },
+      // Service 6
+      { selectors: ['.service-category:nth-child(6) h3'], color: this.servicesConfig.service6TitleColor, fontFamily: this.servicesConfig.service6TitleFontFamily },
+      { selectors: ['.service-category:nth-child(6) li'], color: this.servicesConfig.service6ItemsColor, fontFamily: this.servicesConfig.service6ItemsFontFamily },
+      { selectors: ['.service-category:nth-child(6) .btn-outline'], color: this.servicesConfig.service6ButtonColor, fontFamily: this.servicesConfig.service6ButtonFontFamily },
+      // Service 7
+      { selectors: ['.service-category:nth-child(7) h3'], color: this.servicesConfig.service7TitleColor, fontFamily: this.servicesConfig.service7TitleFontFamily },
+      { selectors: ['.service-category:nth-child(7) li'], color: this.servicesConfig.service7ItemsColor, fontFamily: this.servicesConfig.service7ItemsFontFamily },
+      { selectors: ['.service-category:nth-child(7) .btn-outline'], color: this.servicesConfig.service7ButtonColor, fontFamily: this.servicesConfig.service7ButtonFontFamily },
+      // Service 8
+      { selectors: ['.service-category:nth-child(8) h3'], color: this.servicesConfig.service8TitleColor, fontFamily: this.servicesConfig.service8TitleFontFamily },
+      { selectors: ['.service-category:nth-child(8) li'], color: this.servicesConfig.service8ItemsColor, fontFamily: this.servicesConfig.service8ItemsFontFamily },
+      { selectors: ['.service-category:nth-child(8) .btn-outline'], color: this.servicesConfig.service8ButtonColor, fontFamily: this.servicesConfig.service8ButtonFontFamily },
+      // Service 9
+      { selectors: ['.service-category:nth-child(9) h3'], color: this.servicesConfig.service9TitleColor, fontFamily: this.servicesConfig.service9TitleFontFamily },
+      { selectors: ['.service-category:nth-child(9) li'], color: this.servicesConfig.service9ItemsColor, fontFamily: this.servicesConfig.service9ItemsFontFamily },
+      { selectors: ['.service-category:nth-child(9) .btn-outline'], color: this.servicesConfig.service9ButtonColor, fontFamily: this.servicesConfig.service9ButtonFontFamily }
+    ];
+
+    elements.forEach(({ selectors, color, fontFamily }) => {
+      selectors.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach((element, index) => {
+          if (element) {
+            (element as HTMLElement).style.setProperty('color', color, 'important');
+            (element as HTMLElement).style.setProperty('font-family', fontFamily, 'important');
+            console.log(`Applied color ${color} and font ${fontFamily} to ${selector}[${index}]`);
+          }
+        });
+      });
+    });
+  }
+
+  onServicesColorChange(): void {
+    console.log('Services color changed, triggering change detection...');
+    
+    // Force Angular to detect changes and re-render
+    if (this.servicesConfig) {
+      // Create a new object to trigger change detection
+      this.servicesConfig = { ...this.servicesConfig };
+      console.log('Services config object created:', this.servicesConfig);
+    }
+    
+    // Apply styles immediately and with delays
+    this.applyServicesElementStyles();
+    setTimeout(() => {
+      console.log('Services change detection triggered');
+      this.applyServicesDynamicStyles();
+    }, 10);
+    setTimeout(() => {
+      this.applyServicesElementStyles();
+    }, 100);
+  }
+
+  onServicesFontChange(): void {
+    console.log('Services font changed, triggering change detection...');
+    
+    // Force Angular to detect changes and re-render
+    if (this.servicesConfig) {
+      // Create a new object to trigger change detection
+      this.servicesConfig = { ...this.servicesConfig };
+      console.log('Services config object created for font change:', this.servicesConfig);
+    }
+    
+    // Apply styles immediately and with delays
+    this.applyServicesElementStyles();
+    setTimeout(() => {
+      console.log('Services font change detection triggered');
+      this.applyServicesDynamicStyles();
+    }, 10);
+    setTimeout(() => {
+      this.applyServicesElementStyles();
+    }, 100);
+  }
+
+  // Helper methods for managing service items
+  addServiceItem(serviceNumber: number): void {
+    if (!this.servicesConfig) return;
+    const itemsProperty = `service${serviceNumber}Items` as keyof SimpleServicesConfig;
+    const items = this.servicesConfig[itemsProperty] as string[];
+    items.push('');
+  }
+
+  removeServiceItem(serviceNumber: number, index: number): void {
+    if (!this.servicesConfig) return;
+    const itemsProperty = `service${serviceNumber}Items` as keyof SimpleServicesConfig;
+    const items = this.servicesConfig[itemsProperty] as string[];
     items.splice(index, 1);
   }
 }

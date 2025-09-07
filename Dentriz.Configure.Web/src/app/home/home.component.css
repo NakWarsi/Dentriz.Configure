@@ -145,6 +145,114 @@
   font-family: inherit !important;
 }
 
+/* Ensure services section has relative positioning for floating button */
+.services-overview {
+  position: relative;
+}
+
+/* Ensure services section elements inherit styles properly */
+.services-overview h2,
+.services-overview h3,
+.services-overview li,
+.services-overview a,
+.service-category h3,
+.service-category li,
+.service-category .btn-outline {
+  color: inherit !important;
+  font-family: inherit !important;
+}
+
+/* Service items styling - matching founder section specialties */
+.service-items-container {
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.service-items-container:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  border-radius: 4px;
+  padding: 8px;
+  margin: 4px 0;
+}
+
+.service-items-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.service-items-list li {
+  margin: 4px 0;
+  padding: 2px 0;
+}
+
+.service-items-edit-inline {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  margin: 8px 0;
+}
+
+.service-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.service-item .form-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+}
+
+.service-item .form-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.remove-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.remove-btn:hover {
+  background: #c82333;
+}
+
+.add-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 8px 0;
+  transition: background-color 0.2s ease;
+}
+
+.add-btn:hover {
+  background: #218838;
+}
+
 .founder-edit-container {
   background: #f8f9fa;
   padding: 2rem;
