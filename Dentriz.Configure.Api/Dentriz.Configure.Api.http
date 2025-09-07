@@ -1,0 +1,6 @@
+@Dentriz.Configure.Api_HostAddress = http://localhost:5208
+
+GET {{Dentriz.Configure.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
