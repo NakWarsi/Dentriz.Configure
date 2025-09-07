@@ -13,8 +13,8 @@ export interface SimpleFounderConfig {
   mission: string;
   imageSrc: string;        // Fixed - not editable
   imageAlt: string;        // Fixed - not editable
-  imageName: string;       // Fixed - not editable
-  credentials: string;     // Fixed - not editable
+  imageName: string;       // Now editable
+  credentials: string;     // Now editable
   philosophyTitle: string;
   philosophyContent: string;
   // Individual color options for each element
@@ -26,6 +26,8 @@ export interface SimpleFounderConfig {
   missionColor: string;
   philosophyTitleColor: string;
   philosophyContentColor: string;
+  imageNameColor: string;
+  credentialsColor: string;
   // Individual font family options for each element
   subtitleFontFamily: string;
   doctorNameFontFamily: string;
@@ -35,6 +37,8 @@ export interface SimpleFounderConfig {
   missionFontFamily: string;
   philosophyTitleFontFamily: string;
   philosophyContentFontFamily: string;
+  imageNameFontFamily: string;
+  credentialsFontFamily: string;
   // Global styling options
   backgroundColor: string;
 }
@@ -96,6 +100,8 @@ export class FounderSectionApiService {
             missionColor: data.missionColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.MISSION,
             philosophyTitleColor: data.philosophyTitleColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.PHILOSOPHY_TITLE,
             philosophyContentColor: data.philosophyContentColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.PHILOSOPHY_CONTENT,
+            imageNameColor: data.imageNameColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.IMAGE_NAME,
+            credentialsColor: data.credentialsColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.CREDENTIALS,
             // Individual font family options with defaults from constants
             subtitleFontFamily: data.subtitleFontFamily || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_FONTS.SUBTITLE,
             doctorNameFontFamily: data.doctorNameFontFamily || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_FONTS.DOCTOR_NAME,
@@ -105,6 +111,8 @@ export class FounderSectionApiService {
             missionFontFamily: data.missionFontFamily || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_FONTS.MISSION,
             philosophyTitleFontFamily: data.philosophyTitleFontFamily || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_FONTS.PHILOSOPHY_TITLE,
             philosophyContentFontFamily: data.philosophyContentFontFamily || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_FONTS.PHILOSOPHY_CONTENT,
+            imageNameFontFamily: data.imageNameFontFamily || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_FONTS.IMAGE_NAME,
+            credentialsFontFamily: data.credentialsFontFamily || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_FONTS.CREDENTIALS,
             // Global styling options with defaults from constants
             backgroundColor: data.backgroundColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.BACKGROUND
           };

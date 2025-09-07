@@ -34,7 +34,7 @@
                  placeholder="Enter subtitle"
                  title="Edit subtitle">
           <div *ngIf="isEditingFounder && editingElement === 'subtitle'" class="inline-controls">
-            <select [(ngModel)]="founderConfig.subtitleFontFamily" (change)="applyDynamicStyles()" class="font-select-inline" title="Font Family">
+                <select [(ngModel)]="founderConfig.subtitleFontFamily" (change)="onFontChange()" class="font-select-inline" title="Font Family">
               <option value="Arial, sans-serif">Arial</option>
               <option value="Georgia, serif">Georgia</option>
               <option value="Times New Roman, serif">Times New Roman</option>
@@ -72,7 +72,7 @@
                    placeholder="Enter doctor name"
                    title="Edit doctor name">
             <div *ngIf="isEditingFounder && editingElement === 'doctorName'" class="inline-controls">
-              <select [(ngModel)]="founderConfig.doctorNameFontFamily" (change)="applyDynamicStyles()" class="font-select-inline" title="Font Family">
+                <select [(ngModel)]="founderConfig.doctorNameFontFamily" (change)="onFontChange()" class="font-select-inline" title="Font Family">
                 <option value="Arial, sans-serif">Arial</option>
                 <option value="Georgia, serif">Georgia</option>
                 <option value="Times New Roman, serif">Times New Roman</option>
@@ -192,7 +192,7 @@
               </div>
               <button type="button" (click)="addSpecialty()" class="add-btn">+ Add Specialty</button>
               <div class="inline-controls">
-                <select [(ngModel)]="founderConfig.specialtiesFontFamily" (change)="applyDynamicStyles()" class="font-select-inline" title="Font Family">
+                        <select [(ngModel)]="founderConfig.specialtiesFontFamily" (change)="onFontChange()" class="font-select-inline" title="Font Family">
                   <option value="Arial, sans-serif">Arial</option>
                   <option value="Georgia, serif">Georgia</option>
                   <option value="Times New Roman, serif">Times New Roman</option>
@@ -255,8 +255,81 @@
         <div class="founder-photo">
           <img [src]="founderConfig.imageSrc" [alt]="founderConfig.imageAlt" class="founder-img">
           <div>
-            <p class="founder-subtitle">{{ founderConfig.imageName }}</p>
-            <p class="founder-image-dubtitle-down">{{ founderConfig.credentials }}</p>
+            <!-- Image Name with inline editing -->
+            <div class="editable-element">
+              <p class="founder-subtitle"
+                 [style.color]="founderConfig.imageNameColor"
+                 [style.font-family]="founderConfig.imageNameFontFamily"
+                 *ngIf="!isEditingFounder || editingElement !== 'imageName'"
+                 (click)="startInlineEdit('imageName')">
+                {{ founderConfig.imageName }}
+                <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+              </p>
+              <input *ngIf="isEditingFounder && editingElement === 'imageName'"
+                     [(ngModel)]="founderConfig.imageName"
+                     (blur)="stopInlineEdit()"
+                     (keyup.enter)="stopInlineEdit()"
+                     class="inline-edit-input"
+                     [style.color]="founderConfig.imageNameColor"
+                     [style.font-family]="founderConfig.imageNameFontFamily"
+                     placeholder="Enter image name"
+                     title="Edit image name">
+              <div *ngIf="isEditingFounder && editingElement === 'imageName'" class="inline-controls">
+                <select [(ngModel)]="founderConfig.imageNameFontFamily" (change)="onFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="founderConfig.imageNameColor"
+                       (change)="onColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+
+            <!-- Credentials with inline editing -->
+            <div class="editable-element">
+              <p class="founder-image-dubtitle-down"
+                 [style.color]="founderConfig.credentialsColor"
+                 [style.font-family]="founderConfig.credentialsFontFamily"
+                 *ngIf="!isEditingFounder || editingElement !== 'credentials'"
+                 (click)="startInlineEdit('credentials')">
+                {{ founderConfig.credentials }}
+                <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+              </p>
+              <input *ngIf="isEditingFounder && editingElement === 'credentials'"
+                     [(ngModel)]="founderConfig.credentials"
+                     (blur)="stopInlineEdit()"
+                     (keyup.enter)="stopInlineEdit()"
+                     class="inline-edit-input"
+                     [style.color]="founderConfig.credentialsColor"
+                     [style.font-family]="founderConfig.credentialsFontFamily"
+                     placeholder="Enter credentials"
+                     title="Edit credentials">
+              <div *ngIf="isEditingFounder && editingElement === 'credentials'" class="inline-controls">
+                <select [(ngModel)]="founderConfig.credentialsFontFamily" (change)="onFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="founderConfig.credentialsColor"
+                       (change)="onColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
           </div>
         </div>
       </div>

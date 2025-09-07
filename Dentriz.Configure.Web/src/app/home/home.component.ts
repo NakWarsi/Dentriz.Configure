@@ -97,6 +97,17 @@ export class HomeComponent implements OnInit {
         console.log('Founder section config loaded successfully:', config);
         this.founderConfig = config;
         this.founderLoading = false;
+        
+        // Apply styles immediately after config loads
+        this.applyDynamicStyles();
+        
+        // Force apply styles with multiple attempts to ensure they stick
+        setTimeout(() => {
+          this.applyElementStyles();
+        }, 100);
+        setTimeout(() => {
+          this.applyElementStyles();
+        }, 500);
       },
       error: (error) => {
         console.error('Error loading founder section configuration:', error);
@@ -195,23 +206,43 @@ export class HomeComponent implements OnInit {
   private applyElementStyles(): void {
     if (!this.founderConfig || typeof document === 'undefined') return;
 
-    // Apply styles to specific elements
-    const elements = {
-      '.founder-subtitle-small': this.founderConfig.subtitleColor,
-      '.founder-info h3': this.founderConfig.doctorNameColor,
-      '.founder-title': this.founderConfig.titleColor,
-      '.founder-description': this.founderConfig.descriptionColor,
-      '.specialties-list': this.founderConfig.specialtiesColor,
-      '.founder-philosophy-full h4': this.founderConfig.philosophyTitleColor,
-      '.founder-philosophy-full p': this.founderConfig.philosophyContentColor
-    };
+    console.log('Applying element styles...', this.founderConfig);
 
-    Object.entries(elements).forEach(([selector, color]) => {
-      const element = document.querySelector(selector);
-      if (element) {
-        (element as HTMLElement).style.color = color;
-        console.log(`Applied color ${color} to ${selector}`);
-      }
+    // Apply styles to specific elements with multiple selectors for better coverage
+    const elements = [
+      // Subtitle
+      { selectors: ['.founder-subtitle-small'], color: this.founderConfig.subtitleColor, fontFamily: this.founderConfig.subtitleFontFamily },
+      // Doctor Name
+      { selectors: ['.founder-info h3', 'h3'], color: this.founderConfig.doctorNameColor, fontFamily: this.founderConfig.doctorNameFontFamily },
+      // Title
+      { selectors: ['.founder-title'], color: this.founderConfig.titleColor, fontFamily: this.founderConfig.titleFontFamily },
+      // Description
+      { selectors: ['.founder-description'], color: this.founderConfig.descriptionColor, fontFamily: this.founderConfig.descriptionFontFamily },
+      // Specialties
+      { selectors: ['.specialties-list', '.specialties-list li'], color: this.founderConfig.specialtiesColor, fontFamily: this.founderConfig.specialtiesFontFamily },
+      // Mission
+      { selectors: ['.founder-description'], color: this.founderConfig.missionColor, fontFamily: this.founderConfig.missionFontFamily },
+      // Philosophy Title
+      { selectors: ['.founder-philosophy-full h4', 'h4'], color: this.founderConfig.philosophyTitleColor, fontFamily: this.founderConfig.philosophyTitleFontFamily },
+      // Philosophy Content
+      { selectors: ['.founder-philosophy-full p'], color: this.founderConfig.philosophyContentColor, fontFamily: this.founderConfig.philosophyContentFontFamily },
+      // Image Name
+      { selectors: ['.founder-subtitle'], color: this.founderConfig.imageNameColor, fontFamily: this.founderConfig.imageNameFontFamily },
+      // Credentials
+      { selectors: ['.founder-image-dubtitle-down'], color: this.founderConfig.credentialsColor, fontFamily: this.founderConfig.credentialsFontFamily }
+    ];
+
+    elements.forEach(({ selectors, color, fontFamily }) => {
+      selectors.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach((element, index) => {
+          if (element) {
+            (element as HTMLElement).style.setProperty('color', color, 'important');
+            (element as HTMLElement).style.setProperty('font-family', fontFamily, 'important');
+            console.log(`Applied color ${color} and font ${fontFamily} to ${selector}[${index}]`);
+          }
+        });
+      });
     });
   }
 
@@ -231,7 +262,9 @@ export class HomeComponent implements OnInit {
       doctorNameColor: this.founderConfig?.doctorNameColor,
       titleColor: this.founderConfig?.titleColor,
       descriptionColor: this.founderConfig?.descriptionColor,
-      specialtiesColor: this.founderConfig?.specialtiesColor
+      specialtiesColor: this.founderConfig?.specialtiesColor,
+      imageNameColor: this.founderConfig?.imageNameColor,
+      credentialsColor: this.founderConfig?.credentialsColor
     });
     
     // Force Angular to detect changes and re-render
@@ -241,11 +274,44 @@ export class HomeComponent implements OnInit {
       console.log('New config object created:', this.founderConfig);
     }
     
-    // Force change detection with a small delay
+    // Apply styles immediately and with delays
+    this.applyElementStyles();
     setTimeout(() => {
       console.log('Change detection triggered');
-      // Apply the styles directly to ensure they work
       this.applyDynamicStyles();
     }, 10);
+    setTimeout(() => {
+      this.applyElementStyles();
+    }, 100);
+  }
+
+  onFontChange(): void {
+    console.log('Font changed, triggering change detection...');
+    console.log('Current fonts:', {
+      subtitleFontFamily: this.founderConfig?.subtitleFontFamily,
+      doctorNameFontFamily: this.founderConfig?.doctorNameFontFamily,
+      titleFontFamily: this.founderConfig?.titleFontFamily,
+      descriptionFontFamily: this.founderConfig?.descriptionFontFamily,
+      specialtiesFontFamily: this.founderConfig?.specialtiesFontFamily,
+      imageNameFontFamily: this.founderConfig?.imageNameFontFamily,
+      credentialsFontFamily: this.founderConfig?.credentialsFontFamily
+    });
+    
+    // Force Angular to detect changes and re-render
+    if (this.founderConfig) {
+      // Create a new object to trigger change detection
+      this.founderConfig = { ...this.founderConfig };
+      console.log('New config object created for font change:', this.founderConfig);
+    }
+    
+    // Apply styles immediately and with delays
+    this.applyElementStyles();
+    setTimeout(() => {
+      console.log('Font change detection triggered');
+      this.applyDynamicStyles();
+    }, 10);
+    setTimeout(() => {
+      this.applyElementStyles();
+    }, 100);
   }
 }

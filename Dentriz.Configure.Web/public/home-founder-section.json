@@ -31,6 +31,8 @@
   "missionColor": "#333333",
   "philosophyTitleColor": "#2c5aa0",
   "philosophyContentColor": "#333333",
+  "imageNameColor": "#000000",
+  "credentialsColor": "#666666",
   "subtitleFontFamily": "Arial, sans-serif",
   "doctorNameFontFamily": "Arial, sans-serif",
   "titleFontFamily": "Arial, sans-serif",
@@ -39,5 +41,7 @@
   "missionFontFamily": "Arial, sans-serif",
   "philosophyTitleFontFamily": "Arial, sans-serif",
   "philosophyContentFontFamily": "Arial, sans-serif",
+  "imageNameFontFamily": "Arial, sans-serif",
+  "credentialsFontFamily": "Arial, sans-serif",
   "backgroundColor": "rgb(231,240,234)"
 }

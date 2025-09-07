@@ -33,6 +33,8 @@ export const HOME_FOUNDER_SECTION_CONSTANTS = {
     MISSION: '#333333',
     PHILOSOPHY_TITLE: '#2c5aa0',
     PHILOSOPHY_CONTENT: '#333333',
+    IMAGE_NAME: '#000000',
+    CREDENTIALS: '#666666',
     BACKGROUND: 'rgb(231,240,234)'
   },
   // Font family constants - single source of truth
@@ -44,6 +46,8 @@ export const HOME_FOUNDER_SECTION_CONSTANTS = {
     SPECIALTIES: 'Arial, sans-serif',
     MISSION: 'Arial, sans-serif',
     PHILOSOPHY_TITLE: 'Arial, sans-serif',
-    PHILOSOPHY_CONTENT: 'Arial, sans-serif'
+    PHILOSOPHY_CONTENT: 'Arial, sans-serif',
+    IMAGE_NAME: 'Arial, sans-serif',
+    CREDENTIALS: 'Arial, sans-serif'
   }
 } as const;
