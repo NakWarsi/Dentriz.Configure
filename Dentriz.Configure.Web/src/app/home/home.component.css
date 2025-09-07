@@ -108,6 +108,25 @@
   font-family: inherit !important;
 }
 
+/* Ensure new patient section has relative positioning for floating button */
+.new-patients {
+  position: relative;
+}
+
+/* Ensure new patient section elements inherit styles properly */
+.new-patients h3,
+.new-patients h4,
+.new-patients p,
+.detail h4,
+.detail p,
+.btn-primary,
+.btn-outline,
+.clinic-map h3,
+.map-info p {
+  color: inherit !important;
+  font-family: inherit !important;
+}
+
 .founder-edit-container {
   background: #f8f9fa;
   padding: 2rem;

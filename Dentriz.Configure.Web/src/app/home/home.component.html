@@ -444,56 +444,244 @@
 
 
 <!-- New Patients Section -->
-<section class="new-patients">
+<!-- New Patients Section -->
+<section class="new-patients" *ngIf="!newPatientLoading && !newPatientError && newPatientConfig">
   <div class="container">
-    <div class="new-patients-content">
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingNewPatient">
+      <button class="edit-btn-floating" (click)="startEditingNewPatient()" title="Edit New Patient Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <div class="new-patients-content"
+         [style.background-color]="newPatientConfig.backgroundColor">
       <div class="new-patients-text">
   <div class="clinic-location-details">
-  <h3>Clinic Accessibility & Nearby Convenience</h3>
-  
-  <div class="detail">
-    <h4>📍 Address</h4>
-    <p>
-      Dentriz Dental Clinic <br>
-      Rohan Tarang, Wakad Chowk <br>
-      Opposite Alamgir Masjid <br>
-      <em>Landmark:</em> Close to Mahavir Medical & Hinjewadi Bridge
-    </p>
+          <!-- Main Title with inline editing -->
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'mainTitle'"
+                [style.color]="newPatientConfig.mainTitleColor"
+                [style.font-family]="newPatientConfig.mainTitleFontFamily"
+                (click)="startInlineEditNewPatient('mainTitle')">
+              {{ newPatientConfig.mainTitle }}
+              <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+            </h3>
+            <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'mainTitle'"
+                   [(ngModel)]="newPatientConfig.mainTitle"
+                   (blur)="stopInlineEditNewPatient()"
+                   (keyup.enter)="stopInlineEditNewPatient()"
+                   class="inline-edit-input"
+                   [style.color]="newPatientConfig.mainTitleColor"
+                   [style.font-family]="newPatientConfig.mainTitleFontFamily"
+                   placeholder="Enter main title"
+                   title="Edit main title">
+            <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'mainTitle'" class="inline-controls">
+              <select [(ngModel)]="newPatientConfig.mainTitleFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="newPatientConfig.mainTitleColor"
+                     (change)="onNewPatientColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
   </div>
 
+          <!-- Address Detail with inline editing -->
   <div class="detail">
-    <h4>🚗 Parking</h4>
-    <p>Free parking available within our premises, with easy access for both two-wheelers and four-wheelers.</p>
+            <div class="editable-element">
+              <h4 *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'addressTitle'"
+                  [style.color]="newPatientConfig.addressTitleColor"
+                  [style.font-family]="newPatientConfig.addressTitleFontFamily"
+                  (click)="startInlineEditNewPatient('addressTitle')">
+                {{ newPatientConfig.addressTitle }}
+                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              </h4>
+              <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'addressTitle'"
+                     [(ngModel)]="newPatientConfig.addressTitle"
+                     (blur)="stopInlineEditNewPatient()"
+                     (keyup.enter)="stopInlineEditNewPatient()"
+                     class="inline-edit-input"
+                     [style.color]="newPatientConfig.addressTitleColor"
+                     [style.font-family]="newPatientConfig.addressTitleFontFamily"
+                     placeholder="Enter address title"
+                     title="Edit address title">
+              <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'addressTitle'" class="inline-controls">
+                <select [(ngModel)]="newPatientConfig.addressTitleFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="newPatientConfig.addressTitleColor"
+                       (change)="onNewPatientColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+            <div class="editable-element">
+              <p *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'addressContent'"
+                 [style.color]="newPatientConfig.addressContentColor"
+                 [style.font-family]="newPatientConfig.addressContentFontFamily"
+                 (click)="startInlineEditNewPatient('addressContent')"
+                 [innerHTML]="newPatientConfig.addressContent">
+                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              </p>
+              <textarea *ngIf="isEditingNewPatient && editingNewPatientElement === 'addressContent'"
+                        [(ngModel)]="newPatientConfig.addressContent"
+                        (blur)="stopInlineEditNewPatient()"
+                        (keyup.ctrl.enter)="stopInlineEditNewPatient()"
+                        class="inline-edit-textarea"
+                        [style.color]="newPatientConfig.addressContentColor"
+                        [style.font-family]="newPatientConfig.addressContentFontFamily"
+                        placeholder="Enter address content"
+                        title="Edit address content"></textarea>
+              <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'addressContent'" class="inline-controls">
+                <select [(ngModel)]="newPatientConfig.addressContentFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="newPatientConfig.addressContentColor"
+                       (change)="onNewPatientColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+  </div>
   </div>
 
+          <!-- Parking Detail with inline editing -->
   <div class="detail">
-    <h4>🚌 Public Transit</h4>
-    <p>Connected by multiple city bus routes, with Wakad Chowk Bus Stop just a few steps away.</p>
+            <div class="editable-element">
+              <h4 *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'parkingTitle'"
+                  [style.color]="newPatientConfig.parkingTitleColor"
+                  [style.font-family]="newPatientConfig.parkingTitleFontFamily"
+                  (click)="startInlineEditNewPatient('parkingTitle')">
+                {{ newPatientConfig.parkingTitle }}
+                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              </h4>
+              <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'parkingTitle'"
+                     [(ngModel)]="newPatientConfig.parkingTitle"
+                     (blur)="stopInlineEditNewPatient()"
+                     (keyup.enter)="stopInlineEditNewPatient()"
+                     class="inline-edit-input"
+                     [style.color]="newPatientConfig.parkingTitleColor"
+                     [style.font-family]="newPatientConfig.parkingTitleFontFamily"
+                     placeholder="Enter parking title"
+                     title="Edit parking title">
+              <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'parkingTitle'" class="inline-controls">
+                <select [(ngModel)]="newPatientConfig.parkingTitleFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="newPatientConfig.parkingTitleColor"
+                       (change)="onNewPatientColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
   </div>
-
-  <div class="detail">
-    <h4>♿ Metro Access</h4>
-    <p>Walking distance from Hinjewadi Bridge Metro Station, making it simple for daily commuters.</p>
   </div>
-
-  <div class="detail">
-    <h4>👨‍👩‍👧‍👦 Accessibility</h4>
-    <p>Our clinic is designed to be family-friendly and wheelchair accessible, with a clean waiting area for kids and seniors.</p>
+            <div class="editable-element">
+              <p *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'parkingContent'"
+                 [style.color]="newPatientConfig.parkingContentColor"
+                 [style.font-family]="newPatientConfig.parkingContentFontFamily"
+                 (click)="startInlineEditNewPatient('parkingContent')">
+                {{ newPatientConfig.parkingContent }}
+                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              </p>
+              <textarea *ngIf="isEditingNewPatient && editingNewPatientElement === 'parkingContent'"
+                        [(ngModel)]="newPatientConfig.parkingContent"
+                        (blur)="stopInlineEditNewPatient()"
+                        (keyup.ctrl.enter)="stopInlineEditNewPatient()"
+                        class="inline-edit-textarea"
+                        [style.color]="newPatientConfig.parkingContentColor"
+                        [style.font-family]="newPatientConfig.parkingContentFontFamily"
+                        placeholder="Enter parking content"
+                        title="Edit parking content"></textarea>
+              <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'parkingContent'" class="inline-controls">
+                <select [(ngModel)]="newPatientConfig.parkingContentFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="newPatientConfig.parkingContentColor"
+                       (change)="onNewPatientColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
   </div>
-
-  <div class="detail">
-    <h4>⏰ Flexible Hours</h4>
-    <p>Open late till 10:00 PM mon to sat, so you can schedule visits after office or school hours or on weekends. </p>
-  </div>
-
-  <div class="detail">
-    <h4>🛡️ Comfort & Safety</h4>
-    <p>A modern, hygienic setup equipped with advanced technology, ensuring a stress-free and safe dental experience.</p>
   </div>
 </div>
 
-
-  <a href="/contact" class="btn-primary">Book Your Appointment</a>
+          <!-- Button with inline editing -->
+          <div class="editable-element">
+            <a href="/contact" 
+               class="btn-primary"
+               [style.color]="newPatientConfig.buttonTextColor"
+               [style.font-family]="newPatientConfig.buttonTextFontFamily"
+               *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'buttonText'"
+               (click)="startInlineEditNewPatient('buttonText')">
+              {{ newPatientConfig.buttonText }}
+              <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+            </a>
+            <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'buttonText'"
+                   [(ngModel)]="newPatientConfig.buttonText"
+                   (blur)="stopInlineEditNewPatient()"
+                   (keyup.enter)="stopInlineEditNewPatient()"
+                   class="inline-edit-input"
+                   [style.color]="newPatientConfig.buttonTextColor"
+                   [style.font-family]="newPatientConfig.buttonTextFontFamily"
+                   placeholder="Enter button text"
+                   title="Edit button text">
+            <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'buttonText'" class="inline-controls">
+              <select [(ngModel)]="newPatientConfig.buttonTextFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="newPatientConfig.buttonTextColor"
+                     (change)="onNewPatientColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+        </div>
 </div>
 
       <div class="new-patients-image">
@@ -529,7 +717,43 @@
           </div>
         </div>
         <div class="clinic-map">
-          <h3>📍 Visit Our Clinic</h3>
+          <!-- Map Title with inline editing -->
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'mapTitle'"
+                [style.color]="newPatientConfig.mapTitleColor"
+                [style.font-family]="newPatientConfig.mapTitleFontFamily"
+                (click)="startInlineEditNewPatient('mapTitle')">
+              {{ newPatientConfig.mapTitle }}
+              <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+            </h3>
+            <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'mapTitle'"
+                   [(ngModel)]="newPatientConfig.mapTitle"
+                   (blur)="stopInlineEditNewPatient()"
+                   (keyup.enter)="stopInlineEditNewPatient()"
+                   class="inline-edit-input"
+                   [style.color]="newPatientConfig.mapTitleColor"
+                   [style.font-family]="newPatientConfig.mapTitleFontFamily"
+                   placeholder="Enter map title"
+                   title="Edit map title">
+            <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'mapTitle'" class="inline-controls">
+              <select [(ngModel)]="newPatientConfig.mapTitleFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="newPatientConfig.mapTitleColor"
+                     (change)="onNewPatientColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          
           <div class="map-container">
                          <iframe 
                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d236.35202385690053!2d73.76117365276494!3d18.59060519688083!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2b97dc645a90f%3A0xf370478ecff49ae9!2sDentriz%20dental%20clinic!5e0!3m2!1sen!2sin!4v1755898762059!5m2!1sen!2sin"
@@ -543,16 +767,154 @@
                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
              </iframe>
           </div>
+          
           <div class="map-info">
-            <p><strong>📍 Location:</strong> Wakad, Pune, Maharashtra</p>
-            <p><strong>🕒 Hours:</strong> Mon-Sat: 9:00 AM - 10:00 PM</p>
-            <a href="https://maps.app.goo.gl/qJdrWXYGJR8ki7BR7" target="_blank" class="btn-outline">📍 Get Directions</a>
+            <!-- Location Text with inline editing -->
+            <div class="editable-element">
+              <p *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'locationText'"
+                 [style.color]="newPatientConfig.locationTextColor"
+                 [style.font-family]="newPatientConfig.locationTextFontFamily"
+                 (click)="startInlineEditNewPatient('locationText')">
+                <strong>{{ newPatientConfig.locationText }}</strong>
+                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              </p>
+              <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'locationText'"
+                     [(ngModel)]="newPatientConfig.locationText"
+                     (blur)="stopInlineEditNewPatient()"
+                     (keyup.enter)="stopInlineEditNewPatient()"
+                     class="inline-edit-input"
+                     [style.color]="newPatientConfig.locationTextColor"
+                     [style.font-family]="newPatientConfig.locationTextFontFamily"
+                     placeholder="Enter location text"
+                     title="Edit location text">
+              <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'locationText'" class="inline-controls">
+                <select [(ngModel)]="newPatientConfig.locationTextFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="newPatientConfig.locationTextColor"
+                       (change)="onNewPatientColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+            
+            <!-- Hours Text with inline editing -->
+            <div class="editable-element">
+              <p *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'hoursText'"
+                 [style.color]="newPatientConfig.hoursTextColor"
+                 [style.font-family]="newPatientConfig.hoursTextFontFamily"
+                 (click)="startInlineEditNewPatient('hoursText')">
+                <strong>{{ newPatientConfig.hoursText }}</strong>
+                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              </p>
+              <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'hoursText'"
+                     [(ngModel)]="newPatientConfig.hoursText"
+                     (blur)="stopInlineEditNewPatient()"
+                     (keyup.enter)="stopInlineEditNewPatient()"
+                     class="inline-edit-input"
+                     [style.color]="newPatientConfig.hoursTextColor"
+                     [style.font-family]="newPatientConfig.hoursTextFontFamily"
+                     placeholder="Enter hours text"
+                     title="Edit hours text">
+              <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'hoursText'" class="inline-controls">
+                <select [(ngModel)]="newPatientConfig.hoursTextFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="newPatientConfig.hoursTextColor"
+                       (change)="onNewPatientColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+            
+            <!-- Directions Button with inline editing -->
+            <div class="editable-element">
+              <a href="https://maps.app.goo.gl/qJdrWXYGJR8ki7BR7" 
+                 target="_blank" 
+                 class="btn-outline"
+                 [style.color]="newPatientConfig.directionsTextColor"
+                 [style.font-family]="newPatientConfig.directionsTextFontFamily"
+                 *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'directionsText'"
+                 (click)="startInlineEditNewPatient('directionsText')">
+                {{ newPatientConfig.directionsText }}
+                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              </a>
+              <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'directionsText'"
+                     [(ngModel)]="newPatientConfig.directionsText"
+                     (blur)="stopInlineEditNewPatient()"
+                     (keyup.enter)="stopInlineEditNewPatient()"
+                     class="inline-edit-input"
+                     [style.color]="newPatientConfig.directionsTextColor"
+                     [style.font-family]="newPatientConfig.directionsTextFontFamily"
+                     placeholder="Enter directions text"
+                     title="Edit directions text">
+              <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'directionsText'" class="inline-controls">
+                <select [(ngModel)]="newPatientConfig.directionsTextFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="newPatientConfig.directionsTextColor"
+                       (change)="onNewPatientColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingNewPatient">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" [(ngModel)]="newPatientConfig.backgroundColor" (change)="onNewPatientColorChange()" class="color-picker" title="Background Color">
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Actions -->
+    <div class="edit-actions" *ngIf="isEditingNewPatient">
+      <button class="save-btn" (click)="stopEditingNewPatient()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingNewPatient()">Cancel</button>
+      <button class="reset-btn" (click)="resetNewPatientToOriginal()">Reset to Original</button>
+    </div>
   </div>
 </section>
+
+<!-- Loading and Error States for New Patient Section -->
+<div class="loading-container" *ngIf="newPatientLoading">
+  <p>Loading new patient section...</p>
+</div>
+
+<div class="error-container" *ngIf="newPatientError">
+  <p>Error loading new patient section. Please try again.</p>
+</div>
 
 <!-- Top Reasons Section -->
 <section class="reasons">
