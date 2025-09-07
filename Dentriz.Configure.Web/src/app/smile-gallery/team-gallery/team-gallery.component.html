@@ -1,0 +1,92 @@
+<div class="team-gallery">
+  <div class="seo-badge">SEO</div>
+  
+  <div class="gallery-hero">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a routerLink="/smile-gallery">Our Smile Gallery</a>
+        <span class="separator">/</span>
+        <span>Team Gallery</span>
+      </nav>
+      <h1 class="page-title">Team Gallery - Best Dental Clinic in Wakad</h1>
+      <p class="page-subtitle">Expert dental team in Wakad and skilled professionals in Hinjewadi. Experienced cosmetic dentist Pune and orthodontist in Wakad at DentRiz Dental Clinic.</p>
+    </div>
+  </div>
+
+  <div class="gallery-content">
+    <div class="container">
+      <div class="team-grid">
+        <div class="team-card" *ngFor="let member of teamMembers" (click)="openModal(member)">
+          <div class="seo-badge-card">SEO</div>
+          <div class="team-image">
+            <div class="image-placeholder">
+              <span class="placeholder-text">Team Member</span>
+              <div class="position-badge">{{ member.position }}</div>
+            </div>
+          </div>
+          <div class="team-info">
+            <h3 class="member-position">{{ member.position }}</h3>
+            <p class="member-specialization">{{ member.specialization }}</p>
+            <p class="seo-keywords">{{ member.seoKeywords }}</p>
+            <div class="member-stats">
+              <span class="experience">{{ member.experience }}</span>
+            </div>
+            <div class="view-details">
+              <span>View Profile</span>
+              <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for detailed view -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-button" (click)="closeModal()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+      <div class="modal-body" *ngIf="selectedMember">
+        <div class="modal-image">
+          <div class="image-placeholder">
+            <span>Team Member</span>
+          </div>
+        </div>
+        <div class="modal-info">
+          <h2>{{ selectedMember.position }}</h2>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Position:</span>
+              <span class="value">{{ selectedMember.position }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Experience:</span>
+              <span class="value">{{ selectedMember.experience }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Education:</span>
+              <span class="value">{{ selectedMember.education }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Specialization:</span>
+              <span class="value">{{ selectedMember.specialization }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Bio:</span>
+              <span class="value bio-text">{{ selectedMember.bio }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">SEO Keywords:</span>
+              <span class="value">{{ selectedMember.seoKeywords }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

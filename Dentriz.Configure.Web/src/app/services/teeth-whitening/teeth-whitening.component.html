@@ -1,0 +1,98 @@
+<!-- Hero Section -->
+<section class="service-hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-icon">😁</div>
+      <h1>Teeth Whitening</h1>
+      <p>Professional Whitening for a Brighter Smile</p>
+      <div class="hero-description">
+        <p>Transform your smile with our professional teeth whitening services. Achieve a brighter, more confident smile with safe and effective whitening treatments.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Whitening Options -->
+<section class="whitening-options">
+  <div class="container">
+    <h2>Professional Whitening Options</h2>
+    <p class="section-subtitle">Choose the whitening treatment that's right for you.</p>
+    
+    <div class="options-grid">
+      <div class="option-card" *ngFor="let option of whiteningOptions">
+        <div class="option-header">
+          <div class="option-icon">{{ option.icon }}</div>
+          <h3>{{ option.title }}</h3>
+        </div>
+        <p class="option-description">{{ option.description }}</p>
+        <div class="option-details">
+          <div class="detail-item">
+            <strong>Duration:</strong> {{ option.duration }}
+          </div>
+          <div class="detail-item">
+            <strong>Results:</strong> {{ option.results }}
+          </div>
+        </div>
+        <ul class="option-features">
+          <li *ngFor="let feature of option.features">{{ feature }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Whitening Process -->
+<section class="whitening-process">
+  <div class="container">
+    <h2>The Whitening Process</h2>
+    <div class="process-grid">
+      <div class="process-card" *ngFor="let process of whiteningProcess">
+        <div class="process-step">{{ process.step }}</div>
+        <h3>{{ process.title }}</h3>
+        <p>{{ process.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Benefits -->
+<section class="whitening-benefits">
+  <div class="container">
+    <h2>Benefits of Professional Whitening</h2>
+    <div class="benefits-grid">
+      <div class="benefit-card" *ngFor="let benefit of benefits">
+        <div class="benefit-icon">{{ benefit.icon }}</div>
+        <h3>{{ benefit.title }}</h3>
+        <p>{{ benefit.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Maintenance -->
+<section class="maintenance">
+  <div class="container">
+    <h2>Maintaining Your Bright Smile</h2>
+    <p class="section-subtitle">Keep your whitening results lasting longer with these tips.</p>
+    <div class="maintenance-grid">
+      <div class="maintenance-item" *ngFor="let tip of maintenance">
+        <span class="tip-icon">💡</span>
+        <span>{{ tip }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready for a Brighter Smile?</h2>
+      <p>Schedule your teeth whitening consultation today and discover how professional whitening can transform your smile.</p>
+      <div class="cta-buttons">
+        <a href="tel:555-123-4567" class="btn-primary">📞 Call Now</a>
+        <a href="/contact" class="btn-secondary">Contact Us</a>
+      </div>
+    </div>
+  </div>
+</section>

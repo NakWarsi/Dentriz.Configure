@@ -1,0 +1,99 @@
+<div class="before-after-gallery">
+  <div class="seo-badge">SEO</div>
+  
+  <div class="gallery-hero">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a routerLink="/smile-gallery">Our Smile Gallery</a>
+        <span class="separator">/</span>
+        <span>Before & After</span>
+      </nav>
+      <h1 class="page-title">Before & After Gallery - Best Dental Clinic in Wakad</h1>
+      <p class="page-subtitle">Cosmetic dentistry transformations in Wakad and dental implants in Pune. Professional teeth whitening in Wakad and veneers in Wakad at DentRiz Dental Clinic - the top dentist in Pune.</p>
+    </div>
+  </div>
+
+  <div class="gallery-content">
+    <div class="container">
+      <div class="gallery-grid">
+        <div class="case-card" *ngFor="let case of beforeAfterCases" (click)="openModal(case)">
+          <div class="seo-badge-card">SEO</div>
+          <div class="case-images">
+            <div class="image-container before">
+              <div class="image-placeholder">
+                <span class="label">Before</span>
+                <div class="placeholder-text">Before Image</div>
+              </div>
+            </div>
+            <div class="image-container after">
+              <div class="image-placeholder">
+                <span class="label">After</span>
+                <div class="placeholder-text">After Image</div>
+              </div>
+            </div>
+          </div>
+          <div class="case-info">
+            <h3 class="treatment-type">{{ case.treatment }}</h3>
+            <p class="duration">Duration: {{ case.duration }}</p>
+            <p class="description">{{ case.description }}</p>
+            <p class="seo-keywords">{{ case.seoKeywords }}</p>
+            <div class="view-details">
+              <span>View Details</span>
+              <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for detailed view -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-button" (click)="closeModal()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+      <div class="modal-body" *ngIf="selectedCase">
+        <div class="modal-images">
+          <div class="modal-image-container">
+            <h4>Before</h4>
+            <div class="modal-image before">
+              <div class="image-placeholder">
+                <span>Before Treatment</span>
+              </div>
+            </div>
+          </div>
+          <div class="modal-image-container">
+            <h4>After</h4>
+            <div class="modal-image after">
+              <div class="image-placeholder">
+                <span>After Treatment</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-info">
+          <h2>{{ selectedCase.treatment }}</h2>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Duration:</span>
+              <span class="value">{{ selectedCase.duration }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Treatment:</span>
+              <span class="value">{{ selectedCase.description }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">SEO Keywords:</span>
+              <span class="value">{{ selectedCase.seoKeywords }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

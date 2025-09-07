@@ -1,0 +1,94 @@
+<div class="patient-stories-gallery">
+  <div class="seo-badge">SEO</div>
+  
+  <div class="gallery-hero">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a routerLink="/smile-gallery">Our Smile Gallery</a>
+        <span class="separator">/</span>
+        <span>Patient Stories</span>
+      </nav>
+      <h1 class="page-title">Patient Stories - Best Dental Clinic in Wakad</h1>
+      <p class="page-subtitle">Dental journey experiences with the best dentist in Wakad. Success stories from cosmetic dentistry in Wakad and dental implants in Pune at DentRiz Dental Clinic.</p>
+    </div>
+  </div>
+
+  <div class="gallery-content">
+    <div class="container">
+      <div class="stories-grid">
+        <div class="story-card" *ngFor="let story of patientStories" (click)="openModal(story)">
+          <div class="seo-badge-card">SEO</div>
+          <div class="story-image">
+            <div class="image-placeholder">
+              <span class="placeholder-text">Success Story</span>
+              <div class="rating-badge">
+                <span class="stars">★★★★★</span>
+                <span class="rating">{{ story.rating }}/5</span>
+              </div>
+            </div>
+          </div>
+          <div class="story-info">
+            <h3 class="treatment-type">{{ story.treatment }}</h3>
+            <p class="story-preview">{{ story.story | slice:0:100 }}...</p>
+            <p class="seo-keywords">{{ story.seoKeywords }}</p>
+            <div class="story-stats">
+              <span class="duration">{{ story.duration }}</span>
+            </div>
+            <div class="view-details">
+              <span>Read Full Story</span>
+              <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for detailed view -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-button" (click)="closeModal()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+      <div class="modal-body" *ngIf="selectedStory">
+        <div class="modal-image">
+          <div class="image-placeholder">
+            <span>Success Story</span>
+          </div>
+        </div>
+        <div class="modal-info">
+          <h2>{{ selectedStory.treatment }} Success Story</h2>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Treatment:</span>
+              <span class="value">{{ selectedStory.treatment }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Duration:</span>
+              <span class="value">{{ selectedStory.duration }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Rating:</span>
+              <span class="value">
+                <span class="stars">★★★★★</span>
+                {{ selectedStory.rating }}/5
+              </span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Story:</span>
+              <span class="value story-text">{{ selectedStory.story }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">SEO Keywords:</span>
+              <span class="value">{{ selectedStory.seoKeywords }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

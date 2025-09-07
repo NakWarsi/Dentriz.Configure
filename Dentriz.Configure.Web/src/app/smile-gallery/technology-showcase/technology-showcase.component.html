@@ -1,0 +1,84 @@
+<div class="technology-showcase-gallery">
+  <div class="gallery-hero">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a routerLink="/smile-gallery">Our Smile Gallery</a>
+        <span class="separator">/</span>
+        <span>Technology Showcase</span>
+      </nav>
+      <h1 class="page-title">Technology Showcase</h1>
+      <p class="page-subtitle">Advanced dental technology and equipment we use</p>
+    </div>
+  </div>
+
+  <div class="gallery-content">
+    <div class="container">
+      <div class="technology-grid">
+        <div class="technology-card" *ngFor="let tech of technologyItems" (click)="openModal(tech)">
+          <div class="technology-image">
+            <div class="image-placeholder">
+              <span class="placeholder-text">{{ tech.name }}</span>
+              <div class="category-badge">{{ tech.category | titlecase }}</div>
+            </div>
+          </div>
+          <div class="technology-info">
+            <h3 class="technology-name">{{ tech.name }}</h3>
+            <p class="technology-description">{{ tech.description }}</p>
+            <div class="benefits">
+              <span class="benefit-tag" *ngFor="let benefit of tech.benefits">{{ benefit }}</span>
+            </div>
+            <div class="view-details">
+              <span>View Details</span>
+              <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for detailed view -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-button" (click)="closeModal()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+      <div class="modal-body" *ngIf="selectedTech">
+        <div class="modal-image">
+          <div class="image-placeholder">
+            <span>{{ selectedTech.name }}</span>
+          </div>
+        </div>
+        <div class="modal-info">
+          <h2>{{ selectedTech.name }}</h2>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Category:</span>
+              <span class="value">{{ selectedTech.category | titlecase }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Description:</span>
+              <span class="value">{{ selectedTech.description }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Benefits:</span>
+              <div class="benefits-list">
+                <span class="benefit-tag" *ngFor="let benefit of selectedTech.benefits">{{ benefit }}</span>
+              </div>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Specifications:</span>
+              <div class="specifications-list">
+                <span class="spec-tag" *ngFor="let spec of selectedTech.specifications">{{ spec }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

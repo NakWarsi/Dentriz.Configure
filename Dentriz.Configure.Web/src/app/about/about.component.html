@@ -1,0 +1,169 @@
+<!-- Meet Our Doctors -->
+<section id="doctors" class="doctors-section">
+  <div class="container">
+    <h2 class="section-title">Meet the Top Dentists in Wakad & Hinjewadi</h2>
+    <p class="section-subtitle">
+    At DentRiz Dental Clinic, we believe every smile deserves to shine! Our expert dentists in Pune provide complete preventive, restorative, and cosmetic care - from dental implants in Wakad and cosmetic dentistry to trusted family dentistry - all under one roof with comfort and care you can trust.  
+    </p>
+    
+    <div class="doctors-carousel">
+      <div class="carousel-container">
+        <div class="doctor-card">          
+          <div class="doctor-info">
+            <h3>{{ doctors[currentDoctorIndex].name }}</h3>
+            <p class="doctor-title">{{ doctors[currentDoctorIndex].title }}</p>
+            <div class="doctor-bio">
+              <p *ngFor="let paragraph of doctors[currentDoctorIndex].bio" [innerHTML]="paragraph"></p>
+            </div>
+            <div class="doctor-specialties">
+              <span *ngFor="let specialty of doctors[currentDoctorIndex].specialties">{{ specialty }}</span>
+            </div>
+          </div>
+          <div>
+          <div class="doctor-image">
+            <img 
+              [src]="doctors[currentDoctorIndex].image" 
+              [alt]="doctors[currentDoctorIndex].name"
+              class="doctor-img"
+              (error)="onImageError($event)">
+            <div class="doctor-placeholder" style="display: none;">
+              <span>👨‍⚕️</span>
+            </div>
+          </div>
+          <div class="doctor-title2">{{ doctors[currentDoctorIndex].title }} 
+            <div class="doctor-title3">{{ doctors[currentDoctorIndex].title2 }}
+            </div>            
+            </div>
+        </div>
+      </div>
+        <!-- Navigation arrows -->
+        <button class="carousel-nav prev" (click)="previousDoctor()" aria-label="Previous doctor">
+          <span>‹</span>
+        </button>
+        <button class="carousel-nav next" (click)="nextDoctor()" aria-label="Next doctor">
+          <span>›</span>
+        </button>
+        
+        <!-- Doctor indicators -->
+        <div class="carousel-indicators">
+          <button 
+            *ngFor="let doctor of doctors; let i = index" 
+            class="indicator" 
+            [class.active]="i === currentDoctorIndex"
+            (click)="goToDoctor(i)"
+            [attr.aria-label]="'Go to ' + doctor.name">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Our Values -->
+<section class="values-section">
+  <div class="container">
+    <h2 class="section-title">Our Core Values</h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon">❤️</div>
+        <h3>Compassionate Care</h3>
+        <p>We treat every patient with kindness, respect, and understanding, creating a comfortable environment for all.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🔬</div>
+        <h3>Advanced Technology</h3>
+        <p>We invest in the latest dental technology to provide precise, efficient, and comfortable treatments.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">👨‍👩‍👧‍👦</div>
+        <h3>Family Focused</h3>
+        <p>We welcome patients of all ages and provide comprehensive care for the entire family under one roof.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🎯</div>
+        <h3>Excellence</h3>
+        <p>We maintain the highest standards of dental care and continuously improve our skills and techniques.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Technology & Facilities -->
+<section class="technology-section">
+  <div class="container">
+    <h2 class="section-title">Advanced Technology & Facilities</h2>
+    <p class="section-subtitle">
+      We're proud to offer an array of leading technologies to ensure your smile receives the tailored care it deserves!
+    </p>
+    
+    <div class="tech-grid">
+      <div class="tech-item">
+        <div class="tech-icon">🖥️</div>
+        <h3>CEREC Same-Day Crowns</h3>
+        <p>Get your crown in a single visit with our advanced CEREC technology.</p>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">📷</div>
+        <h3>CBCT Scanner</h3>
+        <p>3D imaging for comprehensive oral health insights and implant planning accuracy.</p>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">💻</div>
+        <h3>PrimeScan Technology</h3>
+        <p>Cloud-based scanning for accurate digital impressions and treatment planning.</p>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🦷</div>
+        <h3>Digital X-Rays</h3>
+        <p>Lower radiation exposure and instant results with digital imaging.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials-section">
+  <div class="container">
+    <h2 class="section-title">What Our Patients Say</h2>
+    <p class="section-subtitle">
+      Read some of our amazing patient reviews and then contact us to experience our care for yourself!
+    </p>
+    
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testimonial-text">
+          "The staff at DentRiz Dental are friendly and efficient. Dr. Ahmed in particular is a joy to be around! The whole experience was comfortable and professional."
+        </p>
+        <div class="testimonial-author">
+          <strong>Aleena O.</strong>
+          <span>Verified Patient</span>
+        </div>
+      </div>
+      
+      <div class="testimonial-card">
+        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testimonial-text">
+          "First visit to DentRiz Dental and the staff couldn't be more friendly! It's amazing how much easier visiting the dentist is these days. Highly recommended!"
+        </p>
+        <div class="testimonial-author">
+          <strong>Mike Zita</strong>
+          <span>Verified Patient</span>
+        </div>
+      </div>
+      
+      <div class="testimonial-card">
+        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testimonial-text">
+          "Staff here is amazing. Very knowledgeable and friendly. The office is exceptionally clean and operates efficiently. Highly recommended!"
+        </p>
+        <div class="testimonial-author">
+          <strong>Sneha Bhosle</strong>
+          <span>Verified Patient</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+

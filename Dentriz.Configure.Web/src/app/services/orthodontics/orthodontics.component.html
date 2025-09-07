@@ -1,0 +1,196 @@
+<!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1>Orthodontics & Braces</h1>
+      <p>Transform your smile with advanced orthodontic treatments. From traditional braces to modern clear aligners, we offer comprehensive solutions for all ages to achieve the perfect smile you deserve.</p>
+      <div class="hero-buttons">
+        <a routerLink="/contact" class="btn btn-primary">Free Consultation</a>
+        <a href="#services" class="btn btn-secondary">Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services Overview -->
+<section id="services" class="services-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Our Orthodontic Services</h2>
+      <p>Comprehensive orthodontic solutions for a beautiful, healthy smile at any age</p>
+    </div>
+    
+    <div class="services-grid">
+      <div class="service-card" *ngFor="let service of services">
+        <div class="service-icon">{{ service.icon }}</div>
+        <h3>{{ service.title }}</h3>
+        <p>{{ service.description }}</p>
+        <ul class="service-features">
+          <li *ngFor="let feature of service.features">{{ feature }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Treatment Options -->
+<section class="treatment-options-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Treatment Options Comparison</h2>
+      <p>Choose the orthodontic treatment that best fits your lifestyle and goals</p>
+    </div>
+    
+    <div class="treatment-grid">
+      <div class="treatment-card" *ngFor="let option of treatmentOptions">
+        <h3>{{ option.title }}</h3>
+        <p>{{ option.description }}</p>
+        <div class="treatment-details">
+          <div class="detail-item">
+            <span class="detail-label">Duration:</span>
+            <span class="detail-value">{{ option.duration }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Cost:</span>
+            <span class="detail-value">{{ option.cost }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Age Groups Section -->
+<section class="age-groups-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Orthodontics for Every Age</h2>
+      <p>It's never too early or too late to achieve a beautiful smile</p>
+    </div>
+    
+    <div class="age-groups-grid">
+      <div class="age-group-card" *ngFor="let group of ageGroups">
+        <h3>{{ group.age }}</h3>
+        <p>{{ group.description }}</p>
+        <ul class="age-benefits">
+          <li *ngFor="let benefit of group.benefits">{{ benefit }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Treatment Process -->
+<section class="process-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Your Orthodontic Journey</h2>
+      <p>From consultation to beautiful smile - your path to orthodontic success</p>
+    </div>
+    
+    <div class="process-steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Initial Consultation</h3>
+        <p>Comprehensive examination including X-rays, photos, and treatment planning discussion</p>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Treatment Planning</h3>
+        <p>Customized treatment plan based on your specific needs and smile goals</p>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Treatment Begins</h3>
+        <p>Placement of braces or delivery of aligners with detailed care instructions</p>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">4</div>
+        <h3>Regular Adjustments</h3>
+        <p>Periodic visits for adjustments and progress monitoring throughout treatment</p>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">5</div>
+        <h3>Treatment Completion</h3>
+        <p>Removal of braces or completion of aligner treatment with final results</p>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">6</div>
+        <h3>Retention Phase</h3>
+        <p>Custom retainers to maintain your beautiful new smile for life</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="why-choose-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Why Choose Our Orthodontic Care</h2>
+      <p>Expert orthodontic treatment with advanced technology and personalized care</p>
+    </div>
+    
+    <div class="benefits-grid">
+      <div class="benefit-card" *ngFor="let benefit of benefits">
+        <h3>{{ benefit.title }}</h3>
+        <p>{{ benefit.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Technology Section -->
+<section class="technology-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Advanced Orthodontic Technology</h2>
+      <p>State-of-the-art equipment for precise and comfortable treatment</p>
+    </div>
+    
+    <div class="technology-grid">
+      <div class="tech-item">
+        <div class="tech-icon">📱</div>
+        <h3>3D Digital Scanning</h3>
+        <p>No more messy impressions - digital scanning for precise treatment planning</p>
+      </div>
+      
+      <div class="tech-item">
+        <div class="tech-icon">🖥️</div>
+        <h3>Treatment Simulation</h3>
+        <p>See your future smile with advanced computer simulation technology</p>
+      </div>
+      
+      <div class="tech-item">
+        <div class="tech-icon">🔬</div>
+        <h3>Custom Brackets</h3>
+        <p>Precision-engineered brackets for faster, more comfortable treatment</p>
+      </div>
+      
+      <div class="tech-item">
+        <div class="tech-icon">📊</div>
+        <h3>Progress Tracking</h3>
+        <p>Advanced monitoring systems to track your treatment progress</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready to Transform Your Smile?</h2>
+      <p>Take the first step towards a beautiful, confident smile. Schedule your free orthodontic consultation today.</p>
+      <div class="cta-buttons">
+        <a routerLink="/contact" class="btn btn-primary">Schedule Free Consultation</a>
+        <a href="tel:+1234567890" class="btn btn-secondary">Call Now</a>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,197 @@
+<!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1>Oral Surgery</h1>
+      <p>Expert surgical dental care with advanced technology and compassionate treatment. Our experienced oral surgeons provide safe, comfortable procedures for complex dental needs and optimal outcomes.</p>
+      <div class="hero-buttons">
+        <a routerLink="/contact" class="btn btn-primary">Schedule Consultation</a>
+        <a href="#services" class="btn btn-secondary">Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services Overview -->
+<section id="services" class="services-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Our Oral Surgery Services</h2>
+      <p>Comprehensive surgical dental care for complex dental needs</p>
+    </div>
+    
+    <div class="services-grid">
+      <div class="service-card" *ngFor="let service of services">
+        <div class="service-icon">{{ service.icon }}</div>
+        <h3>{{ service.title }}</h3>
+        <p>{{ service.description }}</p>
+        <ul class="service-features">
+          <li *ngFor="let feature of service.features">{{ feature }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Procedures Section -->
+<section class="procedures-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Common Surgical Procedures</h2>
+      <p>Understanding what to expect from your oral surgery procedure</p>
+    </div>
+    
+    <div class="procedures-grid">
+      <div class="procedure-card" *ngFor="let procedure of procedures">
+        <h3>{{ procedure.title }}</h3>
+        <p>{{ procedure.description }}</p>
+        <div class="procedure-details">
+          <div class="detail-item">
+            <span class="detail-label">Duration:</span>
+            <span class="detail-value">{{ procedure.duration }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Recovery:</span>
+            <span class="detail-value">{{ procedure.recovery }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sedation Options -->
+<section class="sedation-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Sedation Options</h2>
+      <p>Multiple sedation options to ensure your comfort during oral surgery</p>
+    </div>
+    
+    <div class="sedation-grid">
+      <div class="sedation-card" *ngFor="let option of sedationOptions">
+        <h3>{{ option.type }}</h3>
+        <p>{{ option.description }}</p>
+        <div class="sedation-details">
+          <div class="detail-item">
+            <span class="detail-label">Level:</span>
+            <span class="detail-value">{{ option.level }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Recovery:</span>
+            <span class="detail-value">{{ option.recovery }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="why-choose-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Why Choose Our Oral Surgery Care</h2>
+      <p>Expert surgical treatment with advanced technology and personalized care</p>
+    </div>
+    
+    <div class="benefits-grid">
+      <div class="benefit-card" *ngFor="let benefit of benefits">
+        <h3>{{ benefit.title }}</h3>
+        <p>{{ benefit.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Technology Section -->
+<section class="technology-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Advanced Surgical Technology</h2>
+      <p>State-of-the-art equipment for precise and safe oral surgery</p>
+    </div>
+    
+    <div class="technology-grid">
+      <div class="tech-item">
+        <div class="tech-icon">🔬</div>
+        <h3>3D Imaging</h3>
+        <p>Advanced CT scans and digital imaging for precise surgical planning</p>
+      </div>
+      
+      <div class="tech-item">
+        <div class="tech-icon">⚡</div>
+        <h3>Laser Technology</h3>
+        <p>Minimally invasive laser procedures for faster healing and less discomfort</p>
+      </div>
+      
+      <div class="tech-item">
+        <div class="tech-icon">📊</div>
+        <h3>Computer-Guided Surgery</h3>
+        <p>Precision surgical planning and execution for optimal results</p>
+      </div>
+      
+      <div class="tech-item">
+        <div class="tech-icon">🛡️</div>
+        <h3>Sterile Environment</h3>
+        <p>Hospital-grade sterilization and safety protocols for your protection</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Recovery Section -->
+<section class="recovery-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Recovery & Aftercare</h2>
+      <p>Comprehensive post-operative care for successful recovery</p>
+    </div>
+    
+    <div class="recovery-grid">
+      <div class="recovery-item">
+        <h3>Immediate Post-Op Care</h3>
+        <ul>
+          <li>Follow medication instructions</li>
+          <li>Apply ice packs to reduce swelling</li>
+          <li>Rest and avoid strenuous activity</li>
+          <li>Eat soft foods and stay hydrated</li>
+        </ul>
+      </div>
+      
+      <div class="recovery-item">
+        <h3>Follow-up Care</h3>
+        <ul>
+          <li>Attend scheduled follow-up appointments</li>
+          <li>Monitor for signs of infection</li>
+          <li>Gradually resume normal activities</li>
+          <li>Maintain good oral hygiene</li>
+        </ul>
+      </div>
+      
+      <div class="recovery-item">
+        <h3>Long-term Care</h3>
+        <ul>
+          <li>Regular dental checkups</li>
+          <li>Proper oral hygiene routine</li>
+          <li>Healthy diet and lifestyle</li>
+          <li>Address any concerns promptly</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready for Expert Oral Surgery Care?</h2>
+      <p>Trust our experienced oral surgeons for safe, comfortable, and effective surgical dental procedures. Schedule your consultation today.</p>
+      <div class="cta-buttons">
+        <a routerLink="/contact" class="btn btn-primary">Schedule Consultation</a>
+        <a href="tel:+1234567890" class="btn btn-secondary">Call Now</a>
+      </div>
+    </div>
+  </div>
+</section>

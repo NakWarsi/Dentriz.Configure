@@ -1,0 +1,353 @@
+<!-- Meet the Founder Section -->
+<section class="founder-section">
+  <div class="container">
+    <div class="founder-content">
+      <div class="founder-text">
+        <h2 class="founder-subtitle-small">Know your Doctor</h2>
+        <div class="founder-info">
+          <h3>Dr. Rizwana Khan</h3>
+          <p class="founder-title">Founder & Chief Dentist</p>
+                               <p class="founder-description">
+            A proud graduate of Government Dental College, Mumbai — one of the most prestigious dental institutions in India.
+            With around 10 years of experience, Dr. Khan has honed his expertise in a wide range of specialties including:
+          </p>
+          <ul class="specialties-list">
+            <li>Cosmetic dentistry</li>
+            <li>Dental implants</li>
+            <li>Smile designing</li>
+            <li>Root canal treatments</li>
+            <li>Full-mouth rehabilitation</li>
+            <li>Preventive care</li>
+            <li>Pediatric dentistry</li>
+          </ul>
+          <p class="founder-description">
+            Dr. Khan's mission is not just to treat dental concerns but to help patients achieve lifelong oral health, confidence, and beautiful smiles.
+          </p>
+        </div>
+      </div>
+      <div class="founder-image">
+        <div class="founder-photo">
+          <img src="/images/home/dr-rizwana-khan-c1.jpg?v=2" alt="Dr. Rizwana Khan - Founder & Chief Dentist" class="founder-img">
+          <div >
+            <p class="founder-subtitle">Dr. Rizwana Khan</p>
+            <p class="founder-image-dubtitle-down">(BDS. Govt. Dental College, Mumbai)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Philosophy Section - Full Width -->
+    <div class="founder-philosophy-full">
+      <h4>Our Philosophy:</h4>
+      <p>
+        "DentRiz Dental Clinic was built on the belief that dentistry should be modern, compassionate, and patient-focused. Our philosophy is to combine cutting-edge technology with a human touch, ensuring every patient receives the highest standard of care. We strive to create smiles that are not only healthy but also filled with confidence and happiness."
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- New Patients Section -->
+<section class="new-patients">
+  <div class="container">
+    <div class="new-patients-content">
+      <div class="new-patients-text">
+  <div class="clinic-location-details">
+  <h3>Clinic Accessibility & Nearby Convenience</h3>
+  
+  <div class="detail">
+    <h4>📍 Address</h4>
+    <p>
+      Dentriz Dental Clinic <br>
+      Rohan Tarang, Wakad Chowk <br>
+      Opposite Alamgir Masjid <br>
+      <em>Landmark:</em> Close to Mahavir Medical & Hinjewadi Bridge
+    </p>
+  </div>
+
+  <div class="detail">
+    <h4>🚗 Parking</h4>
+    <p>Free parking available within our premises, with easy access for both two-wheelers and four-wheelers.</p>
+  </div>
+
+  <div class="detail">
+    <h4>🚌 Public Transit</h4>
+    <p>Connected by multiple city bus routes, with Wakad Chowk Bus Stop just a few steps away.</p>
+  </div>
+
+  <div class="detail">
+    <h4>♿ Metro Access</h4>
+    <p>Walking distance from Hinjewadi Bridge Metro Station, making it simple for daily commuters.</p>
+  </div>
+
+  <div class="detail">
+    <h4>👨‍👩‍👧‍👦 Accessibility</h4>
+    <p>Our clinic is designed to be family-friendly and wheelchair accessible, with a clean waiting area for kids and seniors.</p>
+  </div>
+
+  <div class="detail">
+    <h4>⏰ Flexible Hours</h4>
+    <p>Open late till 10:00 PM mon to sat, so you can schedule visits after office or school hours or on weekends. </p>
+  </div>
+
+  <div class="detail">
+    <h4>🛡️ Comfort & Safety</h4>
+    <p>A modern, hygienic setup equipped with advanced technology, ensuring a stress-free and safe dental experience.</p>
+  </div>
+</div>
+
+
+  <a href="/contact" class="btn-primary">Book Your Appointment</a>
+</div>
+
+      <div class="new-patients-image">
+        <div class="clinic-images-carousel">
+          <div class="carousel-container">
+            <div class="carousel-image">
+              <img 
+                [src]="clinicImages[currentImageIndex].src" 
+                [alt]="clinicImages[currentImageIndex].alt" 
+                class="clinic-img"
+                (error)="onImageError($event)">
+              <p class="image-caption">{{ clinicImages[currentImageIndex].caption }}</p>
+            </div>
+            
+            <!-- Navigation arrows -->
+            <button class="carousel-nav prev" (click)="previousImage()" aria-label="Previous image">
+              <span>‹</span>
+            </button>
+            <button class="carousel-nav next" (click)="nextImage()" aria-label="Next image">
+              <span>›</span>
+            </button>
+            
+            <!-- Image indicators -->
+            <div class="carousel-indicators">
+              <button 
+                *ngFor="let image of clinicImages; let i = index" 
+                class="indicator" 
+                [class.active]="i === currentImageIndex"
+                (click)="goToImage(i)"
+                [attr.aria-label]="'Go to image ' + (i + 1)">
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="clinic-map">
+          <h3>📍 Visit Our Clinic</h3>
+          <div class="map-container">
+                         <iframe 
+               src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d236.35202385690053!2d73.76117365276494!3d18.59060519688083!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2b97dc645a90f%3A0xf370478ecff49ae9!2sDentriz%20dental%20clinic!5e0!3m2!1sen!2sin!4v1755898762059!5m2!1sen!2sin"
+               width="100%" 
+               height="300" 
+               style="border:0;" 
+               allowfullscreen="" 
+               loading="lazy" 
+               referrerpolicy="no-referrer-when-downgrade"
+               title="DentRiz Dental Clinic Location"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+             </iframe>
+          </div>
+          <div class="map-info">
+            <p><strong>📍 Location:</strong> Wakad, Pune, Maharashtra</p>
+            <p><strong>🕒 Hours:</strong> Mon-Sat: 9:00 AM - 10:00 PM</p>
+            <a href="https://maps.app.goo.gl/qJdrWXYGJR8ki7BR7" target="_blank" class="btn-outline">📍 Get Directions</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Top Reasons Section -->
+<section class="reasons">
+  <div class="container">
+    <h2 class="section-title">Why Choose DentRiz Dental Clinic in Pune</h2>
+    <p class="section-intro">
+      At <strong>DentRiz Dental Clinic</strong>, we believe every patient deserves a healthy, confident smile. 
+      Here’s why families in Wakad, Hinjewadi, and across Pune trust us for their dental care:
+    </p>
+    <div class="reasons-grid">
+
+      <div class="reason-card">
+        <div class="reason-icon">🦷</div>
+        <h3>Comprehensive Dental Care for Every Smile</h3>
+        <ul>
+          <li>Cosmetic dentistry including teeth whitening, veneers & smile makeovers</li>
+          <li>Advanced dental implants with precision technology</li>
+          <li>Family-focused care with pediatric and preventive dentistry</li>
+        </ul>
+      </div>
+
+      <div class="reason-card">
+        <div class="reason-icon">⚡</div>
+        <h3>Modern & Advanced Dental Treatments</h3>
+        <ul>
+          <li>Same-day crowns and digital dentistry for faster results</li>
+          <li>Professional teeth whitening for a brighter smile</li>
+          <li>Orthodontic solutions including Invisalign & invisible braces</li>
+        </ul>
+      </div>
+
+      <div class="reason-card">
+        <div class="reason-icon">❤️</div>
+        <h3>Trusted Local Dental Clinic in Wakad & Hinjewadi</h3>
+        <ul>
+          <li>Conveniently located in Wakad & Hinjewadi for easy access</li>
+          <li>Flexible appointments to suit your busy schedule</li>
+          <li>Affordable treatment plans with transparent pricing</li>
+        </ul>
+      </div>
+
+      <div class="reason-card">
+        <div class="reason-icon">🌿</div>
+        <h3>Comfortable & Stress-Free Environment</h3>
+        <ul>
+          <li>Pain-free dentistry options for anxious patients</li>
+          <li>Warm, patient-friendly atmosphere for children & adults</li>
+          <li>Multilingual staff to make every patient feel at home</li>
+        </ul>
+      </div>
+
+      <div class="reason-card">
+        <div class="reason-icon">🧼</div>
+        <h3>Uncompromised Hygiene & Safety</h3>
+        <ul>
+          <li>Strict international sterilization & infection-control protocols</li>
+          <li>Clean, modern clinic with advanced dental equipment</li>
+          <li>Highest standards of patient safety and comfort</li>
+        </ul>
+      </div>
+
+      <div class="reason-card">
+        <div class="reason-icon">💳</div>
+        <h3>Accessible & Affordable Care</h3>
+        <ul>
+          <li>Flexible payment plans to suit every budget</li>
+          <li>Preventive care packages for families & children</li>
+          <li>Transparent pricing with no hidden costs</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- Services Overview -->
+<section class="services-overview">
+  <div class="container">
+    <h2 class="section-title">Comprehensive Dental Services in Wakad & Hinjewadi</h2>
+    <div class="services-grid">
+
+      <!-- Preventive Care -->
+      <div class="service-category">
+        <h3>🦷 Preventive Care & Dental Cleaning in Wakad</h3>
+        <ul>
+          <li>Professional teeth cleaning & polishing</li>
+          <li>Pediatric dentistry for children</li>
+          <li>Oral health education & cavity prevention</li>
+          <li>Family dentistry in Wakad & Hinjewadi</li>
+        </ul>
+        <a routerLink="/services#preventive" class="btn-outline">Learn More</a>
+      </div>
+
+      <!-- Restorative Care -->
+      <div class="service-category">
+        <h3>🔧 Restorative Care & Dental Implants in Wakad</h3>
+        <ul>
+          <li>Advanced dental implants in Pune</li>
+          <li>Dental crowns & bridges</li>
+          <li>Tooth-colored fillings</li>
+          <li>Emergency dental treatments</li>
+        </ul>
+        <a routerLink="/services#restorative" class="btn-outline">Learn More</a>
+      </div>
+
+      <!-- Cosmetic Dentistry -->
+      <div class="service-category">
+        <h3>✨ Cosmetic Dentistry in Wakad</h3>
+        <ul>
+          <li>Teeth whitening & smile makeovers</li>
+          <li>Invisalign® & clear aligners</li>
+          <li>Dental veneers & bonding</li>
+          <li>Cosmetic contouring</li>
+        </ul>
+        <a routerLink="/services#cosmetic" class="btn-outline">Learn More</a>
+      </div>
+
+      <!-- Orthodontics -->
+      <div class="service-category">
+        <h3>😃 Orthodontics & Braces</h3>
+        <ul>
+          <li>Metal & ceramic braces</li>
+          <li>Invisalign® clear aligners</li>
+          <li>Early orthodontic care for children</li>
+          <li>Jaw alignment treatments</li>
+        </ul>
+        <a routerLink="/services#orthodontics" class="btn-outline">Learn More</a>
+      </div>
+
+      <!-- Pediatric Dentistry -->
+      <div class="service-category">
+        <h3>👶 Pediatric Dentistry</h3>
+        <ul>
+          <li>Gentle dental care for children</li>
+          <li>Preventive sealants & fluoride treatments</li>
+          <li>Habit counseling (thumb sucking, mouth breathing)</li>
+          <li>Space maintainers for growing smiles</li>
+        </ul>
+        <a routerLink="/services#pediatric" class="btn-outline">Learn More</a>
+      </div>
+
+      <!-- Periodontal Care -->
+      <div class="service-category">
+        <h3>🌿 Gum & Periodontal Care</h3>
+        <ul>
+          <li>Treatment for bleeding gums</li>
+          <li>Scaling & root planing</li>
+          <li>Laser gum treatments</li>
+          <li>Periodontal maintenance therapy</li>
+        </ul>
+        <a routerLink="/services#periodontal" class="btn-outline">Learn More</a>
+      </div>
+
+      <!-- Oral Surgery -->
+      <div class="service-category">
+        <h3>🔨 Oral Surgery & Extractions</h3>
+        <ul>
+          <li>Wisdom tooth removal</li>
+          <li>Tooth extractions with minimal pain</li>
+          <li>Minor oral surgical procedures</li>
+          <li>Bone grafting for implants</li>
+        </ul>
+        <a routerLink="/services#surgery" class="btn-outline">Learn More</a>
+      </div>
+
+      <!-- Endodontics -->
+      <div class="service-category">
+        <h3>🛡️ Root Canal & Endodontics</h3>
+        <ul>
+          <li>Painless root canal treatment</li>
+          <li>Single-sitting RCT options</li>
+          <li>Retreatment of failed RCT</li>
+          <li>Post & core build-up</li>
+        </ul>
+        <a routerLink="/services#endodontics" class="btn-outline">Learn More</a>
+      </div>
+
+      <!-- Emergency Dentistry -->
+      <div class="service-category">
+        <h3>🚑 Emergency Dental Care</h3>
+        <ul>
+          <li>Immediate pain relief treatments</li>
+          <li>Broken tooth repair</li>
+          <li>Knocked-out tooth management</li>
+          <li>Same-day emergency appointments</li>
+        </ul>
+        <a routerLink="/services#emergency" class="btn-outline">Learn More</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+

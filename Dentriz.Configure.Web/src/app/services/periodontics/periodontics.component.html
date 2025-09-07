@@ -1,0 +1,124 @@
+<!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1>Periodontics & Gum Disease Treatment</h1>
+      <p>Expert care for gum health and periodontal disease treatment. Our specialized periodontics services help restore and maintain healthy gums for a lifetime of oral health.</p>
+      <div class="hero-buttons">
+        <a routerLink="/contact" class="btn btn-primary">Schedule Consultation</a>
+        <a href="#services" class="btn btn-secondary">Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services Overview -->
+<section id="services" class="services-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Our Periodontics Services</h2>
+      <p>Comprehensive gum disease treatment and periodontal care to restore your oral health</p>
+    </div>
+    
+    <div class="services-grid">
+      <div class="service-card" *ngFor="let service of services">
+        <div class="service-icon">{{ service.icon }}</div>
+        <h3>{{ service.title }}</h3>
+        <p>{{ service.description }}</p>
+        <ul class="service-features">
+          <li *ngFor="let feature of service.features">{{ feature }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Warning Signs Section -->
+<section class="warning-signs-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Warning Signs of Gum Disease</h2>
+      <p>Don't ignore these symptoms - early detection is key to successful treatment</p>
+    </div>
+    
+    <div class="symptoms-grid">
+      <div class="symptom-item" *ngFor="let symptom of symptoms">
+        <div class="symptom-icon">⚠️</div>
+        <p>{{ symptom }}</p>
+      </div>
+    </div>
+    
+    <div class="cta-box">
+      <h3>Experiencing Any of These Symptoms?</h3>
+      <p>Contact us immediately for a comprehensive periodontal evaluation. Early treatment can prevent serious complications.</p>
+      <a routerLink="/contact" class="btn btn-primary">Get Evaluated Today</a>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="why-choose-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Why Choose Our Periodontics Care</h2>
+      <p>Expert periodontal treatment with advanced technology and compassionate care</p>
+    </div>
+    
+    <div class="benefits-grid">
+      <div class="benefit-card" *ngFor="let benefit of benefits">
+        <h3>{{ benefit.title }}</h3>
+        <p>{{ benefit.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Treatment Process -->
+<section class="process-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Our Treatment Process</h2>
+      <p>Comprehensive periodontal care from diagnosis to maintenance</p>
+    </div>
+    
+    <div class="process-steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Comprehensive Evaluation</h3>
+        <p>Thorough examination including X-rays, pocket measurements, and gum health assessment</p>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Treatment Planning</h3>
+        <p>Personalized treatment plan based on your specific condition and oral health goals</p>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Active Treatment</h3>
+        <p>Professional treatment including scaling, root planing, and surgical procedures if needed</p>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">4</div>
+        <h3>Maintenance Care</h3>
+        <p>Ongoing periodontal maintenance to prevent disease recurrence and maintain results</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready to Restore Your Gum Health?</h2>
+      <p>Don't let gum disease compromise your oral health. Our periodontics experts are here to help you achieve and maintain healthy gums.</p>
+      <div class="cta-buttons">
+        <a routerLink="/contact" class="btn btn-primary">Schedule Your Consultation</a>
+        <a href="tel:+1234567890" class="btn btn-secondary">Call Now</a>
+      </div>
+    </div>
+  </div>
+</section>

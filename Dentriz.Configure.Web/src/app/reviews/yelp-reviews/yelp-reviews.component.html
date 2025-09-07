@@ -1,0 +1,103 @@
+<div class="yelp-reviews-page">
+  <!-- Header Section -->
+  <section class="header-section">
+    <div class="container">
+      <div class="header-content">
+        <div class="back-button">
+          <button class="btn-back" (click)="backToReviews()">
+            ← Back to Reviews
+          </button>
+        </div>
+        <div class="yelp-logo">
+          <div class="yelp-icon">Y</div>
+          <h1>Yelp Reviews</h1>
+        </div>
+        <div class="overall-stats">
+          <div class="rating-display">
+            <div class="rating-number">{{ overallStats.averageRating }}</div>
+            <div class="rating-stars">
+              <span class="star filled" *ngFor="let star of [1,2,3,4,5]">★</span>
+            </div>
+            <div class="total-reviews">{{ overallStats.totalReviews }} reviews</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rating Breakdown Section -->
+  <section class="rating-breakdown">
+    <div class="container">
+      <h2>Rating Breakdown</h2>
+      <div class="rating-bars">
+        <div class="rating-bar" *ngFor="let rating of [5,4,3,2,1]">
+          <div class="rating-label">{{ rating }} stars</div>
+          <div class="rating-bar-container">
+            <div class="rating-bar-fill" [style.width.%]="getRatingPercentage(rating)"></div>
+          </div>
+          <div class="rating-count">
+            {{ rating === 5 ? overallStats.fiveStar : 
+               rating === 4 ? overallStats.fourStar :
+               rating === 3 ? overallStats.threeStar :
+               rating === 2 ? overallStats.twoStar : overallStats.oneStar }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews List Section -->
+  <section class="reviews-section">
+    <div class="container">
+      <h2>Recent Reviews</h2>
+      <div class="reviews-list">
+        <div class="review-card" *ngFor="let review of yelpReviews">
+          <div class="review-header">
+            <div class="reviewer-info">
+              <div class="reviewer-avatar">
+                {{ review.author.charAt(0) }}
+              </div>
+              <div class="reviewer-details">
+                <div class="reviewer-name">{{ review.author }}</div>
+                <div class="review-meta">
+                  <div class="review-rating">
+                    <span class="star filled" *ngFor="let star of [1,2,3,4,5]">★</span>
+                  </div>
+                  <span class="review-date">{{ review.date | date:'MMM dd, yyyy' }}</span>
+                  <span class="verified-badge" *ngIf="review.verified">✓ Verified</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="review-content">
+            <p>{{ review.text }}</p>
+          </div>
+          <div class="review-footer">
+            <div class="social-actions">
+              <button class="useful-btn">
+                👍 Useful ({{ review.useful }})
+              </button>
+              <button class="funny-btn">
+                😄 Funny ({{ review.funny }})
+              </button>
+              <button class="cool-btn">
+                😎 Cool ({{ review.cool }})
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Share Your Experience</h2>
+        <p>Help others by leaving a review on Yelp</p>
+        <button class="btn-write-review">Write a Review</button>
+      </div>
+    </div>
+  </section>
+</div>

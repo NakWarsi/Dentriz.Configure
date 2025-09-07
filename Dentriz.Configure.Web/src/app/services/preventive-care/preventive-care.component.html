@@ -1,0 +1,77 @@
+<!-- Hero Section -->
+<section class="service-hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-icon">🦷</div>
+      <h1>Preventive Care</h1>
+      <p>Keeping your smile healthy starts with prevention</p>
+      <div class="hero-description">
+        <p>Preventive dental care is the foundation of good oral health. Our comprehensive preventive services help you maintain a healthy smile and avoid more serious dental problems in the future.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services Overview -->
+<section class="services-overview">
+  <div class="container">
+    <h2>Our Preventive Care Services</h2>
+    <p class="section-subtitle">We offer a complete range of preventive dental services to keep your smile healthy and beautiful.</p>
+    
+    <div class="services-grid">
+      <div class="service-card" *ngFor="let service of services">
+        <div class="service-header">
+          <div class="service-icon">{{ service.icon }}</div>
+          <h3>{{ service.title }}</h3>
+        </div>
+        <p class="service-description">{{ service.description }}</p>
+        <ul class="service-features">
+          <li *ngFor="let feature of service.features">{{ feature }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Preventive Care -->
+<section class="why-choose">
+  <div class="container">
+    <h2>Why Choose Preventive Care?</h2>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="benefit-icon">💰</div>
+        <h3>Cost-Effective</h3>
+        <p>Preventive care is much more affordable than treating advanced dental problems.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">😊</div>
+        <h3>Pain-Free</h3>
+        <p>Regular checkups and cleanings are comfortable and help prevent painful dental issues.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">⚡</div>
+        <h3>Quick & Convenient</h3>
+        <p>Most preventive procedures are quick and can be completed in a single visit.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🛡️</div>
+        <h3>Long-Term Protection</h3>
+        <p>Regular preventive care provides lasting protection for your teeth and gums.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready to Start Your Preventive Care Journey?</h2>
+      <p>Schedule your first preventive care appointment today and take the first step toward a healthier smile.</p>
+      <div class="cta-buttons">
+        <a href="tel:555-123-4567" class="btn-primary">📞 Call Now</a>
+        <a href="/contact" class="btn-secondary">Contact Us</a>
+      </div>
+    </div>
+  </div>
+</section>

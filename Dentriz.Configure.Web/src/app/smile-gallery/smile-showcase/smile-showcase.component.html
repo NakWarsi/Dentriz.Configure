@@ -1,0 +1,97 @@
+<div class="smile-showcase-gallery">
+  <div class="gallery-hero">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a routerLink="/smile-gallery">Our Smile Gallery</a>
+        <span class="separator">/</span>
+        <span>Our Smile Showcase</span>
+      </nav>
+      <h1 class="page-title">Our Smile Showcase</h1>
+      <p class="page-subtitle">A collection of our finest cosmetic dentistry work</p>
+    </div>
+  </div>
+
+  <div class="gallery-content">
+    <div class="container">
+      <!-- Category Filters -->
+      <div class="category-filters">
+        <div class="filter-buttons">
+          <button 
+            *ngFor="let category of categories" 
+            [class.active]="selectedCategory === category.id"
+            (click)="selectCategory(category.id)"
+            class="filter-btn">
+            {{ category.name }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Showcase Grid -->
+      <div class="showcase-grid">
+        <div class="showcase-card" *ngFor="let item of filteredItems" (click)="openModal(item)">
+          <div class="showcase-image">
+            <div class="image-placeholder">
+              <span class="placeholder-text">{{ item.title }}</span>
+              <div class="category-badge">{{ item.category | titlecase }}</div>
+            </div>
+          </div>
+          <div class="showcase-info">
+            <h3 class="showcase-title">{{ item.title }}</h3>
+            <p class="showcase-description">{{ item.description }}</p>
+            <div class="showcase-details">
+              <span class="treatment">{{ item.treatment }}</span>
+              <span class="patient-age">{{ item.patientAge }} years</span>
+            </div>
+            <div class="satisfaction-badge">
+              <span class="satisfaction-text">{{ item.satisfaction }}%</span>
+              <span class="satisfaction-label">Satisfaction</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for detailed view -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-button" (click)="closeModal()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+      <div class="modal-body" *ngIf="selectedItem">
+        <div class="modal-image">
+          <div class="image-placeholder">
+            <span>{{ selectedItem.title }}</span>
+          </div>
+        </div>
+        <div class="modal-info">
+          <h2>{{ selectedItem.title }}</h2>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Treatment:</span>
+              <span class="value">{{ selectedItem.treatment }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Patient Age:</span>
+              <span class="value">{{ selectedItem.patientAge }} years</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Category:</span>
+              <span class="value">{{ selectedItem.category | titlecase }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Satisfaction:</span>
+              <span class="value">{{ selectedItem.satisfaction }}%</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Description:</span>
+              <span class="value">{{ selectedItem.description }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

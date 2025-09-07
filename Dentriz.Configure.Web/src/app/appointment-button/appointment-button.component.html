@@ -1,0 +1,88 @@
+<!-- Floating Appointment Button -->
+<div class="floating-button" (click)="openModal()">
+  <div class="button-content">
+    <span class="button-icon">📅</span>
+    <span class="button-text">Book Appointment</span>
+  </div>
+</div>
+
+<!-- Call to Book Appointment Button -->
+<div class="call-button" (click)="callToBook()">
+  <div class="button-content">
+    <span class="button-icon">📞</span>
+    <span class="button-text">Call for Appointment</span>
+  </div>
+</div>
+
+<!-- Appointment Modal -->
+<div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
+  <div class="modal-content" (click)="onModalClick($event)">
+    <div class="modal-header">
+      <h2>📅 Book Your Appointment</h2>
+      <button class="close-button" (click)="closeModal()">×</button>
+    </div>
+    
+    <form (ngSubmit)="onSubmit()" class="appointment-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Full Name *</label>
+          <input 
+            type="text" 
+            id="name" 
+            name="name" 
+            [(ngModel)]="appointmentForm.name" 
+            required>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            [(ngModel)]="appointmentForm.email" 
+            required>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="date">Preferred Date *</label>
+          <input 
+            type="date" 
+            id="date" 
+            name="date" 
+            [(ngModel)]="appointmentForm.date" 
+            required>
+        </div>
+        
+        <div class="form-group">
+          <label for="time">Preferred Time *</label>
+          <select 
+            id="time" 
+            name="time" 
+            [(ngModel)]="appointmentForm.time" 
+            required>
+            <option value="">Select a time</option>
+            <option *ngFor="let time of timeSlots" [value]="time">{{ time }}</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-group full-width">
+        <label for="issue">Describe Your Issue (Optional)</label>
+        <textarea 
+          id="issue" 
+          name="issue" 
+          [(ngModel)]="appointmentForm.issue" 
+          rows="4" 
+          placeholder="Please describe your dental concern or reason for visit..."></textarea>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn-primary">Submit Appointment Request</button>
+      </div>
+    </form>
+  </div>
+</div>

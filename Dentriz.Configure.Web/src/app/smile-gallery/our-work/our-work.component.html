@@ -1,0 +1,98 @@
+<div class="our-work-gallery">
+  <div class="gallery-hero">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a routerLink="/smile-gallery">Our Smile Gallery</a>
+        <span class="separator">/</span>
+        <span>Our Work</span>
+      </nav>
+      <h1 class="page-title">Our Work Gallery</h1>
+      <p class="page-subtitle">A showcase of our finest dental work and craftsmanship across various procedures</p>
+    </div>
+  </div>
+
+  <div class="gallery-content">
+    <div class="container">
+      <!-- Category Filters -->
+      <div class="category-filters">
+        <div class="filter-buttons">
+          <button 
+            *ngFor="let category of categories" 
+            [class.active]="selectedCategory === category.id"
+            (click)="selectCategory(category.id)"
+            class="filter-btn">
+            {{ category.name }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Work Grid -->
+      <div class="work-grid">
+        <div class="work-card" *ngFor="let work of filteredWork" (click)="openModal(work)">
+          <div class="work-image">
+            <div class="image-placeholder">
+              <span class="placeholder-text">{{ work.title }}</span>
+              <div class="category-badge">{{ work.category | titlecase }}</div>
+            </div>
+          </div>
+          <div class="work-info">
+            <h3 class="work-title">{{ work.title }}</h3>
+            <p class="work-description">{{ work.description }}</p>
+            <div class="work-details">
+              <span class="procedure">{{ work.procedure }}</span>
+              <span class="duration">{{ work.duration }}</span>
+            </div>
+            <div class="difficulty-badge" [class]="'difficulty-' + work.difficulty.toLowerCase()">
+              {{ work.difficulty }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for detailed view -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-button" (click)="closeModal()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+      <div class="modal-body" *ngIf="selectedWork">
+        <div class="modal-image">
+          <div class="image-placeholder">
+            <span>{{ selectedWork.title }}</span>
+          </div>
+        </div>
+        <div class="modal-info">
+          <h2>{{ selectedWork.title }}</h2>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Procedure:</span>
+              <span class="value">{{ selectedWork.procedure }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Duration:</span>
+              <span class="value">{{ selectedWork.duration }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Difficulty:</span>
+              <span class="value difficulty-badge" [class]="'difficulty-' + selectedWork.difficulty.toLowerCase()">
+                {{ selectedWork.difficulty }}
+              </span>
+            </div>
+            <div class="info-item">
+              <span class="label">Category:</span>
+              <span class="value">{{ selectedWork.category | titlecase }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Description:</span>
+              <span class="value">{{ selectedWork.description }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

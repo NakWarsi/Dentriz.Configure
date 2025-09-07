@@ -1,0 +1,56 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: DentrizWeb/package-lock.json
+        
+    - name: Install dependencies
+      run: |
+        cd DentrizWeb
+        npm ci
+        
+    - name: Check formatting
+      run: |
+        cd DentrizWeb
+        npm run format:check
+        
+    - name: Run linting
+      run: |
+        cd DentrizWeb
+        npm run lint
+        
+    - name: Run type checking
+      run: |
+        cd DentrizWeb
+        npm run build --dry-run
+        
+    - name: Run tests
+      run: |
+        cd DentrizWeb
+        npm run test -- --watch=false --browsers=ChromeHeadless --code-coverage
+        
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        file: DentrizWeb/coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false

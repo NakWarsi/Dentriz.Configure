@@ -1,0 +1,59 @@
+<div class="smile-gallery">
+  <div class="seo-badge">SEO</div>
+  
+  <div class="gallery-hero">
+    <div class="container">
+      <h1 class="gallery-title">Dentriz Dental Clinic -smile gallery</h1>
+      <p class="gallery-subtitle">Cosmetic dentistry in Wakad and dental implants in Pune. Professional teeth whitening in Wakad and veneers in Wakad at DentRiz Dental Clinic - the top dentist in Pune.</p>
+    </div>
+  </div>
+
+  <div class="gallery-content">
+    <div class="container">
+      <div class="gallery-grid">
+        <div class="gallery-card" *ngFor="let section of gallerySections" [routerLink]="section.route">
+          <div class="seo-badge-card">SEO</div>
+          <div class="card-image" [style.background]="section.color">
+            <div class="image-placeholder">
+              <span class="placeholder-text">{{ section.title }}</span>
+              <div class="image-count">{{ section.imageCount }} Photos</div>
+            </div>
+          </div>
+          <div class="card-content">
+            <h3 class="card-title">{{ section.title }}</h3>
+            <p class="card-description">{{ section.description }}</p>
+            <div class="card-action">
+              <span class="view-gallery">View Gallery</span>
+              <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">500+</div>
+          <div class="stat-label">Cosmetic Dentistry Cases in Wakad</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">1000+</div>
+          <div class="stat-label">Dental Implants in Pune</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">15+</div>
+          <div class="stat-label">Years of Dental Care in Wakad</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">98%</div>
+          <div class="stat-label">Satisfaction at Best Dental Clinic in Wakad</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

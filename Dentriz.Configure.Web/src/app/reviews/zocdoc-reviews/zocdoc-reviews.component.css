@@ -1,0 +1,361 @@
+.zocdoc-reviews-page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+/* Header Section */
+.header-section {
+  background: white;
+  padding: 40px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.back-button {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.btn-back {
+  background: #00a0dc;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-back:hover {
+  background: #0088b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 160, 220, 0.3);
+}
+
+.zocdoc-logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0 auto;
+}
+
+.zocdoc-icon {
+  width: 50px;
+  height: 50px;
+  background: #00a0dc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.zocdoc-logo h1 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 2rem;
+}
+
+.overall-stats {
+  text-align: right;
+}
+
+.rating-display {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.rating-number {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.star {
+  font-size: 1.2rem;
+  color: #ffd700;
+}
+
+.total-reviews {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+/* Rating Breakdown Section */
+.rating-breakdown {
+  background: white;
+  padding: 40px 0;
+  margin: 20px 0;
+}
+
+.rating-breakdown h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+}
+
+.rating-bars {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.rating-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.rating-label {
+  min-width: 80px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.rating-bar-container {
+  flex: 1;
+  height: 20px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.rating-bar-fill {
+  height: 100%;
+  background: #00a0dc;
+  transition: width 0.3s ease;
+}
+
+.rating-count {
+  min-width: 40px;
+  text-align: right;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+/* Reviews Section */
+.reviews-section {
+  background: white;
+  padding: 40px 0;
+  margin: 20px 0;
+}
+
+.reviews-section h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+}
+
+.reviews-list {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.review-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #00a0dc;
+}
+
+.review-header {
+  margin-bottom: 1rem;
+}
+
+.reviewer-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.reviewer-avatar {
+  width: 50px;
+  height: 50px;
+  background: #00a0dc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.reviewer-details {
+  flex: 1;
+}
+
+.reviewer-name {
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.appointment-badge {
+  background: #e3f2fd;
+  color: #00a0dc;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+.review-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.review-rating {
+  display: flex;
+  gap: 0.1rem;
+}
+
+.review-date {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.verified-badge {
+  background: #28a745;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.review-content {
+  margin-bottom: 1rem;
+}
+
+.review-content p {
+  color: #2c3e50;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.review-footer {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 1rem;
+}
+
+.helpful-btn {
+  background: white;
+  border: 1px solid #00a0dc;
+  color: #00a0dc;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.helpful-btn:hover {
+  background: #00a0dc;
+  color: white;
+}
+
+/* CTA Section */
+.cta-section {
+  background: linear-gradient(135deg, #00a0dc 0%, #0088b3 100%);
+  color: white;
+  padding: 60px 0;
+  text-align: center;
+}
+
+.cta-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.cta-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.btn-book-appointment {
+  background: white;
+  color: #00a0dc;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-book-appointment:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .back-button {
+    position: static;
+    transform: none;
+    align-self: flex-start;
+  }
+  
+  .zocdoc-logo {
+    margin: 0;
+  }
+  
+  .overall-stats {
+    text-align: center;
+  }
+  
+  .rating-display {
+    align-items: center;
+  }
+  
+  .rating-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .rating-count {
+    text-align: left;
+  }
+}

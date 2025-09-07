@@ -1,0 +1,74 @@
+import { Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { ContactComponent } from './contact/contact.component';
+import { ServicesComponent } from './services/services.component';
+import { AboutComponent } from './about/about.component';
+import { ReviewsComponent } from './reviews/reviews.component';
+import { GoogleReviewsComponent } from './reviews/google-reviews/google-reviews.component';
+import { FacebookReviewsComponent } from './reviews/facebook-reviews/facebook-reviews.component';
+import { YelpReviewsComponent } from './reviews/yelp-reviews/yelp-reviews.component';
+import { HealthgradesReviewsComponent } from './reviews/healthgrades-reviews/healthgrades-reviews.component';
+import { ZocdocReviewsComponent } from './reviews/zocdoc-reviews/zocdoc-reviews.component';
+import { VitalsReviewsComponent } from './reviews/vitals-reviews/vitals-reviews.component';
+import { PreventiveCareComponent } from './services/preventive-care/preventive-care.component';
+import { RestorativeCareComponent } from './services/restorative-care/restorative-care.component';
+import { CosmeticServicesComponent } from './services/cosmetic-services/cosmetic-services.component';
+import { EmergencyCareComponent } from './services/emergency-care/emergency-care.component';
+import { DentalImplantsComponent } from './services/dental-implants/dental-implants.component';
+import { InvisalignComponent } from './services/invisalign/invisalign.component';
+import { TeethWhiteningComponent } from './services/teeth-whitening/teeth-whitening.component';
+import { PeriodonticsComponent } from './services/periodontics/periodontics.component';
+import { EndodonticsComponent } from './services/endodontics/endodontics.component';
+import { OrthodonticsComponent } from './services/orthodontics/orthodontics.component';
+import { PediatricDentistryComponent } from './services/pediatric-dentistry/pediatric-dentistry.component';
+import { OralSurgeryComponent } from './services/oral-surgery/oral-surgery.component';
+import { SmileGalleryComponent } from './smile-gallery/smile-gallery.component';
+import { BeforeAfterComponent } from './smile-gallery/before-after/before-after.component';
+import { OurWorkComponent } from './smile-gallery/our-work/our-work.component';
+import { SmileTransformationsComponent } from './smile-gallery/smile-transformations/smile-transformations.component';
+import { SmileShowcaseComponent } from './smile-gallery/smile-showcase/smile-showcase.component';
+import { ClinicPhotosComponent } from './smile-gallery/clinic-photos/clinic-photos.component';
+import { EventsComponent } from './smile-gallery/events/events.component';
+import { PatientStoriesComponent } from './smile-gallery/patient-stories/patient-stories.component';
+import { TechnologyShowcaseComponent } from './smile-gallery/technology-showcase/technology-showcase.component';
+import { TeamGalleryComponent } from './smile-gallery/team-gallery/team-gallery.component';
+import { AwardsRecognitionComponent } from './smile-gallery/awards-recognition/awards-recognition.component';
+
+export const routes: Routes = [
+  { path: '', component: HomeComponent },
+  { path: 'home', component: HomeComponent },
+  { path: 'services', component: ServicesComponent },
+  { path: 'services/preventive-care', component: PreventiveCareComponent },
+  { path: 'services/restorative-care', component: RestorativeCareComponent },
+  { path: 'services/cosmetic-services', component: CosmeticServicesComponent },
+  { path: 'services/emergency-care', component: EmergencyCareComponent },
+  { path: 'services/dental-implants', component: DentalImplantsComponent },
+  { path: 'services/invisalign', component: InvisalignComponent },
+  { path: 'services/teeth-whitening', component: TeethWhiteningComponent },
+  { path: 'services/periodontics', component: PeriodonticsComponent },
+  { path: 'services/endodontics', component: EndodonticsComponent },
+  { path: 'services/orthodontics', component: OrthodonticsComponent },
+  { path: 'services/pediatric-dentistry', component: PediatricDentistryComponent },
+  { path: 'services/oral-surgery', component: OralSurgeryComponent },
+  { path: 'about', component: AboutComponent },
+  { path: 'reviews', component: ReviewsComponent },
+  { path: 'reviews/google', component: GoogleReviewsComponent },
+  { path: 'reviews/facebook', component: FacebookReviewsComponent },
+  { path: 'reviews/yelp', component: YelpReviewsComponent },
+  { path: 'reviews/healthgrades', component: HealthgradesReviewsComponent },
+  { path: 'reviews/zocdoc', component: ZocdocReviewsComponent },
+  { path: 'reviews/vitals', component: VitalsReviewsComponent },
+  { path: 'smile-gallery', component: SmileGalleryComponent },
+  { path: 'smile-gallery/before-after', component: BeforeAfterComponent },
+  { path: 'smile-gallery/our-work', component: OurWorkComponent },
+  { path: 'smile-gallery/smile-transformations', component: SmileTransformationsComponent },
+  { path: 'smile-gallery/smile-showcase', component: SmileShowcaseComponent },
+  { path: 'smile-gallery/clinic-photos', component: ClinicPhotosComponent },
+  { path: 'smile-gallery/events', component: EventsComponent },
+  { path: 'smile-gallery/patient-stories', component: PatientStoriesComponent },
+  { path: 'smile-gallery/technology-showcase', component: TechnologyShowcaseComponent },
+  { path: 'smile-gallery/team-gallery', component: TeamGalleryComponent },
+  { path: 'smile-gallery/awards-recognition', component: AwardsRecognitionComponent },
+  { path: 'contact', component: ContactComponent },
+  { path: '**', redirectTo: '' }
+];

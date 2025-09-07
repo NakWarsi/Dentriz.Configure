@@ -1,0 +1,78 @@
+<div class="clinic-photos-gallery">
+  <div class="gallery-hero">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a routerLink="/smile-gallery">Our Smile Gallery</a>
+        <span class="separator">/</span>
+        <span>Clinic Photos</span>
+      </nav>
+      <h1 class="page-title">Clinic Photos</h1>
+      <p class="page-subtitle">Take a tour of our state-of-the-art dental facility</p>
+    </div>
+  </div>
+
+  <div class="gallery-content">
+    <div class="container">
+      <div class="clinic-grid">
+        <div class="clinic-card" *ngFor="let photo of clinicPhotos" (click)="openModal(photo)">
+          <div class="clinic-image">
+            <div class="image-placeholder">
+              <span class="placeholder-text">{{ photo.title }}</span>
+              <div class="area-badge">{{ photo.area | titlecase }}</div>
+            </div>
+          </div>
+          <div class="clinic-info">
+            <h3 class="clinic-title">{{ photo.title }}</h3>
+            <p class="clinic-description">{{ photo.description }}</p>
+            <div class="features">
+              <span class="feature-tag" *ngFor="let feature of photo.features">{{ feature }}</span>
+            </div>
+            <div class="view-details">
+              <span>View Details</span>
+              <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for detailed view -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-button" (click)="closeModal()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+      <div class="modal-body" *ngIf="selectedPhoto">
+        <div class="modal-image">
+          <div class="image-placeholder">
+            <span>{{ selectedPhoto.title }}</span>
+          </div>
+        </div>
+        <div class="modal-info">
+          <h2>{{ selectedPhoto.title }}</h2>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Area:</span>
+              <span class="value">{{ selectedPhoto.area | titlecase }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Description:</span>
+              <span class="value">{{ selectedPhoto.description }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Features:</span>
+              <div class="features-list">
+                <span class="feature-tag" *ngFor="let feature of selectedPhoto.features">{{ feature }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

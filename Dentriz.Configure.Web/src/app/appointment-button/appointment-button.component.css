@@ -1,0 +1,55 @@
+/* Buttons */
+.floating-button { position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%); color: white; border-radius: 50px; padding: 15px 25px; box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3); cursor: pointer; transition: all 0.3s ease; z-index: 1000; border: none; font-weight: 600; font-size: 16px; }
+.floating-button:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(255, 107, 53, 0.4); }
+.call-button { position: fixed; bottom: 100px; right: 30px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border-radius: 50px; padding: 15px 25px; box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3); cursor: pointer; transition: all 0.3s ease; z-index: 1000; border: none; font-weight: 600; font-size: 16px; animation: pulse 2s infinite; }
+.call-button:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(40, 167, 69, 0.4); }
+@keyframes pulse { 0% { box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3); } 50% { box-shadow: 0 8px 25px rgba(40, 167, 69, 0.6); } 100% { box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3); } }
+.button-content { display: flex; align-items: center; gap: 10px; }
+.button-icon { font-size: 20px; }
+.button-text { white-space: nowrap; }
+
+/* Modal */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(5px); }
+.modal-content { background: white; border-radius: 20px; padding: 0; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: modalSlideIn 0.3s ease-out; }
+@keyframes modalSlideIn { from { opacity: 0; transform: translateY(-50px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.modal-header { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 25px 30px; border-radius: 20px 20px 0 0; display: flex; justify-content: space-between; align-items: center; }
+.modal-header h2 { margin: 0; font-size: 1.5rem; font-weight: 600; }
+.close-button { background: none; border: none; color: white; font-size: 2rem; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: background-color 0.3s ease; }
+.close-button:hover { background: rgba(255, 255, 255, 0.2); }
+
+/* Form */
+.appointment-form { padding: 30px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+.form-group { display: flex; flex-direction: column; }
+.form-group.full-width { grid-column: 1 / -1; }
+.form-group label { font-weight: 600; color: #1e3c72; margin-bottom: 8px; font-size: 0.9rem; }
+.form-group input, .form-group select, .form-group textarea { padding: 12px 15px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: white; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #ff6b35; box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1); }
+.form-group textarea { resize: vertical; min-height: 100px; font-family: inherit; }
+.form-actions { display: flex; gap: 15px; justify-content: flex-end; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; }
+.btn-primary, .btn-secondary { padding: 12px 24px; border-radius: 25px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; border: 2px solid; text-decoration: none; display: inline-block; }
+.btn-primary { background: #ff6b35; color: white; border-color: #ff6b35; }
+.btn-primary:hover { background: transparent; color: #ff6b35; transform: translateY(-2px); }
+.btn-secondary { background: transparent; color: #1e3c72; border-color: #1e3c72; }
+.btn-secondary:hover { background: #1e3c72; color: white; transform: translateY(-2px); }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .floating-button { bottom: 20px; right: 20px; padding: 12px 20px; font-size: 14px; }
+  .call-button { bottom: 90px; right: 20px; padding: 12px 20px; font-size: 14px; }
+  .button-text { display: none; }
+  .modal-content { width: 95%; margin: 20px; }
+  .form-row { grid-template-columns: 1fr; gap: 15px; }
+  .modal-header { padding: 20px; }
+  .modal-header h2 { font-size: 1.3rem; }
+  .appointment-form { padding: 20px; }
+  .form-actions { flex-direction: column; }
+  .btn-primary, .btn-secondary { width: 100%; text-align: center; }
+}
+@media (max-width: 480px) {
+  .floating-button { bottom: 15px; right: 15px; padding: 10px 15px; }
+  .call-button { bottom: 80px; right: 15px; padding: 10px 15px; }
+  .modal-content { width: 98%; margin: 10px; }
+  .modal-header { padding: 15px; }
+  .appointment-form { padding: 15px; }
+}

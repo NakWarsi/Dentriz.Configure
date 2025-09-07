@@ -1,0 +1,83 @@
+<div class="awards-recognition-gallery">
+  <div class="gallery-hero">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a routerLink="/smile-gallery">Our Smile Gallery</a>
+        <span class="separator">/</span>
+        <span>Awards & Recognition</span>
+      </nav>
+      <h1 class="page-title">Awards & Recognition</h1>
+      <p class="page-subtitle">Our achievements, certifications, and professional recognition</p>
+    </div>
+  </div>
+
+  <div class="gallery-content">
+    <div class="container">
+      <div class="awards-grid">
+        <div class="award-card" *ngFor="let award of awards" (click)="openModal(award)">
+          <div class="award-image">
+            <div class="image-placeholder">
+              <span class="placeholder-text">{{ award.title }}</span>
+              <div class="year-badge">{{ award.year }}</div>
+            </div>
+          </div>
+          <div class="award-info">
+            <h3 class="award-title">{{ award.title }}</h3>
+            <p class="award-type">{{ award.type }}</p>
+            <p class="award-organization">{{ award.organization }}</p>
+            <p class="award-description">{{ award.description }}</p>
+            <div class="view-details">
+              <span>View Details</span>
+              <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for detailed view -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-button" (click)="closeModal()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+      <div class="modal-body" *ngIf="selectedAward">
+        <div class="modal-image">
+          <div class="image-placeholder">
+            <span>{{ selectedAward.title }}</span>
+          </div>
+        </div>
+        <div class="modal-info">
+          <h2>{{ selectedAward.title }}</h2>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Type:</span>
+              <span class="value">{{ selectedAward.type }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Year:</span>
+              <span class="value">{{ selectedAward.year }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Organization:</span>
+              <span class="value">{{ selectedAward.organization }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Description:</span>
+              <span class="value">{{ selectedAward.description }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Significance:</span>
+              <span class="value significance-text">{{ selectedAward.significance }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

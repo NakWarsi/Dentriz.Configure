@@ -1,0 +1,108 @@
+<!-- Hero Section -->
+<section class="service-hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-icon">🔧</div>
+      <h1>Restorative Care</h1>
+      <p>Restoring function and beauty to your smile</p>
+      <div class="hero-description">
+        <p>Our comprehensive restorative dental services help repair damaged teeth, replace missing teeth, and restore your smile to its full function and beauty. We use the latest technology and techniques to ensure optimal results.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services Overview -->
+<section class="services-overview">
+  <div class="container">
+    <h2>Our Restorative Care Services</h2>
+    <p class="section-subtitle">We offer advanced restorative treatments to repair and enhance your dental health.</p>
+    
+    <div class="services-grid">
+      <div class="service-card" *ngFor="let service of services">
+        <div class="service-header">
+          <div class="service-icon">{{ service.icon }}</div>
+          <h3>{{ service.title }}</h3>
+        </div>
+        <p class="service-description">{{ service.description }}</p>
+        <ul class="service-features">
+          <li *ngFor="let feature of service.features">{{ feature }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Technology Section -->
+<section class="technology-section">
+  <div class="container">
+    <h2>Advanced Technology</h2>
+    <p class="section-subtitle">We use cutting-edge technology to provide the best restorative care possible.</p>
+    
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="tech-icon">🖥️</div>
+        <h3>CEREC Technology</h3>
+        <p>Same-day crowns and restorations with our advanced CEREC system.</p>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">📷</div>
+        <h3>Digital Imaging</h3>
+        <p>3D imaging and digital X-rays for precise treatment planning.</p>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🔍</div>
+        <h3>CBCT Scanner</h3>
+        <p>3D cone beam imaging for accurate implant placement.</p>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">💻</div>
+        <h3>Digital Impressions</h3>
+        <p>Comfortable digital impressions for precise restorations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Restorative Care -->
+<section class="why-choose">
+  <div class="container">
+    <h2>Why Choose Our Restorative Care?</h2>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="benefit-icon">🎯</div>
+        <h3>Precision</h3>
+        <p>Advanced technology ensures precise and accurate treatments.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">⚡</div>
+        <h3>Same-Day Results</h3>
+        <p>Many procedures can be completed in a single visit.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">😊</div>
+        <h3>Comfort</h3>
+        <p>Modern techniques ensure comfortable treatment experiences.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🔄</div>
+        <h3>Longevity</h3>
+        <p>High-quality materials ensure long-lasting results.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready to Restore Your Smile?</h2>
+      <p>Contact us today to schedule your restorative care consultation and take the first step toward a healthier, more beautiful smile.</p>
+      <div class="cta-buttons">
+        <a href="tel:555-123-4567" class="btn-primary">📞 Call Now</a>
+        <a href="/contact" class="btn-secondary">Contact Us</a>
+      </div>
+    </div>
+  </div>
+</section>

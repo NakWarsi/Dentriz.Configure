@@ -1,0 +1,110 @@
+name: Deploy to Azure App Service (Advanced)
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      package-path: ${{ steps.build.outputs.package-path }}
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: DentrizWeb/package-lock.json
+        
+    - name: Install dependencies
+      run: |
+        cd DentrizWeb
+        npm ci
+        
+    - name: Run linting
+      run: |
+        cd DentrizWeb
+        npm run lint
+        
+    - name: Run tests
+      run: |
+        cd DentrizWeb
+        npm run test -- --watch=false --browsers=ChromeHeadless --code-coverage
+        
+    - name: Build application
+      id: build
+      run: |
+        cd DentrizWeb
+        npm run build
+        echo "package-path=./DentrizWeb/dist/DentrizWeb/browser" >> $GITHUB_OUTPUT
+        
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist-files
+        path: DentrizWeb/dist/
+        retention-days: 7
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+    
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: dist-files
+        path: DentrizWeb/dist/
+        
+    - name: Deploy to Azure App Service (Staging)
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: ${{ secrets.AZURE_WEBAPP_NAME_STAGING }}
+        package: './DentrizWeb/dist/DentrizWeb/browser'
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_STAGING }}
+        
+    - name: Notify staging deployment
+      run: |
+        echo "Staging deployment completed successfully!"
+        echo "App URL: https://${{ secrets.AZURE_WEBAPP_NAME_STAGING }}.azurewebsites.net"
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: dist-files
+        path: DentrizWeb/dist/
+        
+    - name: Deploy to Azure App Service (Production)
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: ${{ secrets.AZURE_WEBAPP_NAME_PRODUCTION }}
+        package: './DentrizWeb/dist/DentrizWeb/browser'
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PRODUCTION }}
+        
+    - name: Notify production deployment
+      run: |
+        echo "Production deployment completed successfully!"
+        echo "App URL: https://${{ secrets.AZURE_WEBAPP_NAME_PRODUCTION }}.azurewebsites.net"
+        
+    - name: Azure logout
+      run: |
+        az logout

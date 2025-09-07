@@ -1,0 +1,96 @@
+<div class="healthgrades-reviews-page">
+  <!-- Header Section -->
+  <section class="header-section">
+    <div class="container">
+      <div class="header-content">
+        <div class="back-button">
+          <button class="btn-back" (click)="backToReviews()">
+            ← Back to Reviews
+          </button>
+        </div>
+        <div class="healthgrades-logo">
+          <div class="healthgrades-icon">H</div>
+          <h1>Healthgrades Reviews</h1>
+        </div>
+        <div class="overall-stats">
+          <div class="rating-display">
+            <div class="rating-number">{{ overallStats.averageRating }}</div>
+            <div class="rating-stars">
+              <span class="star filled" *ngFor="let star of [1,2,3,4,5]">★</span>
+            </div>
+            <div class="total-reviews">{{ overallStats.totalReviews }} reviews</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rating Breakdown Section -->
+  <section class="rating-breakdown">
+    <div class="container">
+      <h2>Rating Breakdown</h2>
+      <div class="rating-bars">
+        <div class="rating-bar" *ngFor="let rating of [5,4,3,2,1]">
+          <div class="rating-label">{{ rating }} stars</div>
+          <div class="rating-bar-container">
+            <div class="rating-bar-fill" [style.width.%]="getRatingPercentage(rating)"></div>
+          </div>
+          <div class="rating-count">
+            {{ rating === 5 ? overallStats.fiveStar : 
+               rating === 4 ? overallStats.fourStar :
+               rating === 3 ? overallStats.threeStar :
+               rating === 2 ? overallStats.twoStar : overallStats.oneStar }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews List Section -->
+  <section class="reviews-section">
+    <div class="container">
+      <h2>Professional Reviews</h2>
+      <div class="reviews-list">
+        <div class="review-card" *ngFor="let review of healthgradesReviews">
+          <div class="review-header">
+            <div class="reviewer-info">
+              <div class="reviewer-avatar">
+                {{ review.author.charAt(0) }}
+              </div>
+              <div class="reviewer-details">
+                <div class="reviewer-name">{{ review.author }}</div>
+                <div class="specialty-badge">{{ review.specialty }}</div>
+                <div class="review-meta">
+                  <div class="review-rating">
+                    <span class="star filled" *ngFor="let star of [1,2,3,4,5]">★</span>
+                  </div>
+                  <span class="review-date">{{ review.date | date:'MMM dd, yyyy' }}</span>
+                  <span class="verified-badge" *ngIf="review.verified">✓ Verified</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="review-content">
+            <p>{{ review.text }}</p>
+          </div>
+          <div class="review-footer">
+            <button class="helpful-btn">
+              👍 Helpful ({{ review.helpful }})
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Share Your Professional Experience</h2>
+        <p>Help other healthcare professionals by leaving a review on Healthgrades</p>
+        <button class="btn-write-review">Write a Review</button>
+      </div>
+    </div>
+  </section>
+</div>
