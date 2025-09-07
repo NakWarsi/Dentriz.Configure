@@ -917,78 +917,405 @@
 </div>
 
 <!-- Top Reasons Section -->
-<section class="reasons">
+<section class="reasons" *ngIf="!reasonsLoading && !reasonsError && reasonsConfig">
   <div class="container">
-    <h2 class="section-title">Why Choose DentRiz Dental Clinic in Pune</h2>
-    <p class="section-intro">
-      At <strong>DentRiz Dental Clinic</strong>, we believe every patient deserves a healthy, confident smile. 
-      Here’s why families in Wakad, Hinjewadi, and across Pune trust us for their dental care:
-    </p>
-    <div class="reasons-grid">
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingReasons">
+      <button class="edit-btn-floating" (click)="startEditingReasons()" title="Edit Reasons Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
 
-      <div class="reason-card">
-        <div class="reason-icon">🦷</div>
-        <h3>Comprehensive Dental Care for Every Smile</h3>
-        <ul>
-          <li>Cosmetic dentistry including teeth whitening, veneers & smile makeovers</li>
-          <li>Advanced dental implants with precision technology</li>
-          <li>Family-focused care with pediatric and preventive dentistry</li>
-        </ul>
+    <div class="reasons-content" [style.background-color]="reasonsConfig.backgroundColor">
+      <!-- Section Title with inline editing -->
+      <div class="editable-element">
+        <h2 class="section-title"
+            [style.color]="reasonsConfig.sectionTitleColor"
+            [style.font-family]="reasonsConfig.sectionTitleFontFamily"
+            *ngIf="!isEditingReasons || editingReasonsElement !== 'sectionTitle'"
+            (click)="startInlineEditReasons('sectionTitle')">
+          {{ reasonsConfig.sectionTitle }}
+          <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+        </h2>
+        <input *ngIf="isEditingReasons && editingReasonsElement === 'sectionTitle'"
+               [(ngModel)]="reasonsConfig.sectionTitle"
+               (blur)="stopInlineEditReasons()"
+               (keyup.enter)="stopInlineEditReasons()"
+               class="inline-edit-input"
+               [style.color]="reasonsConfig.sectionTitleColor"
+               [style.font-family]="reasonsConfig.sectionTitleFontFamily"
+               placeholder="Enter section title"
+               title="Edit section title">
+        <div *ngIf="isEditingReasons && editingReasonsElement === 'sectionTitle'" class="inline-controls">
+          <select [(ngModel)]="reasonsConfig.sectionTitleFontFamily" (change)="onReasonsFontChange()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color"
+                 [(ngModel)]="reasonsConfig.sectionTitleColor"
+                 (change)="onReasonsColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
       </div>
 
-      <div class="reason-card">
-        <div class="reason-icon">⚡</div>
-        <h3>Modern & Advanced Dental Treatments</h3>
-        <ul>
-          <li>Same-day crowns and digital dentistry for faster results</li>
-          <li>Professional teeth whitening for a brighter smile</li>
-          <li>Orthodontic solutions including Invisalign & invisible braces</li>
-        </ul>
+      <!-- Section Intro with inline editing -->
+      <div class="editable-element">
+        <p class="section-intro"
+           [style.color]="reasonsConfig.sectionIntroColor"
+           [style.font-family]="reasonsConfig.sectionIntroFontFamily"
+           *ngIf="!isEditingReasons || editingReasonsElement !== 'sectionIntro'"
+           (click)="startInlineEditReasons('sectionIntro')"
+           [innerHTML]="reasonsConfig.sectionIntro">
+          <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+        </p>
+        <textarea *ngIf="isEditingReasons && editingReasonsElement === 'sectionIntro'"
+                  [(ngModel)]="reasonsConfig.sectionIntro"
+                  (blur)="stopInlineEditReasons()"
+                  (keyup.ctrl.enter)="stopInlineEditReasons()"
+                  class="inline-edit-textarea"
+                  [style.color]="reasonsConfig.sectionIntroColor"
+                  [style.font-family]="reasonsConfig.sectionIntroFontFamily"
+                  placeholder="Enter section intro"
+                  title="Edit section intro"></textarea>
+        <div *ngIf="isEditingReasons && editingReasonsElement === 'sectionIntro'" class="inline-controls">
+          <select [(ngModel)]="reasonsConfig.sectionIntroFontFamily" (change)="onReasonsFontChange()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color"
+                 [(ngModel)]="reasonsConfig.sectionIntroColor"
+                 (change)="onReasonsColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
       </div>
 
-      <div class="reason-card">
-        <div class="reason-icon">❤️</div>
-        <h3>Trusted Local Dental Clinic in Wakad & Hinjewadi</h3>
-        <ul>
-          <li>Conveniently located in Wakad & Hinjewadi for easy access</li>
-          <li>Flexible appointments to suit your busy schedule</li>
-          <li>Affordable treatment plans with transparent pricing</li>
-        </ul>
-      </div>
+      <div class="reasons-grid">
+        <!-- Reason 1 -->
+        <div class="reason-card">
+          <div class="reason-icon">{{ reasonsConfig.reason1Icon }}</div>
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason1Title'"
+                [style.color]="reasonsConfig.reason1TitleColor"
+                [style.font-family]="reasonsConfig.reason1TitleFontFamily"
+                (click)="startInlineEditReasons('reason1Title')">
+              {{ reasonsConfig.reason1Title }}
+              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+            </h3>
+            <input *ngIf="isEditingReasons && editingReasonsElement === 'reason1Title'"
+                   [(ngModel)]="reasonsConfig.reason1Title"
+                   (blur)="stopInlineEditReasons()"
+                   (keyup.enter)="stopInlineEditReasons()"
+                   class="inline-edit-input"
+                   [style.color]="reasonsConfig.reason1TitleColor"
+                   [style.font-family]="reasonsConfig.reason1TitleFontFamily"
+                   placeholder="Enter reason 1 title"
+                   title="Edit reason 1 title">
+            <div *ngIf="isEditingReasons && editingReasonsElement === 'reason1Title'" class="inline-controls">
+              <select [(ngModel)]="reasonsConfig.reason1TitleFontFamily" (change)="onReasonsFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="reasonsConfig.reason1TitleColor"
+                     (change)="onReasonsColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          <ul>
+            <li *ngFor="let item of reasonsConfig.reason1Items; let i = index"
+                [style.color]="reasonsConfig.reason1ItemsColor"
+                [style.font-family]="reasonsConfig.reason1ItemsFontFamily">
+              {{ item }}
+            </li>
+          </ul>
+        </div>
 
-      <div class="reason-card">
-        <div class="reason-icon">🌿</div>
-        <h3>Comfortable & Stress-Free Environment</h3>
-        <ul>
-          <li>Pain-free dentistry options for anxious patients</li>
-          <li>Warm, patient-friendly atmosphere for children & adults</li>
-          <li>Multilingual staff to make every patient feel at home</li>
-        </ul>
-      </div>
+        <!-- Reason 2 -->
+        <div class="reason-card">
+          <div class="reason-icon">{{ reasonsConfig.reason2Icon }}</div>
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason2Title'"
+                [style.color]="reasonsConfig.reason2TitleColor"
+                [style.font-family]="reasonsConfig.reason2TitleFontFamily"
+                (click)="startInlineEditReasons('reason2Title')">
+              {{ reasonsConfig.reason2Title }}
+              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+            </h3>
+            <input *ngIf="isEditingReasons && editingReasonsElement === 'reason2Title'"
+                   [(ngModel)]="reasonsConfig.reason2Title"
+                   (blur)="stopInlineEditReasons()"
+                   (keyup.enter)="stopInlineEditReasons()"
+                   class="inline-edit-input"
+                   [style.color]="reasonsConfig.reason2TitleColor"
+                   [style.font-family]="reasonsConfig.reason2TitleFontFamily"
+                   placeholder="Enter reason 2 title"
+                   title="Edit reason 2 title">
+            <div *ngIf="isEditingReasons && editingReasonsElement === 'reason2Title'" class="inline-controls">
+              <select [(ngModel)]="reasonsConfig.reason2TitleFontFamily" (change)="onReasonsFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="reasonsConfig.reason2TitleColor"
+                     (change)="onReasonsColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          <ul>
+            <li *ngFor="let item of reasonsConfig.reason2Items; let i = index"
+                [style.color]="reasonsConfig.reason2ItemsColor"
+                [style.font-family]="reasonsConfig.reason2ItemsFontFamily">
+              {{ item }}
+            </li>
+          </ul>
+        </div>
 
-      <div class="reason-card">
-        <div class="reason-icon">🧼</div>
-        <h3>Uncompromised Hygiene & Safety</h3>
-        <ul>
-          <li>Strict international sterilization & infection-control protocols</li>
-          <li>Clean, modern clinic with advanced dental equipment</li>
-          <li>Highest standards of patient safety and comfort</li>
-        </ul>
-      </div>
+        <!-- Reason 3 -->
+        <div class="reason-card">
+          <div class="reason-icon">{{ reasonsConfig.reason3Icon }}</div>
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason3Title'"
+                [style.color]="reasonsConfig.reason3TitleColor"
+                [style.font-family]="reasonsConfig.reason3TitleFontFamily"
+                (click)="startInlineEditReasons('reason3Title')">
+              {{ reasonsConfig.reason3Title }}
+              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+            </h3>
+            <input *ngIf="isEditingReasons && editingReasonsElement === 'reason3Title'"
+                   [(ngModel)]="reasonsConfig.reason3Title"
+                   (blur)="stopInlineEditReasons()"
+                   (keyup.enter)="stopInlineEditReasons()"
+                   class="inline-edit-input"
+                   [style.color]="reasonsConfig.reason3TitleColor"
+                   [style.font-family]="reasonsConfig.reason3TitleFontFamily"
+                   placeholder="Enter reason 3 title"
+                   title="Edit reason 3 title">
+            <div *ngIf="isEditingReasons && editingReasonsElement === 'reason3Title'" class="inline-controls">
+              <select [(ngModel)]="reasonsConfig.reason3TitleFontFamily" (change)="onReasonsFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="reasonsConfig.reason3TitleColor"
+                     (change)="onReasonsColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          <ul>
+            <li *ngFor="let item of reasonsConfig.reason3Items; let i = index"
+                [style.color]="reasonsConfig.reason3ItemsColor"
+                [style.font-family]="reasonsConfig.reason3ItemsFontFamily">
+              {{ item }}
+            </li>
+          </ul>
+        </div>
 
-      <div class="reason-card">
-        <div class="reason-icon">💳</div>
-        <h3>Accessible & Affordable Care</h3>
-        <ul>
-          <li>Flexible payment plans to suit every budget</li>
-          <li>Preventive care packages for families & children</li>
-          <li>Transparent pricing with no hidden costs</li>
-        </ul>
-      </div>
+        <!-- Reason 4 -->
+        <div class="reason-card">
+          <div class="reason-icon">{{ reasonsConfig.reason4Icon }}</div>
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason4Title'"
+                [style.color]="reasonsConfig.reason4TitleColor"
+                [style.font-family]="reasonsConfig.reason4TitleFontFamily"
+                (click)="startInlineEditReasons('reason4Title')">
+              {{ reasonsConfig.reason4Title }}
+              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+            </h3>
+            <input *ngIf="isEditingReasons && editingReasonsElement === 'reason4Title'"
+                   [(ngModel)]="reasonsConfig.reason4Title"
+                   (blur)="stopInlineEditReasons()"
+                   (keyup.enter)="stopInlineEditReasons()"
+                   class="inline-edit-input"
+                   [style.color]="reasonsConfig.reason4TitleColor"
+                   [style.font-family]="reasonsConfig.reason4TitleFontFamily"
+                   placeholder="Enter reason 4 title"
+                   title="Edit reason 4 title">
+            <div *ngIf="isEditingReasons && editingReasonsElement === 'reason4Title'" class="inline-controls">
+              <select [(ngModel)]="reasonsConfig.reason4TitleFontFamily" (change)="onReasonsFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="reasonsConfig.reason4TitleColor"
+                     (change)="onReasonsColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          <ul>
+            <li *ngFor="let item of reasonsConfig.reason4Items; let i = index"
+                [style.color]="reasonsConfig.reason4ItemsColor"
+                [style.font-family]="reasonsConfig.reason4ItemsFontFamily">
+              {{ item }}
+            </li>
+          </ul>
+        </div>
 
+        <!-- Reason 5 -->
+        <div class="reason-card">
+          <div class="reason-icon">{{ reasonsConfig.reason5Icon }}</div>
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason5Title'"
+                [style.color]="reasonsConfig.reason5TitleColor"
+                [style.font-family]="reasonsConfig.reason5TitleFontFamily"
+                (click)="startInlineEditReasons('reason5Title')">
+              {{ reasonsConfig.reason5Title }}
+              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+            </h3>
+            <input *ngIf="isEditingReasons && editingReasonsElement === 'reason5Title'"
+                   [(ngModel)]="reasonsConfig.reason5Title"
+                   (blur)="stopInlineEditReasons()"
+                   (keyup.enter)="stopInlineEditReasons()"
+                   class="inline-edit-input"
+                   [style.color]="reasonsConfig.reason5TitleColor"
+                   [style.font-family]="reasonsConfig.reason5TitleFontFamily"
+                   placeholder="Enter reason 5 title"
+                   title="Edit reason 5 title">
+            <div *ngIf="isEditingReasons && editingReasonsElement === 'reason5Title'" class="inline-controls">
+              <select [(ngModel)]="reasonsConfig.reason5TitleFontFamily" (change)="onReasonsFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="reasonsConfig.reason5TitleColor"
+                     (change)="onReasonsColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          <ul>
+            <li *ngFor="let item of reasonsConfig.reason5Items; let i = index"
+                [style.color]="reasonsConfig.reason5ItemsColor"
+                [style.font-family]="reasonsConfig.reason5ItemsFontFamily">
+              {{ item }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- Reason 6 -->
+        <div class="reason-card">
+          <div class="reason-icon">{{ reasonsConfig.reason6Icon }}</div>
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason6Title'"
+                [style.color]="reasonsConfig.reason6TitleColor"
+                [style.font-family]="reasonsConfig.reason6TitleFontFamily"
+                (click)="startInlineEditReasons('reason6Title')">
+              {{ reasonsConfig.reason6Title }}
+              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+            </h3>
+            <input *ngIf="isEditingReasons && editingReasonsElement === 'reason6Title'"
+                   [(ngModel)]="reasonsConfig.reason6Title"
+                   (blur)="stopInlineEditReasons()"
+                   (keyup.enter)="stopInlineEditReasons()"
+                   class="inline-edit-input"
+                   [style.color]="reasonsConfig.reason6TitleColor"
+                   [style.font-family]="reasonsConfig.reason6TitleFontFamily"
+                   placeholder="Enter reason 6 title"
+                   title="Edit reason 6 title">
+            <div *ngIf="isEditingReasons && editingReasonsElement === 'reason6Title'" class="inline-controls">
+              <select [(ngModel)]="reasonsConfig.reason6TitleFontFamily" (change)="onReasonsFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="reasonsConfig.reason6TitleColor"
+                     (change)="onReasonsColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          <ul>
+            <li *ngFor="let item of reasonsConfig.reason6Items; let i = index"
+                [style.color]="reasonsConfig.reason6ItemsColor"
+                [style.font-family]="reasonsConfig.reason6ItemsFontFamily">
+              {{ item }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingReasons">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" [(ngModel)]="reasonsConfig.backgroundColor" (change)="onReasonsColorChange()" class="color-picker" title="Background Color">
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Actions -->
+    <div class="edit-actions" *ngIf="isEditingReasons">
+      <button class="save-btn" (click)="stopEditingReasons()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingReasons()">Cancel</button>
+      <button class="reset-btn" (click)="resetReasonsToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
+
+<!-- Loading and Error States for Reasons Section -->
+<div class="loading-container" *ngIf="reasonsLoading">
+  <p>Loading reasons section...</p>
+</div>
+
+<div class="error-container" *ngIf="reasonsError">
+  <p>Error loading reasons section. Please try again.</p>
+</div>
 
 
 <!-- Services Overview -->

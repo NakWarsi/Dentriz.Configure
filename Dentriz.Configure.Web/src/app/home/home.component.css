@@ -127,6 +127,24 @@
   font-family: inherit !important;
 }
 
+/* Ensure reasons section has relative positioning for floating button */
+.reasons {
+  position: relative;
+}
+
+/* Ensure reasons section elements inherit styles properly */
+.reasons h2,
+.reasons h3,
+.reasons p,
+.reasons li,
+.section-title,
+.section-intro,
+.reason-card h3,
+.reason-card li {
+  color: inherit !important;
+  font-family: inherit !important;
+}
+
 .founder-edit-container {
   background: #f8f9fa;
   padding: 2rem;

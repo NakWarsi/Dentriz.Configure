@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { FounderSectionApiService, SimpleFounderConfig } from './services/founder-section-api.service';
 import { NewPatientSectionApiService, SimpleNewPatientConfig } from './services/new-patient-section-api.service';
+import { ReasonsSectionApiService, SimpleReasonsConfig } from './services/reasons-section-api.service';
 
 @Component({
   selector: 'app-home',
@@ -31,10 +32,19 @@ export class HomeComponent implements OnInit {
   originalNewPatientData: any = {};
   editingNewPatientElement: string | null = null;
 
+  // Reasons Section properties
+  reasonsConfig: SimpleReasonsConfig | null = null;
+  reasonsLoading = true;
+  reasonsError = false;
+  isEditingReasons = false;
+  originalReasonsData: any = {};
+  editingReasonsElement: string | null = null;
+
   constructor(
     private http: HttpClient,
     private founderSectionApiService: FounderSectionApiService,
-    private newPatientSectionApiService: NewPatientSectionApiService
+    private newPatientSectionApiService: NewPatientSectionApiService,
+    private reasonsSectionApiService: ReasonsSectionApiService
   ) {}
 
   // Clinic images carousel
@@ -95,6 +105,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.loadFounderSectionConfig();
     this.loadNewPatientSectionConfig();
+    this.loadReasonsSectionConfig();
     // Auto-advance every 5 seconds
     setInterval(() => {
       this.nextImage();
@@ -488,5 +499,198 @@ export class HomeComponent implements OnInit {
     setTimeout(() => {
       this.applyNewPatientElementStyles();
     }, 100);
+  }
+
+  // Reasons Section methods (following same pattern as other sections)
+  private loadReasonsSectionConfig(): void {
+    this.reasonsSectionApiService.loadConfig().subscribe({
+      next: (config) => {
+        console.log('Reasons section config loaded successfully:', config);
+        this.reasonsConfig = config;
+        this.reasonsLoading = false;
+        
+        // Apply styles immediately after config loads
+        this.applyReasonsDynamicStyles();
+        
+        // Force apply styles with multiple attempts to ensure they stick
+        setTimeout(() => {
+          this.applyReasonsElementStyles();
+        }, 100);
+        setTimeout(() => {
+          this.applyReasonsElementStyles();
+        }, 500);
+      },
+      error: (error) => {
+        console.error('Error loading reasons section configuration:', error);
+        this.reasonsError = true;
+        this.reasonsLoading = false;
+      }
+    });
+  }
+
+  startEditingReasons(): void {
+    console.log('Edit button clicked, starting reasons editing mode...');
+    if (!this.reasonsConfig) {
+      console.log('No reasons config available');
+      return;
+    }
+
+    this.isEditingReasons = true;
+    this.originalReasonsData = JSON.parse(JSON.stringify(this.reasonsConfig));
+    console.log('Reasons editing mode activated');
+  }
+
+  stopEditingReasons(): void {
+    this.isEditingReasons = false;
+    this.saveReasonsSectionConfig();
+    console.log('Reasons section updated:', this.reasonsConfig);
+  }
+
+  cancelEditingReasons(): void {
+    this.isEditingReasons = false;
+    this.reasonsConfig = JSON.parse(JSON.stringify(this.originalReasonsData));
+    this.applyReasonsDynamicStyles(); // Reapply original styles
+  }
+
+  saveReasonsSectionConfig(): void {
+    if (!this.reasonsConfig) return;
+    // Implement API call to save config
+    console.log('Saving reasons config:', this.reasonsConfig);
+    // For now, just log and exit edit mode
+    this.isEditingReasons = false;
+  }
+
+  resetReasonsToOriginal(): void {
+    if (!this.reasonsConfig) return;
+    this.reasonsConfig = JSON.parse(JSON.stringify(this.originalReasonsData));
+    this.applyReasonsDynamicStyles(); // Reapply original styles
+  }
+
+  startInlineEditReasons(element: string): void {
+    if (!this.isEditingReasons) return;
+    this.editingReasonsElement = element;
+  }
+
+  stopInlineEditReasons(): void {
+    this.editingReasonsElement = null;
+  }
+
+  applyReasonsDynamicStyles(): void {
+    if (!this.reasonsConfig || typeof document === 'undefined') return;
+
+    console.log('Applying reasons dynamic styles...', this.reasonsConfig);
+    const root = document.documentElement;
+    root.style.setProperty('--reasons-background-color', this.reasonsConfig.backgroundColor);
+
+    // Apply individual element styles directly
+    this.applyReasonsElementStyles();
+  }
+
+  private applyReasonsElementStyles(): void {
+    if (!this.reasonsConfig || typeof document === 'undefined') return;
+
+    console.log('Applying reasons element styles...', this.reasonsConfig);
+
+    // Apply styles to specific elements with multiple selectors for better coverage
+    const elements = [
+      // Section Title
+      { selectors: ['.reasons .section-title', '.section-title'], color: this.reasonsConfig.sectionTitleColor, fontFamily: this.reasonsConfig.sectionTitleFontFamily },
+      // Section Intro
+      { selectors: ['.reasons .section-intro', '.section-intro'], color: this.reasonsConfig.sectionIntroColor, fontFamily: this.reasonsConfig.sectionIntroFontFamily },
+      // Reason 1 Title
+      { selectors: ['.reason-card:nth-child(1) h3'], color: this.reasonsConfig.reason1TitleColor, fontFamily: this.reasonsConfig.reason1TitleFontFamily },
+      // Reason 1 Items
+      { selectors: ['.reason-card:nth-child(1) li'], color: this.reasonsConfig.reason1ItemsColor, fontFamily: this.reasonsConfig.reason1ItemsFontFamily },
+      // Reason 2 Title
+      { selectors: ['.reason-card:nth-child(2) h3'], color: this.reasonsConfig.reason2TitleColor, fontFamily: this.reasonsConfig.reason2TitleFontFamily },
+      // Reason 2 Items
+      { selectors: ['.reason-card:nth-child(2) li'], color: this.reasonsConfig.reason2ItemsColor, fontFamily: this.reasonsConfig.reason2ItemsFontFamily },
+      // Reason 3 Title
+      { selectors: ['.reason-card:nth-child(3) h3'], color: this.reasonsConfig.reason3TitleColor, fontFamily: this.reasonsConfig.reason3TitleFontFamily },
+      // Reason 3 Items
+      { selectors: ['.reason-card:nth-child(3) li'], color: this.reasonsConfig.reason3ItemsColor, fontFamily: this.reasonsConfig.reason3ItemsFontFamily },
+      // Reason 4 Title
+      { selectors: ['.reason-card:nth-child(4) h3'], color: this.reasonsConfig.reason4TitleColor, fontFamily: this.reasonsConfig.reason4TitleFontFamily },
+      // Reason 4 Items
+      { selectors: ['.reason-card:nth-child(4) li'], color: this.reasonsConfig.reason4ItemsColor, fontFamily: this.reasonsConfig.reason4ItemsFontFamily },
+      // Reason 5 Title
+      { selectors: ['.reason-card:nth-child(5) h3'], color: this.reasonsConfig.reason5TitleColor, fontFamily: this.reasonsConfig.reason5TitleFontFamily },
+      // Reason 5 Items
+      { selectors: ['.reason-card:nth-child(5) li'], color: this.reasonsConfig.reason5ItemsColor, fontFamily: this.reasonsConfig.reason5ItemsFontFamily },
+      // Reason 6 Title
+      { selectors: ['.reason-card:nth-child(6) h3'], color: this.reasonsConfig.reason6TitleColor, fontFamily: this.reasonsConfig.reason6TitleFontFamily },
+      // Reason 6 Items
+      { selectors: ['.reason-card:nth-child(6) li'], color: this.reasonsConfig.reason6ItemsColor, fontFamily: this.reasonsConfig.reason6ItemsFontFamily }
+    ];
+
+    elements.forEach(({ selectors, color, fontFamily }) => {
+      selectors.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach((element, index) => {
+          if (element) {
+            (element as HTMLElement).style.setProperty('color', color, 'important');
+            (element as HTMLElement).style.setProperty('font-family', fontFamily, 'important');
+            console.log(`Applied color ${color} and font ${fontFamily} to ${selector}[${index}]`);
+          }
+        });
+      });
+    });
+  }
+
+  onReasonsColorChange(): void {
+    console.log('Reasons color changed, triggering change detection...');
+    
+    // Force Angular to detect changes and re-render
+    if (this.reasonsConfig) {
+      // Create a new object to trigger change detection
+      this.reasonsConfig = { ...this.reasonsConfig };
+      console.log('Reasons config object created:', this.reasonsConfig);
+    }
+    
+    // Apply styles immediately and with delays
+    this.applyReasonsElementStyles();
+    setTimeout(() => {
+      console.log('Reasons change detection triggered');
+      this.applyReasonsDynamicStyles();
+    }, 10);
+    setTimeout(() => {
+      this.applyReasonsElementStyles();
+    }, 100);
+  }
+
+  onReasonsFontChange(): void {
+    console.log('Reasons font changed, triggering change detection...');
+    
+    // Force Angular to detect changes and re-render
+    if (this.reasonsConfig) {
+      // Create a new object to trigger change detection
+      this.reasonsConfig = { ...this.reasonsConfig };
+      console.log('Reasons config object created for font change:', this.reasonsConfig);
+    }
+    
+    // Apply styles immediately and with delays
+    this.applyReasonsElementStyles();
+    setTimeout(() => {
+      console.log('Reasons font change detection triggered');
+      this.applyReasonsDynamicStyles();
+    }, 10);
+    setTimeout(() => {
+      this.applyReasonsElementStyles();
+    }, 100);
+  }
+
+  // Helper methods for managing reason items
+  addReasonItem(reasonNumber: number): void {
+    if (!this.reasonsConfig) return;
+    const itemsProperty = `reason${reasonNumber}Items` as keyof SimpleReasonsConfig;
+    const items = this.reasonsConfig[itemsProperty] as string[];
+    items.push('');
+  }
+
+  removeReasonItem(reasonNumber: number, index: number): void {
+    if (!this.reasonsConfig) return;
+    const itemsProperty = `reason${reasonNumber}Items` as keyof SimpleReasonsConfig;
+    const items = this.reasonsConfig[itemsProperty] as string[];
+    items.splice(index, 1);
   }
 }
