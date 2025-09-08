@@ -1,8 +1,14 @@
 <!-- Contact Hero -->
-<section class="contact-hero">
+<section class="contact-hero" [style.background-color]="contactHeroConfig.backgroundColor">
   <div class="container">
-    <h1>Contact the Best Dentists in Pune</h1>
-    <p>Get in touch with DentRiz Dental Clinic and it's associated Doctors</p>
+    <h1 [style.color]="contactHeroConfig.heroTitleColor" 
+        [style.font-family]="contactHeroConfig.heroTitleFontFamily">
+      {{ contactHeroConfig.heroTitle }}
+    </h1>
+    <p [style.color]="contactHeroConfig.heroSubtitleColor" 
+       [style.font-family]="contactHeroConfig.heroSubtitleFontFamily">
+      {{ contactHeroConfig.heroSubtitle }}
+    </p>
   </div>
 </section>
 
