@@ -1,10 +1,122 @@
 <!-- Services Hero -->
-<section class="services-hero">
+<section class="services-hero" 
+         *ngIf="!servicesHeroLoading && !servicesHeroError && servicesHeroConfig"
+         [style.background-color]="servicesHeroConfig.backgroundColor">
   <div class="container">
-    <h1>Complete Dental Care Under One Roof</h1>
-    <p>Comprehensive dental care including cosmetic dentistry, dental implants, and family dentistry in Wakad and Hinjewadi</p>
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingServicesHero">
+      <button class="edit-btn-floating" (click)="startEditingServicesHero()" title="Edit Services Hero Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <!-- Title -->
+    <div class="editable-element">
+      <h1 *ngIf="!isEditingServicesHero || editingServicesHeroElement !== 'title'"
+          [style.color]="servicesHeroConfig.titleColor"
+          [style.font-family]="servicesHeroConfig.titleFontFamily"
+          (click)="startInlineEditServicesHero('title')">
+        <span>{{ servicesHeroConfig.title }}</span>
+        <span class="edit-icon" *ngIf="isEditingServicesHero">✏️</span>
+      </h1>
+      <input *ngIf="isEditingServicesHero && editingServicesHeroElement === 'title'"
+             [(ngModel)]="servicesHeroConfig.title"
+             (blur)="stopInlineEditServicesHero()"
+             (keyup.enter)="stopInlineEditServicesHero()"
+             class="inline-edit-input"
+             [style.color]="servicesHeroConfig.titleColor"
+             [style.font-family]="servicesHeroConfig.titleFontFamily"
+             placeholder="Enter title"
+             title="Edit title">
+      <div *ngIf="isEditingServicesHero && editingServicesHeroElement === 'title'" class="inline-controls">
+        <select [(ngModel)]="servicesHeroConfig.titleFontFamily" (change)="onServicesHeroFontChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="servicesHeroConfig.titleColor"
+               (change)="onServicesHeroColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
+
+    <!-- Subtitle -->
+    <div class="editable-element">
+      <p *ngIf="!isEditingServicesHero || editingServicesHeroElement !== 'subtitle'"
+         [style.color]="servicesHeroConfig.subtitleColor"
+         [style.font-family]="servicesHeroConfig.subtitleFontFamily"
+         (click)="startInlineEditServicesHero('subtitle')">
+        <span>{{ servicesHeroConfig.subtitle }}</span>
+        <span class="edit-icon" *ngIf="isEditingServicesHero">✏️</span>
+      </p>
+      <input *ngIf="isEditingServicesHero && editingServicesHeroElement === 'subtitle'"
+             [(ngModel)]="servicesHeroConfig.subtitle"
+             (blur)="stopInlineEditServicesHero()"
+             (keyup.enter)="stopInlineEditServicesHero()"
+             class="inline-edit-input"
+             [style.color]="servicesHeroConfig.subtitleColor"
+             [style.font-family]="servicesHeroConfig.subtitleFontFamily"
+             placeholder="Enter subtitle"
+             title="Edit subtitle">
+      <div *ngIf="isEditingServicesHero && editingServicesHeroElement === 'subtitle'" class="inline-controls">
+        <select [(ngModel)]="servicesHeroConfig.subtitleFontFamily" (change)="onServicesHeroFontChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="servicesHeroConfig.subtitleColor"
+               (change)="onServicesHeroColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingServicesHero">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" 
+                 [(ngModel)]="servicesHeroConfig.backgroundColor"
+                 (change)="onServicesHeroColorChange()"
+                 class="color-picker"
+                 title="Background Color">
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Actions (only when editing) -->
+    <div class="edit-actions" *ngIf="isEditingServicesHero">
+      <button class="save-btn" (click)="stopEditingServicesHero()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingServicesHero()">Cancel</button>
+      <button class="reset-btn" (click)="resetServicesHeroToOriginal()">Reset to Original</button>
+    </div>
   </div>
 </section>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="servicesHeroLoading">
+  <p>Loading services hero information...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="servicesHeroError">
+  <p>Error loading services hero information. Please try again later.</p>
+</div>
 
 <!-- Services Overview -->
 <!-- <section class="services-overview">

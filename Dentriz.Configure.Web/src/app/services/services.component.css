@@ -4,6 +4,7 @@
   color: #1e3c72;
   padding: 100px 0;
   text-align: center;
+  position: relative;
 }
 
 .services-hero h1 {
@@ -12,9 +13,25 @@
   margin-bottom: 1rem;
 }
 
+.services-hero h1 .inline-edit-input {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  height: auto;
+  min-height: 1.2em;
+}
+
 .services-hero p {
   font-size: 1.3rem;
   opacity: 0.9;
+}
+
+.services-hero p .inline-edit-input {
+  font-size: 1.3rem;
+  opacity: 0.9;
+  line-height: 1.4;
+  height: auto;
+  min-height: 1.4em;
 }
 
 /* Services Overview */
@@ -306,4 +323,245 @@
   .service-card {
     padding: 2rem;
   }
+}
+
+/* Services Hero Editable Styles */
+.floating-edit-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.edit-btn-floating {
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #2c5aa0;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.edit-btn-floating:hover {
+  background: #2c5aa0;
+  transform: scale(1.1);
+}
+
+.edit-icon-floating {
+  font-size: 20px;
+  color: #2c5aa0;
+  transition: color 0.3s ease;
+}
+
+.edit-btn-floating:hover .edit-icon-floating {
+  color: white;
+}
+
+.editable-element {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.editable-element:hover .edit-icon {
+  opacity: 1;
+}
+
+.edit-icon {
+  position: absolute;
+  top: -5px;
+  right: -20px;
+  background: rgba(44, 90, 160, 0.9);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+.inline-edit-input,
+.inline-edit-textarea {
+  border: 2px solid #2c5aa0;
+  border-radius: 4px;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+  background: rgba(255, 255, 255, 0.95);
+  color: inherit;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  margin: 0;
+  outline: none;
+  position: relative;
+  z-index: 100;
+  font-weight: inherit;
+  line-height: inherit;
+  text-align: inherit;
+  min-height: inherit;
+  height: auto;
+}
+
+.inline-edit-textarea {
+  min-height: 60px;
+  resize: vertical;
+  display: block;
+  width: 100%;
+  max-width: 600px;
+}
+
+.inline-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  position: relative;
+  max-width: 400px;
+}
+
+.font-select-inline {
+  padding: 5px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+  background: white;
+}
+
+.color-picker-inline {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.color-picker {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.global-styling-controls {
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.global-styling-controls h4 {
+  margin: 0 0 15px 0;
+  color: #2c5aa0;
+  font-size: 16px;
+}
+
+.styling-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.styling-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.styling-item label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.save-btn,
+.cancel-btn,
+.reset-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.save-btn {
+  background: #28a745;
+  color: white;
+}
+
+.save-btn:hover {
+  background: #218838;
+  transform: translateY(-2px);
+}
+
+.cancel-btn {
+  background: #6c757d;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+.reset-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.reset-btn:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+}
+
+.loading-container,
+.error-container {
+  text-align: center;
+  padding: 40px 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.loading-container p,
+.error-container p {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+}
+
+.error-container p {
+  color: #dc3545;
 }
