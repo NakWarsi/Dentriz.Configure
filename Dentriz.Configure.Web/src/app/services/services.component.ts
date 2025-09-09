@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ServicesHeroApiService, SimpleServicesHeroConfig } from './services/services-hero-api.service';
 import { PreventiveCareApiService, SimplePreventiveCareConfig } from './services/preventive-care-api.service';
 import { RestorativeCareApiService, SimpleRestorativeCareConfig } from './services/restorative-care-api.service';
+import { CosmeticServicesApiService, SimpleCosmeticServicesConfig } from './services/cosmetic-services-api.service';
 
 @Component({
   selector: 'app-services',
@@ -36,6 +37,14 @@ export class ServicesComponent implements OnInit {
   restorativeCareError = false;
   isEditingRestorativeCare = false;
   editingRestorativeCareElement: string | null = null;
+
+  // Cosmetic Services Configuration
+  cosmeticServicesConfig: SimpleCosmeticServicesConfig | null = null;
+  originalCosmeticServicesConfig: SimpleCosmeticServicesConfig | null = null;
+  cosmeticServicesLoading = false;
+  cosmeticServicesError = false;
+  isEditingCosmeticServices = false;
+  editingCosmeticServicesElement: string | null = null;
   services = [
     {
       title: 'General Dentistry',
@@ -62,13 +71,15 @@ export class ServicesComponent implements OnInit {
   constructor(
     private servicesHeroApiService: ServicesHeroApiService,
     private preventiveCareApiService: PreventiveCareApiService,
-    private restorativeCareApiService: RestorativeCareApiService
+    private restorativeCareApiService: RestorativeCareApiService,
+    private cosmeticServicesApiService: CosmeticServicesApiService
   ) {}
 
   ngOnInit() {
     this.loadServicesHeroConfig();
     this.loadPreventiveCareConfig();
     this.loadRestorativeCareConfig();
+    this.loadCosmeticServicesConfig();
   }
 
   // Services Hero Configuration Methods
@@ -339,6 +350,106 @@ export class ServicesComponent implements OnInit {
   removeRestorativeCareFeature(serviceIndex: number, featureIndex: number) {
     if (this.restorativeCareConfig) {
       this.restorativeCareConfig.services[serviceIndex].features.splice(featureIndex, 1);
+    }
+  }
+
+  // Cosmetic Services Configuration Methods
+  loadCosmeticServicesConfig() {
+    this.cosmeticServicesLoading = true;
+    this.cosmeticServicesError = false;
+
+    this.cosmeticServicesApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.cosmeticServicesConfig = config;
+        this.originalCosmeticServicesConfig = JSON.parse(JSON.stringify(config));
+        this.cosmeticServicesLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading cosmetic services config:', error);
+        this.cosmeticServicesError = true;
+        this.cosmeticServicesLoading = false;
+      }
+    });
+  }
+
+  startEditingCosmeticServices() {
+    this.isEditingCosmeticServices = true;
+  }
+
+  stopEditingCosmeticServices() {
+    if (this.cosmeticServicesConfig) {
+      this.cosmeticServicesApiService.saveConfig(this.cosmeticServicesConfig).subscribe({
+        next: () => {
+          this.originalCosmeticServicesConfig = JSON.parse(JSON.stringify(this.cosmeticServicesConfig!));
+          this.isEditingCosmeticServices = false;
+          this.editingCosmeticServicesElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving cosmetic services config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingCosmeticServices() {
+    if (this.originalCosmeticServicesConfig) {
+      this.cosmeticServicesConfig = JSON.parse(JSON.stringify(this.originalCosmeticServicesConfig));
+    }
+    this.isEditingCosmeticServices = false;
+    this.editingCosmeticServicesElement = null;
+  }
+
+  resetCosmeticServicesToOriginal() {
+    if (this.originalCosmeticServicesConfig) {
+      this.cosmeticServicesConfig = JSON.parse(JSON.stringify(this.originalCosmeticServicesConfig));
+    }
+  }
+
+  startInlineEditCosmeticServices(element: string) {
+    this.editingCosmeticServicesElement = element;
+  }
+
+  stopInlineEditCosmeticServices() {
+    this.editingCosmeticServicesElement = null;
+  }
+
+  onCosmeticServicesColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onCosmeticServicesFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addCosmeticServicesService() {
+    if (this.cosmeticServicesConfig) {
+      this.cosmeticServicesConfig.services.push({
+        icon: '🦷',
+        title: 'New Service',
+        description: 'Service description',
+        features: ['Feature 1', 'Feature 2']
+      });
+    }
+  }
+
+  removeCosmeticServicesService(index: number) {
+    if (this.cosmeticServicesConfig && this.cosmeticServicesConfig.services.length > 1) {
+      this.cosmeticServicesConfig.services.splice(index, 1);
+    }
+  }
+
+  addCosmeticServicesFeature(serviceIndex: number) {
+    if (this.cosmeticServicesConfig) {
+      this.cosmeticServicesConfig.services[serviceIndex].features.push('New Feature');
+    }
+  }
+
+  removeCosmeticServicesFeature(serviceIndex: number, featureIndex: number) {
+    if (this.cosmeticServicesConfig) {
+      this.cosmeticServicesConfig.services[serviceIndex].features.splice(featureIndex, 1);
     }
   }
 }

@@ -705,65 +705,291 @@
 </div>
 
 <!-- Cosmetic Services -->
-<section id="cosmetic" class="service-section">
+<section id="cosmetic" class="service-section" 
+         *ngIf="!cosmeticServicesLoading && !cosmeticServicesError && cosmeticServicesConfig"
+         [style.background-color]="cosmeticServicesConfig.backgroundColor">
   <div class="container">
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingCosmeticServices">
+      <button class="edit-btn-floating" (click)="startEditingCosmeticServices()" title="Edit Cosmetic Services Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
     <div class="service-header">
-      <div class="service-icon">✨</div>
-      <h2>Cosmetic Services</h2>
-      <p>Enhancing the beauty of your smile</p>
+      <!-- Section Icon -->
+      <div class="editable-element">
+        <div class="service-icon" *ngIf="!isEditingCosmeticServices || editingCosmeticServicesElement !== 'sectionIcon'"
+             (click)="startInlineEditCosmeticServices('sectionIcon')">
+          <span>{{ cosmeticServicesConfig.sectionIcon }}</span>
+          <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
+        </div>
+        <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'sectionIcon'"
+               [(ngModel)]="cosmeticServicesConfig.sectionIcon"
+               (blur)="stopInlineEditCosmeticServices()"
+               (keyup.enter)="stopInlineEditCosmeticServices()"
+               class="inline-edit-input"
+               placeholder="Enter icon"
+               title="Edit section icon">
+      </div>
+
+      <!-- Section Title -->
+      <div class="editable-element">
+        <h2 *ngIf="!isEditingCosmeticServices || editingCosmeticServicesElement !== 'sectionTitle'"
+            [style.color]="cosmeticServicesConfig.sectionTitleColor"
+            [style.font-family]="cosmeticServicesConfig.sectionTitleFontFamily"
+            (click)="startInlineEditCosmeticServices('sectionTitle')">
+          <span>{{ cosmeticServicesConfig.sectionTitle }}</span>
+          <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
+        </h2>
+        <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'sectionTitle'"
+               [(ngModel)]="cosmeticServicesConfig.sectionTitle"
+               (blur)="stopInlineEditCosmeticServices()"
+               (keyup.enter)="stopInlineEditCosmeticServices()"
+               class="inline-edit-input"
+               [style.color]="cosmeticServicesConfig.sectionTitleColor"
+               [style.font-family]="cosmeticServicesConfig.sectionTitleFontFamily"
+               placeholder="Enter section title"
+               title="Edit section title">
+        <div *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'sectionTitle'" class="inline-controls">
+          <select [(ngModel)]="cosmeticServicesConfig.sectionTitleFontFamily" (change)="onCosmeticServicesFontChange()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color" 
+                 [(ngModel)]="cosmeticServicesConfig.sectionTitleColor"
+                 (change)="onCosmeticServicesColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
+      </div>
+
+      <!-- Section Subtitle -->
+      <div class="editable-element">
+        <p *ngIf="!isEditingCosmeticServices || editingCosmeticServicesElement !== 'sectionSubtitle'"
+           [style.color]="cosmeticServicesConfig.sectionSubtitleColor"
+           [style.font-family]="cosmeticServicesConfig.sectionSubtitleFontFamily"
+           (click)="startInlineEditCosmeticServices('sectionSubtitle')">
+          <span>{{ cosmeticServicesConfig.sectionSubtitle }}</span>
+          <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
+        </p>
+        <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'sectionSubtitle'"
+               [(ngModel)]="cosmeticServicesConfig.sectionSubtitle"
+               (blur)="stopInlineEditCosmeticServices()"
+               (keyup.enter)="stopInlineEditCosmeticServices()"
+               class="inline-edit-input"
+               [style.color]="cosmeticServicesConfig.sectionSubtitleColor"
+               [style.font-family]="cosmeticServicesConfig.sectionSubtitleFontFamily"
+               placeholder="Enter section subtitle"
+               title="Edit section subtitle">
+        <div *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'sectionSubtitle'" class="inline-controls">
+          <select [(ngModel)]="cosmeticServicesConfig.sectionSubtitleFontFamily" (change)="onCosmeticServicesFontChange()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color" 
+                 [(ngModel)]="cosmeticServicesConfig.sectionSubtitleColor"
+                 (change)="onCosmeticServicesColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
+      </div>
     </div>
     
     <div class="services-grid">
-      <div class="service-card">
-        <div class="service-icon-small">🦷</div>
-        <h3>Dental Bonding</h3>
-        <p>A quick and cost-effective way to improve the appearance of chipped, cracked, or discolored teeth.</p>
+      <div class="service-card" *ngFor="let service of cosmeticServicesConfig.services; let i = index">
+        <!-- Service Icon -->
+        <div class="editable-element">
+          <div class="service-icon-small" *ngIf="!isEditingCosmeticServices || editingCosmeticServicesElement !== 'serviceIcon_' + i"
+               (click)="startInlineEditCosmeticServices('serviceIcon_' + i)">
+            <span>{{ service.icon }}</span>
+            <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
+          </div>
+          <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceIcon_' + i"
+                 [(ngModel)]="service.icon"
+                 (blur)="stopInlineEditCosmeticServices()"
+                 (keyup.enter)="stopInlineEditCosmeticServices()"
+                 class="inline-edit-input"
+                 placeholder="Enter icon"
+                 title="Edit service icon">
+        </div>
+
+        <!-- Service Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingCosmeticServices || editingCosmeticServicesElement !== 'serviceTitle_' + i"
+              [style.color]="cosmeticServicesConfig.cardTitleColor"
+              [style.font-family]="cosmeticServicesConfig.cardTitleFontFamily"
+              (click)="startInlineEditCosmeticServices('serviceTitle_' + i)">
+            <span>{{ service.title }}</span>
+            <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
+          </h3>
+          <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceTitle_' + i"
+                 [(ngModel)]="service.title"
+                 (blur)="stopInlineEditCosmeticServices()"
+                 (keyup.enter)="stopInlineEditCosmeticServices()"
+                 class="inline-edit-input"
+                 [style.color]="cosmeticServicesConfig.cardTitleColor"
+                 [style.font-family]="cosmeticServicesConfig.cardTitleFontFamily"
+                 placeholder="Enter service title"
+                 title="Edit service title">
+          <div *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceTitle_' + i" class="inline-controls">
+            <select [(ngModel)]="cosmeticServicesConfig.cardTitleFontFamily" (change)="onCosmeticServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="cosmeticServicesConfig.cardTitleColor"
+                   (change)="onCosmeticServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <!-- Service Description -->
+        <div class="editable-element">
+          <p *ngIf="!isEditingCosmeticServices || editingCosmeticServicesElement !== 'serviceDescription_' + i"
+             [style.color]="cosmeticServicesConfig.cardDescriptionColor"
+             [style.font-family]="cosmeticServicesConfig.cardDescriptionFontFamily"
+             (click)="startInlineEditCosmeticServices('serviceDescription_' + i)">
+            <span>{{ service.description }}</span>
+            <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceDescription_' + i"
+                    [(ngModel)]="service.description"
+                    (blur)="stopInlineEditCosmeticServices()"
+                    class="inline-edit-textarea"
+                    [style.color]="cosmeticServicesConfig.cardDescriptionColor"
+                    [style.font-family]="cosmeticServicesConfig.cardDescriptionFontFamily"
+                    placeholder="Enter service description"
+                    title="Edit service description"></textarea>
+          <div *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceDescription_' + i" class="inline-controls">
+            <select [(ngModel)]="cosmeticServicesConfig.cardDescriptionFontFamily" (change)="onCosmeticServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="cosmeticServicesConfig.cardDescriptionColor"
+                   (change)="onCosmeticServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <!-- Service Features -->
         <ul>
-          <li>Repair chipped teeth</li>
-          <li>Close gaps between teeth</li>
-          <li>Improve tooth shape</li>
-          <li>Single visit treatment</li>
+          <li *ngFor="let feature of service.features; let j = index" class="editable-element">
+            <span *ngIf="!isEditingCosmeticServices || editingCosmeticServicesElement !== 'serviceFeature_' + i + '_' + j"
+                  [style.color]="cosmeticServicesConfig.cardFeaturesColor"
+                  [style.font-family]="cosmeticServicesConfig.cardFeaturesFontFamily"
+                  (click)="startInlineEditCosmeticServices('serviceFeature_' + i + '_' + j)">
+              {{ feature }}
+              <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
+            </span>
+            <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceFeature_' + i + '_' + j"
+                   [(ngModel)]="service.features[j]"
+                   (blur)="stopInlineEditCosmeticServices()"
+                   (keyup.enter)="stopInlineEditCosmeticServices()"
+                   class="inline-edit-input"
+                   [style.color]="cosmeticServicesConfig.cardFeaturesColor"
+                   [style.font-family]="cosmeticServicesConfig.cardFeaturesFontFamily"
+                   placeholder="Enter feature"
+                   title="Edit feature">
+            <div *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceFeature_' + i + '_' + j" class="inline-controls">
+              <select [(ngModel)]="cosmeticServicesConfig.cardFeaturesFontFamily" (change)="onCosmeticServicesFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="cosmeticServicesConfig.cardFeaturesColor"
+                     (change)="onCosmeticServicesColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+              <button type="button" class="remove-item-btn" (click)="removeCosmeticServicesFeature(i, j)" title="Remove Feature">🗑️</button>
+            </div>
+          </li>
+          <li *ngIf="isEditingCosmeticServices" class="add-feature-item">
+            <button type="button" class="add-item-btn" (click)="addCosmeticServicesFeature(i)" title="Add Feature">+ Add Feature</button>
+          </li>
         </ul>
+
+        <!-- Remove Service Button -->
+        <button *ngIf="isEditingCosmeticServices && cosmeticServicesConfig.services.length > 1" 
+                type="button" class="remove-service-btn" (click)="removeCosmeticServicesService(i)" title="Remove Service">
+          🗑️ Remove Service
+        </button>
       </div>
-      
-      <div class="service-card">
-        <div class="service-icon-small">😁</div>
-        <h3>Teeth Whitening</h3>
-        <p>Professional teeth whitening services to brighten your smile and boost your confidence.</p>
-        <ul>
-          <li>In-office whitening</li>
-          <li>Take-home whitening kits</li>
-          <li>Custom-fitted trays</li>
-          <li>Long-lasting results</li>
-        </ul>
+
+      <!-- Add Service Button -->
+      <div *ngIf="isEditingCosmeticServices" class="add-service-card">
+        <button type="button" class="add-service-btn" (click)="addCosmeticServicesService()" title="Add Service">
+          + Add New Service
+        </button>
       </div>
-      
-      <div class="service-card">
-        <div class="service-icon-small">🦷</div>
-        <h3>Invisalign®</h3>
-        <p>Straighten your teeth discreetly with clear, removable aligners that fit your lifestyle.</p>
-        <ul>
-          <li>Virtually invisible</li>
-          <li>Removable aligners</li>
-          <li>Comfortable treatment</li>
-          <li>Digital treatment planning</li>
-        </ul>
+    </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingCosmeticServices">
+      <h4>Section Styling</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" 
+                 [(ngModel)]="cosmeticServicesConfig.backgroundColor"
+                 (change)="onCosmeticServicesColorChange()"
+                 class="color-picker"
+                 title="Background Color">
+        </div>
       </div>
-      
-      <div class="service-card">
-        <div class="service-icon-small">✨</div>
-        <h3>Dental Veneers</h3>
-        <p>Transform your smile with custom-made porcelain veneers that create a beautiful, natural-looking appearance.</p>
-        <ul>
-          <li>Same-day veneers available</li>
-          <li>Stain-resistant</li>
-          <li>Natural appearance</li>
-          <li>Long-lasting results</li>
-        </ul>
-      </div>
+    </div>
+
+    <!-- Edit Actions (only when editing) -->
+    <div class="edit-actions" *ngIf="isEditingCosmeticServices">
+      <button class="save-btn" (click)="stopEditingCosmeticServices()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingCosmeticServices()">Cancel</button>
+      <button class="reset-btn" (click)="resetCosmeticServicesToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="cosmeticServicesLoading">
+  <p>Loading cosmetic services information...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="cosmeticServicesError">
+  <p>Error loading cosmetic services information. Please try again later.</p>
+</div>
 
 <!-- Technology Section -->
 <section class="technology-section">

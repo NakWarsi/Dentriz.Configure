@@ -1,0 +1,62 @@
+{
+  "sectionTitle": "Cosmetic Services",
+  "sectionSubtitle": "Enhancing the beauty of your smile",
+  "sectionIcon": "✨",
+  "services": [
+    {
+      "icon": "🦷",
+      "title": "Dental Bonding",
+      "description": "A quick and cost-effective way to improve the appearance of chipped, cracked, or discolored teeth.",
+      "features": [
+        "Repair chipped teeth",
+        "Close gaps between teeth",
+        "Improve tooth shape",
+        "Single visit treatment"
+      ]
+    },
+    {
+      "icon": "😁",
+      "title": "Teeth Whitening",
+      "description": "Professional teeth whitening services to brighten your smile and boost your confidence.",
+      "features": [
+        "In-office whitening",
+        "Take-home whitening kits",
+        "Custom-fitted trays",
+        "Long-lasting results"
+      ]
+    },
+    {
+      "icon": "🦷",
+      "title": "Invisalign®",
+      "description": "Straighten your teeth discreetly with clear, removable aligners that fit your lifestyle.",
+      "features": [
+        "Virtually invisible",
+        "Removable aligners",
+        "Comfortable treatment",
+        "Digital treatment planning"
+      ]
+    },
+    {
+      "icon": "✨",
+      "title": "Dental Veneers",
+      "description": "Transform your smile with custom-made porcelain veneers that create a beautiful, natural-looking appearance.",
+      "features": [
+        "Same-day veneers available",
+        "Stain-resistant",
+        "Natural appearance",
+        "Long-lasting results"
+      ]
+    }
+  ],
+  "sectionTitleColor": "#1e3c72",
+  "sectionSubtitleColor": "#666666",
+  "backgroundColor": "#ffffff",
+  "cardTitleColor": "#1e3c72",
+  "cardDescriptionColor": "#666666",
+  "cardFeaturesColor": "#333333",
+  "sectionTitleFontFamily": "Arial, sans-serif",
+  "sectionSubtitleFontFamily": "Arial, sans-serif",
+  "cardTitleFontFamily": "Arial, sans-serif",
+  "cardDescriptionFontFamily": "Arial, sans-serif",
+  "cardFeaturesFontFamily": "Arial, sans-serif"
+}
