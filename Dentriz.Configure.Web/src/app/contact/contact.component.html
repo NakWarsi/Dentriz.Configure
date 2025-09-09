@@ -120,47 +120,403 @@
   </div>
 </section>
 
-<!-- Contact Information -->
-<section class="contact-info-section">
+<!-- Contact Information Loading and Error States -->
+<div class="loading-container" *ngIf="contactInfoLoading">
+  <p>Loading contact information section...</p>
+</div>
+
+<div class="error-container" *ngIf="contactInfoError">
+  <p>Error loading contact information section. Please try again.</p>
+  <button (click)="loadContactInfoConfig()">Retry</button>
+</div>
+
+<!-- Contact Information Section -->
+<section class="contact-info-section" 
+         *ngIf="!contactInfoLoading && !contactInfoError && contactInfoConfig"
+         [style.background-color]="contactInfoConfig.backgroundColor">
   <div class="container">
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingContactInfo">
+      <button class="edit-btn-floating" (click)="startEditingContactInfo()" title="Edit Contact Information Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
     <div class="contact-grid">
+      <!-- Phone Card -->
       <div class="contact-card">
         <div class="contact-icon">📞</div>
-        <h3>Phone</h3>
-        <p class="contact-note">Call us for any enquiry</p>
+        
+        <!-- Phone Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'phoneTitle'"
+              [style.color]="contactInfoConfig.phoneTitleColor"
+              [style.font-family]="contactInfoConfig.phoneTitleFontFamily"
+              (click)="startInlineEditContactInfo('phoneTitle')">
+            {{ contactInfoConfig.phoneTitle }}
+            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+          </h3>
+          <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'phoneTitle'"
+                 [(ngModel)]="contactInfoConfig.phoneTitle"
+                 (blur)="stopInlineEditContactInfo()"
+                 (keyup.enter)="stopInlineEditContactInfo()"
+                 class="inline-edit-input"
+                 [style.color]="contactInfoConfig.phoneTitleColor"
+                 [style.font-family]="contactInfoConfig.phoneTitleFontFamily"
+                 placeholder="Enter phone title"
+                 title="Edit phone title">
+          <div *ngIf="isEditingContactInfo && editingContactInfoElement === 'phoneTitle'" class="inline-controls">
+            <select [(ngModel)]="contactInfoConfig.phoneTitleFontFamily" (change)="onContactInfoFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactInfoConfig.phoneTitleColor"
+                   (change)="onContactInfoColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <!-- Phone Note -->
+        <div class="editable-element">
+          <p class="contact-note" 
+             *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'phoneNote'"
+             [style.color]="contactInfoConfig.phoneNoteColor"
+             [style.font-family]="contactInfoConfig.phoneNoteFontFamily"
+             (click)="startInlineEditContactInfo('phoneNote')">
+            {{ contactInfoConfig.phoneNote }}
+            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+          </p>
+          <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'phoneNote'"
+                 [(ngModel)]="contactInfoConfig.phoneNote"
+                 (blur)="stopInlineEditContactInfo()"
+                 (keyup.enter)="stopInlineEditContactInfo()"
+                 class="inline-edit-input"
+                 [style.color]="contactInfoConfig.phoneNoteColor"
+                 [style.font-family]="contactInfoConfig.phoneNoteFontFamily"
+                 placeholder="Enter phone note"
+                 title="Edit phone note">
+          <div *ngIf="isEditingContactInfo && editingContactInfoElement === 'phoneNote'" class="inline-controls">
+            <select [(ngModel)]="contactInfoConfig.phoneNoteFontFamily" (change)="onContactInfoFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactInfoConfig.phoneNoteColor"
+                   (change)="onContactInfoColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
         <div class="contact-buttons">
-          <!-- <a href="tel:750-616-8095" class="emergency-btn">📞 Emergency Call</a> -->
-          <a href="tel:932-144-9313" class="btn-secondary">📞 Inquiries</a>
+          <a [href]="'tel:' + contactInfoConfig.phoneNumber" 
+             class="btn-secondary"
+             [style.color]="contactInfoConfig.phoneButtonColor"
+             [style.font-family]="contactInfoConfig.phoneButtonFontFamily">
+            {{ contactInfoConfig.phoneButtonText }}
+          </a>
         </div>
       </div>
       
+      <!-- Email Card -->
       <div class="contact-card">
         <div class="contact-icon">📧</div>
-        <h3>Email</h3>
-        <p class="contact-note">Send us a message anytime</p>
+        
+        <!-- Email Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'emailTitle'"
+              [style.color]="contactInfoConfig.emailTitleColor"
+              [style.font-family]="contactInfoConfig.emailTitleFontFamily"
+              (click)="startInlineEditContactInfo('emailTitle')">
+            {{ contactInfoConfig.emailTitle }}
+            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+          </h3>
+          <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'emailTitle'"
+                 [(ngModel)]="contactInfoConfig.emailTitle"
+                 (blur)="stopInlineEditContactInfo()"
+                 (keyup.enter)="stopInlineEditContactInfo()"
+                 class="inline-edit-input"
+                 [style.color]="contactInfoConfig.emailTitleColor"
+                 [style.font-family]="contactInfoConfig.emailTitleFontFamily"
+                 placeholder="Enter email title"
+                 title="Edit email title">
+          <div *ngIf="isEditingContactInfo && editingContactInfoElement === 'emailTitle'" class="inline-controls">
+            <select [(ngModel)]="contactInfoConfig.emailTitleFontFamily" (change)="onContactInfoFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactInfoConfig.emailTitleColor"
+                   (change)="onContactInfoColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <!-- Email Note -->
+        <div class="editable-element">
+          <p class="contact-note" 
+             *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'emailNote'"
+             [style.color]="contactInfoConfig.emailNoteColor"
+             [style.font-family]="contactInfoConfig.emailNoteFontFamily"
+             (click)="startInlineEditContactInfo('emailNote')">
+            {{ contactInfoConfig.emailNote }}
+            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+          </p>
+          <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'emailNote'"
+                 [(ngModel)]="contactInfoConfig.emailNote"
+                 (blur)="stopInlineEditContactInfo()"
+                 (keyup.enter)="stopInlineEditContactInfo()"
+                 class="inline-edit-input"
+                 [style.color]="contactInfoConfig.emailNoteColor"
+                 [style.font-family]="contactInfoConfig.emailNoteFontFamily"
+                 placeholder="Enter email note"
+                 title="Edit email note">
+          <div *ngIf="isEditingContactInfo && editingContactInfoElement === 'emailNote'" class="inline-controls">
+            <select [(ngModel)]="contactInfoConfig.emailNoteFontFamily" (change)="onContactInfoFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactInfoConfig.emailNoteColor"
+                   (change)="onContactInfoColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
         <div class="contact-buttons">
-          <a href="mailto:rzwarsi707@gmail.com" class="btn-primary">📧 Send Email</a>
+          <a [href]="'mailto:' + contactInfoConfig.emailAddress" 
+             class="btn-primary"
+             [style.color]="contactInfoConfig.emailButtonColor"
+             [style.font-family]="contactInfoConfig.emailButtonFontFamily">
+            {{ contactInfoConfig.emailButtonText }}
+          </a>
         </div>
       </div>
       
+      <!-- Address Card -->
       <div class="contact-card">
         <div class="contact-icon">📍</div>
-        <h3>Address</h3>
-        <p class="contact-note">Best dental clinic in Pune</p>
+        
+        <!-- Address Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'addressTitle'"
+              [style.color]="contactInfoConfig.addressTitleColor"
+              [style.font-family]="contactInfoConfig.addressTitleFontFamily"
+              (click)="startInlineEditContactInfo('addressTitle')">
+            {{ contactInfoConfig.addressTitle }}
+            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+          </h3>
+          <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'addressTitle'"
+                 [(ngModel)]="contactInfoConfig.addressTitle"
+                 (blur)="stopInlineEditContactInfo()"
+                 (keyup.enter)="stopInlineEditContactInfo()"
+                 class="inline-edit-input"
+                 [style.color]="contactInfoConfig.addressTitleColor"
+                 [style.font-family]="contactInfoConfig.addressTitleFontFamily"
+                 placeholder="Enter address title"
+                 title="Edit address title">
+          <div *ngIf="isEditingContactInfo && editingContactInfoElement === 'addressTitle'" class="inline-controls">
+            <select [(ngModel)]="contactInfoConfig.addressTitleFontFamily" (change)="onContactInfoFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactInfoConfig.addressTitleColor"
+                   (change)="onContactInfoColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <!-- Address Note -->
+        <div class="editable-element">
+          <p class="contact-note" 
+             *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'addressNote'"
+             [style.color]="contactInfoConfig.addressNoteColor"
+             [style.font-family]="contactInfoConfig.addressNoteFontFamily"
+             (click)="startInlineEditContactInfo('addressNote')">
+            {{ contactInfoConfig.addressNote }}
+            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+          </p>
+          <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'addressNote'"
+                 [(ngModel)]="contactInfoConfig.addressNote"
+                 (blur)="stopInlineEditContactInfo()"
+                 (keyup.enter)="stopInlineEditContactInfo()"
+                 class="inline-edit-input"
+                 [style.color]="contactInfoConfig.addressNoteColor"
+                 [style.font-family]="contactInfoConfig.addressNoteFontFamily"
+                 placeholder="Enter address note"
+                 title="Edit address note">
+          <div *ngIf="isEditingContactInfo && editingContactInfoElement === 'addressNote'" class="inline-controls">
+            <select [(ngModel)]="contactInfoConfig.addressNoteFontFamily" (change)="onContactInfoFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactInfoConfig.addressNoteColor"
+                   (change)="onContactInfoColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
         <div class="contact-buttons">
-          <a href="https://maps.app.goo.gl/4qYJf5jwSWNNExSQ8" target="_blank" class="btn-outline">📍 Get Directions</a>
+          <a [href]="contactInfoConfig.addressLink" 
+             target="_blank" 
+             class="btn-outline"
+             [style.color]="contactInfoConfig.addressButtonColor"
+             [style.font-family]="contactInfoConfig.addressButtonFontFamily">
+            {{ contactInfoConfig.addressButtonText }}
+          </a>
         </div>
       </div>
       
+      <!-- Emergency Card -->
       <div class="contact-card">
         <div class="contact-icon">🕒</div>
-        <h3>Emergency</h3>
-        <p class="contact-note">24/7 emergency care </p>
+        
+        <!-- Emergency Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'emergencyTitle'"
+              [style.color]="contactInfoConfig.emergencyTitleColor"
+              [style.font-family]="contactInfoConfig.emergencyTitleFontFamily"
+              (click)="startInlineEditContactInfo('emergencyTitle')">
+            {{ contactInfoConfig.emergencyTitle }}
+            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+          </h3>
+          <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'emergencyTitle'"
+                 [(ngModel)]="contactInfoConfig.emergencyTitle"
+                 (blur)="stopInlineEditContactInfo()"
+                 (keyup.enter)="stopInlineEditContactInfo()"
+                 class="inline-edit-input"
+                 [style.color]="contactInfoConfig.emergencyTitleColor"
+                 [style.font-family]="contactInfoConfig.emergencyTitleFontFamily"
+                 placeholder="Enter emergency title"
+                 title="Edit emergency title">
+          <div *ngIf="isEditingContactInfo && editingContactInfoElement === 'emergencyTitle'" class="inline-controls">
+            <select [(ngModel)]="contactInfoConfig.emergencyTitleFontFamily" (change)="onContactInfoFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactInfoConfig.emergencyTitleColor"
+                   (change)="onContactInfoColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <!-- Emergency Note -->
+        <div class="editable-element">
+          <p class="contact-note" 
+             *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'emergencyNote'"
+             [style.color]="contactInfoConfig.emergencyNoteColor"
+             [style.font-family]="contactInfoConfig.emergencyNoteFontFamily"
+             (click)="startInlineEditContactInfo('emergencyNote')">
+            {{ contactInfoConfig.emergencyNote }}
+            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+          </p>
+          <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'emergencyNote'"
+                 [(ngModel)]="contactInfoConfig.emergencyNote"
+                 (blur)="stopInlineEditContactInfo()"
+                 (keyup.enter)="stopInlineEditContactInfo()"
+                 class="inline-edit-input"
+                 [style.color]="contactInfoConfig.emergencyNoteColor"
+                 [style.font-family]="contactInfoConfig.emergencyNoteFontFamily"
+                 placeholder="Enter emergency note"
+                 title="Edit emergency note">
+          <div *ngIf="isEditingContactInfo && editingContactInfoElement === 'emergencyNote'" class="inline-controls">
+            <select [(ngModel)]="contactInfoConfig.emergencyNoteFontFamily" (change)="onContactInfoFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactInfoConfig.emergencyNoteColor"
+                   (change)="onContactInfoColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
         <div class="contact-buttons">
-          <a href="tel:750-616-8095" class="emergency-btn">🚨 Emergency Call</a>
-          <!-- <a href="/appointment" class="btn-secondary">📅 Book Appointment</a> -->
+          <a [href]="'tel:' + contactInfoConfig.emergencyNumber" 
+             class="emergency-btn"
+             [style.color]="contactInfoConfig.emergencyButtonColor"
+             [style.font-family]="contactInfoConfig.emergencyButtonFontFamily">
+            {{ contactInfoConfig.emergencyButtonText }}
+          </a>
         </div>
       </div>
+    </div>
+    
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingContactInfo">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" [(ngModel)]="contactInfoConfig.backgroundColor" (change)="onContactInfoColorChange()" class="color-picker" title="Background Color">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Edit Actions -->
+    <div class="edit-actions" *ngIf="isEditingContactInfo">
+      <button class="save-btn" (click)="stopEditingContactInfo()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingContactInfo()">Cancel</button>
+      <button class="reset-btn" (click)="resetContactInfoToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>

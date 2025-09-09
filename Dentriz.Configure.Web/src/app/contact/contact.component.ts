@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ContactHeroApiService, SimpleContactHeroConfig } from './services/contact-hero-api.service';
+import { ContactInfoApiService, SimpleContactInfoConfig } from './services/contact-info-api.service';
 
 @Component({
   selector: 'app-contact',
@@ -19,6 +20,14 @@ export class ContactComponent implements OnInit {
   isEditingContactHero = false;
   editingElement: string | null = null;
 
+  // Contact Info Configuration
+  contactInfoConfig: SimpleContactInfoConfig | null = null;
+  originalContactInfoConfig: SimpleContactInfoConfig | null = null;
+  contactInfoLoading = false;
+  contactInfoError = false;
+  isEditingContactInfo = false;
+  editingContactInfoElement: string | null = null;
+
   contactForm = {
     name: '',
     email: '',
@@ -27,10 +36,14 @@ export class ContactComponent implements OnInit {
     message: ''
   };
 
-  constructor(private contactHeroApiService: ContactHeroApiService) {}
+  constructor(
+    private contactHeroApiService: ContactHeroApiService,
+    private contactInfoApiService: ContactInfoApiService
+  ) {}
 
   ngOnInit() {
     this.loadContactHeroConfig();
+    this.loadContactInfoConfig();
   }
 
   loadContactHeroConfig() {
@@ -99,6 +112,77 @@ export class ContactComponent implements OnInit {
   }
 
   onFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  // Contact Info Methods
+  loadContactInfoConfig() {
+    this.contactInfoLoading = true;
+    this.contactInfoError = false;
+
+    this.contactInfoApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.contactInfoConfig = config;
+        this.originalContactInfoConfig = JSON.parse(JSON.stringify(config));
+        this.contactInfoLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading contact info config:', error);
+        this.contactInfoError = true;
+        this.contactInfoLoading = false;
+      }
+    });
+  }
+
+  startEditingContactInfo() {
+    this.isEditingContactInfo = true;
+  }
+
+  stopEditingContactInfo() {
+    if (this.contactInfoConfig) {
+      this.contactInfoApiService.saveConfig(this.contactInfoConfig).subscribe({
+        next: () => {
+          this.originalContactInfoConfig = JSON.parse(JSON.stringify(this.contactInfoConfig!));
+          this.isEditingContactInfo = false;
+          this.editingContactInfoElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving contact info config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingContactInfo() {
+    if (this.originalContactInfoConfig) {
+      this.contactInfoConfig = JSON.parse(JSON.stringify(this.originalContactInfoConfig));
+    }
+    this.isEditingContactInfo = false;
+    this.editingContactInfoElement = null;
+  }
+
+  resetContactInfoToOriginal() {
+    if (this.originalContactInfoConfig) {
+      this.contactInfoConfig = JSON.parse(JSON.stringify(this.originalContactInfoConfig));
+    }
+  }
+
+  startInlineEditContactInfo(element: string) {
+    this.editingContactInfoElement = element;
+  }
+
+  stopInlineEditContactInfo() {
+    this.editingContactInfoElement = null;
+  }
+
+  onContactInfoColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onContactInfoFontChange() {
     // This method is called when any font input changes
     // The actual saving happens when the user clicks "Save Changes"
   }

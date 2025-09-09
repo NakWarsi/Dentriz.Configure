@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
 import { CONTACT_HERO_CONSTANTS } from '../constants/contact-hero.constants';
 
 export interface SimpleContactHeroConfig {
@@ -63,7 +63,8 @@ export class ContactHeroApiService {
   }
 
   private loadConfigFromJsonOrDefaults(): Observable<SimpleContactHeroConfig> {
-    return this.http.get<SimpleContactHeroConfig>('/assets/contact-hero.json').pipe(
+    return this.http.get<any>('./assets/contact-hero.json').pipe(
+      map(data => this.mapToSimpleConfig(data)),
       catchError(error => {
         console.error('Error loading config from JSON, falling back to default constants:', error);
         return of(this.getDefaultConfig());
@@ -71,15 +72,21 @@ export class ContactHeroApiService {
     );
   }
 
-  private getDefaultConfig(): SimpleContactHeroConfig {
+  private mapToSimpleConfig(data: any): SimpleContactHeroConfig {
+    const constants = CONTACT_HERO_CONSTANTS;
+    
     return {
-      heroTitle: CONTACT_HERO_CONSTANTS.DEFAULT_HERO_TITLE,
-      heroSubtitle: CONTACT_HERO_CONSTANTS.DEFAULT_HERO_SUBTITLE,
-      heroTitleColor: CONTACT_HERO_CONSTANTS.DEFAULT_COLORS.HERO_TITLE,
-      heroSubtitleColor: CONTACT_HERO_CONSTANTS.DEFAULT_COLORS.HERO_SUBTITLE,
-      heroTitleFontFamily: CONTACT_HERO_CONSTANTS.DEFAULT_FONTS.HERO_TITLE,
-      heroSubtitleFontFamily: CONTACT_HERO_CONSTANTS.DEFAULT_FONTS.HERO_SUBTITLE,
-      backgroundColor: CONTACT_HERO_CONSTANTS.DEFAULT_COLORS.BACKGROUND
+      heroTitle: data.heroTitle || constants.DEFAULT_HERO_TITLE,
+      heroSubtitle: data.heroSubtitle || constants.DEFAULT_HERO_SUBTITLE,
+      heroTitleColor: data.heroTitleColor || constants.DEFAULT_COLORS.HERO_TITLE,
+      heroSubtitleColor: data.heroSubtitleColor || constants.DEFAULT_COLORS.HERO_SUBTITLE,
+      heroTitleFontFamily: data.heroTitleFontFamily || constants.DEFAULT_FONTS.HERO_TITLE,
+      heroSubtitleFontFamily: data.heroSubtitleFontFamily || constants.DEFAULT_FONTS.HERO_SUBTITLE,
+      backgroundColor: data.backgroundColor || constants.DEFAULT_COLORS.BACKGROUND
     };
+  }
+
+  private getDefaultConfig(): SimpleContactHeroConfig {
+    return this.mapToSimpleConfig({});
   }
 }
