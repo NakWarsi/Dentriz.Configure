@@ -108,6 +108,23 @@
                      [style.font-family]="doctorsConfig.doctorNameFontFamily"
                      placeholder="Enter doctor name"
                      title="Edit doctor name">
+              <div *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorName_' + currentDoctorIndex" class="inline-controls">
+                <select [(ngModel)]="doctorsConfig.doctorNameFontFamily" (change)="onDoctorsFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="doctorsConfig.doctorNameColor"
+                       (change)="onDoctorsColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
             </div>
 
             <!-- Doctor Title -->
@@ -129,6 +146,23 @@
                      [style.font-family]="doctorsConfig.doctorTitleFontFamily"
                      placeholder="Enter doctor title"
                      title="Edit doctor title">
+              <div *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorTitle_' + currentDoctorIndex" class="inline-controls">
+                <select [(ngModel)]="doctorsConfig.doctorTitleFontFamily" (change)="onDoctorsFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="doctorsConfig.doctorTitleColor"
+                       (change)="onDoctorsColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
             </div>
 
             <!-- Doctor Bio -->
@@ -150,6 +184,21 @@
                           [placeholder]="'Enter bio paragraph ' + (bioIndex + 1)"
                           [title]="'Edit bio paragraph ' + (bioIndex + 1)"></textarea>
                 <div *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorBio_' + currentDoctorIndex + '_' + bioIndex" class="inline-controls">
+                  <select [(ngModel)]="doctorsConfig.doctorBioFontFamily" (change)="onDoctorsFontChange()" class="font-select-inline" title="Font Family">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="Times New Roman, serif">Times New Roman</option>
+                    <option value="Helvetica, sans-serif">Helvetica</option>
+                    <option value="Verdana, sans-serif">Verdana</option>
+                    <option value="Courier New, monospace">Courier New</option>
+                    <option value="Impact, sans-serif">Impact</option>
+                    <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                  </select>
+                  <input type="color" 
+                         [(ngModel)]="doctorsConfig.doctorBioColor"
+                         (change)="onDoctorsColorChange()"
+                         class="color-picker-inline"
+                         title="Color">
                   <button class="remove-item-btn" 
                           (click)="removeBioParagraph(currentDoctorIndex, bioIndex)" 
                           title="Remove this bio paragraph"
@@ -187,6 +236,21 @@
                        [placeholder]="'Enter specialty ' + (specialtyIndex + 1)"
                        [title]="'Edit specialty ' + (specialtyIndex + 1)">
                 <div *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorSpecialty_' + currentDoctorIndex + '_' + specialtyIndex" class="inline-controls">
+                  <select [(ngModel)]="doctorsConfig.specialtyFontFamily" (change)="onDoctorsFontChange()" class="font-select-inline" title="Font Family">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="Times New Roman, serif">Times New Roman</option>
+                    <option value="Helvetica, sans-serif">Helvetica</option>
+                    <option value="Verdana, sans-serif">Verdana</option>
+                    <option value="Courier New, monospace">Courier New</option>
+                    <option value="Impact, sans-serif">Impact</option>
+                    <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                  </select>
+                  <input type="color" 
+                         [(ngModel)]="doctorsConfig.specialtyColor"
+                         (change)="onDoctorsColorChange()"
+                         class="color-picker-inline"
+                         title="Color">
                   <button class="remove-item-btn" 
                           (click)="removeSpecialty(currentDoctorIndex, specialtyIndex)" 
                           title="Remove this specialty"
@@ -215,10 +279,83 @@
               <span>👨‍⚕️</span>
             </div>
           </div>
-          <div class="doctor-title2">{{ currentDoctors[currentDoctorIndex].title }} 
-            <div class="doctor-title3">{{ currentDoctors[currentDoctorIndex].title2 }}
-            </div>            
+          <div class="doctor-title2">
+            <!-- Doctor Title 2 (Main Title) -->
+            <div class="editable-element">
+              <span *ngIf="!isEditingDoctors || editingDoctorsElement !== 'doctorTitle2_' + currentDoctorIndex"
+                    [style.color]="doctorsConfig.doctorTitleColor"
+                    [style.font-family]="doctorsConfig.doctorTitleFontFamily"
+                    (click)="startInlineEditDoctors('doctorTitle2_' + currentDoctorIndex)">
+                {{ currentDoctors[currentDoctorIndex].title }}
+                <span class="edit-icon" *ngIf="isEditingDoctors">✏️</span>
+              </span>
+              <input *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorTitle2_' + currentDoctorIndex"
+                     [(ngModel)]="currentDoctors[currentDoctorIndex].title"
+                     (blur)="stopInlineEditDoctors()"
+                     (keyup.enter)="stopInlineEditDoctors()"
+                     class="inline-edit-input"
+                     [style.color]="doctorsConfig.doctorTitleColor"
+                     [style.font-family]="doctorsConfig.doctorTitleFontFamily"
+                     placeholder="Enter doctor title"
+                     title="Edit doctor title">
+              <div *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorTitle2_' + currentDoctorIndex" class="inline-controls">
+                <select [(ngModel)]="doctorsConfig.doctorTitleFontFamily" (change)="onDoctorsFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="doctorsConfig.doctorTitleColor"
+                       (change)="onDoctorsColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
             </div>
+            
+            <!-- Doctor Title 3 (Subtitle) -->
+            <div class="doctor-title3">
+              <div class="editable-element">
+                <span *ngIf="!isEditingDoctors || editingDoctorsElement !== 'doctorTitle3_' + currentDoctorIndex"
+                      [style.color]="doctorsConfig.doctorTitleColor"
+                      [style.font-family]="doctorsConfig.doctorTitleFontFamily"
+                      (click)="startInlineEditDoctors('doctorTitle3_' + currentDoctorIndex)">
+                  {{ currentDoctors[currentDoctorIndex].title2 }}
+                  <span class="edit-icon" *ngIf="isEditingDoctors">✏️</span>
+                </span>
+                <input *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorTitle3_' + currentDoctorIndex"
+                       [(ngModel)]="currentDoctors[currentDoctorIndex].title2"
+                       (blur)="stopInlineEditDoctors()"
+                       (keyup.enter)="stopInlineEditDoctors()"
+                       class="inline-edit-input"
+                       [style.color]="doctorsConfig.doctorTitleColor"
+                       [style.font-family]="doctorsConfig.doctorTitleFontFamily"
+                       placeholder="Enter doctor subtitle"
+                       title="Edit doctor subtitle">
+                <div *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorTitle3_' + currentDoctorIndex" class="inline-controls">
+                  <select [(ngModel)]="doctorsConfig.doctorTitleFontFamily" (change)="onDoctorsFontChange()" class="font-select-inline" title="Font Family">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="Times New Roman, serif">Times New Roman</option>
+                    <option value="Helvetica, sans-serif">Helvetica</option>
+                    <option value="Verdana, sans-serif">Verdana</option>
+                    <option value="Courier New, monospace">Courier New</option>
+                    <option value="Impact, sans-serif">Impact</option>
+                    <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                  </select>
+                  <input type="color" 
+                         [(ngModel)]="doctorsConfig.doctorTitleColor"
+                         (change)="onDoctorsColorChange()"
+                         class="color-picker-inline"
+                         title="Color">
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
         <!-- Navigation arrows -->
