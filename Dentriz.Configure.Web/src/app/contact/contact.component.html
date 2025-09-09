@@ -1,251 +1,2048 @@
-<!-- Contact Hero -->
-<section class="contact-hero">
-  <div class="container">
-    <h1>Contact the Best Dentists in Pune</h1>
-    <p>Get in touch with DentRiz Dental Clinic and it's associated Doctors</p>
-  </div>
-</section>
+<!-- Loading and Error States -->
+<div class="loading-container" *ngIf="contactHeroLoading">
+  <p>Loading contact hero section...</p>
+</div>
 
-<!-- Contact Information -->
-<section class="contact-info-section">
+<div class="error-container" *ngIf="contactHeroError">
+  <p>Error loading contact hero section. Please try again.</p>
+  <button (click)="loadContactHeroConfig()">Retry</button>
+</div>
+
+<!-- Contact Hero Section -->
+<section class="contact-hero" 
+         *ngIf="!contactHeroLoading && !contactHeroError && contactHeroConfig"
+         [style.background-color]="contactHeroConfig.backgroundColor">
   <div class="container">
-    <div class="contact-grid">
-      <div class="contact-card">
-        <div class="contact-icon">📞</div>
-        <h3>Phone</h3>
-        <p class="contact-note">Call us for any enquiry</p>
-        <div class="contact-buttons">
-          <!-- <a href="tel:750-616-8095" class="emergency-btn">📞 Emergency Call</a> -->
-          <a href="tel:932-144-9313" class="btn-secondary">📞 Inquiries</a>
-        </div>
-      </div>
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingContactHero">
+      <button class="edit-btn-floating" (click)="startEditingContactHero()" title="Edit Contact Hero Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <!-- Inline Editable Content -->
+    <div class="contact-hero-content">
       
-      <div class="contact-card">
-        <div class="contact-icon">📧</div>
-        <h3>Email</h3>
-        <p class="contact-note">Send us a message anytime</p>
-        <div class="contact-buttons">
-          <a href="mailto:rzwarsi707@gmail.com" class="btn-primary">📧 Send Email</a>
+      <div class="contact-hero-text">
+        <!-- Title with inline editing -->
+        <div class="editable-element">
+          <h1 *ngIf="!isEditingContactHero || editingElement !== 'heroTitle'"
+              [style.color]="contactHeroConfig.heroTitleColor"
+              [style.font-family]="contactHeroConfig.heroTitleFontFamily"
+              (click)="startInlineEdit('heroTitle')">
+            {{ contactHeroConfig.heroTitle }}
+            <span class="edit-icon" *ngIf="isEditingContactHero">✏️</span>
+          </h1>
+          <input *ngIf="isEditingContactHero && editingElement === 'heroTitle'"
+                 [(ngModel)]="contactHeroConfig.heroTitle"
+                 (blur)="stopInlineEdit()"
+                 (keyup.enter)="stopInlineEdit()"
+                 class="inline-edit-input"
+                 [style.color]="contactHeroConfig.heroTitleColor"
+                 [style.font-family]="contactHeroConfig.heroTitleFontFamily"
+                 placeholder="Enter hero title"
+                 title="Edit hero title">
+          <div *ngIf="isEditingContactHero && editingElement === 'heroTitle'" class="inline-controls">
+            <select [(ngModel)]="contactHeroConfig.heroTitleFontFamily" (change)="onFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactHeroConfig.heroTitleColor"
+                   (change)="onColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+        
+        <!-- Subtitle with inline editing -->
+        <div class="editable-element">
+          <p *ngIf="!isEditingContactHero || editingElement !== 'heroSubtitle'"
+             [style.color]="contactHeroConfig.heroSubtitleColor"
+             [style.font-family]="contactHeroConfig.heroSubtitleFontFamily"
+             (click)="startInlineEdit('heroSubtitle')">
+            {{ contactHeroConfig.heroSubtitle }}
+            <span class="edit-icon" *ngIf="isEditingContactHero">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingContactHero && editingElement === 'heroSubtitle'"
+                    [(ngModel)]="contactHeroConfig.heroSubtitle"
+                    (blur)="stopInlineEdit()"
+                    (keyup.ctrl.enter)="stopInlineEdit()"
+                    class="inline-edit-textarea"
+                    [style.color]="contactHeroConfig.heroSubtitleColor"
+                    [style.font-family]="contactHeroConfig.heroSubtitleFontFamily"
+                    placeholder="Enter hero subtitle"
+                    title="Edit hero subtitle"></textarea>
+          <div *ngIf="isEditingContactHero && editingElement === 'heroSubtitle'" class="inline-controls">
+            <select [(ngModel)]="contactHeroConfig.heroSubtitleFontFamily" (change)="onFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactHeroConfig.heroSubtitleColor"
+                   (change)="onColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
         </div>
       </div>
-      
-      <div class="contact-card">
-        <div class="contact-icon">📍</div>
-        <h3>Address</h3>
-        <p class="contact-note">Best dental clinic in Pune</p>
-        <div class="contact-buttons">
-          <a href="https://maps.app.goo.gl/4qYJf5jwSWNNExSQ8" target="_blank" class="btn-outline">📍 Get Directions</a>
+    </div>
+    
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingContactHero">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" [(ngModel)]="contactHeroConfig.backgroundColor" (change)="onColorChange()" class="color-picker" title="Background Color">
         </div>
       </div>
-      
-      <div class="contact-card">
-        <div class="contact-icon">🕒</div>
-        <h3>Emergency</h3>
-        <p class="contact-note">24/7 emergency care </p>
-        <div class="contact-buttons">
-          <a href="tel:750-616-8095" class="emergency-btn">🚨 Emergency Call</a>
-          <!-- <a href="/appointment" class="btn-secondary">📅 Book Appointment</a> -->
-        </div>
-      </div>
+    </div>
+    
+    <!-- Edit Actions -->
+    <div class="edit-actions" *ngIf="isEditingContactHero">
+      <button class="save-btn" (click)="stopEditingContactHero()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingContactHero()">Cancel</button>
+      <button class="reset-btn" (click)="resetContactHeroToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
 
-<!-- Office Hours -->
-<section class="hours-section">
+<!-- Contact Information Loading and Error States -->
+<div class="loading-container" *ngIf="contactInfoLoading">
+  <p>Loading contact information section...</p>
+</div>
+
+<div class="error-container" *ngIf="contactInfoError">
+  <p>Error loading contact information section. Please try again.</p>
+  <button (click)="loadContactInfoConfig()">Retry</button>
+</div>
+
+<!-- Contact Information Section -->
+<section class="contact-info-section" 
+         *ngIf="!contactInfoLoading && !contactInfoError && contactInfoConfig"
+         [style.background-color]="contactInfoConfig.backgroundColor">
   <div class="container">
-    <h2 class="section-title">Office Hours</h2>
-    <p class="section-subtitle">Convenient hours to fit your busy schedule</p>
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingContactInfo">
+      <button class="edit-btn-floating" (click)="startEditingContactInfo()" title="Edit Contact Information Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <div class="contact-grid">
+      <!-- Phone Card -->
+      <div class="contact-card">
+        <div class="contact-icon">📞</div>
+        
+        <!-- Phone Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'phoneTitle'"
+              [style.color]="contactInfoConfig.phoneTitleColor"
+              [style.font-family]="contactInfoConfig.phoneTitleFontFamily"
+              (click)="startInlineEditContactInfo('phoneTitle')">
+            {{ contactInfoConfig.phoneTitle }}
+            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+          </h3>
+          <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'phoneTitle'"
+                 [(ngModel)]="contactInfoConfig.phoneTitle"
+                 (blur)="stopInlineEditContactInfo()"
+                 (keyup.enter)="stopInlineEditContactInfo()"
+                 class="inline-edit-input"
+                 [style.color]="contactInfoConfig.phoneTitleColor"
+                 [style.font-family]="contactInfoConfig.phoneTitleFontFamily"
+                 placeholder="Enter phone title"
+                 title="Edit phone title">
+          <div *ngIf="isEditingContactInfo && editingContactInfoElement === 'phoneTitle'" class="inline-controls">
+            <select [(ngModel)]="contactInfoConfig.phoneTitleFontFamily" (change)="onContactInfoFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactInfoConfig.phoneTitleColor"
+                   (change)="onContactInfoColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <!-- Phone Note -->
+        <div class="editable-element">
+          <p class="contact-note" 
+             *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'phoneNote'"
+             [style.color]="contactInfoConfig.phoneNoteColor"
+             [style.font-family]="contactInfoConfig.phoneNoteFontFamily"
+             (click)="startInlineEditContactInfo('phoneNote')">
+            {{ contactInfoConfig.phoneNote }}
+            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+          </p>
+          <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'phoneNote'"
+                 [(ngModel)]="contactInfoConfig.phoneNote"
+                 (blur)="stopInlineEditContactInfo()"
+                 (keyup.enter)="stopInlineEditContactInfo()"
+                 class="inline-edit-input"
+                 [style.color]="contactInfoConfig.phoneNoteColor"
+                 [style.font-family]="contactInfoConfig.phoneNoteFontFamily"
+                 placeholder="Enter phone note"
+                 title="Edit phone note">
+          <div *ngIf="isEditingContactInfo && editingContactInfoElement === 'phoneNote'" class="inline-controls">
+            <select [(ngModel)]="contactInfoConfig.phoneNoteFontFamily" (change)="onContactInfoFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactInfoConfig.phoneNoteColor"
+                   (change)="onContactInfoColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <div class="contact-buttons">
+          <a [href]="'tel:' + contactInfoConfig.phoneNumber" 
+             class="btn-secondary"
+             [style.color]="contactInfoConfig.phoneButtonColor"
+             [style.font-family]="contactInfoConfig.phoneButtonFontFamily">
+            {{ contactInfoConfig.phoneButtonText }}
+          </a>
+        </div>
+      </div>
+      
+      <!-- Email Card -->
+      <div class="contact-card">
+        <div class="contact-icon">📧</div>
+        
+        <!-- Email Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'emailTitle'"
+              [style.color]="contactInfoConfig.emailTitleColor"
+              [style.font-family]="contactInfoConfig.emailTitleFontFamily"
+              (click)="startInlineEditContactInfo('emailTitle')">
+            {{ contactInfoConfig.emailTitle }}
+            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+          </h3>
+          <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'emailTitle'"
+                 [(ngModel)]="contactInfoConfig.emailTitle"
+                 (blur)="stopInlineEditContactInfo()"
+                 (keyup.enter)="stopInlineEditContactInfo()"
+                 class="inline-edit-input"
+                 [style.color]="contactInfoConfig.emailTitleColor"
+                 [style.font-family]="contactInfoConfig.emailTitleFontFamily"
+                 placeholder="Enter email title"
+                 title="Edit email title">
+          <div *ngIf="isEditingContactInfo && editingContactInfoElement === 'emailTitle'" class="inline-controls">
+            <select [(ngModel)]="contactInfoConfig.emailTitleFontFamily" (change)="onContactInfoFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactInfoConfig.emailTitleColor"
+                   (change)="onContactInfoColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <!-- Email Note -->
+        <div class="editable-element">
+          <p class="contact-note" 
+             *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'emailNote'"
+             [style.color]="contactInfoConfig.emailNoteColor"
+             [style.font-family]="contactInfoConfig.emailNoteFontFamily"
+             (click)="startInlineEditContactInfo('emailNote')">
+            {{ contactInfoConfig.emailNote }}
+            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+          </p>
+          <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'emailNote'"
+                 [(ngModel)]="contactInfoConfig.emailNote"
+                 (blur)="stopInlineEditContactInfo()"
+                 (keyup.enter)="stopInlineEditContactInfo()"
+                 class="inline-edit-input"
+                 [style.color]="contactInfoConfig.emailNoteColor"
+                 [style.font-family]="contactInfoConfig.emailNoteFontFamily"
+                 placeholder="Enter email note"
+                 title="Edit email note">
+          <div *ngIf="isEditingContactInfo && editingContactInfoElement === 'emailNote'" class="inline-controls">
+            <select [(ngModel)]="contactInfoConfig.emailNoteFontFamily" (change)="onContactInfoFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactInfoConfig.emailNoteColor"
+                   (change)="onContactInfoColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <div class="contact-buttons">
+          <a [href]="'mailto:' + contactInfoConfig.emailAddress" 
+             class="btn-primary"
+             [style.color]="contactInfoConfig.emailButtonColor"
+             [style.font-family]="contactInfoConfig.emailButtonFontFamily">
+            {{ contactInfoConfig.emailButtonText }}
+          </a>
+        </div>
+      </div>
+      
+      <!-- Address Card -->
+      <div class="contact-card">
+        <div class="contact-icon">📍</div>
+        
+        <!-- Address Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'addressTitle'"
+              [style.color]="contactInfoConfig.addressTitleColor"
+              [style.font-family]="contactInfoConfig.addressTitleFontFamily"
+              (click)="startInlineEditContactInfo('addressTitle')">
+            {{ contactInfoConfig.addressTitle }}
+            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+          </h3>
+          <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'addressTitle'"
+                 [(ngModel)]="contactInfoConfig.addressTitle"
+                 (blur)="stopInlineEditContactInfo()"
+                 (keyup.enter)="stopInlineEditContactInfo()"
+                 class="inline-edit-input"
+                 [style.color]="contactInfoConfig.addressTitleColor"
+                 [style.font-family]="contactInfoConfig.addressTitleFontFamily"
+                 placeholder="Enter address title"
+                 title="Edit address title">
+          <div *ngIf="isEditingContactInfo && editingContactInfoElement === 'addressTitle'" class="inline-controls">
+            <select [(ngModel)]="contactInfoConfig.addressTitleFontFamily" (change)="onContactInfoFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactInfoConfig.addressTitleColor"
+                   (change)="onContactInfoColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <!-- Address Note -->
+        <div class="editable-element">
+          <p class="contact-note" 
+             *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'addressNote'"
+             [style.color]="contactInfoConfig.addressNoteColor"
+             [style.font-family]="contactInfoConfig.addressNoteFontFamily"
+             (click)="startInlineEditContactInfo('addressNote')">
+            {{ contactInfoConfig.addressNote }}
+            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+          </p>
+          <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'addressNote'"
+                 [(ngModel)]="contactInfoConfig.addressNote"
+                 (blur)="stopInlineEditContactInfo()"
+                 (keyup.enter)="stopInlineEditContactInfo()"
+                 class="inline-edit-input"
+                 [style.color]="contactInfoConfig.addressNoteColor"
+                 [style.font-family]="contactInfoConfig.addressNoteFontFamily"
+                 placeholder="Enter address note"
+                 title="Edit address note">
+          <div *ngIf="isEditingContactInfo && editingContactInfoElement === 'addressNote'" class="inline-controls">
+            <select [(ngModel)]="contactInfoConfig.addressNoteFontFamily" (change)="onContactInfoFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactInfoConfig.addressNoteColor"
+                   (change)="onContactInfoColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <div class="contact-buttons">
+          <a [href]="contactInfoConfig.addressLink" 
+             target="_blank" 
+             class="btn-outline"
+             [style.color]="contactInfoConfig.addressButtonColor"
+             [style.font-family]="contactInfoConfig.addressButtonFontFamily">
+            {{ contactInfoConfig.addressButtonText }}
+          </a>
+        </div>
+      </div>
+      
+      <!-- Emergency Card -->
+      <div class="contact-card">
+        <div class="contact-icon">🕒</div>
+        
+        <!-- Emergency Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'emergencyTitle'"
+              [style.color]="contactInfoConfig.emergencyTitleColor"
+              [style.font-family]="contactInfoConfig.emergencyTitleFontFamily"
+              (click)="startInlineEditContactInfo('emergencyTitle')">
+            {{ contactInfoConfig.emergencyTitle }}
+            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+          </h3>
+          <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'emergencyTitle'"
+                 [(ngModel)]="contactInfoConfig.emergencyTitle"
+                 (blur)="stopInlineEditContactInfo()"
+                 (keyup.enter)="stopInlineEditContactInfo()"
+                 class="inline-edit-input"
+                 [style.color]="contactInfoConfig.emergencyTitleColor"
+                 [style.font-family]="contactInfoConfig.emergencyTitleFontFamily"
+                 placeholder="Enter emergency title"
+                 title="Edit emergency title">
+          <div *ngIf="isEditingContactInfo && editingContactInfoElement === 'emergencyTitle'" class="inline-controls">
+            <select [(ngModel)]="contactInfoConfig.emergencyTitleFontFamily" (change)="onContactInfoFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactInfoConfig.emergencyTitleColor"
+                   (change)="onContactInfoColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <!-- Emergency Note -->
+        <div class="editable-element">
+          <p class="contact-note" 
+             *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'emergencyNote'"
+             [style.color]="contactInfoConfig.emergencyNoteColor"
+             [style.font-family]="contactInfoConfig.emergencyNoteFontFamily"
+             (click)="startInlineEditContactInfo('emergencyNote')">
+            {{ contactInfoConfig.emergencyNote }}
+            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+          </p>
+          <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'emergencyNote'"
+                 [(ngModel)]="contactInfoConfig.emergencyNote"
+                 (blur)="stopInlineEditContactInfo()"
+                 (keyup.enter)="stopInlineEditContactInfo()"
+                 class="inline-edit-input"
+                 [style.color]="contactInfoConfig.emergencyNoteColor"
+                 [style.font-family]="contactInfoConfig.emergencyNoteFontFamily"
+                 placeholder="Enter emergency note"
+                 title="Edit emergency note">
+          <div *ngIf="isEditingContactInfo && editingContactInfoElement === 'emergencyNote'" class="inline-controls">
+            <select [(ngModel)]="contactInfoConfig.emergencyNoteFontFamily" (change)="onContactInfoFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactInfoConfig.emergencyNoteColor"
+                   (change)="onContactInfoColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <div class="contact-buttons">
+          <a [href]="'tel:' + contactInfoConfig.emergencyNumber" 
+             class="emergency-btn"
+             [style.color]="contactInfoConfig.emergencyButtonColor"
+             [style.font-family]="contactInfoConfig.emergencyButtonFontFamily">
+            {{ contactInfoConfig.emergencyButtonText }}
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingContactInfo">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" [(ngModel)]="contactInfoConfig.backgroundColor" (change)="onContactInfoColorChange()" class="color-picker" title="Background Color">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Edit Actions -->
+    <div class="edit-actions" *ngIf="isEditingContactInfo">
+      <button class="save-btn" (click)="stopEditingContactInfo()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingContactInfo()">Cancel</button>
+      <button class="reset-btn" (click)="resetContactInfoToOriginal()">Reset to Original</button>
+    </div>
+  </div>
+</section>
+
+<!-- Office Hours Loading and Error States -->
+<div class="loading-container" *ngIf="officeHoursLoading">
+  <p>Loading office hours section...</p>
+</div>
+
+<div class="error-container" *ngIf="officeHoursError">
+  <p>Error loading office hours section. Please try again.</p>
+  <button (click)="loadOfficeHoursConfig()">Retry</button>
+</div>
+
+<!-- Office Hours Section -->
+<section class="hours-section" 
+         *ngIf="!officeHoursLoading && !officeHoursError && officeHoursConfig"
+         [style.background-color]="officeHoursConfig.backgroundColor">
+  <div class="container">
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingOfficeHours">
+      <button class="edit-btn-floating" (click)="startEditingOfficeHours()" title="Edit Office Hours Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <!-- Section Title -->
+    <div class="editable-element">
+      <h2 class="section-title" 
+          *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'sectionTitle'"
+          [style.color]="officeHoursConfig.sectionTitleColor"
+          [style.font-family]="officeHoursConfig.sectionTitleFontFamily"
+          (click)="startInlineEditOfficeHours('sectionTitle')">
+        {{ officeHoursConfig.sectionTitle }}
+        <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+      </h2>
+      <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'sectionTitle'"
+             [(ngModel)]="officeHoursConfig.sectionTitle"
+             (blur)="stopInlineEditOfficeHours()"
+             (keyup.enter)="stopInlineEditOfficeHours()"
+             class="inline-edit-input"
+             [style.color]="officeHoursConfig.sectionTitleColor"
+             [style.font-family]="officeHoursConfig.sectionTitleFontFamily"
+             placeholder="Enter section title"
+             title="Edit section title">
+      <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'sectionTitle'" class="inline-controls">
+        <select [(ngModel)]="officeHoursConfig.sectionTitleFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="officeHoursConfig.sectionTitleColor"
+               (change)="onOfficeHoursColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
+
+    <!-- Section Subtitle -->
+    <div class="editable-element">
+      <p class="section-subtitle" 
+         *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'sectionSubtitle'"
+         [style.color]="officeHoursConfig.sectionSubtitleColor"
+         [style.font-family]="officeHoursConfig.sectionSubtitleFontFamily"
+         (click)="startInlineEditOfficeHours('sectionSubtitle')">
+        {{ officeHoursConfig.sectionSubtitle }}
+        <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+      </p>
+      <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'sectionSubtitle'"
+             [(ngModel)]="officeHoursConfig.sectionSubtitle"
+             (blur)="stopInlineEditOfficeHours()"
+             (keyup.enter)="stopInlineEditOfficeHours()"
+             class="inline-edit-input"
+             [style.color]="officeHoursConfig.sectionSubtitleColor"
+             [style.font-family]="officeHoursConfig.sectionSubtitleFontFamily"
+             placeholder="Enter section subtitle"
+             title="Edit section subtitle">
+      <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'sectionSubtitle'" class="inline-controls">
+        <select [(ngModel)]="officeHoursConfig.sectionSubtitleFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="officeHoursConfig.sectionSubtitleColor"
+               (change)="onOfficeHoursColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
     
     <div class="hours-content">
       <div class="hours-table">
+        <!-- Monday -->
         <div class="hours-row">
-          <div class="day">Monday</div>
-          <div class="time">10:00 AM - 10:00 PM</div>
+          <div class="day" [style.color]="officeHoursConfig.dayTextColor" [style.font-family]="officeHoursConfig.dayTextFontFamily">Monday</div>
+          <div class="time-editable">
+            <div class="editable-element">
+              <div class="time" 
+                   *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'mondayTime'"
+                   [style.color]="officeHoursConfig.timeTextColor"
+                   [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                   (click)="startInlineEditOfficeHours('mondayTime')">
+                {{ officeHoursConfig.mondayTime }}
+                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+              </div>
+              <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'mondayTime'"
+                     [(ngModel)]="officeHoursConfig.mondayTime"
+                     (blur)="stopInlineEditOfficeHours()"
+                     (keyup.enter)="stopInlineEditOfficeHours()"
+                     class="inline-edit-input"
+                     [style.color]="officeHoursConfig.timeTextColor"
+                     [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                     placeholder="Enter Monday hours"
+                     title="Edit Monday hours">
+              <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'mondayTime'" class="inline-controls">
+                <select [(ngModel)]="officeHoursConfig.timeTextFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="officeHoursConfig.timeTextColor"
+                       (change)="onOfficeHoursColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Tuesday -->
         <div class="hours-row">
-          <div class="day">Tuesday</div>
-          <div class="time">10:00 AM - 10:00 PM</div>
+          <div class="day" [style.color]="officeHoursConfig.dayTextColor" [style.font-family]="officeHoursConfig.dayTextFontFamily">Tuesday</div>
+          <div class="time-editable">
+            <div class="editable-element">
+              <div class="time" 
+                   *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'tuesdayTime'"
+                   [style.color]="officeHoursConfig.timeTextColor"
+                   [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                   (click)="startInlineEditOfficeHours('tuesdayTime')">
+                {{ officeHoursConfig.tuesdayTime }}
+                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+              </div>
+              <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'tuesdayTime'"
+                     [(ngModel)]="officeHoursConfig.tuesdayTime"
+                     (blur)="stopInlineEditOfficeHours()"
+                     (keyup.enter)="stopInlineEditOfficeHours()"
+                     class="inline-edit-input"
+                     [style.color]="officeHoursConfig.timeTextColor"
+                     [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                     placeholder="Enter Tuesday hours"
+                     title="Edit Tuesday hours">
+              <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'tuesdayTime'" class="inline-controls">
+                <select [(ngModel)]="officeHoursConfig.timeTextFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="officeHoursConfig.timeTextColor"
+                       (change)="onOfficeHoursColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Wednesday -->
         <div class="hours-row">
-          <div class="day">Wednesday</div>
-          <div class="time">10:00 AM - 10:00 PM</div>
+          <div class="day" [style.color]="officeHoursConfig.dayTextColor" [style.font-family]="officeHoursConfig.dayTextFontFamily">Wednesday</div>
+          <div class="time-editable">
+            <div class="editable-element">
+              <div class="time" 
+                   *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'wednesdayTime'"
+                   [style.color]="officeHoursConfig.timeTextColor"
+                   [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                   (click)="startInlineEditOfficeHours('wednesdayTime')">
+                {{ officeHoursConfig.wednesdayTime }}
+                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+              </div>
+              <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'wednesdayTime'"
+                     [(ngModel)]="officeHoursConfig.wednesdayTime"
+                     (blur)="stopInlineEditOfficeHours()"
+                     (keyup.enter)="stopInlineEditOfficeHours()"
+                     class="inline-edit-input"
+                     [style.color]="officeHoursConfig.timeTextColor"
+                     [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                     placeholder="Enter Wednesday hours"
+                     title="Edit Wednesday hours">
+              <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'wednesdayTime'" class="inline-controls">
+                <select [(ngModel)]="officeHoursConfig.timeTextFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="officeHoursConfig.timeTextColor"
+                       (change)="onOfficeHoursColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Thursday -->
         <div class="hours-row">
-          <div class="day">Thursday</div>
-          <div class="time">10:00 AM - 10:00 PM</div>
+          <div class="day" [style.color]="officeHoursConfig.dayTextColor" [style.font-family]="officeHoursConfig.dayTextFontFamily">Thursday</div>
+          <div class="time-editable">
+            <div class="editable-element">
+              <div class="time" 
+                   *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'thursdayTime'"
+                   [style.color]="officeHoursConfig.timeTextColor"
+                   [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                   (click)="startInlineEditOfficeHours('thursdayTime')">
+                {{ officeHoursConfig.thursdayTime }}
+                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+              </div>
+              <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'thursdayTime'"
+                     [(ngModel)]="officeHoursConfig.thursdayTime"
+                     (blur)="stopInlineEditOfficeHours()"
+                     (keyup.enter)="stopInlineEditOfficeHours()"
+                     class="inline-edit-input"
+                     [style.color]="officeHoursConfig.timeTextColor"
+                     [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                     placeholder="Enter Thursday hours"
+                     title="Edit Thursday hours">
+              <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'thursdayTime'" class="inline-controls">
+                <select [(ngModel)]="officeHoursConfig.timeTextFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="officeHoursConfig.timeTextColor"
+                       (change)="onOfficeHoursColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Friday -->
         <div class="hours-row">
-          <div class="day">Friday</div>
-          <div class="time">10:00 AM - 10:00 PM</div>
+          <div class="day" [style.color]="officeHoursConfig.dayTextColor" [style.font-family]="officeHoursConfig.dayTextFontFamily">Friday</div>
+          <div class="time-editable">
+            <div class="editable-element">
+              <div class="time" 
+                   *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'fridayTime'"
+                   [style.color]="officeHoursConfig.timeTextColor"
+                   [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                   (click)="startInlineEditOfficeHours('fridayTime')">
+                {{ officeHoursConfig.fridayTime }}
+                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+              </div>
+              <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'fridayTime'"
+                     [(ngModel)]="officeHoursConfig.fridayTime"
+                     (blur)="stopInlineEditOfficeHours()"
+                     (keyup.enter)="stopInlineEditOfficeHours()"
+                     class="inline-edit-input"
+                     [style.color]="officeHoursConfig.timeTextColor"
+                     [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                     placeholder="Enter Friday hours"
+                     title="Edit Friday hours">
+              <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'fridayTime'" class="inline-controls">
+                <select [(ngModel)]="officeHoursConfig.timeTextFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="officeHoursConfig.timeTextColor"
+                       (change)="onOfficeHoursColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Saturday -->
         <div class="hours-row">
-          <div class="day">Saturday</div>
-          <div class="time">10:00 AM - 10:00 PM</div>
+          <div class="day" [style.color]="officeHoursConfig.dayTextColor" [style.font-family]="officeHoursConfig.dayTextFontFamily">Saturday</div>
+          <div class="time-editable">
+            <div class="editable-element">
+              <div class="time" 
+                   *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'saturdayTime'"
+                   [style.color]="officeHoursConfig.timeTextColor"
+                   [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                   (click)="startInlineEditOfficeHours('saturdayTime')">
+                {{ officeHoursConfig.saturdayTime }}
+                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+              </div>
+              <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'saturdayTime'"
+                     [(ngModel)]="officeHoursConfig.saturdayTime"
+                     (blur)="stopInlineEditOfficeHours()"
+                     (keyup.enter)="stopInlineEditOfficeHours()"
+                     class="inline-edit-input"
+                     [style.color]="officeHoursConfig.timeTextColor"
+                     [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                     placeholder="Enter Saturday hours"
+                     title="Edit Saturday hours">
+              <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'saturdayTime'" class="inline-controls">
+                <select [(ngModel)]="officeHoursConfig.timeTextFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="officeHoursConfig.timeTextColor"
+                       (change)="onOfficeHoursColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Sunday -->
         <div class="hours-row">
-          <div class="day">Sunday</div>
-          <div class="time">10:00 AM - 10:00 PM</div>
+          <div class="day" [style.color]="officeHoursConfig.dayTextColor" [style.font-family]="officeHoursConfig.dayTextFontFamily">Sunday</div>
+          <div class="time-editable">
+            <div class="editable-element">
+              <div class="time" 
+                   *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'sundayTime'"
+                   [style.color]="officeHoursConfig.timeTextColor"
+                   [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                   (click)="startInlineEditOfficeHours('sundayTime')">
+                {{ officeHoursConfig.sundayTime }}
+                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+              </div>
+              <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'sundayTime'"
+                     [(ngModel)]="officeHoursConfig.sundayTime"
+                     (blur)="stopInlineEditOfficeHours()"
+                     (keyup.enter)="stopInlineEditOfficeHours()"
+                     class="inline-edit-input"
+                     [style.color]="officeHoursConfig.timeTextColor"
+                     [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                     placeholder="Enter Sunday hours"
+                     title="Edit Sunday hours">
+              <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'sundayTime'" class="inline-controls">
+                <select [(ngModel)]="officeHoursConfig.timeTextFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="officeHoursConfig.timeTextColor"
+                       (change)="onOfficeHoursColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       
       <div class="hours-note">
-        <h3>📋 Important Notes</h3>
-        <ul>
-          <li>We offer flexible appointment scheduling for our dental clinic in Wakad</li>
-          <li>Emergency appointments available outside regular hours</li>
-          <li>New patients welcome - call to schedule your first visit at the best dentist in Wakad</li>
-          <li>We accept most insurance plans for dental implants in Wakad and cosmetic dentistry in Wakad</li>
-          <li>Conveniently located dental clinic in Hinjewadi and Wakad for all your dental needs</li>
+        <!-- Notes Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'notesTitle'"
+              [style.color]="officeHoursConfig.notesTitleColor"
+              [style.font-family]="officeHoursConfig.notesTitleFontFamily"
+              (click)="startInlineEditOfficeHours('notesTitle')">
+            {{ officeHoursConfig.notesTitle }}
+            <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+          </h3>
+          <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'notesTitle'"
+                 [(ngModel)]="officeHoursConfig.notesTitle"
+                 (blur)="stopInlineEditOfficeHours()"
+                 (keyup.enter)="stopInlineEditOfficeHours()"
+                 class="inline-edit-input"
+                 [style.color]="officeHoursConfig.notesTitleColor"
+                 [style.font-family]="officeHoursConfig.notesTitleFontFamily"
+                 placeholder="Enter notes title"
+                 title="Edit notes title">
+          <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'notesTitle'" class="inline-controls">
+            <select [(ngModel)]="officeHoursConfig.notesTitleFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="officeHoursConfig.notesTitleColor"
+                   (change)="onOfficeHoursColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <ul [style.color]="officeHoursConfig.notesTextColor" [style.font-family]="officeHoursConfig.notesTextFontFamily">
+          <li *ngFor="let note of officeHoursConfig.notes; let i = index" class="note-item">
+            <div class="editable-element">
+              <div class="note-text" 
+                   *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'note_' + i"
+                   [style.color]="officeHoursConfig.notesTextColor"
+                   [style.font-family]="officeHoursConfig.notesTextFontFamily"
+                   (click)="startInlineEditOfficeHours('note_' + i)">
+                {{ note }}
+                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+              </div>
+              <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'note_' + i"
+                     [(ngModel)]="officeHoursConfig.notes[i]"
+                     (blur)="stopInlineEditOfficeHours()"
+                     (keyup.enter)="stopInlineEditOfficeHours()"
+                     class="inline-edit-input"
+                     [style.color]="officeHoursConfig.notesTextColor"
+                     [style.font-family]="officeHoursConfig.notesTextFontFamily"
+                     [placeholder]="'Enter note ' + (i + 1)"
+                     [title]="'Edit note ' + (i + 1)">
+              <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'note_' + i" class="inline-controls">
+                <select [(ngModel)]="officeHoursConfig.notesTextFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="officeHoursConfig.notesTextColor"
+                       (change)="onOfficeHoursColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+                <button class="remove-note-btn" 
+                        (click)="removeNote(i)" 
+                        title="Remove this note"
+                        *ngIf="officeHoursConfig.notes.length > 1">
+                  ❌
+                </button>
+              </div>
+            </div>
+          </li>
         </ul>
+        
+        <!-- Add Note Button -->
+        <div class="add-note-section" *ngIf="isEditingOfficeHours">
+          <button class="add-note-btn" (click)="addNote()" title="Add new note">
+            ➕ Add Note
+          </button>
+        </div>
       </div>
+    </div>
+    
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingOfficeHours">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" [(ngModel)]="officeHoursConfig.backgroundColor" (change)="onOfficeHoursColorChange()" class="color-picker" title="Background Color">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Edit Actions -->
+    <div class="edit-actions" *ngIf="isEditingOfficeHours">
+      <button class="save-btn" (click)="stopEditingOfficeHours()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingOfficeHours()">Cancel</button>
+      <button class="reset-btn" (click)="resetOfficeHoursToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
 
 <!-- Location & Map -->
-<section class="location-section">
+<section class="location-section" 
+         *ngIf="!locationMapLoading && !locationMapError && locationMapConfig"
+         [style.background-color]="locationMapConfig.backgroundColor">
   <div class="container">
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingLocationMap">
+      <button class="edit-btn-floating" (click)="startEditingLocationMap()" title="Edit Location & Map Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
     <div class="location-content">
       <div class="location-info">
-        <h2>Find Our Office</h2>
-        <p>
-          Our dental office is conveniently located in the heart of the city, with easy access to public transportation and plenty of parking available. We're committed to making your visit as comfortable and convenient as possible.
-        </p>
+        <!-- Section Title -->
+        <div class="editable-element">
+          <h2 *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'sectionTitle'"
+              [style.color]="locationMapConfig.sectionTitleColor"
+              [style.font-family]="locationMapConfig.sectionTitleFontFamily"
+              (click)="startInlineEditLocationMap('sectionTitle')">
+            {{ locationMapConfig.sectionTitle }}
+            <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+          </h2>
+          <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'sectionTitle'"
+                 [(ngModel)]="locationMapConfig.sectionTitle"
+                 (blur)="stopInlineEditLocationMap()"
+                 (keyup.enter)="stopInlineEditLocationMap()"
+                 class="inline-edit-input"
+                 [style.color]="locationMapConfig.sectionTitleColor"
+                 [style.font-family]="locationMapConfig.sectionTitleFontFamily"
+                 placeholder="Enter section title"
+                 title="Edit section title">
+          <div *ngIf="isEditingLocationMap && editingLocationMapElement === 'sectionTitle'" class="inline-controls">
+            <select [(ngModel)]="locationMapConfig.sectionTitleFontFamily" (change)="onLocationMapFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="locationMapConfig.sectionTitleColor"
+                   (change)="onLocationMapColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <!-- Section Description -->
+        <div class="editable-element">
+          <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'sectionDescription'"
+             [style.color]="locationMapConfig.sectionDescriptionColor"
+             [style.font-family]="locationMapConfig.sectionDescriptionFontFamily"
+             (click)="startInlineEditLocationMap('sectionDescription')">
+            {{ locationMapConfig.sectionDescription }}
+            <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingLocationMap && editingLocationMapElement === 'sectionDescription'"
+                    [(ngModel)]="locationMapConfig.sectionDescription"
+                    (blur)="stopInlineEditLocationMap()"
+                    (keyup.enter)="stopInlineEditLocationMap()"
+                    class="inline-edit-textarea"
+                    [style.color]="locationMapConfig.sectionDescriptionColor"
+                    [style.font-family]="locationMapConfig.sectionDescriptionFontFamily"
+                    placeholder="Enter section description"
+                    title="Edit section description"></textarea>
+          <div *ngIf="isEditingLocationMap && editingLocationMapElement === 'sectionDescription'" class="inline-controls">
+            <select [(ngModel)]="locationMapConfig.sectionDescriptionFontFamily" (change)="onLocationMapFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="locationMapConfig.sectionDescriptionColor"
+                   (change)="onLocationMapColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
         
         <div class="location-details">
+          <!-- Address -->
           <div class="detail-item">
-            <strong>📍 Address:</strong>
-            <p>Dentriz Dental Clinic<br>Rohan Tarang, Wakad Chowk<br> opposit Alamgir masjid</p>
+            <div class="editable-element">
+              <strong *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'addressTitle'"
+                     [style.color]="locationMapConfig.detailTitleColor"
+                     [style.font-family]="locationMapConfig.detailTitleFontFamily"
+                     (click)="startInlineEditLocationMap('addressTitle')">
+                {{ locationMapConfig.addressTitle }}
+                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              </strong>
+              <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'addressTitle'"
+                     [(ngModel)]="locationMapConfig.addressTitle"
+                     (blur)="stopInlineEditLocationMap()"
+                     (keyup.enter)="stopInlineEditLocationMap()"
+                     class="inline-edit-input"
+                     [style.color]="locationMapConfig.detailTitleColor"
+                     [style.font-family]="locationMapConfig.detailTitleFontFamily"
+                     placeholder="Enter address title"
+                     title="Edit address title">
+            </div>
+            <div class="editable-element">
+              <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'addressContent'"
+                 [style.color]="locationMapConfig.detailContentColor"
+                 [style.font-family]="locationMapConfig.detailContentFontFamily"
+                 (click)="startInlineEditLocationMap('addressContent')"
+                 [innerHTML]="locationMapConfig.addressContent">
+                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              </p>
+              <textarea *ngIf="isEditingLocationMap && editingLocationMapElement === 'addressContent'"
+                        [(ngModel)]="locationMapConfig.addressContent"
+                        (blur)="stopInlineEditLocationMap()"
+                        (keyup.enter)="stopInlineEditLocationMap()"
+                        class="inline-edit-textarea"
+                        [style.color]="locationMapConfig.detailContentColor"
+                        [style.font-family]="locationMapConfig.detailContentFontFamily"
+                        placeholder="Enter address content"
+                        title="Edit address content"></textarea>
+            </div>
           </div>
           
+          <!-- Parking -->
           <div class="detail-item">
-            <strong>🚗 Parking:</strong>
-            <p>Free parking available in our lot</p>
+            <div class="editable-element">
+              <strong *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'parkingTitle'"
+                     [style.color]="locationMapConfig.detailTitleColor"
+                     [style.font-family]="locationMapConfig.detailTitleFontFamily"
+                     (click)="startInlineEditLocationMap('parkingTitle')">
+                {{ locationMapConfig.parkingTitle }}
+                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              </strong>
+              <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'parkingTitle'"
+                     [(ngModel)]="locationMapConfig.parkingTitle"
+                     (blur)="stopInlineEditLocationMap()"
+                     (keyup.enter)="stopInlineEditLocationMap()"
+                     class="inline-edit-input"
+                     [style.color]="locationMapConfig.detailTitleColor"
+                     [style.font-family]="locationMapConfig.detailTitleFontFamily"
+                     placeholder="Enter parking title"
+                     title="Edit parking title">
+            </div>
+            <div class="editable-element">
+              <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'parkingContent'"
+                 [style.color]="locationMapConfig.detailContentColor"
+                 [style.font-family]="locationMapConfig.detailContentFontFamily"
+                 (click)="startInlineEditLocationMap('parkingContent')">
+                {{ locationMapConfig.parkingContent }}
+                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              </p>
+              <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'parkingContent'"
+                     [(ngModel)]="locationMapConfig.parkingContent"
+                     (blur)="stopInlineEditLocationMap()"
+                     (keyup.enter)="stopInlineEditLocationMap()"
+                     class="inline-edit-input"
+                     [style.color]="locationMapConfig.detailContentColor"
+                     [style.font-family]="locationMapConfig.detailContentFontFamily"
+                     placeholder="Enter parking content"
+                     title="Edit parking content">
+            </div>
           </div>
           
+          <!-- Public Transit -->
           <div class="detail-item">
-            <strong>🚌 Public Transit:</strong>
-            <p>Bus routes available to stop nearby<br> wakd chowk bus stop</p>
+            <div class="editable-element">
+              <strong *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'transitTitle'"
+                     [style.color]="locationMapConfig.detailTitleColor"
+                     [style.font-family]="locationMapConfig.detailTitleFontFamily"
+                     (click)="startInlineEditLocationMap('transitTitle')">
+                {{ locationMapConfig.transitTitle }}
+                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              </strong>
+              <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'transitTitle'"
+                     [(ngModel)]="locationMapConfig.transitTitle"
+                     (blur)="stopInlineEditLocationMap()"
+                     (keyup.enter)="stopInlineEditLocationMap()"
+                     class="inline-edit-input"
+                     [style.color]="locationMapConfig.detailTitleColor"
+                     [style.font-family]="locationMapConfig.detailTitleFontFamily"
+                     placeholder="Enter transit title"
+                     title="Edit transit title">
+            </div>
+            <div class="editable-element">
+              <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'transitContent'"
+                 [style.color]="locationMapConfig.detailContentColor"
+                 [style.font-family]="locationMapConfig.detailContentFontFamily"
+                 (click)="startInlineEditLocationMap('transitContent')"
+                 [innerHTML]="locationMapConfig.transitContent">
+                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              </p>
+              <textarea *ngIf="isEditingLocationMap && editingLocationMapElement === 'transitContent'"
+                        [(ngModel)]="locationMapConfig.transitContent"
+                        (blur)="stopInlineEditLocationMap()"
+                        (keyup.enter)="stopInlineEditLocationMap()"
+                        class="inline-edit-textarea"
+                        [style.color]="locationMapConfig.detailContentColor"
+                        [style.font-family]="locationMapConfig.detailContentFontFamily"
+                        placeholder="Enter transit content"
+                        title="Edit transit content"></textarea>
+            </div>
           </div>
           
+          <!-- Metro Stop -->
           <div class="detail-item">
-            <strong>♿ Metro Stop:</strong>
-            <p>walking distanbce from Hinjewadi bridge(metro station)</p>
+            <div class="editable-element">
+              <strong *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'metroTitle'"
+                     [style.color]="locationMapConfig.detailTitleColor"
+                     [style.font-family]="locationMapConfig.detailTitleFontFamily"
+                     (click)="startInlineEditLocationMap('metroTitle')">
+                {{ locationMapConfig.metroTitle }}
+                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              </strong>
+              <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'metroTitle'"
+                     [(ngModel)]="locationMapConfig.metroTitle"
+                     (blur)="stopInlineEditLocationMap()"
+                     (keyup.enter)="stopInlineEditLocationMap()"
+                     class="inline-edit-input"
+                     [style.color]="locationMapConfig.detailTitleColor"
+                     [style.font-family]="locationMapConfig.detailTitleFontFamily"
+                     placeholder="Enter metro title"
+                     title="Edit metro title">
+            </div>
+            <div class="editable-element">
+              <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'metroContent'"
+                 [style.color]="locationMapConfig.detailContentColor"
+                 [style.font-family]="locationMapConfig.detailContentFontFamily"
+                 (click)="startInlineEditLocationMap('metroContent')">
+                {{ locationMapConfig.metroContent }}
+                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              </p>
+              <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'metroContent'"
+                     [(ngModel)]="locationMapConfig.metroContent"
+                     (blur)="stopInlineEditLocationMap()"
+                     (keyup.enter)="stopInlineEditLocationMap()"
+                     class="inline-edit-input"
+                     [style.color]="locationMapConfig.detailContentColor"
+                     [style.font-family]="locationMapConfig.detailContentFontFamily"
+                     placeholder="Enter metro content"
+                     title="Edit metro content">
+            </div>
           </div>
         </div>
       </div>
       
       <div class="clinic-map">
-          <h3>📍 Visit Our Clinic</h3>
-          <div class="map-container">
-                         <iframe 
-               src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d236.35202385690053!2d73.76117365276494!3d18.59060519688083!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2b97dc645a90f%3A0xf370478ecff49ae9!2sDentriz%20dental%20clinic!5e0!3m2!1sen!2sin!4v1755898762059!5m2!1sen!2sin"
-               width="100%" 
-               height="300" 
-               style="border:0;" 
-               allowfullscreen="" 
-               loading="lazy" 
-               referrerpolicy="no-referrer-when-downgrade"
-               title="DentRiz Dental Clinic Location"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-             </iframe>
-          </div>
-          <div class="map-info">
-            <p><strong>📍 Location:</strong> Wakad, Pune, Maharashtra</p>
-            <p><strong>🕒 Hours:</strong> Mon-Sun: 9:00 AM - 10:00 PM</p>
-            <a href="https://maps.app.goo.gl/qJdrWXYGJR8ki7BR7" target="_blank" class="btn-outline">📍 Get Directions</a>
+        <!-- Map Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'mapTitle'"
+              [style.color]="locationMapConfig.mapTitleColor"
+              [style.font-family]="locationMapConfig.mapTitleFontFamily"
+              (click)="startInlineEditLocationMap('mapTitle')">
+            {{ locationMapConfig.mapTitle }}
+            <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+          </h3>
+          <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'mapTitle'"
+                 [(ngModel)]="locationMapConfig.mapTitle"
+                 (blur)="stopInlineEditLocationMap()"
+                 (keyup.enter)="stopInlineEditLocationMap()"
+                 class="inline-edit-input"
+                 [style.color]="locationMapConfig.mapTitleColor"
+                 [style.font-family]="locationMapConfig.mapTitleFontFamily"
+                 placeholder="Enter map title"
+                 title="Edit map title">
+          <div *ngIf="isEditingLocationMap && editingLocationMapElement === 'mapTitle'" class="inline-controls">
+            <select [(ngModel)]="locationMapConfig.mapTitleFontFamily" (change)="onLocationMapFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="locationMapConfig.mapTitleColor"
+                   (change)="onLocationMapColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
           </div>
         </div>
+
+        <div class="map-container">
+          <iframe 
+            [src]="safeMapUrl"
+            width="100%" 
+            height="300" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade"
+            title="DentRiz Dental Clinic Location"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+          </iframe>
+        </div>
+        <div class="map-info">
+          <!-- Map Location -->
+          <div class="editable-element">
+            <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'mapLocation'"
+               [style.color]="locationMapConfig.mapInfoColor"
+               [style.font-family]="locationMapConfig.mapInfoFontFamily"
+               (click)="startInlineEditLocationMap('mapLocation')">
+              {{ locationMapConfig.mapLocation }}
+              <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+            </p>
+            <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'mapLocation'"
+                   [(ngModel)]="locationMapConfig.mapLocation"
+                   (blur)="stopInlineEditLocationMap()"
+                   (keyup.enter)="stopInlineEditLocationMap()"
+                   class="inline-edit-input"
+                   [style.color]="locationMapConfig.mapInfoColor"
+                   [style.font-family]="locationMapConfig.mapInfoFontFamily"
+                   placeholder="Enter map location"
+                   title="Edit map location">
+          </div>
+
+          <!-- Map Hours -->
+          <div class="editable-element">
+            <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'mapHours'"
+               [style.color]="locationMapConfig.mapInfoColor"
+               [style.font-family]="locationMapConfig.mapInfoFontFamily"
+               (click)="startInlineEditLocationMap('mapHours')">
+              {{ locationMapConfig.mapHours }}
+              <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+            </p>
+            <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'mapHours'"
+                   [(ngModel)]="locationMapConfig.mapHours"
+                   (blur)="stopInlineEditLocationMap()"
+                   (keyup.enter)="stopInlineEditLocationMap()"
+                   class="inline-edit-input"
+                   [style.color]="locationMapConfig.mapInfoColor"
+                   [style.font-family]="locationMapConfig.mapInfoFontFamily"
+                   placeholder="Enter map hours"
+                   title="Edit map hours">
+          </div>
+
+          <!-- Directions Link -->
+          <div class="editable-element">
+            <a *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'directionsText'"
+               [href]="locationMapConfig.directionsLink"
+               target="_blank"
+               class="btn-outline"
+               [style.color]="locationMapConfig.mapLinkColor"
+               [style.font-family]="locationMapConfig.mapLinkFontFamily"
+               (click)="startInlineEditLocationMap('directionsText')">
+              {{ locationMapConfig.directionsText }}
+              <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+            </a>
+            <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'directionsText'"
+                   [(ngModel)]="locationMapConfig.directionsText"
+                   (blur)="stopInlineEditLocationMap()"
+                   (keyup.enter)="stopInlineEditLocationMap()"
+                   class="inline-edit-input"
+                   [style.color]="locationMapConfig.mapLinkColor"
+                   [style.font-family]="locationMapConfig.mapLinkFontFamily"
+                   placeholder="Enter directions text"
+                   title="Edit directions text">
+            <div *ngIf="isEditingLocationMap && editingLocationMapElement === 'directionsText'" class="inline-controls">
+              <select [(ngModel)]="locationMapConfig.mapLinkFontFamily" (change)="onLocationMapFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="locationMapConfig.mapLinkColor"
+                     (change)="onLocationMapColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingLocationMap">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" 
+                 [(ngModel)]="locationMapConfig.backgroundColor"
+                 (change)="onLocationMapColorChange()"
+                 class="color-picker"
+                 title="Background Color">
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Actions (only when editing) -->
+    <div class="edit-actions" *ngIf="isEditingLocationMap">
+      <button class="save-btn" (click)="stopEditingLocationMap()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingLocationMap()">Cancel</button>
+      <button class="reset-btn" (click)="resetLocationMapToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="locationMapLoading">
+  <p>Loading location information...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="locationMapError">
+  <p>Error loading location information. Please try again later.</p>
+</div>
 
 <!-- Insurance & Payment -->
-<section class="insurance-section">
+<section class="insurance-section" 
+         *ngIf="!insurancePaymentLoading && !insurancePaymentError && insurancePaymentConfig"
+         [style.background-color]="insurancePaymentConfig.backgroundColor">
   <div class="container">
-    <h2 class="section-title">Insurance & Payment Options</h2>
-    <p class="section-subtitle">We make dental care accessible and affordable</p>
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingInsurancePayment">
+      <button class="edit-btn-floating" (click)="startEditingInsurancePayment()" title="Edit Insurance & Payment Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <!-- Section Title -->
+    <div class="editable-element">
+      <h2 class="section-title" 
+          *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'sectionTitle'"
+          [style.color]="insurancePaymentConfig.sectionTitleColor"
+          [style.font-family]="insurancePaymentConfig.sectionTitleFontFamily"
+          (click)="startInlineEditInsurancePayment('sectionTitle')">
+        {{ insurancePaymentConfig.sectionTitle }}
+        <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+      </h2>
+      <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'sectionTitle'"
+             [(ngModel)]="insurancePaymentConfig.sectionTitle"
+             (blur)="stopInlineEditInsurancePayment()"
+             (keyup.enter)="stopInlineEditInsurancePayment()"
+             class="inline-edit-input"
+             [style.color]="insurancePaymentConfig.sectionTitleColor"
+             [style.font-family]="insurancePaymentConfig.sectionTitleFontFamily"
+             placeholder="Enter section title"
+             title="Edit section title">
+      <div *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'sectionTitle'" class="inline-controls">
+        <select [(ngModel)]="insurancePaymentConfig.sectionTitleFontFamily" (change)="onInsurancePaymentFontChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="insurancePaymentConfig.sectionTitleColor"
+               (change)="onInsurancePaymentColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
+
+    <!-- Section Subtitle -->
+    <div class="editable-element">
+      <p class="section-subtitle" 
+         *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'sectionSubtitle'"
+         [style.color]="insurancePaymentConfig.sectionSubtitleColor"
+         [style.font-family]="insurancePaymentConfig.sectionSubtitleFontFamily"
+         (click)="startInlineEditInsurancePayment('sectionSubtitle')">
+        {{ insurancePaymentConfig.sectionSubtitle }}
+        <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+      </p>
+      <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'sectionSubtitle'"
+             [(ngModel)]="insurancePaymentConfig.sectionSubtitle"
+             (blur)="stopInlineEditInsurancePayment()"
+             (keyup.enter)="stopInlineEditInsurancePayment()"
+             class="inline-edit-input"
+             [style.color]="insurancePaymentConfig.sectionSubtitleColor"
+             [style.font-family]="insurancePaymentConfig.sectionSubtitleFontFamily"
+             placeholder="Enter section subtitle"
+             title="Edit section subtitle">
+      <div *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'sectionSubtitle'" class="inline-controls">
+        <select [(ngModel)]="insurancePaymentConfig.sectionSubtitleFontFamily" (change)="onInsurancePaymentFontChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="insurancePaymentConfig.sectionSubtitleColor"
+               (change)="onInsurancePaymentColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
     
     <div class="insurance-grid">
+      <!-- Insurance Plans Card -->
       <div class="insurance-card">
-        <div class="insurance-icon">🏥</div>
-        <h3>Insurance Plans</h3>
-        <p>We accept most major insurance plans and will help you understand your coverage. Our team will file claims on your behalf to make the process as smooth as possible.</p>
+        <div class="editable-element">
+          <div class="insurance-icon" 
+               *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'insuranceIcon'"
+               (click)="startInlineEditInsurancePayment('insuranceIcon')">
+            {{ insurancePaymentConfig.insuranceIcon }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </div>
+          <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'insuranceIcon'"
+                 [(ngModel)]="insurancePaymentConfig.insuranceIcon"
+                 (blur)="stopInlineEditInsurancePayment()"
+                 (keyup.enter)="stopInlineEditInsurancePayment()"
+                 class="inline-edit-input"
+                 placeholder="Enter icon"
+                 title="Edit icon">
+        </div>
+
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'insuranceTitle'"
+              [style.color]="insurancePaymentConfig.cardTitleColor"
+              [style.font-family]="insurancePaymentConfig.cardTitleFontFamily"
+              (click)="startInlineEditInsurancePayment('insuranceTitle')">
+            {{ insurancePaymentConfig.insuranceTitle }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </h3>
+          <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'insuranceTitle'"
+                 [(ngModel)]="insurancePaymentConfig.insuranceTitle"
+                 (blur)="stopInlineEditInsurancePayment()"
+                 (keyup.enter)="stopInlineEditInsurancePayment()"
+                 class="inline-edit-input"
+                 [style.color]="insurancePaymentConfig.cardTitleColor"
+                 [style.font-family]="insurancePaymentConfig.cardTitleFontFamily"
+                 placeholder="Enter card title"
+                 title="Edit card title">
+        </div>
+
+        <div class="editable-element">
+          <p *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'insuranceDescription'"
+             [style.color]="insurancePaymentConfig.cardDescriptionColor"
+             [style.font-family]="insurancePaymentConfig.cardDescriptionFontFamily"
+             (click)="startInlineEditInsurancePayment('insuranceDescription')">
+            {{ insurancePaymentConfig.insuranceDescription }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'insuranceDescription'"
+                    [(ngModel)]="insurancePaymentConfig.insuranceDescription"
+                    (blur)="stopInlineEditInsurancePayment()"
+                    (keyup.enter)="stopInlineEditInsurancePayment()"
+                    class="inline-edit-textarea"
+                    [style.color]="insurancePaymentConfig.cardDescriptionColor"
+                    [style.font-family]="insurancePaymentConfig.cardDescriptionFontFamily"
+                    placeholder="Enter card description"
+                    title="Edit card description"></textarea>
+        </div>
+
         <ul>
-          <li>Blue Cross Blue Shield</li>
-          <li>Aetna</li>
-          <li>Cigna</li>
-          <li>Delta Dental</li>
-          <li>And many more...</li>
+          <li *ngFor="let item of insurancePaymentConfig.insuranceItems; let i = index" class="insurance-item">
+            <div class="editable-element">
+              <span *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'insuranceItem_' + i"
+                    [style.color]="insurancePaymentConfig.cardItemColor"
+                    [style.font-family]="insurancePaymentConfig.cardItemFontFamily"
+                    (click)="startInlineEditInsurancePayment('insuranceItem_' + i)">
+                {{ item }}
+                <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+              </span>
+              <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'insuranceItem_' + i"
+                     [(ngModel)]="insurancePaymentConfig.insuranceItems[i]"
+                     (blur)="stopInlineEditInsurancePayment()"
+                     (keyup.enter)="stopInlineEditInsurancePayment()"
+                     class="inline-edit-input"
+                     [style.color]="insurancePaymentConfig.cardItemColor"
+                     [style.font-family]="insurancePaymentConfig.cardItemFontFamily"
+                     [placeholder]="'Enter item ' + (i + 1)"
+                     [title]="'Edit item ' + (i + 1)">
+              <div *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'insuranceItem_' + i" class="inline-controls">
+                <button class="remove-item-btn" 
+                        (click)="removeInsuranceItem(i)" 
+                        title="Remove this item"
+                        *ngIf="insurancePaymentConfig.insuranceItems.length > 1">
+                  ❌
+                </button>
+              </div>
+            </div>
+          </li>
         </ul>
+
+        <!-- Add Item Button -->
+        <div class="add-item-section" *ngIf="isEditingInsurancePayment">
+          <button class="add-item-btn" (click)="addInsuranceItem()" title="Add new insurance item">
+            ➕ Add Item
+          </button>
+        </div>
       </div>
       
+      <!-- Payment Options Card -->
       <div class="insurance-card">
-        <div class="insurance-icon">💳</div>
-        <h3>Payment Options</h3>
-        <p>We offer flexible payment options to make dental care affordable for everyone. We accept various payment methods and can work with you to create a payment plan.</p>
+        <div class="editable-element">
+          <div class="insurance-icon" 
+               *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'paymentIcon'"
+               (click)="startInlineEditInsurancePayment('paymentIcon')">
+            {{ insurancePaymentConfig.paymentIcon }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </div>
+          <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'paymentIcon'"
+                 [(ngModel)]="insurancePaymentConfig.paymentIcon"
+                 (blur)="stopInlineEditInsurancePayment()"
+                 (keyup.enter)="stopInlineEditInsurancePayment()"
+                 class="inline-edit-input"
+                 placeholder="Enter icon"
+                 title="Edit icon">
+        </div>
+
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'paymentTitle'"
+              [style.color]="insurancePaymentConfig.cardTitleColor"
+              [style.font-family]="insurancePaymentConfig.cardTitleFontFamily"
+              (click)="startInlineEditInsurancePayment('paymentTitle')">
+            {{ insurancePaymentConfig.paymentTitle }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </h3>
+          <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'paymentTitle'"
+                 [(ngModel)]="insurancePaymentConfig.paymentTitle"
+                 (blur)="stopInlineEditInsurancePayment()"
+                 (keyup.enter)="stopInlineEditInsurancePayment()"
+                 class="inline-edit-input"
+                 [style.color]="insurancePaymentConfig.cardTitleColor"
+                 [style.font-family]="insurancePaymentConfig.cardTitleFontFamily"
+                 placeholder="Enter card title"
+                 title="Edit card title">
+        </div>
+
+        <div class="editable-element">
+          <p *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'paymentDescription'"
+             [style.color]="insurancePaymentConfig.cardDescriptionColor"
+             [style.font-family]="insurancePaymentConfig.cardDescriptionFontFamily"
+             (click)="startInlineEditInsurancePayment('paymentDescription')">
+            {{ insurancePaymentConfig.paymentDescription }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'paymentDescription'"
+                    [(ngModel)]="insurancePaymentConfig.paymentDescription"
+                    (blur)="stopInlineEditInsurancePayment()"
+                    (keyup.enter)="stopInlineEditInsurancePayment()"
+                    class="inline-edit-textarea"
+                    [style.color]="insurancePaymentConfig.cardDescriptionColor"
+                    [style.font-family]="insurancePaymentConfig.cardDescriptionFontFamily"
+                    placeholder="Enter card description"
+                    title="Edit card description"></textarea>
+        </div>
+
         <ul>
-          <li>Cash and Check</li>
-          <li>Credit Cards (Visa, MasterCard, Amex)</li>
-          <li>Flexible Payment Plans</li>
-          <li>In-House Dental Plan</li>
-          <li>CareCredit Financing</li>
+          <li *ngFor="let item of insurancePaymentConfig.paymentItems; let i = index" class="insurance-item">
+            <div class="editable-element">
+              <span *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'paymentItem_' + i"
+                    [style.color]="insurancePaymentConfig.cardItemColor"
+                    [style.font-family]="insurancePaymentConfig.cardItemFontFamily"
+                    (click)="startInlineEditInsurancePayment('paymentItem_' + i)">
+                {{ item }}
+                <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+              </span>
+              <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'paymentItem_' + i"
+                     [(ngModel)]="insurancePaymentConfig.paymentItems[i]"
+                     (blur)="stopInlineEditInsurancePayment()"
+                     (keyup.enter)="stopInlineEditInsurancePayment()"
+                     class="inline-edit-input"
+                     [style.color]="insurancePaymentConfig.cardItemColor"
+                     [style.font-family]="insurancePaymentConfig.cardItemFontFamily"
+                     [placeholder]="'Enter item ' + (i + 1)"
+                     [title]="'Edit item ' + (i + 1)">
+              <div *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'paymentItem_' + i" class="inline-controls">
+                <button class="remove-item-btn" 
+                        (click)="removePaymentItem(i)" 
+                        title="Remove this item"
+                        *ngIf="insurancePaymentConfig.paymentItems.length > 1">
+                  ❌
+                </button>
+              </div>
+            </div>
+          </li>
         </ul>
+
+        <!-- Add Item Button -->
+        <div class="add-item-section" *ngIf="isEditingInsurancePayment">
+          <button class="add-item-btn" (click)="addPaymentItem()" title="Add new payment item">
+            ➕ Add Item
+          </button>
+        </div>
       </div>
       
+      <!-- New Patient Special Card -->
       <div class="insurance-card">
-        <div class="insurance-icon">📋</div>
-        <h3>New Patient Special</h3>
-        <p>New to our practice? Take advantage of our new patient special and start your journey to a healthier smile today.</p>
+        <div class="editable-element">
+          <div class="insurance-icon" 
+               *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'specialIcon'"
+               (click)="startInlineEditInsurancePayment('specialIcon')">
+            {{ insurancePaymentConfig.specialIcon }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </div>
+          <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'specialIcon'"
+                 [(ngModel)]="insurancePaymentConfig.specialIcon"
+                 (blur)="stopInlineEditInsurancePayment()"
+                 (keyup.enter)="stopInlineEditInsurancePayment()"
+                 class="inline-edit-input"
+                 placeholder="Enter icon"
+                 title="Edit icon">
+        </div>
+
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'specialTitle'"
+              [style.color]="insurancePaymentConfig.cardTitleColor"
+              [style.font-family]="insurancePaymentConfig.cardTitleFontFamily"
+              (click)="startInlineEditInsurancePayment('specialTitle')">
+            {{ insurancePaymentConfig.specialTitle }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </h3>
+          <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'specialTitle'"
+                 [(ngModel)]="insurancePaymentConfig.specialTitle"
+                 (blur)="stopInlineEditInsurancePayment()"
+                 (keyup.enter)="stopInlineEditInsurancePayment()"
+                 class="inline-edit-input"
+                 [style.color]="insurancePaymentConfig.cardTitleColor"
+                 [style.font-family]="insurancePaymentConfig.cardTitleFontFamily"
+                 placeholder="Enter card title"
+                 title="Edit card title">
+        </div>
+
+        <div class="editable-element">
+          <p *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'specialDescription'"
+             [style.color]="insurancePaymentConfig.cardDescriptionColor"
+             [style.font-family]="insurancePaymentConfig.cardDescriptionFontFamily"
+             (click)="startInlineEditInsurancePayment('specialDescription')">
+            {{ insurancePaymentConfig.specialDescription }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'specialDescription'"
+                    [(ngModel)]="insurancePaymentConfig.specialDescription"
+                    (blur)="stopInlineEditInsurancePayment()"
+                    (keyup.enter)="stopInlineEditInsurancePayment()"
+                    class="inline-edit-textarea"
+                    [style.color]="insurancePaymentConfig.cardDescriptionColor"
+                    [style.font-family]="insurancePaymentConfig.cardDescriptionFontFamily"
+                    placeholder="Enter card description"
+                    title="Edit card description"></textarea>
+        </div>
+
         <ul>
-          <li>Comprehensive Exam</li>
-          <li>Digital X-Rays</li>
-          <li>Professional Cleaning</li>
-          <li>Treatment Consultation</li>
-          <li>Special pricing for new patients</li>
+          <li *ngFor="let item of insurancePaymentConfig.specialItems; let i = index" class="insurance-item">
+            <div class="editable-element">
+              <span *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'specialItem_' + i"
+                    [style.color]="insurancePaymentConfig.cardItemColor"
+                    [style.font-family]="insurancePaymentConfig.cardItemFontFamily"
+                    (click)="startInlineEditInsurancePayment('specialItem_' + i)">
+                {{ item }}
+                <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+              </span>
+              <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'specialItem_' + i"
+                     [(ngModel)]="insurancePaymentConfig.specialItems[i]"
+                     (blur)="stopInlineEditInsurancePayment()"
+                     (keyup.enter)="stopInlineEditInsurancePayment()"
+                     class="inline-edit-input"
+                     [style.color]="insurancePaymentConfig.cardItemColor"
+                     [style.font-family]="insurancePaymentConfig.cardItemFontFamily"
+                     [placeholder]="'Enter item ' + (i + 1)"
+                     [title]="'Edit item ' + (i + 1)">
+              <div *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'specialItem_' + i" class="inline-controls">
+                <button class="remove-item-btn" 
+                        (click)="removeSpecialItem(i)" 
+                        title="Remove this item"
+                        *ngIf="insurancePaymentConfig.specialItems.length > 1">
+                  ❌
+                </button>
+              </div>
+            </div>
+          </li>
         </ul>
+
+        <!-- Add Item Button -->
+        <div class="add-item-section" *ngIf="isEditingInsurancePayment">
+          <button class="add-item-btn" (click)="addSpecialItem()" title="Add new special item">
+            ➕ Add Item
+          </button>
+        </div>
       </div>
+    </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingInsurancePayment">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" 
+                 [(ngModel)]="insurancePaymentConfig.backgroundColor"
+                 (change)="onInsurancePaymentColorChange()"
+                 class="color-picker"
+                 title="Background Color">
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Actions (only when editing) -->
+    <div class="edit-actions" *ngIf="isEditingInsurancePayment">
+      <button class="save-btn" (click)="stopEditingInsurancePayment()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingInsurancePayment()">Cancel</button>
+      <button class="reset-btn" (click)="resetInsurancePaymentToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
 
+<!-- Loading State -->
+<div class="loading-container" *ngIf="insurancePaymentLoading">
+  <p>Loading insurance and payment information...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="insurancePaymentError">
+  <p>Error loading insurance and payment information. Please try again later.</p>
+</div>
+
 <!-- FAQ Section -->
-<section class="faq-section">
+<section class="faq-section" 
+         *ngIf="!faqLoading && !faqError && faqConfig"
+         [style.background-color]="faqConfig.backgroundColor">
   <div class="container">
-    <h2 class="section-title">Frequently Asked Questions</h2>
-    <p class="section-subtitle">Find answers to common questions about our services</p>
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingFAQ">
+      <button class="edit-btn-floating" (click)="startEditingFAQ()" title="Edit FAQ Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <!-- Section Title -->
+    <div class="editable-element">
+      <h2 class="section-title" 
+          *ngIf="!isEditingFAQ || editingFAQElement !== 'sectionTitle'"
+          [style.color]="faqConfig.sectionTitleColor"
+          [style.font-family]="faqConfig.sectionTitleFontFamily"
+          (click)="startInlineEditFAQ('sectionTitle')">
+        {{ faqConfig.sectionTitle }}
+        <span class="edit-icon" *ngIf="isEditingFAQ">✏️</span>
+      </h2>
+      <input *ngIf="isEditingFAQ && editingFAQElement === 'sectionTitle'"
+             [(ngModel)]="faqConfig.sectionTitle"
+             (blur)="stopInlineEditFAQ()"
+             (keyup.enter)="stopInlineEditFAQ()"
+             class="inline-edit-input"
+             [style.color]="faqConfig.sectionTitleColor"
+             [style.font-family]="faqConfig.sectionTitleFontFamily"
+             placeholder="Enter section title"
+             title="Edit section title">
+      <div *ngIf="isEditingFAQ && editingFAQElement === 'sectionTitle'" class="inline-controls">
+        <select [(ngModel)]="faqConfig.sectionTitleFontFamily" (change)="onFAQFonChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="faqConfig.sectionTitleColor"
+               (change)="onFAQColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
+
+    <!-- Section Subtitle -->
+    <div class="editable-element">
+      <p class="section-subtitle" 
+         *ngIf="!isEditingFAQ || editingFAQElement !== 'sectionSubtitle'"
+         [style.color]="faqConfig.sectionSubtitleColor"
+         [style.font-family]="faqConfig.sectionSubtitleFontFamily"
+         (click)="startInlineEditFAQ('sectionSubtitle')">
+        {{ faqConfig.sectionSubtitle }}
+        <span class="edit-icon" *ngIf="isEditingFAQ">✏️</span>
+      </p>
+      <input *ngIf="isEditingFAQ && editingFAQElement === 'sectionSubtitle'"
+             [(ngModel)]="faqConfig.sectionSubtitle"
+             (blur)="stopInlineEditFAQ()"
+             (keyup.enter)="stopInlineEditFAQ()"
+             class="inline-edit-input"
+             [style.color]="faqConfig.sectionSubtitleColor"
+             [style.font-family]="faqConfig.sectionSubtitleFontFamily"
+             placeholder="Enter section subtitle"
+             title="Edit section subtitle">
+      <div *ngIf="isEditingFAQ && editingFAQElement === 'sectionSubtitle'" class="inline-controls">
+        <select [(ngModel)]="faqConfig.sectionSubtitleFontFamily" (change)="onFAQFonChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="faqConfig.sectionSubtitleColor"
+               (change)="onFAQColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
     
     <div class="faq-grid">
-      <div class="faq-item">
-        <h3>How do I schedule an appointment?</h3>
-        <p>You can schedule an appointment by calling us at (750) 616-8095, or you can request an appointment through our website. We'll work with you to find a convenient time.</p>
+      <div class="faq-item" *ngFor="let faqItem of faqConfig.faqItems; let i = index">
+        <!-- Question -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingFAQ || editingFAQElement !== 'question_' + i"
+              [style.color]="faqConfig.questionColor"
+              [style.font-family]="faqConfig.questionFontFamily"
+              (click)="startInlineEditFAQ('question_' + i)">
+            {{ faqItem.question }}
+            <span class="edit-icon" *ngIf="isEditingFAQ">✏️</span>
+          </h3>
+          <input *ngIf="isEditingFAQ && editingFAQElement === 'question_' + i"
+                 [(ngModel)]="faqItem.question"
+                 (blur)="stopInlineEditFAQ()"
+                 (keyup.enter)="stopInlineEditFAQ()"
+                 class="inline-edit-input"
+                 [style.color]="faqConfig.questionColor"
+                 [style.font-family]="faqConfig.questionFontFamily"
+                 [placeholder]="'Enter question ' + (i + 1)"
+                 [title]="'Edit question ' + (i + 1)">
+          <div *ngIf="isEditingFAQ && editingFAQElement === 'question_' + i" class="inline-controls">
+            <button class="remove-item-btn" 
+                    (click)="removeFAQItem(i)" 
+                    title="Remove this FAQ item"
+                    *ngIf="faqConfig.faqItems.length > 1">
+              ❌
+            </button>
+          </div>
+        </div>
+
+        <!-- Answer -->
+        <div class="editable-element">
+          <p *ngIf="!isEditingFAQ || editingFAQElement !== 'answer_' + i"
+             [style.color]="faqConfig.answerColor"
+             [style.font-family]="faqConfig.answerFontFamily"
+             (click)="startInlineEditFAQ('answer_' + i)">
+            {{ faqItem.answer }}
+            <span class="edit-icon" *ngIf="isEditingFAQ">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingFAQ && editingFAQElement === 'answer_' + i"
+                    [(ngModel)]="faqItem.answer"
+                    (blur)="stopInlineEditFAQ()"
+                    (keyup.enter)="stopInlineEditFAQ()"
+                    class="inline-edit-textarea"
+                    [style.color]="faqConfig.answerColor"
+                    [style.font-family]="faqConfig.answerFontFamily"
+                    [placeholder]="'Enter answer ' + (i + 1)"
+                    [title]="'Edit answer ' + (i + 1)"></textarea>
+        </div>
       </div>
-      
-      <div class="faq-item">
-        <h3>What should I bring to my first appointment?</h3>
-        <p>Please bring your ID, insurance card (if applicable), and any relevant medical history. You can also download and fill out our new patient forms from our website.</p>
+    </div>
+
+    <!-- Add FAQ Item Button -->
+    <div class="add-item-section" *ngIf="isEditingFAQ">
+      <button class="add-item-btn" (click)="addFAQItem()" title="Add new FAQ item">
+        ➕ Add FAQ Item
+      </button>
+    </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingFAQ">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" 
+                 [(ngModel)]="faqConfig.backgroundColor"
+                 (change)="onFAQColorChange()"
+                 class="color-picker"
+                 title="Background Color">
+        </div>
       </div>
-      
-      <div class="faq-item">
-        <h3>Do you offer emergency dental care?</h3>
-        <p>Yes, we provide emergency dental care. If you have a dental emergency, please call us immediately at (555) 123-4567, and we'll help you get the care you need.</p>
-      </div>
-      
-      <div class="faq-item">
-        <h3>What insurance plans do you accept?</h3>
-        <p>We accept most major insurance plans. Please call our office to verify your specific plan coverage, and we'll be happy to help you understand your benefits.</p>
-      </div>
-      
-      <div class="faq-item">
-        <h3>Do you offer payment plans?</h3>
-        <p>Yes, we offer flexible payment plans to make dental care affordable. We also accept CareCredit and have an in-house dental plan for patients without insurance.</p>
-      </div>
-      
-      <div class="faq-item">
-        <h3>How often should I visit the dentist?</h3>
-        <p>We recommend visiting the dentist every 6 months for routine checkups and cleanings. However, some patients may need more frequent visits based on their oral health needs.</p>
-      </div>
+    </div>
+
+    <!-- Edit Actions (only when editing) -->
+    <div class="edit-actions" *ngIf="isEditingFAQ">
+      <button class="save-btn" (click)="stopEditingFAQ()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingFAQ()">Cancel</button>
+      <button class="reset-btn" (click)="resetFAQToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="faqLoading">
+  <p>Loading FAQ information...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="faqError">
+  <p>Error loading FAQ information. Please try again later.</p>
+</div>

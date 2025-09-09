@@ -1,103 +1,687 @@
 <!-- Meet the Founder Section -->
-<section class="founder-section">
+<section class="founder-section" *ngIf="!founderLoading && !founderError && founderConfig">
   <div class="container">
-    <div class="founder-content">
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingFounder">
+      <button class="edit-btn-floating" (click)="startEditingFounder()" title="Edit Founder Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+
+    <!-- Inline Editable Content -->
+    <div class="founder-content" 
+         [style.background-color]="founderConfig.backgroundColor">
+      
       <div class="founder-text">
-        <h2 class="founder-subtitle-small">Know your Doctor</h2>
+        <!-- Subtitle with inline editing -->
+        <div class="editable-element">
+          <h2 class="founder-subtitle-small" 
+              [style.color]="founderConfig.subtitleColor"
+              [style.font-family]="founderConfig.subtitleFontFamily"
+              *ngIf="!isEditingFounder || editingElement !== 'subtitle'"
+              (click)="startInlineEdit('subtitle')">
+            {{ founderConfig.subtitle }}
+            <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+          </h2>
+          <input *ngIf="isEditingFounder && editingElement === 'subtitle'"
+                 [(ngModel)]="founderConfig.subtitle"
+                 (blur)="stopInlineEdit()"
+                 (keyup.enter)="stopInlineEdit()"
+                 class="inline-edit-input"
+                 [style.color]="founderConfig.subtitleColor"
+                 [style.font-family]="founderConfig.subtitleFontFamily"
+                 placeholder="Enter subtitle"
+                 title="Edit subtitle">
+          <div *ngIf="isEditingFounder && editingElement === 'subtitle'" class="inline-controls">
+                <select [(ngModel)]="founderConfig.subtitleFontFamily" (change)="onFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="founderConfig.subtitleColor"
+                   (change)="onColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+        
         <div class="founder-info">
-          <h3>Dr. Rizwana Khan</h3>
-          <p class="founder-title">Founder & Chief Dentist</p>
-                               <p class="founder-description">
-            A proud graduate of Government Dental College, Mumbai — one of the most prestigious dental institutions in India.
-            With around 10 years of experience, Dr. Khan has honed his expertise in a wide range of specialties including:
-          </p>
-          <ul class="specialties-list">
-            <li>Cosmetic dentistry</li>
-            <li>Dental implants</li>
-            <li>Smile designing</li>
-            <li>Root canal treatments</li>
-            <li>Full-mouth rehabilitation</li>
-            <li>Preventive care</li>
-            <li>Pediatric dentistry</li>
+          <!-- Doctor Name with inline editing -->
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingFounder || editingElement !== 'doctorName'"
+                [style.color]="founderConfig.doctorNameColor"
+                [style.font-family]="founderConfig.doctorNameFontFamily"
+                (click)="startInlineEdit('doctorName')">
+              {{ founderConfig.doctorName }}
+              <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+            </h3>
+            <input *ngIf="isEditingFounder && editingElement === 'doctorName'"
+                   [(ngModel)]="founderConfig.doctorName"
+                   (blur)="stopInlineEdit()"
+                   (keyup.enter)="stopInlineEdit()"
+                   class="inline-edit-input"
+                   [style.color]="founderConfig.doctorNameColor"
+                   [style.font-family]="founderConfig.doctorNameFontFamily"
+                   placeholder="Enter doctor name"
+                   title="Edit doctor name">
+            <div *ngIf="isEditingFounder && editingElement === 'doctorName'" class="inline-controls">
+                <select [(ngModel)]="founderConfig.doctorNameFontFamily" (change)="onFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="founderConfig.doctorNameColor"
+                     (change)="onColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          
+          <!-- Title with inline editing -->
+          <div class="editable-element">
+            <p class="founder-title" 
+               *ngIf="!isEditingFounder || editingElement !== 'title'"
+               [style.color]="founderConfig.titleColor"
+               [style.font-family]="founderConfig.titleFontFamily"
+               (click)="startInlineEdit('title')">
+              {{ founderConfig.title }}
+              <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+            </p>
+            <input *ngIf="isEditingFounder && editingElement === 'title'"
+                   [(ngModel)]="founderConfig.title"
+                   (blur)="stopInlineEdit()"
+                   (keyup.enter)="stopInlineEdit()"
+                   class="inline-edit-input"
+                   [style.color]="founderConfig.titleColor"
+                   [style.font-family]="founderConfig.titleFontFamily"
+                   placeholder="Enter title"
+                   title="Edit title">
+            <div *ngIf="isEditingFounder && editingElement === 'title'" class="inline-controls">
+              <select [(ngModel)]="founderConfig.titleFontFamily" (change)="applyDynamicStyles()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="founderConfig.titleColor"
+                     (change)="onColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          
+          <!-- Description with inline editing -->
+          <div class="editable-element">
+            <p class="founder-description" 
+               *ngIf="!isEditingFounder || editingElement !== 'description'"
+               [style.color]="founderConfig.descriptionColor"
+               [style.font-family]="founderConfig.descriptionFontFamily"
+               (click)="startInlineEdit('description')">
+              {{ founderConfig.description }}
+              <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+            </p>
+            <textarea *ngIf="isEditingFounder && editingElement === 'description'"
+                      [(ngModel)]="founderConfig.description"
+                      (blur)="stopInlineEdit()"
+                      (keyup.ctrl.enter)="stopInlineEdit()"
+                      class="inline-edit-textarea"
+                      [style.color]="founderConfig.descriptionColor"
+                      [style.font-family]="founderConfig.descriptionFontFamily"
+                      placeholder="Enter description"
+                      title="Edit description"></textarea>
+            <div *ngIf="isEditingFounder && editingElement === 'description'" class="inline-controls">
+              <select [(ngModel)]="founderConfig.descriptionFontFamily" (change)="applyDynamicStyles()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="founderConfig.descriptionColor"
+                     (change)="onColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          
+          <!-- Specialties with inline editing -->
+          <div class="editable-element">
+            <div *ngIf="!isEditingFounder || editingElement !== 'specialties'" 
+                 (click)="startInlineEdit('specialties')" 
+                 class="specialties-container">
+              <ul class="specialties-list" 
+                  [style.color]="founderConfig.specialtiesColor"
+                  [style.font-family]="founderConfig.specialtiesFontFamily">
+                <li *ngFor="let specialty of founderConfig.specialties"
+                    [style.color]="founderConfig.specialtiesColor"
+                    [style.font-family]="founderConfig.specialtiesFontFamily">{{ specialty }}</li>
           </ul>
-          <p class="founder-description">
-            Dr. Khan's mission is not just to treat dental concerns but to help patients achieve lifelong oral health, confidence, and beautiful smiles.
-          </p>
+              <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+            </div>
+            <div *ngIf="isEditingFounder && editingElement === 'specialties'" class="specialties-edit-inline">
+              <div class="specialty-item" *ngFor="let specialty of founderConfig.specialties; let i = index">
+                <input type="text" 
+                       [(ngModel)]="founderConfig.specialties[i]" 
+                       class="form-input" 
+                       placeholder="Enter specialty"
+                       [style.color]="founderConfig.specialtiesColor"
+                       [style.font-family]="founderConfig.specialtiesFontFamily">
+                <button type="button" (click)="removeSpecialty(i)" class="remove-btn">×</button>
+              </div>
+              <button type="button" (click)="addSpecialty()" class="add-btn">+ Add Specialty</button>
+              <div class="inline-controls">
+                        <select [(ngModel)]="founderConfig.specialtiesFontFamily" (change)="onFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="founderConfig.specialtiesColor"
+                       (change)="onColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Mission with inline editing -->
+          <div class="editable-element">
+            <p class="founder-description" 
+               *ngIf="!isEditingFounder || editingElement !== 'mission'"
+               [style.color]="founderConfig.missionColor"
+               [style.font-family]="founderConfig.missionFontFamily"
+               (click)="startInlineEdit('mission')">
+              {{ founderConfig.mission }}
+              <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+            </p>
+            <textarea *ngIf="isEditingFounder && editingElement === 'mission'"
+                      [(ngModel)]="founderConfig.mission"
+                      (blur)="stopInlineEdit()"
+                      (keyup.ctrl.enter)="stopInlineEdit()"
+                      class="inline-edit-textarea"
+                      [style.color]="founderConfig.missionColor"
+                      [style.font-family]="founderConfig.missionFontFamily"
+                      placeholder="Enter mission"
+                      title="Edit mission"></textarea>
+            <div *ngIf="isEditingFounder && editingElement === 'mission'" class="inline-controls">
+              <select [(ngModel)]="founderConfig.missionFontFamily" (change)="applyDynamicStyles()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="founderConfig.missionColor"
+                     (change)="onColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
         </div>
       </div>
+        </div>
+      </div>
+      
       <div class="founder-image">
         <div class="founder-photo">
-          <img src="/images/home/dr-rizwana-khan-c1.jpg?v=2" alt="Dr. Rizwana Khan - Founder & Chief Dentist" class="founder-img">
-          <div >
-            <p class="founder-subtitle">Dr. Rizwana Khan</p>
-            <p class="founder-image-dubtitle-down">(BDS. Govt. Dental College, Mumbai)</p>
+          <img [src]="founderConfig.imageSrc" [alt]="founderConfig.imageAlt" class="founder-img">
+          <div>
+            <!-- Image Name with inline editing -->
+            <div class="editable-element">
+              <p class="founder-subtitle"
+                 [style.color]="founderConfig.imageNameColor"
+                 [style.font-family]="founderConfig.imageNameFontFamily"
+                 *ngIf="!isEditingFounder || editingElement !== 'imageName'"
+                 (click)="startInlineEdit('imageName')">
+                {{ founderConfig.imageName }}
+                <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+              </p>
+              <input *ngIf="isEditingFounder && editingElement === 'imageName'"
+                     [(ngModel)]="founderConfig.imageName"
+                     (blur)="stopInlineEdit()"
+                     (keyup.enter)="stopInlineEdit()"
+                     class="inline-edit-input"
+                     [style.color]="founderConfig.imageNameColor"
+                     [style.font-family]="founderConfig.imageNameFontFamily"
+                     placeholder="Enter image name"
+                     title="Edit image name">
+              <div *ngIf="isEditingFounder && editingElement === 'imageName'" class="inline-controls">
+                <select [(ngModel)]="founderConfig.imageNameFontFamily" (change)="onFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="founderConfig.imageNameColor"
+                       (change)="onColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+
+            <!-- Credentials with inline editing -->
+            <div class="editable-element">
+              <p class="founder-image-dubtitle-down"
+                 [style.color]="founderConfig.credentialsColor"
+                 [style.font-family]="founderConfig.credentialsFontFamily"
+                 *ngIf="!isEditingFounder || editingElement !== 'credentials'"
+                 (click)="startInlineEdit('credentials')">
+                {{ founderConfig.credentials }}
+                <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+              </p>
+              <input *ngIf="isEditingFounder && editingElement === 'credentials'"
+                     [(ngModel)]="founderConfig.credentials"
+                     (blur)="stopInlineEdit()"
+                     (keyup.enter)="stopInlineEdit()"
+                     class="inline-edit-input"
+                     [style.color]="founderConfig.credentialsColor"
+                     [style.font-family]="founderConfig.credentialsFontFamily"
+                     placeholder="Enter credentials"
+                     title="Edit credentials">
+              <div *ngIf="isEditingFounder && editingElement === 'credentials'" class="inline-controls">
+                <select [(ngModel)]="founderConfig.credentialsFontFamily" (change)="onFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="founderConfig.credentialsColor"
+                       (change)="onColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
     
-    <!-- Philosophy Section - Full Width -->
+    <!-- Philosophy Section - Full Width with inline editing -->
     <div class="founder-philosophy-full">
-      <h4>Our Philosophy:</h4>
-      <p>
-        "DentRiz Dental Clinic was built on the belief that dentistry should be modern, compassionate, and patient-focused. Our philosophy is to combine cutting-edge technology with a human touch, ensuring every patient receives the highest standard of care. We strive to create smiles that are not only healthy but also filled with confidence and happiness."
-      </p>
+      
+      <!-- Philosophy Title with inline editing -->
+      <div class="editable-element">
+        <h4 *ngIf="!isEditingFounder || editingElement !== 'philosophyTitle'"
+            [style.color]="founderConfig.philosophyTitleColor"
+            [style.font-family]="founderConfig.philosophyTitleFontFamily"
+            (click)="startInlineEdit('philosophyTitle')">
+          {{ founderConfig.philosophyTitle }}
+          <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+        </h4>
+        <input *ngIf="isEditingFounder && editingElement === 'philosophyTitle'"
+               [(ngModel)]="founderConfig.philosophyTitle"
+               (blur)="stopInlineEdit()"
+               (keyup.enter)="stopInlineEdit()"
+               class="inline-edit-input"
+               [style.color]="founderConfig.philosophyTitleColor"
+               [style.font-family]="founderConfig.philosophyTitleFontFamily"
+               placeholder="Enter philosophy title"
+               title="Edit philosophy title">
+        <div *ngIf="isEditingFounder && editingElement === 'philosophyTitle'" class="inline-controls">
+          <select [(ngModel)]="founderConfig.philosophyTitleFontFamily" (change)="applyDynamicStyles()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color" 
+                 [(ngModel)]="founderConfig.philosophyTitleColor"
+                 (change)="onColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
+      </div>
+      
+      <!-- Philosophy Content with inline editing -->
+      <div class="editable-element">
+        <p *ngIf="!isEditingFounder || editingElement !== 'philosophyContent'"
+           [style.color]="founderConfig.philosophyContentColor"
+           [style.font-family]="founderConfig.philosophyContentFontFamily"
+           (click)="startInlineEdit('philosophyContent')">
+          {{ founderConfig.philosophyContent }}
+          <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+        </p>
+        <textarea *ngIf="isEditingFounder && editingElement === 'philosophyContent'"
+                  [(ngModel)]="founderConfig.philosophyContent"
+                  (blur)="stopInlineEdit()"
+                  (keyup.ctrl.enter)="stopInlineEdit()"
+                  class="inline-edit-textarea"
+                  [style.color]="founderConfig.philosophyContentColor"
+                  [style.font-family]="founderConfig.philosophyContentFontFamily"
+                  placeholder="Enter philosophy content"
+                  title="Edit philosophy content"></textarea>
+        <div *ngIf="isEditingFounder && editingElement === 'philosophyContent'" class="inline-controls">
+          <select [(ngModel)]="founderConfig.philosophyContentFontFamily" (change)="applyDynamicStyles()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color" 
+                 [(ngModel)]="founderConfig.philosophyContentColor"
+                 (change)="onColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingFounder">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" [(ngModel)]="founderConfig.backgroundColor" (change)="applyDynamicStyles()" class="color-picker" title="Background Color">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Edit Actions -->
+    <div class="edit-actions" *ngIf="isEditingFounder">
+      <button class="save-btn" (click)="stopEditingFounder()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingFounder()">Cancel</button>
+      <button class="reset-btn" (click)="resetFounderToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
 
+<!-- Loading and Error States -->
+<div class="loading-container" *ngIf="founderLoading">
+  <p>Loading founder section...</p>
+</div>
 
-<!-- New Patients Section -->
-<section class="new-patients">
-  <div class="container">
-    <div class="new-patients-content">
-      <div class="new-patients-text">
-  <div class="clinic-location-details">
-  <h3>Clinic Accessibility & Nearby Convenience</h3>
-  
-  <div class="detail">
-    <h4>📍 Address</h4>
-    <p>
-      Dentriz Dental Clinic <br>
-      Rohan Tarang, Wakad Chowk <br>
-      Opposite Alamgir Masjid <br>
-      <em>Landmark:</em> Close to Mahavir Medical & Hinjewadi Bridge
-    </p>
-  </div>
-
-  <div class="detail">
-    <h4>🚗 Parking</h4>
-    <p>Free parking available within our premises, with easy access for both two-wheelers and four-wheelers.</p>
-  </div>
-
-  <div class="detail">
-    <h4>🚌 Public Transit</h4>
-    <p>Connected by multiple city bus routes, with Wakad Chowk Bus Stop just a few steps away.</p>
-  </div>
-
-  <div class="detail">
-    <h4>♿ Metro Access</h4>
-    <p>Walking distance from Hinjewadi Bridge Metro Station, making it simple for daily commuters.</p>
-  </div>
-
-  <div class="detail">
-    <h4>👨‍👩‍👧‍👦 Accessibility</h4>
-    <p>Our clinic is designed to be family-friendly and wheelchair accessible, with a clean waiting area for kids and seniors.</p>
-  </div>
-
-  <div class="detail">
-    <h4>⏰ Flexible Hours</h4>
-    <p>Open late till 10:00 PM mon to sat, so you can schedule visits after office or school hours or on weekends. </p>
-  </div>
-
-  <div class="detail">
-    <h4>🛡️ Comfort & Safety</h4>
-    <p>A modern, hygienic setup equipped with advanced technology, ensuring a stress-free and safe dental experience.</p>
-  </div>
+<div class="error-container" *ngIf="founderError">
+  <p>Error loading founder section. Please try again.</p>
 </div>
 
 
-  <a href="/contact" class="btn-primary">Book Your Appointment</a>
+<!-- New Patients Section -->
+<!-- New Patients Section -->
+<section class="new-patients" *ngIf="!newPatientLoading && !newPatientError && newPatientConfig">
+  <div class="container">
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingNewPatient">
+      <button class="edit-btn-floating" (click)="startEditingNewPatient()" title="Edit New Patient Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <div class="new-patients-content"
+         [style.background-color]="newPatientConfig.backgroundColor">
+      <div class="new-patients-text">
+  <div class="clinic-location-details">
+          <!-- Main Title with inline editing -->
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'mainTitle'"
+                [style.color]="newPatientConfig.mainTitleColor"
+                [style.font-family]="newPatientConfig.mainTitleFontFamily"
+                (click)="startInlineEditNewPatient('mainTitle')">
+              {{ newPatientConfig.mainTitle }}
+              <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+            </h3>
+            <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'mainTitle'"
+                   [(ngModel)]="newPatientConfig.mainTitle"
+                   (blur)="stopInlineEditNewPatient()"
+                   (keyup.enter)="stopInlineEditNewPatient()"
+                   class="inline-edit-input"
+                   [style.color]="newPatientConfig.mainTitleColor"
+                   [style.font-family]="newPatientConfig.mainTitleFontFamily"
+                   placeholder="Enter main title"
+                   title="Edit main title">
+            <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'mainTitle'" class="inline-controls">
+              <select [(ngModel)]="newPatientConfig.mainTitleFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="newPatientConfig.mainTitleColor"
+                     (change)="onNewPatientColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+  </div>
+
+          <!-- Address Detail with inline editing -->
+  <div class="detail">
+            <div class="editable-element">
+              <h4 *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'addressTitle'"
+                  [style.color]="newPatientConfig.addressTitleColor"
+                  [style.font-family]="newPatientConfig.addressTitleFontFamily"
+                  (click)="startInlineEditNewPatient('addressTitle')">
+                {{ newPatientConfig.addressTitle }}
+                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              </h4>
+              <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'addressTitle'"
+                     [(ngModel)]="newPatientConfig.addressTitle"
+                     (blur)="stopInlineEditNewPatient()"
+                     (keyup.enter)="stopInlineEditNewPatient()"
+                     class="inline-edit-input"
+                     [style.color]="newPatientConfig.addressTitleColor"
+                     [style.font-family]="newPatientConfig.addressTitleFontFamily"
+                     placeholder="Enter address title"
+                     title="Edit address title">
+              <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'addressTitle'" class="inline-controls">
+                <select [(ngModel)]="newPatientConfig.addressTitleFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="newPatientConfig.addressTitleColor"
+                       (change)="onNewPatientColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+            <div class="editable-element">
+              <p *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'addressContent'"
+                 [style.color]="newPatientConfig.addressContentColor"
+                 [style.font-family]="newPatientConfig.addressContentFontFamily"
+                 (click)="startInlineEditNewPatient('addressContent')"
+                 [innerHTML]="newPatientConfig.addressContent">
+                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              </p>
+              <textarea *ngIf="isEditingNewPatient && editingNewPatientElement === 'addressContent'"
+                        [(ngModel)]="newPatientConfig.addressContent"
+                        (blur)="stopInlineEditNewPatient()"
+                        (keyup.ctrl.enter)="stopInlineEditNewPatient()"
+                        class="inline-edit-textarea"
+                        [style.color]="newPatientConfig.addressContentColor"
+                        [style.font-family]="newPatientConfig.addressContentFontFamily"
+                        placeholder="Enter address content"
+                        title="Edit address content"></textarea>
+              <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'addressContent'" class="inline-controls">
+                <select [(ngModel)]="newPatientConfig.addressContentFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="newPatientConfig.addressContentColor"
+                       (change)="onNewPatientColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+  </div>
+  </div>
+  </div>
+
+          <!-- Parking Detail with inline editing -->
+  <div class="detail">
+            <div class="editable-element">
+              <h4 *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'parkingTitle'"
+                  [style.color]="newPatientConfig.parkingTitleColor"
+                  [style.font-family]="newPatientConfig.parkingTitleFontFamily"
+                  (click)="startInlineEditNewPatient('parkingTitle')">
+                {{ newPatientConfig.parkingTitle }}
+                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              </h4>
+              <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'parkingTitle'"
+                     [(ngModel)]="newPatientConfig.parkingTitle"
+                     (blur)="stopInlineEditNewPatient()"
+                     (keyup.enter)="stopInlineEditNewPatient()"
+                     class="inline-edit-input"
+                     [style.color]="newPatientConfig.parkingTitleColor"
+                     [style.font-family]="newPatientConfig.parkingTitleFontFamily"
+                     placeholder="Enter parking title"
+                     title="Edit parking title">
+              <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'parkingTitle'" class="inline-controls">
+                <select [(ngModel)]="newPatientConfig.parkingTitleFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="newPatientConfig.parkingTitleColor"
+                       (change)="onNewPatientColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+  </div>
+  </div>
+            <div class="editable-element">
+              <p *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'parkingContent'"
+                 [style.color]="newPatientConfig.parkingContentColor"
+                 [style.font-family]="newPatientConfig.parkingContentFontFamily"
+                 (click)="startInlineEditNewPatient('parkingContent')">
+                {{ newPatientConfig.parkingContent }}
+                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              </p>
+              <textarea *ngIf="isEditingNewPatient && editingNewPatientElement === 'parkingContent'"
+                        [(ngModel)]="newPatientConfig.parkingContent"
+                        (blur)="stopInlineEditNewPatient()"
+                        (keyup.ctrl.enter)="stopInlineEditNewPatient()"
+                        class="inline-edit-textarea"
+                        [style.color]="newPatientConfig.parkingContentColor"
+                        [style.font-family]="newPatientConfig.parkingContentFontFamily"
+                        placeholder="Enter parking content"
+                        title="Edit parking content"></textarea>
+              <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'parkingContent'" class="inline-controls">
+                <select [(ngModel)]="newPatientConfig.parkingContentFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="newPatientConfig.parkingContentColor"
+                       (change)="onNewPatientColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+  </div>
+  </div>
+</div>
+
+          <!-- Button with inline editing -->
+          <div class="editable-element">
+            <a href="/contact" 
+               class="btn-primary"
+               [style.color]="newPatientConfig.buttonTextColor"
+               [style.font-family]="newPatientConfig.buttonTextFontFamily"
+               *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'buttonText'"
+               (click)="startInlineEditNewPatient('buttonText')">
+              {{ newPatientConfig.buttonText }}
+              <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+            </a>
+            <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'buttonText'"
+                   [(ngModel)]="newPatientConfig.buttonText"
+                   (blur)="stopInlineEditNewPatient()"
+                   (keyup.enter)="stopInlineEditNewPatient()"
+                   class="inline-edit-input"
+                   [style.color]="newPatientConfig.buttonTextColor"
+                   [style.font-family]="newPatientConfig.buttonTextFontFamily"
+                   placeholder="Enter button text"
+                   title="Edit button text">
+            <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'buttonText'" class="inline-controls">
+              <select [(ngModel)]="newPatientConfig.buttonTextFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="newPatientConfig.buttonTextColor"
+                     (change)="onNewPatientColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+        </div>
 </div>
 
       <div class="new-patients-image">
@@ -133,7 +717,43 @@
           </div>
         </div>
         <div class="clinic-map">
-          <h3>📍 Visit Our Clinic</h3>
+          <!-- Map Title with inline editing -->
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'mapTitle'"
+                [style.color]="newPatientConfig.mapTitleColor"
+                [style.font-family]="newPatientConfig.mapTitleFontFamily"
+                (click)="startInlineEditNewPatient('mapTitle')">
+              {{ newPatientConfig.mapTitle }}
+              <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+            </h3>
+            <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'mapTitle'"
+                   [(ngModel)]="newPatientConfig.mapTitle"
+                   (blur)="stopInlineEditNewPatient()"
+                   (keyup.enter)="stopInlineEditNewPatient()"
+                   class="inline-edit-input"
+                   [style.color]="newPatientConfig.mapTitleColor"
+                   [style.font-family]="newPatientConfig.mapTitleFontFamily"
+                   placeholder="Enter map title"
+                   title="Edit map title">
+            <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'mapTitle'" class="inline-controls">
+              <select [(ngModel)]="newPatientConfig.mapTitleFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="newPatientConfig.mapTitleColor"
+                     (change)="onNewPatientColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          
           <div class="map-container">
                          <iframe 
                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d236.35202385690053!2d73.76117365276494!3d18.59060519688083!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2b97dc645a90f%3A0xf370478ecff49ae9!2sDentriz%20dental%20clinic!5e0!3m2!1sen!2sin!4v1755898762059!5m2!1sen!2sin"
@@ -147,207 +767,1716 @@
                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
              </iframe>
           </div>
+          
           <div class="map-info">
-            <p><strong>📍 Location:</strong> Wakad, Pune, Maharashtra</p>
-            <p><strong>🕒 Hours:</strong> Mon-Sat: 9:00 AM - 10:00 PM</p>
-            <a href="https://maps.app.goo.gl/qJdrWXYGJR8ki7BR7" target="_blank" class="btn-outline">📍 Get Directions</a>
+            <!-- Location Text with inline editing -->
+            <div class="editable-element">
+              <p *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'locationText'"
+                 [style.color]="newPatientConfig.locationTextColor"
+                 [style.font-family]="newPatientConfig.locationTextFontFamily"
+                 (click)="startInlineEditNewPatient('locationText')">
+                <strong>{{ newPatientConfig.locationText }}</strong>
+                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              </p>
+              <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'locationText'"
+                     [(ngModel)]="newPatientConfig.locationText"
+                     (blur)="stopInlineEditNewPatient()"
+                     (keyup.enter)="stopInlineEditNewPatient()"
+                     class="inline-edit-input"
+                     [style.color]="newPatientConfig.locationTextColor"
+                     [style.font-family]="newPatientConfig.locationTextFontFamily"
+                     placeholder="Enter location text"
+                     title="Edit location text">
+              <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'locationText'" class="inline-controls">
+                <select [(ngModel)]="newPatientConfig.locationTextFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="newPatientConfig.locationTextColor"
+                       (change)="onNewPatientColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+          </div>
+        </div>
+            
+            <!-- Hours Text with inline editing -->
+            <div class="editable-element">
+              <p *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'hoursText'"
+                 [style.color]="newPatientConfig.hoursTextColor"
+                 [style.font-family]="newPatientConfig.hoursTextFontFamily"
+                 (click)="startInlineEditNewPatient('hoursText')">
+                <strong>{{ newPatientConfig.hoursText }}</strong>
+                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              </p>
+              <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'hoursText'"
+                     [(ngModel)]="newPatientConfig.hoursText"
+                     (blur)="stopInlineEditNewPatient()"
+                     (keyup.enter)="stopInlineEditNewPatient()"
+                     class="inline-edit-input"
+                     [style.color]="newPatientConfig.hoursTextColor"
+                     [style.font-family]="newPatientConfig.hoursTextFontFamily"
+                     placeholder="Enter hours text"
+                     title="Edit hours text">
+              <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'hoursText'" class="inline-controls">
+                <select [(ngModel)]="newPatientConfig.hoursTextFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="newPatientConfig.hoursTextColor"
+                       (change)="onNewPatientColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+      </div>
+            </div>
+            
+            <!-- Directions Button with inline editing -->
+            <div class="editable-element">
+              <a href="https://maps.app.goo.gl/qJdrWXYGJR8ki7BR7" 
+                 target="_blank" 
+                 class="btn-outline"
+                 [style.color]="newPatientConfig.directionsTextColor"
+                 [style.font-family]="newPatientConfig.directionsTextFontFamily"
+                 *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'directionsText'"
+                 (click)="startInlineEditNewPatient('directionsText')">
+                {{ newPatientConfig.directionsText }}
+                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              </a>
+              <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'directionsText'"
+                     [(ngModel)]="newPatientConfig.directionsText"
+                     (blur)="stopInlineEditNewPatient()"
+                     (keyup.enter)="stopInlineEditNewPatient()"
+                     class="inline-edit-input"
+                     [style.color]="newPatientConfig.directionsTextColor"
+                     [style.font-family]="newPatientConfig.directionsTextFontFamily"
+                     placeholder="Enter directions text"
+                     title="Edit directions text">
+              <div *ngIf="isEditingNewPatient && editingNewPatientElement === 'directionsText'" class="inline-controls">
+                <select [(ngModel)]="newPatientConfig.directionsTextFontFamily" (change)="onNewPatientFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color"
+                       [(ngModel)]="newPatientConfig.directionsTextColor"
+                       (change)="onNewPatientColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- Top Reasons Section -->
-<section class="reasons">
-  <div class="container">
-    <h2 class="section-title">Why Choose DentRiz Dental Clinic in Pune</h2>
-    <p class="section-intro">
-      At <strong>DentRiz Dental Clinic</strong>, we believe every patient deserves a healthy, confident smile. 
-      Here’s why families in Wakad, Hinjewadi, and across Pune trust us for their dental care:
-    </p>
-    <div class="reasons-grid">
-
-      <div class="reason-card">
-        <div class="reason-icon">🦷</div>
-        <h3>Comprehensive Dental Care for Every Smile</h3>
-        <ul>
-          <li>Cosmetic dentistry including teeth whitening, veneers & smile makeovers</li>
-          <li>Advanced dental implants with precision technology</li>
-          <li>Family-focused care with pediatric and preventive dentistry</li>
-        </ul>
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingNewPatient">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" [(ngModel)]="newPatientConfig.backgroundColor" (change)="onNewPatientColorChange()" class="color-picker" title="Background Color">
+        </div>
       </div>
+    </div>
 
-      <div class="reason-card">
-        <div class="reason-icon">⚡</div>
-        <h3>Modern & Advanced Dental Treatments</h3>
-        <ul>
-          <li>Same-day crowns and digital dentistry for faster results</li>
-          <li>Professional teeth whitening for a brighter smile</li>
-          <li>Orthodontic solutions including Invisalign & invisible braces</li>
-        </ul>
-      </div>
-
-      <div class="reason-card">
-        <div class="reason-icon">❤️</div>
-        <h3>Trusted Local Dental Clinic in Wakad & Hinjewadi</h3>
-        <ul>
-          <li>Conveniently located in Wakad & Hinjewadi for easy access</li>
-          <li>Flexible appointments to suit your busy schedule</li>
-          <li>Affordable treatment plans with transparent pricing</li>
-        </ul>
-      </div>
-
-      <div class="reason-card">
-        <div class="reason-icon">🌿</div>
-        <h3>Comfortable & Stress-Free Environment</h3>
-        <ul>
-          <li>Pain-free dentistry options for anxious patients</li>
-          <li>Warm, patient-friendly atmosphere for children & adults</li>
-          <li>Multilingual staff to make every patient feel at home</li>
-        </ul>
-      </div>
-
-      <div class="reason-card">
-        <div class="reason-icon">🧼</div>
-        <h3>Uncompromised Hygiene & Safety</h3>
-        <ul>
-          <li>Strict international sterilization & infection-control protocols</li>
-          <li>Clean, modern clinic with advanced dental equipment</li>
-          <li>Highest standards of patient safety and comfort</li>
-        </ul>
-      </div>
-
-      <div class="reason-card">
-        <div class="reason-icon">💳</div>
-        <h3>Accessible & Affordable Care</h3>
-        <ul>
-          <li>Flexible payment plans to suit every budget</li>
-          <li>Preventive care packages for families & children</li>
-          <li>Transparent pricing with no hidden costs</li>
-        </ul>
-      </div>
-
+    <!-- Edit Actions -->
+    <div class="edit-actions" *ngIf="isEditingNewPatient">
+      <button class="save-btn" (click)="stopEditingNewPatient()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingNewPatient()">Cancel</button>
+      <button class="reset-btn" (click)="resetNewPatientToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
+
+<!-- Loading and Error States for New Patient Section -->
+<div class="loading-container" *ngIf="newPatientLoading">
+  <p>Loading new patient section...</p>
+</div>
+
+<div class="error-container" *ngIf="newPatientError">
+  <p>Error loading new patient section. Please try again.</p>
+</div>
+
+<!-- Top Reasons Section -->
+<section class="reasons" *ngIf="!reasonsLoading && !reasonsError && reasonsConfig">
+  <div class="container">
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingReasons">
+      <button class="edit-btn-floating" (click)="startEditingReasons()" title="Edit Reasons Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <div class="reasons-content" [style.background-color]="reasonsConfig.backgroundColor">
+      <!-- Section Title with inline editing -->
+      <div class="editable-element">
+        <h2 class="section-title"
+            [style.color]="reasonsConfig.sectionTitleColor"
+            [style.font-family]="reasonsConfig.sectionTitleFontFamily"
+            *ngIf="!isEditingReasons || editingReasonsElement !== 'sectionTitle'"
+            (click)="startInlineEditReasons('sectionTitle')">
+          {{ reasonsConfig.sectionTitle }}
+          <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+        </h2>
+        <input *ngIf="isEditingReasons && editingReasonsElement === 'sectionTitle'"
+               [(ngModel)]="reasonsConfig.sectionTitle"
+               (blur)="stopInlineEditReasons()"
+               (keyup.enter)="stopInlineEditReasons()"
+               class="inline-edit-input"
+               [style.color]="reasonsConfig.sectionTitleColor"
+               [style.font-family]="reasonsConfig.sectionTitleFontFamily"
+               placeholder="Enter section title"
+               title="Edit section title">
+        <div *ngIf="isEditingReasons && editingReasonsElement === 'sectionTitle'" class="inline-controls">
+          <select [(ngModel)]="reasonsConfig.sectionTitleFontFamily" (change)="onReasonsFontChange()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color"
+                 [(ngModel)]="reasonsConfig.sectionTitleColor"
+                 (change)="onReasonsColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
+      </div>
+
+      <!-- Section Intro with inline editing -->
+      <div class="editable-element">
+        <p class="section-intro"
+           [style.color]="reasonsConfig.sectionIntroColor"
+           [style.font-family]="reasonsConfig.sectionIntroFontFamily"
+           *ngIf="!isEditingReasons || editingReasonsElement !== 'sectionIntro'"
+           (click)="startInlineEditReasons('sectionIntro')"
+           [innerHTML]="reasonsConfig.sectionIntro">
+          <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+        </p>
+        <textarea *ngIf="isEditingReasons && editingReasonsElement === 'sectionIntro'"
+                  [(ngModel)]="reasonsConfig.sectionIntro"
+                  (blur)="stopInlineEditReasons()"
+                  (keyup.ctrl.enter)="stopInlineEditReasons()"
+                  class="inline-edit-textarea"
+                  [style.color]="reasonsConfig.sectionIntroColor"
+                  [style.font-family]="reasonsConfig.sectionIntroFontFamily"
+                  placeholder="Enter section intro"
+                  title="Edit section intro"></textarea>
+        <div *ngIf="isEditingReasons && editingReasonsElement === 'sectionIntro'" class="inline-controls">
+          <select [(ngModel)]="reasonsConfig.sectionIntroFontFamily" (change)="onReasonsFontChange()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color"
+                 [(ngModel)]="reasonsConfig.sectionIntroColor"
+                 (change)="onReasonsColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
+      </div>
+
+      <div class="reasons-grid">
+        <!-- Reason 1 -->
+      <div class="reason-card">
+          <div class="reason-icon">{{ reasonsConfig.reason1Icon }}</div>
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason1Title'"
+                [style.color]="reasonsConfig.reason1TitleColor"
+                [style.font-family]="reasonsConfig.reason1TitleFontFamily"
+                (click)="startInlineEditReasons('reason1Title')">
+              {{ reasonsConfig.reason1Title }}
+              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+            </h3>
+            <input *ngIf="isEditingReasons && editingReasonsElement === 'reason1Title'"
+                   [(ngModel)]="reasonsConfig.reason1Title"
+                   (blur)="stopInlineEditReasons()"
+                   (keyup.enter)="stopInlineEditReasons()"
+                   class="inline-edit-input"
+                   [style.color]="reasonsConfig.reason1TitleColor"
+                   [style.font-family]="reasonsConfig.reason1TitleFontFamily"
+                   placeholder="Enter reason 1 title"
+                   title="Edit reason 1 title">
+            <div *ngIf="isEditingReasons && editingReasonsElement === 'reason1Title'" class="inline-controls">
+              <select [(ngModel)]="reasonsConfig.reason1TitleFontFamily" (change)="onReasonsFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="reasonsConfig.reason1TitleColor"
+                     (change)="onReasonsColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          <ul>
+            <li *ngFor="let item of reasonsConfig.reason1Items; let i = index"
+                [style.color]="reasonsConfig.reason1ItemsColor"
+                [style.font-family]="reasonsConfig.reason1ItemsFontFamily">
+              {{ item }}
+            </li>
+        </ul>
+      </div>
+
+        <!-- Reason 2 -->
+      <div class="reason-card">
+          <div class="reason-icon">{{ reasonsConfig.reason2Icon }}</div>
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason2Title'"
+                [style.color]="reasonsConfig.reason2TitleColor"
+                [style.font-family]="reasonsConfig.reason2TitleFontFamily"
+                (click)="startInlineEditReasons('reason2Title')">
+              {{ reasonsConfig.reason2Title }}
+              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+            </h3>
+            <input *ngIf="isEditingReasons && editingReasonsElement === 'reason2Title'"
+                   [(ngModel)]="reasonsConfig.reason2Title"
+                   (blur)="stopInlineEditReasons()"
+                   (keyup.enter)="stopInlineEditReasons()"
+                   class="inline-edit-input"
+                   [style.color]="reasonsConfig.reason2TitleColor"
+                   [style.font-family]="reasonsConfig.reason2TitleFontFamily"
+                   placeholder="Enter reason 2 title"
+                   title="Edit reason 2 title">
+            <div *ngIf="isEditingReasons && editingReasonsElement === 'reason2Title'" class="inline-controls">
+              <select [(ngModel)]="reasonsConfig.reason2TitleFontFamily" (change)="onReasonsFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="reasonsConfig.reason2TitleColor"
+                     (change)="onReasonsColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          <ul>
+            <li *ngFor="let item of reasonsConfig.reason2Items; let i = index"
+                [style.color]="reasonsConfig.reason2ItemsColor"
+                [style.font-family]="reasonsConfig.reason2ItemsFontFamily">
+              {{ item }}
+            </li>
+        </ul>
+      </div>
+
+        <!-- Reason 3 -->
+      <div class="reason-card">
+          <div class="reason-icon">{{ reasonsConfig.reason3Icon }}</div>
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason3Title'"
+                [style.color]="reasonsConfig.reason3TitleColor"
+                [style.font-family]="reasonsConfig.reason3TitleFontFamily"
+                (click)="startInlineEditReasons('reason3Title')">
+              {{ reasonsConfig.reason3Title }}
+              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+            </h3>
+            <input *ngIf="isEditingReasons && editingReasonsElement === 'reason3Title'"
+                   [(ngModel)]="reasonsConfig.reason3Title"
+                   (blur)="stopInlineEditReasons()"
+                   (keyup.enter)="stopInlineEditReasons()"
+                   class="inline-edit-input"
+                   [style.color]="reasonsConfig.reason3TitleColor"
+                   [style.font-family]="reasonsConfig.reason3TitleFontFamily"
+                   placeholder="Enter reason 3 title"
+                   title="Edit reason 3 title">
+            <div *ngIf="isEditingReasons && editingReasonsElement === 'reason3Title'" class="inline-controls">
+              <select [(ngModel)]="reasonsConfig.reason3TitleFontFamily" (change)="onReasonsFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="reasonsConfig.reason3TitleColor"
+                     (change)="onReasonsColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          <ul>
+            <li *ngFor="let item of reasonsConfig.reason3Items; let i = index"
+                [style.color]="reasonsConfig.reason3ItemsColor"
+                [style.font-family]="reasonsConfig.reason3ItemsFontFamily">
+              {{ item }}
+            </li>
+        </ul>
+      </div>
+
+        <!-- Reason 4 -->
+      <div class="reason-card">
+          <div class="reason-icon">{{ reasonsConfig.reason4Icon }}</div>
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason4Title'"
+                [style.color]="reasonsConfig.reason4TitleColor"
+                [style.font-family]="reasonsConfig.reason4TitleFontFamily"
+                (click)="startInlineEditReasons('reason4Title')">
+              {{ reasonsConfig.reason4Title }}
+              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+            </h3>
+            <input *ngIf="isEditingReasons && editingReasonsElement === 'reason4Title'"
+                   [(ngModel)]="reasonsConfig.reason4Title"
+                   (blur)="stopInlineEditReasons()"
+                   (keyup.enter)="stopInlineEditReasons()"
+                   class="inline-edit-input"
+                   [style.color]="reasonsConfig.reason4TitleColor"
+                   [style.font-family]="reasonsConfig.reason4TitleFontFamily"
+                   placeholder="Enter reason 4 title"
+                   title="Edit reason 4 title">
+            <div *ngIf="isEditingReasons && editingReasonsElement === 'reason4Title'" class="inline-controls">
+              <select [(ngModel)]="reasonsConfig.reason4TitleFontFamily" (change)="onReasonsFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="reasonsConfig.reason4TitleColor"
+                     (change)="onReasonsColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          <ul>
+            <li *ngFor="let item of reasonsConfig.reason4Items; let i = index"
+                [style.color]="reasonsConfig.reason4ItemsColor"
+                [style.font-family]="reasonsConfig.reason4ItemsFontFamily">
+              {{ item }}
+            </li>
+        </ul>
+      </div>
+
+        <!-- Reason 5 -->
+      <div class="reason-card">
+          <div class="reason-icon">{{ reasonsConfig.reason5Icon }}</div>
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason5Title'"
+                [style.color]="reasonsConfig.reason5TitleColor"
+                [style.font-family]="reasonsConfig.reason5TitleFontFamily"
+                (click)="startInlineEditReasons('reason5Title')">
+              {{ reasonsConfig.reason5Title }}
+              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+            </h3>
+            <input *ngIf="isEditingReasons && editingReasonsElement === 'reason5Title'"
+                   [(ngModel)]="reasonsConfig.reason5Title"
+                   (blur)="stopInlineEditReasons()"
+                   (keyup.enter)="stopInlineEditReasons()"
+                   class="inline-edit-input"
+                   [style.color]="reasonsConfig.reason5TitleColor"
+                   [style.font-family]="reasonsConfig.reason5TitleFontFamily"
+                   placeholder="Enter reason 5 title"
+                   title="Edit reason 5 title">
+            <div *ngIf="isEditingReasons && editingReasonsElement === 'reason5Title'" class="inline-controls">
+              <select [(ngModel)]="reasonsConfig.reason5TitleFontFamily" (change)="onReasonsFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="reasonsConfig.reason5TitleColor"
+                     (change)="onReasonsColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          <ul>
+            <li *ngFor="let item of reasonsConfig.reason5Items; let i = index"
+                [style.color]="reasonsConfig.reason5ItemsColor"
+                [style.font-family]="reasonsConfig.reason5ItemsFontFamily">
+              {{ item }}
+            </li>
+        </ul>
+      </div>
+
+        <!-- Reason 6 -->
+      <div class="reason-card">
+          <div class="reason-icon">{{ reasonsConfig.reason6Icon }}</div>
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason6Title'"
+                [style.color]="reasonsConfig.reason6TitleColor"
+                [style.font-family]="reasonsConfig.reason6TitleFontFamily"
+                (click)="startInlineEditReasons('reason6Title')">
+              {{ reasonsConfig.reason6Title }}
+              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+            </h3>
+            <input *ngIf="isEditingReasons && editingReasonsElement === 'reason6Title'"
+                   [(ngModel)]="reasonsConfig.reason6Title"
+                   (blur)="stopInlineEditReasons()"
+                   (keyup.enter)="stopInlineEditReasons()"
+                   class="inline-edit-input"
+                   [style.color]="reasonsConfig.reason6TitleColor"
+                   [style.font-family]="reasonsConfig.reason6TitleFontFamily"
+                   placeholder="Enter reason 6 title"
+                   title="Edit reason 6 title">
+            <div *ngIf="isEditingReasons && editingReasonsElement === 'reason6Title'" class="inline-controls">
+              <select [(ngModel)]="reasonsConfig.reason6TitleFontFamily" (change)="onReasonsFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color"
+                     [(ngModel)]="reasonsConfig.reason6TitleColor"
+                     (change)="onReasonsColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+          <ul>
+            <li *ngFor="let item of reasonsConfig.reason6Items; let i = index"
+                [style.color]="reasonsConfig.reason6ItemsColor"
+                [style.font-family]="reasonsConfig.reason6ItemsFontFamily">
+              {{ item }}
+            </li>
+        </ul>
+        </div>
+      </div>
+      </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingReasons">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" [(ngModel)]="reasonsConfig.backgroundColor" (change)="onReasonsColorChange()" class="color-picker" title="Background Color">
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Actions -->
+    <div class="edit-actions" *ngIf="isEditingReasons">
+      <button class="save-btn" (click)="stopEditingReasons()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingReasons()">Cancel</button>
+      <button class="reset-btn" (click)="resetReasonsToOriginal()">Reset to Original</button>
+    </div>
+  </div>
+</section>
+
+<!-- Loading and Error States for Reasons Section -->
+<div class="loading-container" *ngIf="reasonsLoading">
+  <p>Loading reasons section...</p>
+</div>
+
+<div class="error-container" *ngIf="reasonsError">
+  <p>Error loading reasons section. Please try again.</p>
+</div>
 
 
 <!-- Services Overview -->
-<section class="services-overview">
+<section class="services-overview" *ngIf="!servicesLoading && !servicesError && servicesConfig">
   <div class="container">
-    <h2 class="section-title">Comprehensive Dental Services in Wakad & Hinjewadi</h2>
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingServices">
+      <button class="edit-btn-floating" (click)="startEditingServices()" title="Edit Services Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <div class="services-content" [style.background-color]="servicesConfig.backgroundColor">
+      <!-- Section Title with inline editing -->
+      <div class="editable-element">
+        <h2 class="section-title"
+            [style.color]="servicesConfig.sectionTitleColor"
+            [style.font-family]="servicesConfig.sectionTitleFontFamily"
+            *ngIf="!isEditingServices || editingServicesElement !== 'sectionTitle'"
+            (click)="startInlineEditServices('sectionTitle')">
+          {{ servicesConfig.sectionTitle }}
+          <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+        </h2>
+        <input *ngIf="isEditingServices && editingServicesElement === 'sectionTitle'"
+               [(ngModel)]="servicesConfig.sectionTitle"
+               (blur)="stopInlineEditServices()"
+               (keyup.enter)="stopInlineEditServices()"
+               class="inline-edit-input"
+               [style.color]="servicesConfig.sectionTitleColor"
+               [style.font-family]="servicesConfig.sectionTitleFontFamily"
+               placeholder="Enter section title"
+               title="Edit section title">
+        <div *ngIf="isEditingServices && editingServicesElement === 'sectionTitle'" class="inline-controls">
+          <select [(ngModel)]="servicesConfig.sectionTitleFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color"
+                 [(ngModel)]="servicesConfig.sectionTitleColor"
+                 (change)="onServicesColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
+      </div>
     <div class="services-grid">
 
-      <!-- Preventive Care -->
+      <!-- Service 1 - Preventive Care -->
       <div class="service-category">
-        <h3>🦷 Preventive Care & Dental Cleaning in Wakad</h3>
-        <ul>
-          <li>Professional teeth cleaning & polishing</li>
-          <li>Pediatric dentistry for children</li>
-          <li>Oral health education & cavity prevention</li>
-          <li>Family dentistry in Wakad & Hinjewadi</li>
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingServices || editingServicesElement !== 'service1Title'"
+              [style.color]="servicesConfig.service1TitleColor"
+              [style.font-family]="servicesConfig.service1TitleFontFamily"
+              (click)="startInlineEditServices('service1Title')">
+            {{ servicesConfig.service1Title }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </h3>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service1Title'"
+                 [(ngModel)]="servicesConfig.service1Title"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service1TitleColor"
+                 [style.font-family]="servicesConfig.service1TitleFontFamily"
+                 placeholder="Enter service 1 title"
+                 title="Edit service 1 title">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service1Title'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service1TitleFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service1TitleColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+        <!-- Service 1 Items with inline editing -->
+        <div class="editable-element">
+          <div *ngIf="!isEditingServices || editingServicesElement !== 'service1Items'" 
+               (click)="startInlineEditServices('service1Items')" 
+               class="service-items-container">
+            <ul class="service-items-list" 
+                [style.color]="servicesConfig.service1ItemsColor"
+                [style.font-family]="servicesConfig.service1ItemsFontFamily">
+              <li *ngFor="let item of servicesConfig.service1Items"
+                  [style.color]="servicesConfig.service1ItemsColor"
+                  [style.font-family]="servicesConfig.service1ItemsFontFamily">{{ item }}</li>
         </ul>
-        <a routerLink="/services#preventive" class="btn-outline">Learn More</a>
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </div>
+          <div *ngIf="isEditingServices && editingServicesElement === 'service1Items'" class="service-items-edit-inline">
+            <div class="service-item" *ngFor="let item of servicesConfig.service1Items; let i = index">
+              <input type="text" 
+                     [(ngModel)]="servicesConfig.service1Items[i]" 
+                     class="form-input" 
+                     placeholder="Enter service item"
+                     [style.color]="servicesConfig.service1ItemsColor"
+                     [style.font-family]="servicesConfig.service1ItemsFontFamily">
+              <button type="button" (click)="removeServiceItem(1, i)" class="remove-btn">×</button>
+            </div>
+            <button type="button" (click)="addServiceItem(1)" class="add-btn">+ Add Item</button>
+            <div class="inline-controls">
+              <select [(ngModel)]="servicesConfig.service1ItemsFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="servicesConfig.service1ItemsColor"
+                     (change)="onServicesColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+        </div>
+        <div class="editable-element">
+          <a routerLink="/services#preventive" 
+             class="btn-outline"
+             [style.color]="servicesConfig.service1ButtonColor"
+             [style.font-family]="servicesConfig.service1ButtonFontFamily"
+             *ngIf="!isEditingServices || editingServicesElement !== 'service1ButtonText'"
+             (click)="startInlineEditServices('service1ButtonText')">
+            {{ servicesConfig.service1ButtonText }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </a>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service1ButtonText'"
+                 [(ngModel)]="servicesConfig.service1ButtonText"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service1ButtonColor"
+                 [style.font-family]="servicesConfig.service1ButtonFontFamily"
+                 placeholder="Enter service 1 button text"
+                 title="Edit service 1 button text">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service1ButtonText'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service1ButtonFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service1ButtonColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
       </div>
 
-      <!-- Restorative Care -->
+      <!-- Service 2 - Restorative Care -->
       <div class="service-category">
-        <h3>🔧 Restorative Care & Dental Implants in Wakad</h3>
-        <ul>
-          <li>Advanced dental implants in Pune</li>
-          <li>Dental crowns & bridges</li>
-          <li>Tooth-colored fillings</li>
-          <li>Emergency dental treatments</li>
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingServices || editingServicesElement !== 'service2Title'"
+              [style.color]="servicesConfig.service2TitleColor"
+              [style.font-family]="servicesConfig.service2TitleFontFamily"
+              (click)="startInlineEditServices('service2Title')">
+            {{ servicesConfig.service2Title }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </h3>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service2Title'"
+                 [(ngModel)]="servicesConfig.service2Title"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service2TitleColor"
+                 [style.font-family]="servicesConfig.service2TitleFontFamily"
+                 placeholder="Enter service 2 title"
+                 title="Edit service 2 title">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service2Title'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service2TitleFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service2TitleColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+        <!-- Service 2 Items with inline editing -->
+        <div class="editable-element">
+          <div *ngIf="!isEditingServices || editingServicesElement !== 'service2Items'" 
+               (click)="startInlineEditServices('service2Items')" 
+               class="service-items-container">
+            <ul class="service-items-list" 
+                [style.color]="servicesConfig.service2ItemsColor"
+                [style.font-family]="servicesConfig.service2ItemsFontFamily">
+              <li *ngFor="let item of servicesConfig.service2Items"
+                  [style.color]="servicesConfig.service2ItemsColor"
+                  [style.font-family]="servicesConfig.service2ItemsFontFamily">{{ item }}</li>
         </ul>
-        <a routerLink="/services#restorative" class="btn-outline">Learn More</a>
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </div>
+          <div *ngIf="isEditingServices && editingServicesElement === 'service2Items'" class="service-items-edit-inline">
+            <div class="service-item" *ngFor="let item of servicesConfig.service2Items; let i = index">
+              <input type="text" 
+                     [(ngModel)]="servicesConfig.service2Items[i]" 
+                     class="form-input" 
+                     placeholder="Enter service item"
+                     [style.color]="servicesConfig.service2ItemsColor"
+                     [style.font-family]="servicesConfig.service2ItemsFontFamily">
+              <button type="button" (click)="removeServiceItem(2, i)" class="remove-btn">×</button>
+            </div>
+            <button type="button" (click)="addServiceItem(2)" class="add-btn">+ Add Item</button>
+            <div class="inline-controls">
+              <select [(ngModel)]="servicesConfig.service2ItemsFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="servicesConfig.service2ItemsColor"
+                     (change)="onServicesColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+        </div>
+        <div class="editable-element">
+          <a routerLink="/services#restorative" 
+             class="btn-outline"
+             [style.color]="servicesConfig.service2ButtonColor"
+             [style.font-family]="servicesConfig.service2ButtonFontFamily"
+             *ngIf="!isEditingServices || editingServicesElement !== 'service2ButtonText'"
+             (click)="startInlineEditServices('service2ButtonText')">
+            {{ servicesConfig.service2ButtonText }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </a>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service2ButtonText'"
+                 [(ngModel)]="servicesConfig.service2ButtonText"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service2ButtonColor"
+                 [style.font-family]="servicesConfig.service2ButtonFontFamily"
+                 placeholder="Enter service 2 button text"
+                 title="Edit service 2 button text">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service2ButtonText'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service2ButtonFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service2ButtonColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
       </div>
 
-      <!-- Cosmetic Dentistry -->
+      <!-- Service 3 - Cosmetic Dentistry -->
       <div class="service-category">
-        <h3>✨ Cosmetic Dentistry in Wakad</h3>
-        <ul>
-          <li>Teeth whitening & smile makeovers</li>
-          <li>Invisalign® & clear aligners</li>
-          <li>Dental veneers & bonding</li>
-          <li>Cosmetic contouring</li>
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingServices || editingServicesElement !== 'service3Title'"
+              [style.color]="servicesConfig.service3TitleColor"
+              [style.font-family]="servicesConfig.service3TitleFontFamily"
+              (click)="startInlineEditServices('service3Title')">
+            {{ servicesConfig.service3Title }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </h3>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service3Title'"
+                 [(ngModel)]="servicesConfig.service3Title"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service3TitleColor"
+                 [style.font-family]="servicesConfig.service3TitleFontFamily"
+                 placeholder="Enter service 3 title"
+                 title="Edit service 3 title">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service3Title'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service3TitleFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service3TitleColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+        <!-- Service 3 Items with inline editing -->
+        <div class="editable-element">
+          <div *ngIf="!isEditingServices || editingServicesElement !== 'service3Items'" 
+               (click)="startInlineEditServices('service3Items')" 
+               class="service-items-container">
+            <ul class="service-items-list" 
+                [style.color]="servicesConfig.service3ItemsColor"
+                [style.font-family]="servicesConfig.service3ItemsFontFamily">
+              <li *ngFor="let item of servicesConfig.service3Items"
+                  [style.color]="servicesConfig.service3ItemsColor"
+                  [style.font-family]="servicesConfig.service3ItemsFontFamily">{{ item }}</li>
         </ul>
-        <a routerLink="/services#cosmetic" class="btn-outline">Learn More</a>
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </div>
+          <div *ngIf="isEditingServices && editingServicesElement === 'service3Items'" class="service-items-edit-inline">
+            <div class="service-item" *ngFor="let item of servicesConfig.service3Items; let i = index">
+              <input type="text" 
+                     [(ngModel)]="servicesConfig.service3Items[i]" 
+                     class="form-input" 
+                     placeholder="Enter service item"
+                     [style.color]="servicesConfig.service3ItemsColor"
+                     [style.font-family]="servicesConfig.service3ItemsFontFamily">
+              <button type="button" (click)="removeServiceItem(3, i)" class="remove-btn">×</button>
+            </div>
+            <button type="button" (click)="addServiceItem(3)" class="add-btn">+ Add Item</button>
+            <div class="inline-controls">
+              <select [(ngModel)]="servicesConfig.service3ItemsFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="servicesConfig.service3ItemsColor"
+                     (change)="onServicesColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+        </div>
+        <div class="editable-element">
+          <a routerLink="/services#cosmetic" 
+             class="btn-outline"
+             [style.color]="servicesConfig.service3ButtonColor"
+             [style.font-family]="servicesConfig.service3ButtonFontFamily"
+             *ngIf="!isEditingServices || editingServicesElement !== 'service3ButtonText'"
+             (click)="startInlineEditServices('service3ButtonText')">
+            {{ servicesConfig.service3ButtonText }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </a>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service3ButtonText'"
+                 [(ngModel)]="servicesConfig.service3ButtonText"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service3ButtonColor"
+                 [style.font-family]="servicesConfig.service3ButtonFontFamily"
+                 placeholder="Enter service 3 button text"
+                 title="Edit service 3 button text">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service3ButtonText'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service3ButtonFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service3ButtonColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
       </div>
 
-      <!-- Orthodontics -->
+      <!-- Service 4 - Orthodontics -->
       <div class="service-category">
-        <h3>😃 Orthodontics & Braces</h3>
-        <ul>
-          <li>Metal & ceramic braces</li>
-          <li>Invisalign® clear aligners</li>
-          <li>Early orthodontic care for children</li>
-          <li>Jaw alignment treatments</li>
-        </ul>
-        <a routerLink="/services#orthodontics" class="btn-outline">Learn More</a>
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingServices || editingServicesElement !== 'service4Title'"
+              [style.color]="servicesConfig.service4TitleColor"
+              [style.font-family]="servicesConfig.service4TitleFontFamily"
+              (click)="startInlineEditServices('service4Title')">
+            {{ servicesConfig.service4Title }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </h3>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service4Title'"
+                 [(ngModel)]="servicesConfig.service4Title"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service4TitleColor"
+                 [style.font-family]="servicesConfig.service4TitleFontFamily"
+                 placeholder="Enter service 4 title"
+                 title="Edit service 4 title">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service4Title'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service4TitleFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service4TitleColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+        <!-- Service 4 Items with inline editing -->
+        <div class="editable-element">
+          <div *ngIf="!isEditingServices || editingServicesElement !== 'service4Items'" 
+               (click)="startInlineEditServices('service4Items')" 
+               class="service-items-container">
+            <ul class="service-items-list" 
+                [style.color]="servicesConfig.service4ItemsColor"
+                [style.font-family]="servicesConfig.service4ItemsFontFamily">
+              <li *ngFor="let item of servicesConfig.service4Items"
+                  [style.color]="servicesConfig.service4ItemsColor"
+                  [style.font-family]="servicesConfig.service4ItemsFontFamily">{{ item }}</li>
+            </ul>
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </div>
+          <div *ngIf="isEditingServices && editingServicesElement === 'service4Items'" class="service-items-edit-inline">
+            <div class="service-item" *ngFor="let item of servicesConfig.service4Items; let i = index">
+              <input type="text" 
+                     [(ngModel)]="servicesConfig.service4Items[i]" 
+                     class="form-input" 
+                     placeholder="Enter service item"
+                     [style.color]="servicesConfig.service4ItemsColor"
+                     [style.font-family]="servicesConfig.service4ItemsFontFamily">
+              <button type="button" (click)="removeServiceItem(4, i)" class="remove-btn">×</button>
+            </div>
+            <button type="button" (click)="addServiceItem(4)" class="add-btn">+ Add Item</button>
+            <div class="inline-controls">
+              <select [(ngModel)]="servicesConfig.service4ItemsFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="servicesConfig.service4ItemsColor"
+                     (change)="onServicesColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+        </div>
+        <div class="editable-element">
+          <a routerLink="/services#orthodontics" 
+             class="btn-outline"
+             [style.color]="servicesConfig.service4ButtonColor"
+             [style.font-family]="servicesConfig.service4ButtonFontFamily"
+             *ngIf="!isEditingServices || editingServicesElement !== 'service4ButtonText'"
+             (click)="startInlineEditServices('service4ButtonText')">
+            {{ servicesConfig.service4ButtonText }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </a>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service4ButtonText'"
+                 [(ngModel)]="servicesConfig.service4ButtonText"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service4ButtonColor"
+                 [style.font-family]="servicesConfig.service4ButtonFontFamily"
+                 placeholder="Enter service 4 button text"
+                 title="Edit service 4 button text">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service4ButtonText'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service4ButtonFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service4ButtonColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
       </div>
 
-      <!-- Pediatric Dentistry -->
+      <!-- Service 5 - Pediatric Dentistry -->
       <div class="service-category">
-        <h3>👶 Pediatric Dentistry</h3>
-        <ul>
-          <li>Gentle dental care for children</li>
-          <li>Preventive sealants & fluoride treatments</li>
-          <li>Habit counseling (thumb sucking, mouth breathing)</li>
-          <li>Space maintainers for growing smiles</li>
-        </ul>
-        <a routerLink="/services#pediatric" class="btn-outline">Learn More</a>
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingServices || editingServicesElement !== 'service5Title'"
+              [style.color]="servicesConfig.service5TitleColor"
+              [style.font-family]="servicesConfig.service5TitleFontFamily"
+              (click)="startInlineEditServices('service5Title')">
+            {{ servicesConfig.service5Title }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </h3>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service5Title'"
+                 [(ngModel)]="servicesConfig.service5Title"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service5TitleColor"
+                 [style.font-family]="servicesConfig.service5TitleFontFamily"
+                 placeholder="Enter service 5 title"
+                 title="Edit service 5 title">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service5Title'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service5TitleFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service5TitleColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+        <!-- Service 5 Items with inline editing -->
+        <div class="editable-element">
+          <div *ngIf="!isEditingServices || editingServicesElement !== 'service5Items'" 
+               (click)="startInlineEditServices('service5Items')" 
+               class="service-items-container">
+            <ul class="service-items-list" 
+                [style.color]="servicesConfig.service5ItemsColor"
+                [style.font-family]="servicesConfig.service5ItemsFontFamily">
+              <li *ngFor="let item of servicesConfig.service5Items"
+                  [style.color]="servicesConfig.service5ItemsColor"
+                  [style.font-family]="servicesConfig.service5ItemsFontFamily">{{ item }}</li>
+            </ul>
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </div>
+          <div *ngIf="isEditingServices && editingServicesElement === 'service5Items'" class="service-items-edit-inline">
+            <div class="service-item" *ngFor="let item of servicesConfig.service5Items; let i = index">
+              <input type="text" 
+                     [(ngModel)]="servicesConfig.service5Items[i]" 
+                     class="form-input" 
+                     placeholder="Enter service item"
+                     [style.color]="servicesConfig.service5ItemsColor"
+                     [style.font-family]="servicesConfig.service5ItemsFontFamily">
+              <button type="button" (click)="removeServiceItem(5, i)" class="remove-btn">×</button>
+            </div>
+            <button type="button" (click)="addServiceItem(5)" class="add-btn">+ Add Item</button>
+            <div class="inline-controls">
+              <select [(ngModel)]="servicesConfig.service5ItemsFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="servicesConfig.service5ItemsColor"
+                     (change)="onServicesColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+        </div>
+        <div class="editable-element">
+          <a routerLink="/services#pediatric" 
+             class="btn-outline"
+             [style.color]="servicesConfig.service5ButtonColor"
+             [style.font-family]="servicesConfig.service5ButtonFontFamily"
+             *ngIf="!isEditingServices || editingServicesElement !== 'service5ButtonText'"
+             (click)="startInlineEditServices('service5ButtonText')">
+            {{ servicesConfig.service5ButtonText }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </a>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service5ButtonText'"
+                 [(ngModel)]="servicesConfig.service5ButtonText"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service5ButtonColor"
+                 [style.font-family]="servicesConfig.service5ButtonFontFamily"
+                 placeholder="Enter service 5 button text"
+                 title="Edit service 5 button text">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service5ButtonText'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service5ButtonFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service5ButtonColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
       </div>
 
-      <!-- Periodontal Care -->
+      <!-- Service 6 - Periodontal Care -->
       <div class="service-category">
-        <h3>🌿 Gum & Periodontal Care</h3>
-        <ul>
-          <li>Treatment for bleeding gums</li>
-          <li>Scaling & root planing</li>
-          <li>Laser gum treatments</li>
-          <li>Periodontal maintenance therapy</li>
-        </ul>
-        <a routerLink="/services#periodontal" class="btn-outline">Learn More</a>
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingServices || editingServicesElement !== 'service6Title'"
+              [style.color]="servicesConfig.service6TitleColor"
+              [style.font-family]="servicesConfig.service6TitleFontFamily"
+              (click)="startInlineEditServices('service6Title')">
+            {{ servicesConfig.service6Title }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </h3>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service6Title'"
+                 [(ngModel)]="servicesConfig.service6Title"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service6TitleColor"
+                 [style.font-family]="servicesConfig.service6TitleFontFamily"
+                 placeholder="Enter service 6 title"
+                 title="Edit service 6 title">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service6Title'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service6TitleFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service6TitleColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+        <!-- Service 6 Items with inline editing -->
+        <div class="editable-element">
+          <div *ngIf="!isEditingServices || editingServicesElement !== 'service6Items'" 
+               (click)="startInlineEditServices('service6Items')" 
+               class="service-items-container">
+            <ul class="service-items-list" 
+                [style.color]="servicesConfig.service6ItemsColor"
+                [style.font-family]="servicesConfig.service6ItemsFontFamily">
+              <li *ngFor="let item of servicesConfig.service6Items"
+                  [style.color]="servicesConfig.service6ItemsColor"
+                  [style.font-family]="servicesConfig.service6ItemsFontFamily">{{ item }}</li>
+            </ul>
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </div>
+          <div *ngIf="isEditingServices && editingServicesElement === 'service6Items'" class="service-items-edit-inline">
+            <div class="service-item" *ngFor="let item of servicesConfig.service6Items; let i = index">
+              <input type="text" 
+                     [(ngModel)]="servicesConfig.service6Items[i]" 
+                     class="form-input" 
+                     placeholder="Enter service item"
+                     [style.color]="servicesConfig.service6ItemsColor"
+                     [style.font-family]="servicesConfig.service6ItemsFontFamily">
+              <button type="button" (click)="removeServiceItem(6, i)" class="remove-btn">×</button>
+            </div>
+            <button type="button" (click)="addServiceItem(6)" class="add-btn">+ Add Item</button>
+            <div class="inline-controls">
+              <select [(ngModel)]="servicesConfig.service6ItemsFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="servicesConfig.service6ItemsColor"
+                     (change)="onServicesColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+        </div>
+        <div class="editable-element">
+          <a routerLink="/services#periodontal" 
+             class="btn-outline"
+             [style.color]="servicesConfig.service6ButtonColor"
+             [style.font-family]="servicesConfig.service6ButtonFontFamily"
+             *ngIf="!isEditingServices || editingServicesElement !== 'service6ButtonText'"
+             (click)="startInlineEditServices('service6ButtonText')">
+            {{ servicesConfig.service6ButtonText }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </a>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service6ButtonText'"
+                 [(ngModel)]="servicesConfig.service6ButtonText"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service6ButtonColor"
+                 [style.font-family]="servicesConfig.service6ButtonFontFamily"
+                 placeholder="Enter service 6 button text"
+                 title="Edit service 6 button text">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service6ButtonText'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service6ButtonFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service6ButtonColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
       </div>
 
-      <!-- Oral Surgery -->
+      <!-- Service 7 - Oral Surgery -->
       <div class="service-category">
-        <h3>🔨 Oral Surgery & Extractions</h3>
-        <ul>
-          <li>Wisdom tooth removal</li>
-          <li>Tooth extractions with minimal pain</li>
-          <li>Minor oral surgical procedures</li>
-          <li>Bone grafting for implants</li>
-        </ul>
-        <a routerLink="/services#surgery" class="btn-outline">Learn More</a>
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingServices || editingServicesElement !== 'service7Title'"
+              [style.color]="servicesConfig.service7TitleColor"
+              [style.font-family]="servicesConfig.service7TitleFontFamily"
+              (click)="startInlineEditServices('service7Title')">
+            {{ servicesConfig.service7Title }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </h3>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service7Title'"
+                 [(ngModel)]="servicesConfig.service7Title"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service7TitleColor"
+                 [style.font-family]="servicesConfig.service7TitleFontFamily"
+                 placeholder="Enter service 7 title"
+                 title="Edit service 7 title">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service7Title'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service7TitleFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service7TitleColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+        <!-- Service 7 Items with inline editing -->
+        <div class="editable-element">
+          <div *ngIf="!isEditingServices || editingServicesElement !== 'service7Items'" 
+               (click)="startInlineEditServices('service7Items')" 
+               class="service-items-container">
+            <ul class="service-items-list" 
+                [style.color]="servicesConfig.service7ItemsColor"
+                [style.font-family]="servicesConfig.service7ItemsFontFamily">
+              <li *ngFor="let item of servicesConfig.service7Items"
+                  [style.color]="servicesConfig.service7ItemsColor"
+                  [style.font-family]="servicesConfig.service7ItemsFontFamily">{{ item }}</li>
+            </ul>
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </div>
+          <div *ngIf="isEditingServices && editingServicesElement === 'service7Items'" class="service-items-edit-inline">
+            <div class="service-item" *ngFor="let item of servicesConfig.service7Items; let i = index">
+              <input type="text" 
+                     [(ngModel)]="servicesConfig.service7Items[i]" 
+                     class="form-input" 
+                     placeholder="Enter service item"
+                     [style.color]="servicesConfig.service7ItemsColor"
+                     [style.font-family]="servicesConfig.service7ItemsFontFamily">
+              <button type="button" (click)="removeServiceItem(7, i)" class="remove-btn">×</button>
+            </div>
+            <button type="button" (click)="addServiceItem(7)" class="add-btn">+ Add Item</button>
+            <div class="inline-controls">
+              <select [(ngModel)]="servicesConfig.service7ItemsFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="servicesConfig.service7ItemsColor"
+                     (change)="onServicesColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+        </div>
+        <div class="editable-element">
+          <a routerLink="/services#surgery" 
+             class="btn-outline"
+             [style.color]="servicesConfig.service7ButtonColor"
+             [style.font-family]="servicesConfig.service7ButtonFontFamily"
+             *ngIf="!isEditingServices || editingServicesElement !== 'service7ButtonText'"
+             (click)="startInlineEditServices('service7ButtonText')">
+            {{ servicesConfig.service7ButtonText }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </a>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service7ButtonText'"
+                 [(ngModel)]="servicesConfig.service7ButtonText"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service7ButtonColor"
+                 [style.font-family]="servicesConfig.service7ButtonFontFamily"
+                 placeholder="Enter service 7 button text"
+                 title="Edit service 7 button text">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service7ButtonText'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service7ButtonFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service7ButtonColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
       </div>
 
-      <!-- Endodontics -->
+      <!-- Service 8 - Endodontics -->
       <div class="service-category">
-        <h3>🛡️ Root Canal & Endodontics</h3>
-        <ul>
-          <li>Painless root canal treatment</li>
-          <li>Single-sitting RCT options</li>
-          <li>Retreatment of failed RCT</li>
-          <li>Post & core build-up</li>
-        </ul>
-        <a routerLink="/services#endodontics" class="btn-outline">Learn More</a>
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingServices || editingServicesElement !== 'service8Title'"
+              [style.color]="servicesConfig.service8TitleColor"
+              [style.font-family]="servicesConfig.service8TitleFontFamily"
+              (click)="startInlineEditServices('service8Title')">
+            {{ servicesConfig.service8Title }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </h3>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service8Title'"
+                 [(ngModel)]="servicesConfig.service8Title"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service8TitleColor"
+                 [style.font-family]="servicesConfig.service8TitleFontFamily"
+                 placeholder="Enter service 8 title"
+                 title="Edit service 8 title">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service8Title'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service8TitleFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service8TitleColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+        <!-- Service 8 Items with inline editing -->
+        <div class="editable-element">
+          <div *ngIf="!isEditingServices || editingServicesElement !== 'service8Items'" 
+               (click)="startInlineEditServices('service8Items')" 
+               class="service-items-container">
+            <ul class="service-items-list" 
+                [style.color]="servicesConfig.service8ItemsColor"
+                [style.font-family]="servicesConfig.service8ItemsFontFamily">
+              <li *ngFor="let item of servicesConfig.service8Items"
+                  [style.color]="servicesConfig.service8ItemsColor"
+                  [style.font-family]="servicesConfig.service8ItemsFontFamily">{{ item }}</li>
+            </ul>
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </div>
+          <div *ngIf="isEditingServices && editingServicesElement === 'service8Items'" class="service-items-edit-inline">
+            <div class="service-item" *ngFor="let item of servicesConfig.service8Items; let i = index">
+              <input type="text" 
+                     [(ngModel)]="servicesConfig.service8Items[i]" 
+                     class="form-input" 
+                     placeholder="Enter service item"
+                     [style.color]="servicesConfig.service8ItemsColor"
+                     [style.font-family]="servicesConfig.service8ItemsFontFamily">
+              <button type="button" (click)="removeServiceItem(8, i)" class="remove-btn">×</button>
+            </div>
+            <button type="button" (click)="addServiceItem(8)" class="add-btn">+ Add Item</button>
+            <div class="inline-controls">
+              <select [(ngModel)]="servicesConfig.service8ItemsFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="servicesConfig.service8ItemsColor"
+                     (change)="onServicesColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+        </div>
+        <div class="editable-element">
+          <a routerLink="/services#endodontics" 
+             class="btn-outline"
+             [style.color]="servicesConfig.service8ButtonColor"
+             [style.font-family]="servicesConfig.service8ButtonFontFamily"
+             *ngIf="!isEditingServices || editingServicesElement !== 'service8ButtonText'"
+             (click)="startInlineEditServices('service8ButtonText')">
+            {{ servicesConfig.service8ButtonText }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </a>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service8ButtonText'"
+                 [(ngModel)]="servicesConfig.service8ButtonText"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service8ButtonColor"
+                 [style.font-family]="servicesConfig.service8ButtonFontFamily"
+                 placeholder="Enter service 8 button text"
+                 title="Edit service 8 button text">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service8ButtonText'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service8ButtonFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service8ButtonColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
       </div>
 
-      <!-- Emergency Dentistry -->
+      <!-- Service 9 - Emergency Dentistry -->
       <div class="service-category">
-        <h3>🚑 Emergency Dental Care</h3>
-        <ul>
-          <li>Immediate pain relief treatments</li>
-          <li>Broken tooth repair</li>
-          <li>Knocked-out tooth management</li>
-          <li>Same-day emergency appointments</li>
-        </ul>
-        <a routerLink="/services#emergency" class="btn-outline">Learn More</a>
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingServices || editingServicesElement !== 'service9Title'"
+              [style.color]="servicesConfig.service9TitleColor"
+              [style.font-family]="servicesConfig.service9TitleFontFamily"
+              (click)="startInlineEditServices('service9Title')">
+            {{ servicesConfig.service9Title }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </h3>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service9Title'"
+                 [(ngModel)]="servicesConfig.service9Title"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service9TitleColor"
+                 [style.font-family]="servicesConfig.service9TitleFontFamily"
+                 placeholder="Enter service 9 title"
+                 title="Edit service 9 title">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service9Title'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service9TitleFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service9TitleColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+        <!-- Service 9 Items with inline editing -->
+        <div class="editable-element">
+          <div *ngIf="!isEditingServices || editingServicesElement !== 'service9Items'" 
+               (click)="startInlineEditServices('service9Items')" 
+               class="service-items-container">
+            <ul class="service-items-list" 
+                [style.color]="servicesConfig.service9ItemsColor"
+                [style.font-family]="servicesConfig.service9ItemsFontFamily">
+              <li *ngFor="let item of servicesConfig.service9Items"
+                  [style.color]="servicesConfig.service9ItemsColor"
+                  [style.font-family]="servicesConfig.service9ItemsFontFamily">{{ item }}</li>
+            </ul>
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </div>
+          <div *ngIf="isEditingServices && editingServicesElement === 'service9Items'" class="service-items-edit-inline">
+            <div class="service-item" *ngFor="let item of servicesConfig.service9Items; let i = index">
+              <input type="text" 
+                     [(ngModel)]="servicesConfig.service9Items[i]" 
+                     class="form-input" 
+                     placeholder="Enter service item"
+                     [style.color]="servicesConfig.service9ItemsColor"
+                     [style.font-family]="servicesConfig.service9ItemsFontFamily">
+              <button type="button" (click)="removeServiceItem(9, i)" class="remove-btn">×</button>
+            </div>
+            <button type="button" (click)="addServiceItem(9)" class="add-btn">+ Add Item</button>
+            <div class="inline-controls">
+              <select [(ngModel)]="servicesConfig.service9ItemsFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="servicesConfig.service9ItemsColor"
+                     (change)="onServicesColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+        </div>
+        <div class="editable-element">
+          <a routerLink="/services#emergency" 
+             class="btn-outline"
+             [style.color]="servicesConfig.service9ButtonColor"
+             [style.font-family]="servicesConfig.service9ButtonFontFamily"
+             *ngIf="!isEditingServices || editingServicesElement !== 'service9ButtonText'"
+             (click)="startInlineEditServices('service9ButtonText')">
+            {{ servicesConfig.service9ButtonText }}
+            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          </a>
+          <input *ngIf="isEditingServices && editingServicesElement === 'service9ButtonText'"
+                 [(ngModel)]="servicesConfig.service9ButtonText"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
+                 class="inline-edit-input"
+                 [style.color]="servicesConfig.service9ButtonColor"
+                 [style.font-family]="servicesConfig.service9ButtonFontFamily"
+                 placeholder="Enter service 9 button text"
+                 title="Edit service 9 button text">
+          <div *ngIf="isEditingServices && editingServicesElement === 'service9ButtonText'" class="inline-controls">
+            <select [(ngModel)]="servicesConfig.service9ButtonFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color"
+                   [(ngModel)]="servicesConfig.service9ButtonColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
       </div>
 
     </div>
+    </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingServices">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" [(ngModel)]="servicesConfig.backgroundColor" (change)="onServicesColorChange()" class="color-picker" title="Background Color">
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Actions -->
+    <div class="edit-actions" *ngIf="isEditingServices">
+      <button class="save-btn" (click)="stopEditingServices()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingServices()">Cancel</button>
+      <button class="reset-btn" (click)="resetServicesToOriginal()">Reset to Original</button>
+    </div>
   </div>
 </section>
+
+<!-- Loading and Error States for Services Section -->
+<div class="loading-container" *ngIf="servicesLoading">
+  <p>Loading services section...</p>
+</div>
+
+<div class="error-container" *ngIf="servicesError">
+  <p>Error loading services section. Please try again.</p>
+</div>
 
