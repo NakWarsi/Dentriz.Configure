@@ -7,6 +7,7 @@ import { ContactInfoApiService, SimpleContactInfoConfig } from './services/conta
 import { OfficeHoursApiService, SimpleOfficeHoursConfig } from './services/office-hours-api.service';
 import { LocationMapApiService, SimpleLocationMapConfig } from './services/location-map-api.service';
 import { InsurancePaymentApiService, SimpleInsurancePaymentConfig } from './services/insurance-payment-api.service';
+import { FAQApiService, SimpleFAQConfig } from './services/faq-api.service';
 
 @Component({
   selector: 'app-contact',
@@ -57,6 +58,14 @@ export class ContactComponent implements OnInit {
   isEditingInsurancePayment = false;
   editingInsurancePaymentElement: string | null = null;
 
+  // FAQ Configuration
+  faqConfig: SimpleFAQConfig | null = null;
+  originalFAQConfig: SimpleFAQConfig | null = null;
+  faqLoading = false;
+  faqError = false;
+  isEditingFAQ = false;
+  editingFAQElement: string | null = null;
+
   contactForm = {
     name: '',
     email: '',
@@ -71,6 +80,7 @@ export class ContactComponent implements OnInit {
     private officeHoursApiService: OfficeHoursApiService,
     private locationMapApiService: LocationMapApiService,
     private insurancePaymentApiService: InsurancePaymentApiService,
+    private faqApiService: FAQApiService,
     private sanitizer: DomSanitizer
   ) {}
 
@@ -80,6 +90,7 @@ export class ContactComponent implements OnInit {
     this.loadOfficeHoursConfig();
     this.loadLocationMapConfig();
     this.loadInsurancePaymentConfig();
+    this.loadFAQConfig();
   }
 
   loadContactHeroConfig() {
@@ -482,6 +493,92 @@ export class ContactComponent implements OnInit {
   removeSpecialItem(index: number) {
     if (this.insurancePaymentConfig && this.insurancePaymentConfig.specialItems.length > 1) {
       this.insurancePaymentConfig.specialItems.splice(index, 1);
+    }
+  }
+
+  // FAQ Methods
+  loadFAQConfig() {
+    this.faqLoading = true;
+    this.faqError = false;
+
+    this.faqApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.faqConfig = config;
+        this.originalFAQConfig = JSON.parse(JSON.stringify(config));
+        this.faqLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading FAQ config:', error);
+        this.faqError = true;
+        this.faqLoading = false;
+      }
+    });
+  }
+
+  startEditingFAQ() {
+    this.isEditingFAQ = true;
+  }
+
+  stopEditingFAQ() {
+    if (this.faqConfig) {
+      this.faqApiService.saveConfig(this.faqConfig).subscribe({
+        next: () => {
+          this.originalFAQConfig = JSON.parse(JSON.stringify(this.faqConfig!));
+          this.isEditingFAQ = false;
+          this.editingFAQElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving FAQ config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingFAQ() {
+    if (this.originalFAQConfig) {
+      this.faqConfig = JSON.parse(JSON.stringify(this.originalFAQConfig));
+    }
+    this.isEditingFAQ = false;
+    this.editingFAQElement = null;
+  }
+
+  resetFAQToOriginal() {
+    if (this.originalFAQConfig) {
+      this.faqConfig = JSON.parse(JSON.stringify(this.originalFAQConfig));
+    }
+  }
+
+  startInlineEditFAQ(element: string) {
+    this.editingFAQElement = element;
+  }
+
+  stopInlineEditFAQ() {
+    this.editingFAQElement = null;
+  }
+
+  onFAQColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onFAQFonChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addFAQItem() {
+    if (this.faqConfig) {
+      this.faqConfig.faqItems.push({
+        question: 'New question - click to edit',
+        answer: 'New answer - click to edit'
+      });
+    }
+  }
+
+  removeFAQItem(index: number) {
+    if (this.faqConfig && this.faqConfig.faqItems.length > 1) {
+      this.faqConfig.faqItems.splice(index, 1);
     }
   }
 

@@ -1867,41 +1867,182 @@
 </div>
 
 <!-- FAQ Section -->
-<section class="faq-section">
+<section class="faq-section" 
+         *ngIf="!faqLoading && !faqError && faqConfig"
+         [style.background-color]="faqConfig.backgroundColor">
   <div class="container">
-    <h2 class="section-title">Frequently Asked Questions</h2>
-    <p class="section-subtitle">Find answers to common questions about our services</p>
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingFAQ">
+      <button class="edit-btn-floating" (click)="startEditingFAQ()" title="Edit FAQ Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <!-- Section Title -->
+    <div class="editable-element">
+      <h2 class="section-title" 
+          *ngIf="!isEditingFAQ || editingFAQElement !== 'sectionTitle'"
+          [style.color]="faqConfig.sectionTitleColor"
+          [style.font-family]="faqConfig.sectionTitleFontFamily"
+          (click)="startInlineEditFAQ('sectionTitle')">
+        {{ faqConfig.sectionTitle }}
+        <span class="edit-icon" *ngIf="isEditingFAQ">✏️</span>
+      </h2>
+      <input *ngIf="isEditingFAQ && editingFAQElement === 'sectionTitle'"
+             [(ngModel)]="faqConfig.sectionTitle"
+             (blur)="stopInlineEditFAQ()"
+             (keyup.enter)="stopInlineEditFAQ()"
+             class="inline-edit-input"
+             [style.color]="faqConfig.sectionTitleColor"
+             [style.font-family]="faqConfig.sectionTitleFontFamily"
+             placeholder="Enter section title"
+             title="Edit section title">
+      <div *ngIf="isEditingFAQ && editingFAQElement === 'sectionTitle'" class="inline-controls">
+        <select [(ngModel)]="faqConfig.sectionTitleFontFamily" (change)="onFAQFonChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="faqConfig.sectionTitleColor"
+               (change)="onFAQColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
+
+    <!-- Section Subtitle -->
+    <div class="editable-element">
+      <p class="section-subtitle" 
+         *ngIf="!isEditingFAQ || editingFAQElement !== 'sectionSubtitle'"
+         [style.color]="faqConfig.sectionSubtitleColor"
+         [style.font-family]="faqConfig.sectionSubtitleFontFamily"
+         (click)="startInlineEditFAQ('sectionSubtitle')">
+        {{ faqConfig.sectionSubtitle }}
+        <span class="edit-icon" *ngIf="isEditingFAQ">✏️</span>
+      </p>
+      <input *ngIf="isEditingFAQ && editingFAQElement === 'sectionSubtitle'"
+             [(ngModel)]="faqConfig.sectionSubtitle"
+             (blur)="stopInlineEditFAQ()"
+             (keyup.enter)="stopInlineEditFAQ()"
+             class="inline-edit-input"
+             [style.color]="faqConfig.sectionSubtitleColor"
+             [style.font-family]="faqConfig.sectionSubtitleFontFamily"
+             placeholder="Enter section subtitle"
+             title="Edit section subtitle">
+      <div *ngIf="isEditingFAQ && editingFAQElement === 'sectionSubtitle'" class="inline-controls">
+        <select [(ngModel)]="faqConfig.sectionSubtitleFontFamily" (change)="onFAQFonChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="faqConfig.sectionSubtitleColor"
+               (change)="onFAQColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
     
     <div class="faq-grid">
-      <div class="faq-item">
-        <h3>How do I schedule an appointment?</h3>
-        <p>You can schedule an appointment by calling us at (750) 616-8095, or you can request an appointment through our website. We'll work with you to find a convenient time.</p>
+      <div class="faq-item" *ngFor="let faqItem of faqConfig.faqItems; let i = index">
+        <!-- Question -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingFAQ || editingFAQElement !== 'question_' + i"
+              [style.color]="faqConfig.questionColor"
+              [style.font-family]="faqConfig.questionFontFamily"
+              (click)="startInlineEditFAQ('question_' + i)">
+            {{ faqItem.question }}
+            <span class="edit-icon" *ngIf="isEditingFAQ">✏️</span>
+          </h3>
+          <input *ngIf="isEditingFAQ && editingFAQElement === 'question_' + i"
+                 [(ngModel)]="faqItem.question"
+                 (blur)="stopInlineEditFAQ()"
+                 (keyup.enter)="stopInlineEditFAQ()"
+                 class="inline-edit-input"
+                 [style.color]="faqConfig.questionColor"
+                 [style.font-family]="faqConfig.questionFontFamily"
+                 [placeholder]="'Enter question ' + (i + 1)"
+                 [title]="'Edit question ' + (i + 1)">
+          <div *ngIf="isEditingFAQ && editingFAQElement === 'question_' + i" class="inline-controls">
+            <button class="remove-item-btn" 
+                    (click)="removeFAQItem(i)" 
+                    title="Remove this FAQ item"
+                    *ngIf="faqConfig.faqItems.length > 1">
+              ❌
+            </button>
+          </div>
+        </div>
+
+        <!-- Answer -->
+        <div class="editable-element">
+          <p *ngIf="!isEditingFAQ || editingFAQElement !== 'answer_' + i"
+             [style.color]="faqConfig.answerColor"
+             [style.font-family]="faqConfig.answerFontFamily"
+             (click)="startInlineEditFAQ('answer_' + i)">
+            {{ faqItem.answer }}
+            <span class="edit-icon" *ngIf="isEditingFAQ">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingFAQ && editingFAQElement === 'answer_' + i"
+                    [(ngModel)]="faqItem.answer"
+                    (blur)="stopInlineEditFAQ()"
+                    (keyup.enter)="stopInlineEditFAQ()"
+                    class="inline-edit-textarea"
+                    [style.color]="faqConfig.answerColor"
+                    [style.font-family]="faqConfig.answerFontFamily"
+                    [placeholder]="'Enter answer ' + (i + 1)"
+                    [title]="'Edit answer ' + (i + 1)"></textarea>
+        </div>
       </div>
-      
-      <div class="faq-item">
-        <h3>What should I bring to my first appointment?</h3>
-        <p>Please bring your ID, insurance card (if applicable), and any relevant medical history. You can also download and fill out our new patient forms from our website.</p>
+    </div>
+
+    <!-- Add FAQ Item Button -->
+    <div class="add-item-section" *ngIf="isEditingFAQ">
+      <button class="add-item-btn" (click)="addFAQItem()" title="Add new FAQ item">
+        ➕ Add FAQ Item
+      </button>
+    </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingFAQ">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" 
+                 [(ngModel)]="faqConfig.backgroundColor"
+                 (change)="onFAQColorChange()"
+                 class="color-picker"
+                 title="Background Color">
+        </div>
       </div>
-      
-      <div class="faq-item">
-        <h3>Do you offer emergency dental care?</h3>
-        <p>Yes, we provide emergency dental care. If you have a dental emergency, please call us immediately at (555) 123-4567, and we'll help you get the care you need.</p>
-      </div>
-      
-      <div class="faq-item">
-        <h3>What insurance plans do you accept?</h3>
-        <p>We accept most major insurance plans. Please call our office to verify your specific plan coverage, and we'll be happy to help you understand your benefits.</p>
-      </div>
-      
-      <div class="faq-item">
-        <h3>Do you offer payment plans?</h3>
-        <p>Yes, we offer flexible payment plans to make dental care affordable. We also accept CareCredit and have an in-house dental plan for patients without insurance.</p>
-      </div>
-      
-      <div class="faq-item">
-        <h3>How often should I visit the dentist?</h3>
-        <p>We recommend visiting the dentist every 6 months for routine checkups and cleanings. However, some patients may need more frequent visits based on their oral health needs.</p>
-      </div>
+    </div>
+
+    <!-- Edit Actions (only when editing) -->
+    <div class="edit-actions" *ngIf="isEditingFAQ">
+      <button class="save-btn" (click)="stopEditingFAQ()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingFAQ()">Cancel</button>
+      <button class="reset-btn" (click)="resetFAQToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="faqLoading">
+  <p>Loading FAQ information...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="faqError">
+  <p>Error loading FAQ information. Please try again later.</p>
+</div>
