@@ -1,14 +1,122 @@
-<!-- Contact Hero -->
-<section class="contact-hero" [style.background-color]="contactHeroConfig.backgroundColor">
+<!-- Loading and Error States -->
+<div class="loading-container" *ngIf="contactHeroLoading">
+  <p>Loading contact hero section...</p>
+</div>
+
+<div class="error-container" *ngIf="contactHeroError">
+  <p>Error loading contact hero section. Please try again.</p>
+  <button (click)="loadContactHeroConfig()">Retry</button>
+</div>
+
+<!-- Contact Hero Section -->
+<section class="contact-hero" 
+         *ngIf="!contactHeroLoading && !contactHeroError && contactHeroConfig"
+         [style.background-color]="contactHeroConfig.backgroundColor">
   <div class="container">
-    <h1 [style.color]="contactHeroConfig.heroTitleColor" 
-        [style.font-family]="contactHeroConfig.heroTitleFontFamily">
-      {{ contactHeroConfig.heroTitle }}
-    </h1>
-    <p [style.color]="contactHeroConfig.heroSubtitleColor" 
-       [style.font-family]="contactHeroConfig.heroSubtitleFontFamily">
-      {{ contactHeroConfig.heroSubtitle }}
-    </p>
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingContactHero">
+      <button class="edit-btn-floating" (click)="startEditingContactHero()" title="Edit Contact Hero Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <!-- Inline Editable Content -->
+    <div class="contact-hero-content">
+      
+      <div class="contact-hero-text">
+        <!-- Title with inline editing -->
+        <div class="editable-element">
+          <h1 *ngIf="!isEditingContactHero || editingElement !== 'heroTitle'"
+              [style.color]="contactHeroConfig.heroTitleColor"
+              [style.font-family]="contactHeroConfig.heroTitleFontFamily"
+              (click)="startInlineEdit('heroTitle')">
+            {{ contactHeroConfig.heroTitle }}
+            <span class="edit-icon" *ngIf="isEditingContactHero">✏️</span>
+          </h1>
+          <input *ngIf="isEditingContactHero && editingElement === 'heroTitle'"
+                 [(ngModel)]="contactHeroConfig.heroTitle"
+                 (blur)="stopInlineEdit()"
+                 (keyup.enter)="stopInlineEdit()"
+                 class="inline-edit-input"
+                 [style.color]="contactHeroConfig.heroTitleColor"
+                 [style.font-family]="contactHeroConfig.heroTitleFontFamily"
+                 placeholder="Enter hero title"
+                 title="Edit hero title">
+          <div *ngIf="isEditingContactHero && editingElement === 'heroTitle'" class="inline-controls">
+            <select [(ngModel)]="contactHeroConfig.heroTitleFontFamily" (change)="onFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactHeroConfig.heroTitleColor"
+                   (change)="onColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+        
+        <!-- Subtitle with inline editing -->
+        <div class="editable-element">
+          <p *ngIf="!isEditingContactHero || editingElement !== 'heroSubtitle'"
+             [style.color]="contactHeroConfig.heroSubtitleColor"
+             [style.font-family]="contactHeroConfig.heroSubtitleFontFamily"
+             (click)="startInlineEdit('heroSubtitle')">
+            {{ contactHeroConfig.heroSubtitle }}
+            <span class="edit-icon" *ngIf="isEditingContactHero">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingContactHero && editingElement === 'heroSubtitle'"
+                    [(ngModel)]="contactHeroConfig.heroSubtitle"
+                    (blur)="stopInlineEdit()"
+                    (keyup.ctrl.enter)="stopInlineEdit()"
+                    class="inline-edit-textarea"
+                    [style.color]="contactHeroConfig.heroSubtitleColor"
+                    [style.font-family]="contactHeroConfig.heroSubtitleFontFamily"
+                    placeholder="Enter hero subtitle"
+                    title="Edit hero subtitle"></textarea>
+          <div *ngIf="isEditingContactHero && editingElement === 'heroSubtitle'" class="inline-controls">
+            <select [(ngModel)]="contactHeroConfig.heroSubtitleFontFamily" (change)="onFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="contactHeroConfig.heroSubtitleColor"
+                   (change)="onColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingContactHero">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" [(ngModel)]="contactHeroConfig.backgroundColor" (change)="onColorChange()" class="color-picker" title="Background Color">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Edit Actions -->
+    <div class="edit-actions" *ngIf="isEditingContactHero">
+      <button class="save-btn" (click)="stopEditingContactHero()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingContactHero()">Cancel</button>
+      <button class="reset-btn" (click)="resetContactHeroToOriginal()">Reset to Original</button>
+    </div>
   </div>
 </section>
 

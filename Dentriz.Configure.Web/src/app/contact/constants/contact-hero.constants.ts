@@ -7,7 +7,7 @@ export const CONTACT_HERO_CONSTANTS = {
   DEFAULT_COLORS: {
     HERO_TITLE: '#2c5aa0',
     HERO_SUBTITLE: '#333333',
-    BACKGROUND: '#f8f9fa'
+    BACKGROUND: 'linear-gradient(135deg, #fafafa 0%, #e0e9e6 100%)'
   },
 
   // Default Fonts
