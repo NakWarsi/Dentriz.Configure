@@ -63,7 +63,7 @@ export class ContactHeroApiService {
   }
 
   private loadConfigFromJsonOrDefaults(): Observable<SimpleContactHeroConfig> {
-    return this.http.get<any>('./assets/contact-hero.json').pipe(
+    return this.http.get<any>('./assets/contact/contact-hero.json').pipe(
       map(data => this.mapToSimpleConfig(data)),
       catchError(error => {
         console.error('Error loading config from JSON, falling back to default constants:', error);

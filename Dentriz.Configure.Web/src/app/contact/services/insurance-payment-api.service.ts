@@ -48,7 +48,7 @@ export interface SimpleInsurancePaymentConfig {
 export class InsurancePaymentApiService {
   private configUrl = 'http://localhost:5000/api/config/insurance-payment';
   private localStorageKey = 'insurancePaymentConfig';
-  private JSON_FILE_PATH = './assets/insurance-payment.json';
+  private JSON_FILE_PATH = './assets/contact/insurance-payment.json';
 
   constructor(private http: HttpClient) { }
 

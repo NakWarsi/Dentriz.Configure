@@ -34,7 +34,7 @@ export interface SimpleFAQConfig {
 export class FAQApiService {
   private configUrl = 'http://localhost:5000/api/config/faq';
   private localStorageKey = 'faqConfig';
-  private JSON_FILE_PATH = './assets/faq.json';
+  private JSON_FILE_PATH = './assets/contact/faq.json';
 
   constructor(private http: HttpClient) { }
 

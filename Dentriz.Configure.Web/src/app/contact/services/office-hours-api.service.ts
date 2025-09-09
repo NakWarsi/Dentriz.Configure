@@ -89,7 +89,7 @@ export class OfficeHoursApiService {
   }
 
   private loadConfigFromJsonOrDefaults(): Observable<SimpleOfficeHoursConfig> {
-    return this.http.get<any>('./assets/office-hours.json').pipe(
+    return this.http.get<any>('./assets/contact/office-hours.json').pipe(
       map(data => this.mapToSimpleConfig(data)),
       catchError(error => {
         console.error('Error loading config from JSON, falling back to default constants:', error);

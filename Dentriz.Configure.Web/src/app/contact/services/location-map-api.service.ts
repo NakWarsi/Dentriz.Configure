@@ -52,7 +52,7 @@ export interface SimpleLocationMapConfig {
 export class LocationMapApiService {
   private configUrl = 'http://localhost:5000/api/config/location-map';
   private localStorageKey = 'locationMapConfig';
-  private JSON_FILE_PATH = './assets/location-map.json';
+  private JSON_FILE_PATH = './assets/contact/location-map.json';
 
   constructor(private http: HttpClient) { }
 

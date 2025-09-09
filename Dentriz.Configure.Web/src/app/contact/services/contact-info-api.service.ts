@@ -108,7 +108,7 @@ export class ContactInfoApiService {
   }
 
   private loadConfigFromJsonOrDefaults(): Observable<SimpleContactInfoConfig> {
-    return this.http.get<any>('./assets/contact-info.json').pipe(
+    return this.http.get<any>('./assets/contact/contact-info.json').pipe(
       map(data => this.mapToSimpleConfig(data)),
       catchError(error => {
         console.error('Error loading config from JSON, falling back to default constants:', error);
