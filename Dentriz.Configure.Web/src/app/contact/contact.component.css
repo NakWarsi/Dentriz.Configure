@@ -989,3 +989,8 @@
     min-width: auto;
   }
 }
+
+/* Insurance Payment Section */
+.insurance-section {
+  position: relative;
+}

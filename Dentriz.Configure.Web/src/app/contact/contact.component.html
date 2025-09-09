@@ -1458,53 +1458,413 @@
 </div>
 
 <!-- Insurance & Payment -->
-<section class="insurance-section">
+<section class="insurance-section" 
+         *ngIf="!insurancePaymentLoading && !insurancePaymentError && insurancePaymentConfig"
+         [style.background-color]="insurancePaymentConfig.backgroundColor">
   <div class="container">
-    <h2 class="section-title">Insurance & Payment Options</h2>
-    <p class="section-subtitle">We make dental care accessible and affordable</p>
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingInsurancePayment">
+      <button class="edit-btn-floating" (click)="startEditingInsurancePayment()" title="Edit Insurance & Payment Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <!-- Section Title -->
+    <div class="editable-element">
+      <h2 class="section-title" 
+          *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'sectionTitle'"
+          [style.color]="insurancePaymentConfig.sectionTitleColor"
+          [style.font-family]="insurancePaymentConfig.sectionTitleFontFamily"
+          (click)="startInlineEditInsurancePayment('sectionTitle')">
+        {{ insurancePaymentConfig.sectionTitle }}
+        <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+      </h2>
+      <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'sectionTitle'"
+             [(ngModel)]="insurancePaymentConfig.sectionTitle"
+             (blur)="stopInlineEditInsurancePayment()"
+             (keyup.enter)="stopInlineEditInsurancePayment()"
+             class="inline-edit-input"
+             [style.color]="insurancePaymentConfig.sectionTitleColor"
+             [style.font-family]="insurancePaymentConfig.sectionTitleFontFamily"
+             placeholder="Enter section title"
+             title="Edit section title">
+      <div *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'sectionTitle'" class="inline-controls">
+        <select [(ngModel)]="insurancePaymentConfig.sectionTitleFontFamily" (change)="onInsurancePaymentFontChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="insurancePaymentConfig.sectionTitleColor"
+               (change)="onInsurancePaymentColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
+
+    <!-- Section Subtitle -->
+    <div class="editable-element">
+      <p class="section-subtitle" 
+         *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'sectionSubtitle'"
+         [style.color]="insurancePaymentConfig.sectionSubtitleColor"
+         [style.font-family]="insurancePaymentConfig.sectionSubtitleFontFamily"
+         (click)="startInlineEditInsurancePayment('sectionSubtitle')">
+        {{ insurancePaymentConfig.sectionSubtitle }}
+        <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+      </p>
+      <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'sectionSubtitle'"
+             [(ngModel)]="insurancePaymentConfig.sectionSubtitle"
+             (blur)="stopInlineEditInsurancePayment()"
+             (keyup.enter)="stopInlineEditInsurancePayment()"
+             class="inline-edit-input"
+             [style.color]="insurancePaymentConfig.sectionSubtitleColor"
+             [style.font-family]="insurancePaymentConfig.sectionSubtitleFontFamily"
+             placeholder="Enter section subtitle"
+             title="Edit section subtitle">
+      <div *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'sectionSubtitle'" class="inline-controls">
+        <select [(ngModel)]="insurancePaymentConfig.sectionSubtitleFontFamily" (change)="onInsurancePaymentFontChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="insurancePaymentConfig.sectionSubtitleColor"
+               (change)="onInsurancePaymentColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
     
     <div class="insurance-grid">
+      <!-- Insurance Plans Card -->
       <div class="insurance-card">
-        <div class="insurance-icon">🏥</div>
-        <h3>Insurance Plans</h3>
-        <p>We accept most major insurance plans and will help you understand your coverage. Our team will file claims on your behalf to make the process as smooth as possible.</p>
+        <div class="editable-element">
+          <div class="insurance-icon" 
+               *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'insuranceIcon'"
+               (click)="startInlineEditInsurancePayment('insuranceIcon')">
+            {{ insurancePaymentConfig.insuranceIcon }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </div>
+          <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'insuranceIcon'"
+                 [(ngModel)]="insurancePaymentConfig.insuranceIcon"
+                 (blur)="stopInlineEditInsurancePayment()"
+                 (keyup.enter)="stopInlineEditInsurancePayment()"
+                 class="inline-edit-input"
+                 placeholder="Enter icon"
+                 title="Edit icon">
+        </div>
+
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'insuranceTitle'"
+              [style.color]="insurancePaymentConfig.cardTitleColor"
+              [style.font-family]="insurancePaymentConfig.cardTitleFontFamily"
+              (click)="startInlineEditInsurancePayment('insuranceTitle')">
+            {{ insurancePaymentConfig.insuranceTitle }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </h3>
+          <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'insuranceTitle'"
+                 [(ngModel)]="insurancePaymentConfig.insuranceTitle"
+                 (blur)="stopInlineEditInsurancePayment()"
+                 (keyup.enter)="stopInlineEditInsurancePayment()"
+                 class="inline-edit-input"
+                 [style.color]="insurancePaymentConfig.cardTitleColor"
+                 [style.font-family]="insurancePaymentConfig.cardTitleFontFamily"
+                 placeholder="Enter card title"
+                 title="Edit card title">
+        </div>
+
+        <div class="editable-element">
+          <p *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'insuranceDescription'"
+             [style.color]="insurancePaymentConfig.cardDescriptionColor"
+             [style.font-family]="insurancePaymentConfig.cardDescriptionFontFamily"
+             (click)="startInlineEditInsurancePayment('insuranceDescription')">
+            {{ insurancePaymentConfig.insuranceDescription }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'insuranceDescription'"
+                    [(ngModel)]="insurancePaymentConfig.insuranceDescription"
+                    (blur)="stopInlineEditInsurancePayment()"
+                    (keyup.enter)="stopInlineEditInsurancePayment()"
+                    class="inline-edit-textarea"
+                    [style.color]="insurancePaymentConfig.cardDescriptionColor"
+                    [style.font-family]="insurancePaymentConfig.cardDescriptionFontFamily"
+                    placeholder="Enter card description"
+                    title="Edit card description"></textarea>
+        </div>
+
         <ul>
-          <li>Blue Cross Blue Shield</li>
-          <li>Aetna</li>
-          <li>Cigna</li>
-          <li>Delta Dental</li>
-          <li>And many more...</li>
+          <li *ngFor="let item of insurancePaymentConfig.insuranceItems; let i = index" class="insurance-item">
+            <div class="editable-element">
+              <span *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'insuranceItem_' + i"
+                    [style.color]="insurancePaymentConfig.cardItemColor"
+                    [style.font-family]="insurancePaymentConfig.cardItemFontFamily"
+                    (click)="startInlineEditInsurancePayment('insuranceItem_' + i)">
+                {{ item }}
+                <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+              </span>
+              <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'insuranceItem_' + i"
+                     [(ngModel)]="insurancePaymentConfig.insuranceItems[i]"
+                     (blur)="stopInlineEditInsurancePayment()"
+                     (keyup.enter)="stopInlineEditInsurancePayment()"
+                     class="inline-edit-input"
+                     [style.color]="insurancePaymentConfig.cardItemColor"
+                     [style.font-family]="insurancePaymentConfig.cardItemFontFamily"
+                     [placeholder]="'Enter item ' + (i + 1)"
+                     [title]="'Edit item ' + (i + 1)">
+              <div *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'insuranceItem_' + i" class="inline-controls">
+                <button class="remove-item-btn" 
+                        (click)="removeInsuranceItem(i)" 
+                        title="Remove this item"
+                        *ngIf="insurancePaymentConfig.insuranceItems.length > 1">
+                  ❌
+                </button>
+              </div>
+            </div>
+          </li>
         </ul>
+
+        <!-- Add Item Button -->
+        <div class="add-item-section" *ngIf="isEditingInsurancePayment">
+          <button class="add-item-btn" (click)="addInsuranceItem()" title="Add new insurance item">
+            ➕ Add Item
+          </button>
+        </div>
       </div>
       
+      <!-- Payment Options Card -->
       <div class="insurance-card">
-        <div class="insurance-icon">💳</div>
-        <h3>Payment Options</h3>
-        <p>We offer flexible payment options to make dental care affordable for everyone. We accept various payment methods and can work with you to create a payment plan.</p>
+        <div class="editable-element">
+          <div class="insurance-icon" 
+               *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'paymentIcon'"
+               (click)="startInlineEditInsurancePayment('paymentIcon')">
+            {{ insurancePaymentConfig.paymentIcon }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </div>
+          <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'paymentIcon'"
+                 [(ngModel)]="insurancePaymentConfig.paymentIcon"
+                 (blur)="stopInlineEditInsurancePayment()"
+                 (keyup.enter)="stopInlineEditInsurancePayment()"
+                 class="inline-edit-input"
+                 placeholder="Enter icon"
+                 title="Edit icon">
+        </div>
+
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'paymentTitle'"
+              [style.color]="insurancePaymentConfig.cardTitleColor"
+              [style.font-family]="insurancePaymentConfig.cardTitleFontFamily"
+              (click)="startInlineEditInsurancePayment('paymentTitle')">
+            {{ insurancePaymentConfig.paymentTitle }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </h3>
+          <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'paymentTitle'"
+                 [(ngModel)]="insurancePaymentConfig.paymentTitle"
+                 (blur)="stopInlineEditInsurancePayment()"
+                 (keyup.enter)="stopInlineEditInsurancePayment()"
+                 class="inline-edit-input"
+                 [style.color]="insurancePaymentConfig.cardTitleColor"
+                 [style.font-family]="insurancePaymentConfig.cardTitleFontFamily"
+                 placeholder="Enter card title"
+                 title="Edit card title">
+        </div>
+
+        <div class="editable-element">
+          <p *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'paymentDescription'"
+             [style.color]="insurancePaymentConfig.cardDescriptionColor"
+             [style.font-family]="insurancePaymentConfig.cardDescriptionFontFamily"
+             (click)="startInlineEditInsurancePayment('paymentDescription')">
+            {{ insurancePaymentConfig.paymentDescription }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'paymentDescription'"
+                    [(ngModel)]="insurancePaymentConfig.paymentDescription"
+                    (blur)="stopInlineEditInsurancePayment()"
+                    (keyup.enter)="stopInlineEditInsurancePayment()"
+                    class="inline-edit-textarea"
+                    [style.color]="insurancePaymentConfig.cardDescriptionColor"
+                    [style.font-family]="insurancePaymentConfig.cardDescriptionFontFamily"
+                    placeholder="Enter card description"
+                    title="Edit card description"></textarea>
+        </div>
+
         <ul>
-          <li>Cash and Check</li>
-          <li>Credit Cards (Visa, MasterCard, Amex)</li>
-          <li>Flexible Payment Plans</li>
-          <li>In-House Dental Plan</li>
-          <li>CareCredit Financing</li>
+          <li *ngFor="let item of insurancePaymentConfig.paymentItems; let i = index" class="insurance-item">
+            <div class="editable-element">
+              <span *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'paymentItem_' + i"
+                    [style.color]="insurancePaymentConfig.cardItemColor"
+                    [style.font-family]="insurancePaymentConfig.cardItemFontFamily"
+                    (click)="startInlineEditInsurancePayment('paymentItem_' + i)">
+                {{ item }}
+                <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+              </span>
+              <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'paymentItem_' + i"
+                     [(ngModel)]="insurancePaymentConfig.paymentItems[i]"
+                     (blur)="stopInlineEditInsurancePayment()"
+                     (keyup.enter)="stopInlineEditInsurancePayment()"
+                     class="inline-edit-input"
+                     [style.color]="insurancePaymentConfig.cardItemColor"
+                     [style.font-family]="insurancePaymentConfig.cardItemFontFamily"
+                     [placeholder]="'Enter item ' + (i + 1)"
+                     [title]="'Edit item ' + (i + 1)">
+              <div *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'paymentItem_' + i" class="inline-controls">
+                <button class="remove-item-btn" 
+                        (click)="removePaymentItem(i)" 
+                        title="Remove this item"
+                        *ngIf="insurancePaymentConfig.paymentItems.length > 1">
+                  ❌
+                </button>
+              </div>
+            </div>
+          </li>
         </ul>
+
+        <!-- Add Item Button -->
+        <div class="add-item-section" *ngIf="isEditingInsurancePayment">
+          <button class="add-item-btn" (click)="addPaymentItem()" title="Add new payment item">
+            ➕ Add Item
+          </button>
+        </div>
       </div>
       
+      <!-- New Patient Special Card -->
       <div class="insurance-card">
-        <div class="insurance-icon">📋</div>
-        <h3>New Patient Special</h3>
-        <p>New to our practice? Take advantage of our new patient special and start your journey to a healthier smile today.</p>
+        <div class="editable-element">
+          <div class="insurance-icon" 
+               *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'specialIcon'"
+               (click)="startInlineEditInsurancePayment('specialIcon')">
+            {{ insurancePaymentConfig.specialIcon }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </div>
+          <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'specialIcon'"
+                 [(ngModel)]="insurancePaymentConfig.specialIcon"
+                 (blur)="stopInlineEditInsurancePayment()"
+                 (keyup.enter)="stopInlineEditInsurancePayment()"
+                 class="inline-edit-input"
+                 placeholder="Enter icon"
+                 title="Edit icon">
+        </div>
+
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'specialTitle'"
+              [style.color]="insurancePaymentConfig.cardTitleColor"
+              [style.font-family]="insurancePaymentConfig.cardTitleFontFamily"
+              (click)="startInlineEditInsurancePayment('specialTitle')">
+            {{ insurancePaymentConfig.specialTitle }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </h3>
+          <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'specialTitle'"
+                 [(ngModel)]="insurancePaymentConfig.specialTitle"
+                 (blur)="stopInlineEditInsurancePayment()"
+                 (keyup.enter)="stopInlineEditInsurancePayment()"
+                 class="inline-edit-input"
+                 [style.color]="insurancePaymentConfig.cardTitleColor"
+                 [style.font-family]="insurancePaymentConfig.cardTitleFontFamily"
+                 placeholder="Enter card title"
+                 title="Edit card title">
+        </div>
+
+        <div class="editable-element">
+          <p *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'specialDescription'"
+             [style.color]="insurancePaymentConfig.cardDescriptionColor"
+             [style.font-family]="insurancePaymentConfig.cardDescriptionFontFamily"
+             (click)="startInlineEditInsurancePayment('specialDescription')">
+            {{ insurancePaymentConfig.specialDescription }}
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'specialDescription'"
+                    [(ngModel)]="insurancePaymentConfig.specialDescription"
+                    (blur)="stopInlineEditInsurancePayment()"
+                    (keyup.enter)="stopInlineEditInsurancePayment()"
+                    class="inline-edit-textarea"
+                    [style.color]="insurancePaymentConfig.cardDescriptionColor"
+                    [style.font-family]="insurancePaymentConfig.cardDescriptionFontFamily"
+                    placeholder="Enter card description"
+                    title="Edit card description"></textarea>
+        </div>
+
         <ul>
-          <li>Comprehensive Exam</li>
-          <li>Digital X-Rays</li>
-          <li>Professional Cleaning</li>
-          <li>Treatment Consultation</li>
-          <li>Special pricing for new patients</li>
+          <li *ngFor="let item of insurancePaymentConfig.specialItems; let i = index" class="insurance-item">
+            <div class="editable-element">
+              <span *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'specialItem_' + i"
+                    [style.color]="insurancePaymentConfig.cardItemColor"
+                    [style.font-family]="insurancePaymentConfig.cardItemFontFamily"
+                    (click)="startInlineEditInsurancePayment('specialItem_' + i)">
+                {{ item }}
+                <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+              </span>
+              <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'specialItem_' + i"
+                     [(ngModel)]="insurancePaymentConfig.specialItems[i]"
+                     (blur)="stopInlineEditInsurancePayment()"
+                     (keyup.enter)="stopInlineEditInsurancePayment()"
+                     class="inline-edit-input"
+                     [style.color]="insurancePaymentConfig.cardItemColor"
+                     [style.font-family]="insurancePaymentConfig.cardItemFontFamily"
+                     [placeholder]="'Enter item ' + (i + 1)"
+                     [title]="'Edit item ' + (i + 1)">
+              <div *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'specialItem_' + i" class="inline-controls">
+                <button class="remove-item-btn" 
+                        (click)="removeSpecialItem(i)" 
+                        title="Remove this item"
+                        *ngIf="insurancePaymentConfig.specialItems.length > 1">
+                  ❌
+                </button>
+              </div>
+            </div>
+          </li>
         </ul>
+
+        <!-- Add Item Button -->
+        <div class="add-item-section" *ngIf="isEditingInsurancePayment">
+          <button class="add-item-btn" (click)="addSpecialItem()" title="Add new special item">
+            ➕ Add Item
+          </button>
+        </div>
       </div>
+    </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingInsurancePayment">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" 
+                 [(ngModel)]="insurancePaymentConfig.backgroundColor"
+                 (change)="onInsurancePaymentColorChange()"
+                 class="color-picker"
+                 title="Background Color">
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Actions (only when editing) -->
+    <div class="edit-actions" *ngIf="isEditingInsurancePayment">
+      <button class="save-btn" (click)="stopEditingInsurancePayment()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingInsurancePayment()">Cancel</button>
+      <button class="reset-btn" (click)="resetInsurancePaymentToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="insurancePaymentLoading">
+  <p>Loading insurance and payment information...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="insurancePaymentError">
+  <p>Error loading insurance and payment information. Please try again later.</p>
+</div>
 
 <!-- FAQ Section -->
 <section class="faq-section">

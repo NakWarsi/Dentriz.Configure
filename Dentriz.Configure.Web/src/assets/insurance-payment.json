@@ -1,0 +1,45 @@
+{
+  "sectionTitle": "Insurance & Payment Options",
+  "sectionSubtitle": "We make dental care accessible and affordable",
+  "insuranceIcon": "🏥",
+  "insuranceTitle": "Insurance Plans",
+  "insuranceDescription": "We accept most major insurance plans and will help you understand your coverage. Our team will file claims on your behalf to make the process as smooth as possible.",
+  "insuranceItems": [
+    "Blue Cross Blue Shield",
+    "Aetna",
+    "Cigna",
+    "Delta Dental",
+    "And many more..."
+  ],
+  "paymentIcon": "💳",
+  "paymentTitle": "Payment Options",
+  "paymentDescription": "We offer flexible payment options to make dental care affordable for everyone. We accept various payment methods and can work with you to create a payment plan.",
+  "paymentItems": [
+    "Cash and Check",
+    "Credit Cards (Visa, MasterCard, Amex)",
+    "Flexible Payment Plans",
+    "In-House Dental Plan",
+    "CareCredit Financing"
+  ],
+  "specialIcon": "📋",
+  "specialTitle": "New Patient Special",
+  "specialDescription": "New to our practice? Take advantage of our new patient special and start your journey to a healthier smile today.",
+  "specialItems": [
+    "Comprehensive Exam",
+    "Digital X-Rays",
+    "Professional Cleaning",
+    "Treatment Consultation",
+    "Special pricing for new patients"
+  ],
+  "sectionTitleColor": "#2c5aa0",
+  "sectionSubtitleColor": "#666666",
+  "cardTitleColor": "#2c5aa0",
+  "cardDescriptionColor": "#333333",
+  "cardItemColor": "#333333",
+  "backgroundColor": "#f8f9fa",
+  "sectionTitleFontFamily": "Arial, sans-serif",
+  "sectionSubtitleFontFamily": "Arial, sans-serif",
+  "cardTitleFontFamily": "Arial, sans-serif",
+  "cardDescriptionFontFamily": "Arial, sans-serif",
+  "cardItemFontFamily": "Arial, sans-serif"
+}

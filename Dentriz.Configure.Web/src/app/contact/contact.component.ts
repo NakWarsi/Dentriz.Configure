@@ -6,6 +6,7 @@ import { ContactHeroApiService, SimpleContactHeroConfig } from './services/conta
 import { ContactInfoApiService, SimpleContactInfoConfig } from './services/contact-info-api.service';
 import { OfficeHoursApiService, SimpleOfficeHoursConfig } from './services/office-hours-api.service';
 import { LocationMapApiService, SimpleLocationMapConfig } from './services/location-map-api.service';
+import { InsurancePaymentApiService, SimpleInsurancePaymentConfig } from './services/insurance-payment-api.service';
 
 @Component({
   selector: 'app-contact',
@@ -48,6 +49,14 @@ export class ContactComponent implements OnInit {
   editingLocationMapElement: string | null = null;
   safeMapUrl: SafeResourceUrl | null = null;
 
+  // Insurance Payment Configuration
+  insurancePaymentConfig: SimpleInsurancePaymentConfig | null = null;
+  originalInsurancePaymentConfig: SimpleInsurancePaymentConfig | null = null;
+  insurancePaymentLoading = false;
+  insurancePaymentError = false;
+  isEditingInsurancePayment = false;
+  editingInsurancePaymentElement: string | null = null;
+
   contactForm = {
     name: '',
     email: '',
@@ -61,6 +70,7 @@ export class ContactComponent implements OnInit {
     private contactInfoApiService: ContactInfoApiService,
     private officeHoursApiService: OfficeHoursApiService,
     private locationMapApiService: LocationMapApiService,
+    private insurancePaymentApiService: InsurancePaymentApiService,
     private sanitizer: DomSanitizer
   ) {}
 
@@ -69,6 +79,7 @@ export class ContactComponent implements OnInit {
     this.loadContactInfoConfig();
     this.loadOfficeHoursConfig();
     this.loadLocationMapConfig();
+    this.loadInsurancePaymentConfig();
   }
 
   loadContactHeroConfig() {
@@ -365,6 +376,113 @@ export class ContactComponent implements OnInit {
   onLocationMapFontChange() {
     // This method is called when any font input changes
     // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  // Insurance Payment Methods
+  loadInsurancePaymentConfig() {
+    this.insurancePaymentLoading = true;
+    this.insurancePaymentError = false;
+
+    this.insurancePaymentApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.insurancePaymentConfig = config;
+        this.originalInsurancePaymentConfig = JSON.parse(JSON.stringify(config));
+        this.insurancePaymentLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading insurance payment config:', error);
+        this.insurancePaymentError = true;
+        this.insurancePaymentLoading = false;
+      }
+    });
+  }
+
+  startEditingInsurancePayment() {
+    this.isEditingInsurancePayment = true;
+  }
+
+  stopEditingInsurancePayment() {
+    if (this.insurancePaymentConfig) {
+      this.insurancePaymentApiService.saveConfig(this.insurancePaymentConfig).subscribe({
+        next: () => {
+          this.originalInsurancePaymentConfig = JSON.parse(JSON.stringify(this.insurancePaymentConfig!));
+          this.isEditingInsurancePayment = false;
+          this.editingInsurancePaymentElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving insurance payment config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingInsurancePayment() {
+    if (this.originalInsurancePaymentConfig) {
+      this.insurancePaymentConfig = JSON.parse(JSON.stringify(this.originalInsurancePaymentConfig));
+    }
+    this.isEditingInsurancePayment = false;
+    this.editingInsurancePaymentElement = null;
+  }
+
+  resetInsurancePaymentToOriginal() {
+    if (this.originalInsurancePaymentConfig) {
+      this.insurancePaymentConfig = JSON.parse(JSON.stringify(this.originalInsurancePaymentConfig));
+    }
+  }
+
+  startInlineEditInsurancePayment(element: string) {
+    this.editingInsurancePaymentElement = element;
+  }
+
+  stopInlineEditInsurancePayment() {
+    this.editingInsurancePaymentElement = null;
+  }
+
+  onInsurancePaymentColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onInsurancePaymentFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addInsuranceItem() {
+    if (this.insurancePaymentConfig) {
+      this.insurancePaymentConfig.insuranceItems.push('New insurance item - click to edit');
+    }
+  }
+
+  removeInsuranceItem(index: number) {
+    if (this.insurancePaymentConfig && this.insurancePaymentConfig.insuranceItems.length > 1) {
+      this.insurancePaymentConfig.insuranceItems.splice(index, 1);
+    }
+  }
+
+  addPaymentItem() {
+    if (this.insurancePaymentConfig) {
+      this.insurancePaymentConfig.paymentItems.push('New payment item - click to edit');
+    }
+  }
+
+  removePaymentItem(index: number) {
+    if (this.insurancePaymentConfig && this.insurancePaymentConfig.paymentItems.length > 1) {
+      this.insurancePaymentConfig.paymentItems.splice(index, 1);
+    }
+  }
+
+  addSpecialItem() {
+    if (this.insurancePaymentConfig) {
+      this.insurancePaymentConfig.specialItems.push('New special item - click to edit');
+    }
+  }
+
+  removeSpecialItem(index: number) {
+    if (this.insurancePaymentConfig && this.insurancePaymentConfig.specialItems.length > 1) {
+      this.insurancePaymentConfig.specialItems.splice(index, 1);
+    }
   }
 
   onSubmit() {
