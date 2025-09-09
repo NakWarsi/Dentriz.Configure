@@ -1,0 +1,32 @@
+{
+  "sectionTitle": "Our Core Values",
+  "values": [
+    {
+      "icon": "❤️",
+      "title": "Compassionate Care",
+      "description": "We treat every patient with kindness, respect, and understanding, creating a comfortable environment for all."
+    },
+    {
+      "icon": "🔬",
+      "title": "Advanced Technology",
+      "description": "We invest in the latest dental technology to provide precise, efficient, and comfortable treatments."
+    },
+    {
+      "icon": "👨‍👩‍👧‍👦",
+      "title": "Family Focused",
+      "description": "We welcome patients of all ages and provide comprehensive care for the entire family under one roof."
+    },
+    {
+      "icon": "🎯",
+      "title": "Excellence",
+      "description": "We maintain the highest standards of dental care and continuously improve our skills and techniques."
+    }
+  ],
+  "sectionTitleColor": "#2c5aa0",
+  "valueTitleColor": "#2c5aa0",
+  "valueDescriptionColor": "#333333",
+  "backgroundColor": "#f8f9fa",
+  "sectionTitleFontFamily": "Arial, sans-serif",
+  "valueTitleFontFamily": "Arial, sans-serif",
+  "valueDescriptionFontFamily": "Arial, sans-serif"
+}

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DoctorsApiService, SimpleDoctorsConfig } from './services/doctors-api.service';
+import { ValuesApiService, SimpleValuesConfig } from './services/values-api.service';
 
 @Component({
   selector: 'app-about',
@@ -18,6 +19,14 @@ export class AboutComponent implements OnInit {
   doctorsError = false;
   isEditingDoctors = false;
   editingDoctorsElement: string | null = null;
+
+  // Values Configuration
+  valuesConfig: SimpleValuesConfig | null = null;
+  originalValuesConfig: SimpleValuesConfig | null = null;
+  valuesLoading = false;
+  valuesError = false;
+  isEditingValues = false;
+  editingValuesElement: string | null = null;
 
   // Doctors carousel data (fallback)
   doctors = [
@@ -73,7 +82,10 @@ export class AboutComponent implements OnInit {
 
   currentDoctorIndex = 0;
 
-  constructor(private doctorsApiService: DoctorsApiService) {}
+  constructor(
+    private doctorsApiService: DoctorsApiService,
+    private valuesApiService: ValuesApiService
+  ) {}
 
   // Navigation methods
   nextDoctor() {
@@ -101,6 +113,7 @@ export class AboutComponent implements OnInit {
   // Auto-advance carousel (optional)
   ngOnInit() {
     this.loadDoctorsConfig();
+    this.loadValuesConfig();
     // Auto-advance every 8 seconds
     setInterval(() => {
       this.nextDoctor();
@@ -249,5 +262,92 @@ export class AboutComponent implements OnInit {
   // Get current doctors array (from config or fallback)
   get currentDoctors() {
     return this.doctorsConfig?.doctors || this.doctors;
+  }
+
+  // Values Configuration Methods
+  loadValuesConfig() {
+    this.valuesLoading = true;
+    this.valuesError = false;
+
+    this.valuesApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.valuesConfig = config;
+        this.originalValuesConfig = JSON.parse(JSON.stringify(config));
+        this.valuesLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading values config:', error);
+        this.valuesError = true;
+        this.valuesLoading = false;
+      }
+    });
+  }
+
+  startEditingValues() {
+    this.isEditingValues = true;
+  }
+
+  stopEditingValues() {
+    if (this.valuesConfig) {
+      this.valuesApiService.saveConfig(this.valuesConfig).subscribe({
+        next: () => {
+          this.originalValuesConfig = JSON.parse(JSON.stringify(this.valuesConfig!));
+          this.isEditingValues = false;
+          this.editingValuesElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving values config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingValues() {
+    if (this.originalValuesConfig) {
+      this.valuesConfig = JSON.parse(JSON.stringify(this.originalValuesConfig));
+    }
+    this.isEditingValues = false;
+    this.editingValuesElement = null;
+  }
+
+  resetValuesToOriginal() {
+    if (this.originalValuesConfig) {
+      this.valuesConfig = JSON.parse(JSON.stringify(this.originalValuesConfig));
+    }
+  }
+
+  startInlineEditValues(element: string) {
+    this.editingValuesElement = element;
+  }
+
+  stopInlineEditValues() {
+    this.editingValuesElement = null;
+  }
+
+  onValuesColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onValuesFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addValue() {
+    if (this.valuesConfig) {
+      this.valuesConfig.values.push({
+        icon: '⭐',
+        title: 'New Value - click to edit',
+        description: 'New value description - click to edit'
+      });
+    }
+  }
+
+  removeValue(index: number) {
+    if (this.valuesConfig && this.valuesConfig.values.length > 1) {
+      this.valuesConfig.values.splice(index, 1);
+    }
   }
 }

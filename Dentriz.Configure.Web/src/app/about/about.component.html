@@ -421,33 +421,196 @@
 </div>
 
 <!-- Our Values -->
-<section class="values-section">
+<section class="values-section" 
+         *ngIf="!valuesLoading && !valuesError && valuesConfig"
+         [style.background-color]="valuesConfig.backgroundColor">
   <div class="container">
-    <h2 class="section-title">Our Core Values</h2>
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingValues">
+      <button class="edit-btn-floating" (click)="startEditingValues()" title="Edit Values Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <!-- Section Title -->
+    <div class="editable-element">
+      <h2 class="section-title" 
+          *ngIf="!isEditingValues || editingValuesElement !== 'sectionTitle'"
+          [style.color]="valuesConfig.sectionTitleColor"
+          [style.font-family]="valuesConfig.sectionTitleFontFamily"
+          (click)="startInlineEditValues('sectionTitle')">
+        {{ valuesConfig.sectionTitle }}
+        <span class="edit-icon" *ngIf="isEditingValues">✏️</span>
+      </h2>
+      <input *ngIf="isEditingValues && editingValuesElement === 'sectionTitle'"
+             [(ngModel)]="valuesConfig.sectionTitle"
+             (blur)="stopInlineEditValues()"
+             (keyup.enter)="stopInlineEditValues()"
+             class="inline-edit-input"
+             [style.color]="valuesConfig.sectionTitleColor"
+             [style.font-family]="valuesConfig.sectionTitleFontFamily"
+             placeholder="Enter section title"
+             title="Edit section title">
+      <div *ngIf="isEditingValues && editingValuesElement === 'sectionTitle'" class="inline-controls">
+        <select [(ngModel)]="valuesConfig.sectionTitleFontFamily" (change)="onValuesFontChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="valuesConfig.sectionTitleColor"
+               (change)="onValuesColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
+
     <div class="values-grid">
-      <div class="value-card">
-        <div class="value-icon">❤️</div>
-        <h3>Compassionate Care</h3>
-        <p>We treat every patient with kindness, respect, and understanding, creating a comfortable environment for all.</p>
+      <div class="value-card" *ngFor="let value of valuesConfig.values; let i = index">
+        <!-- Value Icon -->
+        <div class="editable-element">
+          <div class="value-icon" 
+               *ngIf="!isEditingValues || editingValuesElement !== 'valueIcon_' + i"
+               (click)="startInlineEditValues('valueIcon_' + i)">
+            {{ value.icon }}
+            <span class="edit-icon" *ngIf="isEditingValues">✏️</span>
+          </div>
+          <input *ngIf="isEditingValues && editingValuesElement === 'valueIcon_' + i"
+                 [(ngModel)]="value.icon"
+                 (blur)="stopInlineEditValues()"
+                 (keyup.enter)="stopInlineEditValues()"
+                 class="inline-edit-input"
+                 placeholder="Enter icon"
+                 title="Edit icon">
+        </div>
+
+        <!-- Value Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingValues || editingValuesElement !== 'valueTitle_' + i"
+              [style.color]="valuesConfig.valueTitleColor"
+              [style.font-family]="valuesConfig.valueTitleFontFamily"
+              (click)="startInlineEditValues('valueTitle_' + i)">
+            {{ value.title }}
+            <span class="edit-icon" *ngIf="isEditingValues">✏️</span>
+          </h3>
+          <input *ngIf="isEditingValues && editingValuesElement === 'valueTitle_' + i"
+                 [(ngModel)]="value.title"
+                 (blur)="stopInlineEditValues()"
+                 (keyup.enter)="stopInlineEditValues()"
+                 class="inline-edit-input"
+                 [style.color]="valuesConfig.valueTitleColor"
+                 [style.font-family]="valuesConfig.valueTitleFontFamily"
+                 placeholder="Enter value title"
+                 title="Edit value title">
+          <div *ngIf="isEditingValues && editingValuesElement === 'valueTitle_' + i" class="inline-controls">
+            <select [(ngModel)]="valuesConfig.valueTitleFontFamily" (change)="onValuesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="valuesConfig.valueTitleColor"
+                   (change)="onValuesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+            <button class="remove-item-btn" 
+                    (click)="removeValue(i)" 
+                    title="Remove this value"
+                    *ngIf="valuesConfig.values.length > 1">
+              ❌
+            </button>
+          </div>
+        </div>
+
+        <!-- Value Description -->
+        <div class="editable-element">
+          <p *ngIf="!isEditingValues || editingValuesElement !== 'valueDescription_' + i"
+             [style.color]="valuesConfig.valueDescriptionColor"
+             [style.font-family]="valuesConfig.valueDescriptionFontFamily"
+             (click)="startInlineEditValues('valueDescription_' + i)">
+            {{ value.description }}
+            <span class="edit-icon" *ngIf="isEditingValues">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingValues && editingValuesElement === 'valueDescription_' + i"
+                    [(ngModel)]="value.description"
+                    (blur)="stopInlineEditValues()"
+                    (keyup.enter)="stopInlineEditValues()"
+                    class="inline-edit-textarea"
+                    [style.color]="valuesConfig.valueDescriptionColor"
+                    [style.font-family]="valuesConfig.valueDescriptionFontFamily"
+                    placeholder="Enter value description"
+                    title="Edit value description"></textarea>
+          <div *ngIf="isEditingValues && editingValuesElement === 'valueDescription_' + i" class="inline-controls">
+            <select [(ngModel)]="valuesConfig.valueDescriptionFontFamily" (change)="onValuesFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="valuesConfig.valueDescriptionColor"
+                   (change)="onValuesColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
       </div>
-      <div class="value-card">
-        <div class="value-icon">🔬</div>
-        <h3>Advanced Technology</h3>
-        <p>We invest in the latest dental technology to provide precise, efficient, and comfortable treatments.</p>
+    </div>
+
+    <!-- Add Value Button -->
+    <div class="add-item-section" *ngIf="isEditingValues">
+      <button class="add-item-btn" (click)="addValue()" title="Add new value">
+        ➕ Add Value
+      </button>
+    </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingValues">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" 
+                 [(ngModel)]="valuesConfig.backgroundColor"
+                 (change)="onValuesColorChange()"
+                 class="color-picker"
+                 title="Background Color">
+        </div>
       </div>
-      <div class="value-card">
-        <div class="value-icon">👨‍👩‍👧‍👦</div>
-        <h3>Family Focused</h3>
-        <p>We welcome patients of all ages and provide comprehensive care for the entire family under one roof.</p>
-      </div>
-      <div class="value-card">
-        <div class="value-icon">🎯</div>
-        <h3>Excellence</h3>
-        <p>We maintain the highest standards of dental care and continuously improve our skills and techniques.</p>
-      </div>
+    </div>
+
+    <!-- Edit Actions (only when editing) -->
+    <div class="edit-actions" *ngIf="isEditingValues">
+      <button class="save-btn" (click)="stopEditingValues()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingValues()">Cancel</button>
+      <button class="reset-btn" (click)="resetValuesToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="valuesLoading">
+  <p>Loading values information...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="valuesError">
+  <p>Error loading values information. Please try again later.</p>
+</div>
 
 <!-- Technology & Facilities -->
 <section class="technology-section">
