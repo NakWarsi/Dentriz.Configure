@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServicesHeroApiService, SimpleServicesHeroConfig } from './services/services-hero-api.service';
 import { PreventiveCareApiService, SimplePreventiveCareConfig } from './services/preventive-care-api.service';
+import { RestorativeCareApiService, SimpleRestorativeCareConfig } from './services/restorative-care-api.service';
 
 @Component({
   selector: 'app-services',
@@ -27,6 +28,14 @@ export class ServicesComponent implements OnInit {
   preventiveCareError = false;
   isEditingPreventiveCare = false;
   editingPreventiveCareElement: string | null = null;
+
+  // Restorative Care Configuration
+  restorativeCareConfig: SimpleRestorativeCareConfig | null = null;
+  originalRestorativeCareConfig: SimpleRestorativeCareConfig | null = null;
+  restorativeCareLoading = false;
+  restorativeCareError = false;
+  isEditingRestorativeCare = false;
+  editingRestorativeCareElement: string | null = null;
   services = [
     {
       title: 'General Dentistry',
@@ -52,12 +61,14 @@ export class ServicesComponent implements OnInit {
 
   constructor(
     private servicesHeroApiService: ServicesHeroApiService,
-    private preventiveCareApiService: PreventiveCareApiService
+    private preventiveCareApiService: PreventiveCareApiService,
+    private restorativeCareApiService: RestorativeCareApiService
   ) {}
 
   ngOnInit() {
     this.loadServicesHeroConfig();
     this.loadPreventiveCareConfig();
+    this.loadRestorativeCareConfig();
   }
 
   // Services Hero Configuration Methods
@@ -228,6 +239,106 @@ export class ServicesComponent implements OnInit {
   removePreventiveCareFeature(serviceIndex: number, featureIndex: number) {
     if (this.preventiveCareConfig) {
       this.preventiveCareConfig.services[serviceIndex].features.splice(featureIndex, 1);
+    }
+  }
+
+  // Restorative Care Configuration Methods
+  loadRestorativeCareConfig() {
+    this.restorativeCareLoading = true;
+    this.restorativeCareError = false;
+
+    this.restorativeCareApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.restorativeCareConfig = config;
+        this.originalRestorativeCareConfig = JSON.parse(JSON.stringify(config));
+        this.restorativeCareLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading restorative care config:', error);
+        this.restorativeCareError = true;
+        this.restorativeCareLoading = false;
+      }
+    });
+  }
+
+  startEditingRestorativeCare() {
+    this.isEditingRestorativeCare = true;
+  }
+
+  stopEditingRestorativeCare() {
+    if (this.restorativeCareConfig) {
+      this.restorativeCareApiService.saveConfig(this.restorativeCareConfig).subscribe({
+        next: () => {
+          this.originalRestorativeCareConfig = JSON.parse(JSON.stringify(this.restorativeCareConfig!));
+          this.isEditingRestorativeCare = false;
+          this.editingRestorativeCareElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving restorative care config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingRestorativeCare() {
+    if (this.originalRestorativeCareConfig) {
+      this.restorativeCareConfig = JSON.parse(JSON.stringify(this.originalRestorativeCareConfig));
+    }
+    this.isEditingRestorativeCare = false;
+    this.editingRestorativeCareElement = null;
+  }
+
+  resetRestorativeCareToOriginal() {
+    if (this.originalRestorativeCareConfig) {
+      this.restorativeCareConfig = JSON.parse(JSON.stringify(this.originalRestorativeCareConfig));
+    }
+  }
+
+  startInlineEditRestorativeCare(element: string) {
+    this.editingRestorativeCareElement = element;
+  }
+
+  stopInlineEditRestorativeCare() {
+    this.editingRestorativeCareElement = null;
+  }
+
+  onRestorativeCareColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onRestorativeCareFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addRestorativeCareService() {
+    if (this.restorativeCareConfig) {
+      this.restorativeCareConfig.services.push({
+        icon: '🦷',
+        title: 'New Service',
+        description: 'Service description',
+        features: ['Feature 1', 'Feature 2']
+      });
+    }
+  }
+
+  removeRestorativeCareService(index: number) {
+    if (this.restorativeCareConfig && this.restorativeCareConfig.services.length > 1) {
+      this.restorativeCareConfig.services.splice(index, 1);
+    }
+  }
+
+  addRestorativeCareFeature(serviceIndex: number) {
+    if (this.restorativeCareConfig) {
+      this.restorativeCareConfig.services[serviceIndex].features.push('New Feature');
+    }
+  }
+
+  removeRestorativeCareFeature(serviceIndex: number, featureIndex: number) {
+    if (this.restorativeCareConfig) {
+      this.restorativeCareConfig.services[serviceIndex].features.splice(featureIndex, 1);
     }
   }
 }

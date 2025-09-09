@@ -1,0 +1,62 @@
+{
+  "sectionTitle": "Restorative Care",
+  "sectionSubtitle": "Restoring function and beauty to your smile",
+  "sectionIcon": "🔧",
+  "services": [
+    {
+      "icon": "⚡",
+      "title": "Same-Day Emergencies",
+      "description": "Dental emergencies don't wait, and neither should you. We provide prompt emergency care to relieve pain and address urgent dental issues.",
+      "features": [
+        "Toothache relief",
+        "Broken tooth repair",
+        "Lost filling replacement",
+        "Emergency extractions"
+      ]
+    },
+    {
+      "icon": "🦷",
+      "title": "Composite Fillings",
+      "description": "Modern tooth-colored fillings that blend seamlessly with your natural teeth while providing strong, durable restoration.",
+      "features": [
+        "Natural appearance",
+        "Bonded to tooth structure",
+        "Minimal tooth preparation",
+        "Long-lasting results"
+      ]
+    },
+    {
+      "icon": "👑",
+      "title": "Crowns & Bridges",
+      "description": "Restore damaged or missing teeth with custom-made crowns and bridges that look and function like natural teeth.",
+      "features": [
+        "Same-day CEREC crowns",
+        "Traditional porcelain crowns",
+        "Fixed bridges",
+        "Implant-supported crowns"
+      ]
+    },
+    {
+      "icon": "🦷",
+      "title": "Dental Implants",
+      "description": "The gold standard for replacing missing teeth, dental implants provide a permanent solution that looks, feels, and functions like natural teeth.",
+      "features": [
+        "Single tooth replacement",
+        "Multiple tooth replacement",
+        "Full arch restoration",
+        "Implant-supported dentures"
+      ]
+    }
+  ],
+  "sectionTitleColor": "#1e3c72",
+  "sectionSubtitleColor": "#666666",
+  "backgroundColor": "#ffffff",
+  "cardTitleColor": "#1e3c72",
+  "cardDescriptionColor": "#666666",
+  "cardFeaturesColor": "#333333",
+  "sectionTitleFontFamily": "Arial, sans-serif",
+  "sectionSubtitleFontFamily": "Arial, sans-serif",
+  "cardTitleFontFamily": "Arial, sans-serif",
+  "cardDescriptionFontFamily": "Arial, sans-serif",
+  "cardFeaturesFontFamily": "Arial, sans-serif"
+}

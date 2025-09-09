@@ -418,65 +418,291 @@
 </div>
 
 <!-- Restorative Care -->
-<section id="restorative" class="service-section">
+<section id="restorative" class="service-section" 
+         *ngIf="!restorativeCareLoading && !restorativeCareError && restorativeCareConfig"
+         [style.background-color]="restorativeCareConfig.backgroundColor">
   <div class="container">
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingRestorativeCare">
+      <button class="edit-btn-floating" (click)="startEditingRestorativeCare()" title="Edit Restorative Care Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
     <div class="service-header">
-      <div class="service-icon">🔧</div>
-      <h2>Restorative Care</h2>
-      <p>Restoring function and beauty to your smile</p>
+      <!-- Section Icon -->
+      <div class="editable-element">
+        <div class="service-icon" *ngIf="!isEditingRestorativeCare || editingRestorativeCareElement !== 'sectionIcon'"
+             (click)="startInlineEditRestorativeCare('sectionIcon')">
+          <span>{{ restorativeCareConfig.sectionIcon }}</span>
+          <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
+        </div>
+        <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'sectionIcon'"
+               [(ngModel)]="restorativeCareConfig.sectionIcon"
+               (blur)="stopInlineEditRestorativeCare()"
+               (keyup.enter)="stopInlineEditRestorativeCare()"
+               class="inline-edit-input"
+               placeholder="Enter icon"
+               title="Edit section icon">
+      </div>
+
+      <!-- Section Title -->
+      <div class="editable-element">
+        <h2 *ngIf="!isEditingRestorativeCare || editingRestorativeCareElement !== 'sectionTitle'"
+            [style.color]="restorativeCareConfig.sectionTitleColor"
+            [style.font-family]="restorativeCareConfig.sectionTitleFontFamily"
+            (click)="startInlineEditRestorativeCare('sectionTitle')">
+          <span>{{ restorativeCareConfig.sectionTitle }}</span>
+          <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
+        </h2>
+        <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'sectionTitle'"
+               [(ngModel)]="restorativeCareConfig.sectionTitle"
+               (blur)="stopInlineEditRestorativeCare()"
+               (keyup.enter)="stopInlineEditRestorativeCare()"
+               class="inline-edit-input"
+               [style.color]="restorativeCareConfig.sectionTitleColor"
+               [style.font-family]="restorativeCareConfig.sectionTitleFontFamily"
+               placeholder="Enter section title"
+               title="Edit section title">
+        <div *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'sectionTitle'" class="inline-controls">
+          <select [(ngModel)]="restorativeCareConfig.sectionTitleFontFamily" (change)="onRestorativeCareFontChange()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color" 
+                 [(ngModel)]="restorativeCareConfig.sectionTitleColor"
+                 (change)="onRestorativeCareColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
+      </div>
+
+      <!-- Section Subtitle -->
+      <div class="editable-element">
+        <p *ngIf="!isEditingRestorativeCare || editingRestorativeCareElement !== 'sectionSubtitle'"
+           [style.color]="restorativeCareConfig.sectionSubtitleColor"
+           [style.font-family]="restorativeCareConfig.sectionSubtitleFontFamily"
+           (click)="startInlineEditRestorativeCare('sectionSubtitle')">
+          <span>{{ restorativeCareConfig.sectionSubtitle }}</span>
+          <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
+        </p>
+        <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'sectionSubtitle'"
+               [(ngModel)]="restorativeCareConfig.sectionSubtitle"
+               (blur)="stopInlineEditRestorativeCare()"
+               (keyup.enter)="stopInlineEditRestorativeCare()"
+               class="inline-edit-input"
+               [style.color]="restorativeCareConfig.sectionSubtitleColor"
+               [style.font-family]="restorativeCareConfig.sectionSubtitleFontFamily"
+               placeholder="Enter section subtitle"
+               title="Edit section subtitle">
+        <div *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'sectionSubtitle'" class="inline-controls">
+          <select [(ngModel)]="restorativeCareConfig.sectionSubtitleFontFamily" (change)="onRestorativeCareFontChange()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color" 
+                 [(ngModel)]="restorativeCareConfig.sectionSubtitleColor"
+                 (change)="onRestorativeCareColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
+      </div>
     </div>
     
     <div class="services-grid">
-      <div class="service-card">
-        <div class="service-icon-small">⚡</div>
-        <h3>Same-Day Emergencies</h3>
-        <p>Dental emergencies don't wait, and neither should you. We provide prompt emergency care to relieve pain and address urgent dental issues.</p>
+      <div class="service-card" *ngFor="let service of restorativeCareConfig.services; let i = index">
+        <!-- Service Icon -->
+        <div class="editable-element">
+          <div class="service-icon-small" *ngIf="!isEditingRestorativeCare || editingRestorativeCareElement !== 'serviceIcon_' + i"
+               (click)="startInlineEditRestorativeCare('serviceIcon_' + i)">
+            <span>{{ service.icon }}</span>
+            <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
+          </div>
+          <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceIcon_' + i"
+                 [(ngModel)]="service.icon"
+                 (blur)="stopInlineEditRestorativeCare()"
+                 (keyup.enter)="stopInlineEditRestorativeCare()"
+                 class="inline-edit-input"
+                 placeholder="Enter icon"
+                 title="Edit service icon">
+        </div>
+
+        <!-- Service Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingRestorativeCare || editingRestorativeCareElement !== 'serviceTitle_' + i"
+              [style.color]="restorativeCareConfig.cardTitleColor"
+              [style.font-family]="restorativeCareConfig.cardTitleFontFamily"
+              (click)="startInlineEditRestorativeCare('serviceTitle_' + i)">
+            <span>{{ service.title }}</span>
+            <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
+          </h3>
+          <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceTitle_' + i"
+                 [(ngModel)]="service.title"
+                 (blur)="stopInlineEditRestorativeCare()"
+                 (keyup.enter)="stopInlineEditRestorativeCare()"
+                 class="inline-edit-input"
+                 [style.color]="restorativeCareConfig.cardTitleColor"
+                 [style.font-family]="restorativeCareConfig.cardTitleFontFamily"
+                 placeholder="Enter service title"
+                 title="Edit service title">
+          <div *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceTitle_' + i" class="inline-controls">
+            <select [(ngModel)]="restorativeCareConfig.cardTitleFontFamily" (change)="onRestorativeCareFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="restorativeCareConfig.cardTitleColor"
+                   (change)="onRestorativeCareColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <!-- Service Description -->
+        <div class="editable-element">
+          <p *ngIf="!isEditingRestorativeCare || editingRestorativeCareElement !== 'serviceDescription_' + i"
+             [style.color]="restorativeCareConfig.cardDescriptionColor"
+             [style.font-family]="restorativeCareConfig.cardDescriptionFontFamily"
+             (click)="startInlineEditRestorativeCare('serviceDescription_' + i)">
+            <span>{{ service.description }}</span>
+            <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceDescription_' + i"
+                    [(ngModel)]="service.description"
+                    (blur)="stopInlineEditRestorativeCare()"
+                    class="inline-edit-textarea"
+                    [style.color]="restorativeCareConfig.cardDescriptionColor"
+                    [style.font-family]="restorativeCareConfig.cardDescriptionFontFamily"
+                    placeholder="Enter service description"
+                    title="Edit service description"></textarea>
+          <div *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceDescription_' + i" class="inline-controls">
+            <select [(ngModel)]="restorativeCareConfig.cardDescriptionFontFamily" (change)="onRestorativeCareFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="restorativeCareConfig.cardDescriptionColor"
+                   (change)="onRestorativeCareColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <!-- Service Features -->
         <ul>
-          <li>Toothache relief</li>
-          <li>Broken tooth repair</li>
-          <li>Lost filling replacement</li>
-          <li>Emergency extractions</li>
+          <li *ngFor="let feature of service.features; let j = index" class="editable-element">
+            <span *ngIf="!isEditingRestorativeCare || editingRestorativeCareElement !== 'serviceFeature_' + i + '_' + j"
+                  [style.color]="restorativeCareConfig.cardFeaturesColor"
+                  [style.font-family]="restorativeCareConfig.cardFeaturesFontFamily"
+                  (click)="startInlineEditRestorativeCare('serviceFeature_' + i + '_' + j)">
+              {{ feature }}
+              <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
+            </span>
+            <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceFeature_' + i + '_' + j"
+                   [(ngModel)]="service.features[j]"
+                   (blur)="stopInlineEditRestorativeCare()"
+                   (keyup.enter)="stopInlineEditRestorativeCare()"
+                   class="inline-edit-input"
+                   [style.color]="restorativeCareConfig.cardFeaturesColor"
+                   [style.font-family]="restorativeCareConfig.cardFeaturesFontFamily"
+                   placeholder="Enter feature"
+                   title="Edit feature">
+            <div *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceFeature_' + i + '_' + j" class="inline-controls">
+              <select [(ngModel)]="restorativeCareConfig.cardFeaturesFontFamily" (change)="onRestorativeCareFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="restorativeCareConfig.cardFeaturesColor"
+                     (change)="onRestorativeCareColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+              <button type="button" class="remove-item-btn" (click)="removeRestorativeCareFeature(i, j)" title="Remove Feature">🗑️</button>
+            </div>
+          </li>
+          <li *ngIf="isEditingRestorativeCare" class="add-feature-item">
+            <button type="button" class="add-item-btn" (click)="addRestorativeCareFeature(i)" title="Add Feature">+ Add Feature</button>
+          </li>
         </ul>
+
+        <!-- Remove Service Button -->
+        <button *ngIf="isEditingRestorativeCare && restorativeCareConfig.services.length > 1" 
+                type="button" class="remove-service-btn" (click)="removeRestorativeCareService(i)" title="Remove Service">
+          🗑️ Remove Service
+        </button>
       </div>
-      
-      <div class="service-card">
-        <div class="service-icon-small">🦷</div>
-        <h3>Composite Fillings</h3>
-        <p>Modern tooth-colored fillings that blend seamlessly with your natural teeth while providing strong, durable restoration.</p>
-        <ul>
-          <li>Natural appearance</li>
-          <li>Bonded to tooth structure</li>
-          <li>Minimal tooth preparation</li>
-          <li>Long-lasting results</li>
-        </ul>
+
+      <!-- Add Service Button -->
+      <div *ngIf="isEditingRestorativeCare" class="add-service-card">
+        <button type="button" class="add-service-btn" (click)="addRestorativeCareService()" title="Add Service">
+          + Add New Service
+        </button>
       </div>
-      
-      <div class="service-card">
-        <div class="service-icon-small">👑</div>
-        <h3>Crowns & Bridges</h3>
-        <p>Restore damaged or missing teeth with custom-made crowns and bridges that look and function like natural teeth.</p>
-        <ul>
-          <li>Same-day CEREC crowns</li>
-          <li>Traditional porcelain crowns</li>
-          <li>Fixed bridges</li>
-          <li>Implant-supported crowns</li>
-        </ul>
+    </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingRestorativeCare">
+      <h4>Section Styling</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" 
+                 [(ngModel)]="restorativeCareConfig.backgroundColor"
+                 (change)="onRestorativeCareColorChange()"
+                 class="color-picker"
+                 title="Background Color">
+        </div>
       </div>
-      
-      <div class="service-card">
-        <div class="service-icon-small">🦷</div>
-        <h3>Dental Implants</h3>
-        <p>The gold standard for replacing missing teeth, dental implants provide a permanent solution that looks, feels, and functions like natural teeth.</p>
-        <ul>
-          <li>Single tooth replacement</li>
-          <li>Multiple tooth replacement</li>
-          <li>Full arch restoration</li>
-          <li>Implant-supported dentures</li>
-        </ul>
-      </div>
+    </div>
+
+    <!-- Edit Actions (only when editing) -->
+    <div class="edit-actions" *ngIf="isEditingRestorativeCare">
+      <button class="save-btn" (click)="stopEditingRestorativeCare()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingRestorativeCare()">Cancel</button>
+      <button class="reset-btn" (click)="resetRestorativeCareToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="restorativeCareLoading">
+  <p>Loading restorative care information...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="restorativeCareError">
+  <p>Error loading restorative care information. Please try again later.</p>
+</div>
 
 <!-- Cosmetic Services -->
 <section id="cosmetic" class="service-section">
