@@ -1038,62 +1038,424 @@
 </section>
 
 <!-- Location & Map -->
-<section class="location-section">
+<section class="location-section" 
+         *ngIf="!locationMapLoading && !locationMapError && locationMapConfig"
+         [style.background-color]="locationMapConfig.backgroundColor">
   <div class="container">
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingLocationMap">
+      <button class="edit-btn-floating" (click)="startEditingLocationMap()" title="Edit Location & Map Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
     <div class="location-content">
       <div class="location-info">
-        <h2>Find Our Office</h2>
-        <p>
-          Our dental office is conveniently located in the heart of the city, with easy access to public transportation and plenty of parking available. We're committed to making your visit as comfortable and convenient as possible.
-        </p>
+        <!-- Section Title -->
+        <div class="editable-element">
+          <h2 *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'sectionTitle'"
+              [style.color]="locationMapConfig.sectionTitleColor"
+              [style.font-family]="locationMapConfig.sectionTitleFontFamily"
+              (click)="startInlineEditLocationMap('sectionTitle')">
+            {{ locationMapConfig.sectionTitle }}
+            <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+          </h2>
+          <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'sectionTitle'"
+                 [(ngModel)]="locationMapConfig.sectionTitle"
+                 (blur)="stopInlineEditLocationMap()"
+                 (keyup.enter)="stopInlineEditLocationMap()"
+                 class="inline-edit-input"
+                 [style.color]="locationMapConfig.sectionTitleColor"
+                 [style.font-family]="locationMapConfig.sectionTitleFontFamily"
+                 placeholder="Enter section title"
+                 title="Edit section title">
+          <div *ngIf="isEditingLocationMap && editingLocationMapElement === 'sectionTitle'" class="inline-controls">
+            <select [(ngModel)]="locationMapConfig.sectionTitleFontFamily" (change)="onLocationMapFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="locationMapConfig.sectionTitleColor"
+                   (change)="onLocationMapColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <!-- Section Description -->
+        <div class="editable-element">
+          <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'sectionDescription'"
+             [style.color]="locationMapConfig.sectionDescriptionColor"
+             [style.font-family]="locationMapConfig.sectionDescriptionFontFamily"
+             (click)="startInlineEditLocationMap('sectionDescription')">
+            {{ locationMapConfig.sectionDescription }}
+            <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingLocationMap && editingLocationMapElement === 'sectionDescription'"
+                    [(ngModel)]="locationMapConfig.sectionDescription"
+                    (blur)="stopInlineEditLocationMap()"
+                    (keyup.enter)="stopInlineEditLocationMap()"
+                    class="inline-edit-textarea"
+                    [style.color]="locationMapConfig.sectionDescriptionColor"
+                    [style.font-family]="locationMapConfig.sectionDescriptionFontFamily"
+                    placeholder="Enter section description"
+                    title="Edit section description"></textarea>
+          <div *ngIf="isEditingLocationMap && editingLocationMapElement === 'sectionDescription'" class="inline-controls">
+            <select [(ngModel)]="locationMapConfig.sectionDescriptionFontFamily" (change)="onLocationMapFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="locationMapConfig.sectionDescriptionColor"
+                   (change)="onLocationMapColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
         
         <div class="location-details">
+          <!-- Address -->
           <div class="detail-item">
-            <strong>📍 Address:</strong>
-            <p>Dentriz Dental Clinic<br>Rohan Tarang, Wakad Chowk<br> opposit Alamgir masjid</p>
+            <div class="editable-element">
+              <strong *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'addressTitle'"
+                     [style.color]="locationMapConfig.detailTitleColor"
+                     [style.font-family]="locationMapConfig.detailTitleFontFamily"
+                     (click)="startInlineEditLocationMap('addressTitle')">
+                {{ locationMapConfig.addressTitle }}
+                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              </strong>
+              <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'addressTitle'"
+                     [(ngModel)]="locationMapConfig.addressTitle"
+                     (blur)="stopInlineEditLocationMap()"
+                     (keyup.enter)="stopInlineEditLocationMap()"
+                     class="inline-edit-input"
+                     [style.color]="locationMapConfig.detailTitleColor"
+                     [style.font-family]="locationMapConfig.detailTitleFontFamily"
+                     placeholder="Enter address title"
+                     title="Edit address title">
+            </div>
+            <div class="editable-element">
+              <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'addressContent'"
+                 [style.color]="locationMapConfig.detailContentColor"
+                 [style.font-family]="locationMapConfig.detailContentFontFamily"
+                 (click)="startInlineEditLocationMap('addressContent')"
+                 [innerHTML]="locationMapConfig.addressContent">
+                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              </p>
+              <textarea *ngIf="isEditingLocationMap && editingLocationMapElement === 'addressContent'"
+                        [(ngModel)]="locationMapConfig.addressContent"
+                        (blur)="stopInlineEditLocationMap()"
+                        (keyup.enter)="stopInlineEditLocationMap()"
+                        class="inline-edit-textarea"
+                        [style.color]="locationMapConfig.detailContentColor"
+                        [style.font-family]="locationMapConfig.detailContentFontFamily"
+                        placeholder="Enter address content"
+                        title="Edit address content"></textarea>
+            </div>
           </div>
           
+          <!-- Parking -->
           <div class="detail-item">
-            <strong>🚗 Parking:</strong>
-            <p>Free parking available in our lot</p>
+            <div class="editable-element">
+              <strong *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'parkingTitle'"
+                     [style.color]="locationMapConfig.detailTitleColor"
+                     [style.font-family]="locationMapConfig.detailTitleFontFamily"
+                     (click)="startInlineEditLocationMap('parkingTitle')">
+                {{ locationMapConfig.parkingTitle }}
+                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              </strong>
+              <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'parkingTitle'"
+                     [(ngModel)]="locationMapConfig.parkingTitle"
+                     (blur)="stopInlineEditLocationMap()"
+                     (keyup.enter)="stopInlineEditLocationMap()"
+                     class="inline-edit-input"
+                     [style.color]="locationMapConfig.detailTitleColor"
+                     [style.font-family]="locationMapConfig.detailTitleFontFamily"
+                     placeholder="Enter parking title"
+                     title="Edit parking title">
+            </div>
+            <div class="editable-element">
+              <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'parkingContent'"
+                 [style.color]="locationMapConfig.detailContentColor"
+                 [style.font-family]="locationMapConfig.detailContentFontFamily"
+                 (click)="startInlineEditLocationMap('parkingContent')">
+                {{ locationMapConfig.parkingContent }}
+                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              </p>
+              <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'parkingContent'"
+                     [(ngModel)]="locationMapConfig.parkingContent"
+                     (blur)="stopInlineEditLocationMap()"
+                     (keyup.enter)="stopInlineEditLocationMap()"
+                     class="inline-edit-input"
+                     [style.color]="locationMapConfig.detailContentColor"
+                     [style.font-family]="locationMapConfig.detailContentFontFamily"
+                     placeholder="Enter parking content"
+                     title="Edit parking content">
+            </div>
           </div>
           
+          <!-- Public Transit -->
           <div class="detail-item">
-            <strong>🚌 Public Transit:</strong>
-            <p>Bus routes available to stop nearby<br> wakd chowk bus stop</p>
+            <div class="editable-element">
+              <strong *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'transitTitle'"
+                     [style.color]="locationMapConfig.detailTitleColor"
+                     [style.font-family]="locationMapConfig.detailTitleFontFamily"
+                     (click)="startInlineEditLocationMap('transitTitle')">
+                {{ locationMapConfig.transitTitle }}
+                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              </strong>
+              <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'transitTitle'"
+                     [(ngModel)]="locationMapConfig.transitTitle"
+                     (blur)="stopInlineEditLocationMap()"
+                     (keyup.enter)="stopInlineEditLocationMap()"
+                     class="inline-edit-input"
+                     [style.color]="locationMapConfig.detailTitleColor"
+                     [style.font-family]="locationMapConfig.detailTitleFontFamily"
+                     placeholder="Enter transit title"
+                     title="Edit transit title">
+            </div>
+            <div class="editable-element">
+              <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'transitContent'"
+                 [style.color]="locationMapConfig.detailContentColor"
+                 [style.font-family]="locationMapConfig.detailContentFontFamily"
+                 (click)="startInlineEditLocationMap('transitContent')"
+                 [innerHTML]="locationMapConfig.transitContent">
+                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              </p>
+              <textarea *ngIf="isEditingLocationMap && editingLocationMapElement === 'transitContent'"
+                        [(ngModel)]="locationMapConfig.transitContent"
+                        (blur)="stopInlineEditLocationMap()"
+                        (keyup.enter)="stopInlineEditLocationMap()"
+                        class="inline-edit-textarea"
+                        [style.color]="locationMapConfig.detailContentColor"
+                        [style.font-family]="locationMapConfig.detailContentFontFamily"
+                        placeholder="Enter transit content"
+                        title="Edit transit content"></textarea>
+            </div>
           </div>
           
+          <!-- Metro Stop -->
           <div class="detail-item">
-            <strong>♿ Metro Stop:</strong>
-            <p>walking distanbce from Hinjewadi bridge(metro station)</p>
+            <div class="editable-element">
+              <strong *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'metroTitle'"
+                     [style.color]="locationMapConfig.detailTitleColor"
+                     [style.font-family]="locationMapConfig.detailTitleFontFamily"
+                     (click)="startInlineEditLocationMap('metroTitle')">
+                {{ locationMapConfig.metroTitle }}
+                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              </strong>
+              <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'metroTitle'"
+                     [(ngModel)]="locationMapConfig.metroTitle"
+                     (blur)="stopInlineEditLocationMap()"
+                     (keyup.enter)="stopInlineEditLocationMap()"
+                     class="inline-edit-input"
+                     [style.color]="locationMapConfig.detailTitleColor"
+                     [style.font-family]="locationMapConfig.detailTitleFontFamily"
+                     placeholder="Enter metro title"
+                     title="Edit metro title">
+            </div>
+            <div class="editable-element">
+              <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'metroContent'"
+                 [style.color]="locationMapConfig.detailContentColor"
+                 [style.font-family]="locationMapConfig.detailContentFontFamily"
+                 (click)="startInlineEditLocationMap('metroContent')">
+                {{ locationMapConfig.metroContent }}
+                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              </p>
+              <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'metroContent'"
+                     [(ngModel)]="locationMapConfig.metroContent"
+                     (blur)="stopInlineEditLocationMap()"
+                     (keyup.enter)="stopInlineEditLocationMap()"
+                     class="inline-edit-input"
+                     [style.color]="locationMapConfig.detailContentColor"
+                     [style.font-family]="locationMapConfig.detailContentFontFamily"
+                     placeholder="Enter metro content"
+                     title="Edit metro content">
+            </div>
           </div>
         </div>
       </div>
       
       <div class="clinic-map">
-          <h3>📍 Visit Our Clinic</h3>
-          <div class="map-container">
-                         <iframe 
-               src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d236.35202385690053!2d73.76117365276494!3d18.59060519688083!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2b97dc645a90f%3A0xf370478ecff49ae9!2sDentriz%20dental%20clinic!5e0!3m2!1sen!2sin!4v1755898762059!5m2!1sen!2sin"
-               width="100%" 
-               height="300" 
-               style="border:0;" 
-               allowfullscreen="" 
-               loading="lazy" 
-               referrerpolicy="no-referrer-when-downgrade"
-               title="DentRiz Dental Clinic Location"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-             </iframe>
-          </div>
-          <div class="map-info">
-            <p><strong>📍 Location:</strong> Wakad, Pune, Maharashtra</p>
-            <p><strong>🕒 Hours:</strong> Mon-Sun: 9:00 AM - 10:00 PM</p>
-            <a href="https://maps.app.goo.gl/qJdrWXYGJR8ki7BR7" target="_blank" class="btn-outline">📍 Get Directions</a>
+        <!-- Map Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'mapTitle'"
+              [style.color]="locationMapConfig.mapTitleColor"
+              [style.font-family]="locationMapConfig.mapTitleFontFamily"
+              (click)="startInlineEditLocationMap('mapTitle')">
+            {{ locationMapConfig.mapTitle }}
+            <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+          </h3>
+          <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'mapTitle'"
+                 [(ngModel)]="locationMapConfig.mapTitle"
+                 (blur)="stopInlineEditLocationMap()"
+                 (keyup.enter)="stopInlineEditLocationMap()"
+                 class="inline-edit-input"
+                 [style.color]="locationMapConfig.mapTitleColor"
+                 [style.font-family]="locationMapConfig.mapTitleFontFamily"
+                 placeholder="Enter map title"
+                 title="Edit map title">
+          <div *ngIf="isEditingLocationMap && editingLocationMapElement === 'mapTitle'" class="inline-controls">
+            <select [(ngModel)]="locationMapConfig.mapTitleFontFamily" (change)="onLocationMapFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="locationMapConfig.mapTitleColor"
+                   (change)="onLocationMapColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
           </div>
         </div>
+
+        <div class="map-container">
+          <iframe 
+            [src]="safeMapUrl"
+            width="100%" 
+            height="300" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade"
+            title="DentRiz Dental Clinic Location"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+          </iframe>
+        </div>
+        <div class="map-info">
+          <!-- Map Location -->
+          <div class="editable-element">
+            <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'mapLocation'"
+               [style.color]="locationMapConfig.mapInfoColor"
+               [style.font-family]="locationMapConfig.mapInfoFontFamily"
+               (click)="startInlineEditLocationMap('mapLocation')">
+              {{ locationMapConfig.mapLocation }}
+              <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+            </p>
+            <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'mapLocation'"
+                   [(ngModel)]="locationMapConfig.mapLocation"
+                   (blur)="stopInlineEditLocationMap()"
+                   (keyup.enter)="stopInlineEditLocationMap()"
+                   class="inline-edit-input"
+                   [style.color]="locationMapConfig.mapInfoColor"
+                   [style.font-family]="locationMapConfig.mapInfoFontFamily"
+                   placeholder="Enter map location"
+                   title="Edit map location">
+          </div>
+
+          <!-- Map Hours -->
+          <div class="editable-element">
+            <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'mapHours'"
+               [style.color]="locationMapConfig.mapInfoColor"
+               [style.font-family]="locationMapConfig.mapInfoFontFamily"
+               (click)="startInlineEditLocationMap('mapHours')">
+              {{ locationMapConfig.mapHours }}
+              <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+            </p>
+            <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'mapHours'"
+                   [(ngModel)]="locationMapConfig.mapHours"
+                   (blur)="stopInlineEditLocationMap()"
+                   (keyup.enter)="stopInlineEditLocationMap()"
+                   class="inline-edit-input"
+                   [style.color]="locationMapConfig.mapInfoColor"
+                   [style.font-family]="locationMapConfig.mapInfoFontFamily"
+                   placeholder="Enter map hours"
+                   title="Edit map hours">
+          </div>
+
+          <!-- Directions Link -->
+          <div class="editable-element">
+            <a *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'directionsText'"
+               [href]="locationMapConfig.directionsLink"
+               target="_blank"
+               class="btn-outline"
+               [style.color]="locationMapConfig.mapLinkColor"
+               [style.font-family]="locationMapConfig.mapLinkFontFamily"
+               (click)="startInlineEditLocationMap('directionsText')">
+              {{ locationMapConfig.directionsText }}
+              <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+            </a>
+            <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'directionsText'"
+                   [(ngModel)]="locationMapConfig.directionsText"
+                   (blur)="stopInlineEditLocationMap()"
+                   (keyup.enter)="stopInlineEditLocationMap()"
+                   class="inline-edit-input"
+                   [style.color]="locationMapConfig.mapLinkColor"
+                   [style.font-family]="locationMapConfig.mapLinkFontFamily"
+                   placeholder="Enter directions text"
+                   title="Edit directions text">
+            <div *ngIf="isEditingLocationMap && editingLocationMapElement === 'directionsText'" class="inline-controls">
+              <select [(ngModel)]="locationMapConfig.mapLinkFontFamily" (change)="onLocationMapFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="locationMapConfig.mapLinkColor"
+                     (change)="onLocationMapColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingLocationMap">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" 
+                 [(ngModel)]="locationMapConfig.backgroundColor"
+                 (change)="onLocationMapColorChange()"
+                 class="color-picker"
+                 title="Background Color">
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Actions (only when editing) -->
+    <div class="edit-actions" *ngIf="isEditingLocationMap">
+      <button class="save-btn" (click)="stopEditingLocationMap()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingLocationMap()">Cancel</button>
+      <button class="reset-btn" (click)="resetLocationMapToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="locationMapLoading">
+  <p>Loading location information...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="locationMapError">
+  <p>Error loading location information. Please try again later.</p>
+</div>
 
 <!-- Insurance & Payment -->
 <section class="insurance-section">

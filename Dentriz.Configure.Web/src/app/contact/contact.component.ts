@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ContactHeroApiService, SimpleContactHeroConfig } from './services/contact-hero-api.service';
 import { ContactInfoApiService, SimpleContactInfoConfig } from './services/contact-info-api.service';
 import { OfficeHoursApiService, SimpleOfficeHoursConfig } from './services/office-hours-api.service';
+import { LocationMapApiService, SimpleLocationMapConfig } from './services/location-map-api.service';
 
 @Component({
   selector: 'app-contact',
@@ -37,6 +39,15 @@ export class ContactComponent implements OnInit {
   isEditingOfficeHours = false;
   editingOfficeHoursElement: string | null = null;
 
+  // Location Map Configuration
+  locationMapConfig: SimpleLocationMapConfig | null = null;
+  originalLocationMapConfig: SimpleLocationMapConfig | null = null;
+  locationMapLoading = false;
+  locationMapError = false;
+  isEditingLocationMap = false;
+  editingLocationMapElement: string | null = null;
+  safeMapUrl: SafeResourceUrl | null = null;
+
   contactForm = {
     name: '',
     email: '',
@@ -48,13 +59,16 @@ export class ContactComponent implements OnInit {
   constructor(
     private contactHeroApiService: ContactHeroApiService,
     private contactInfoApiService: ContactInfoApiService,
-    private officeHoursApiService: OfficeHoursApiService
+    private officeHoursApiService: OfficeHoursApiService,
+    private locationMapApiService: LocationMapApiService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {
     this.loadContactHeroConfig();
     this.loadContactInfoConfig();
     this.loadOfficeHoursConfig();
+    this.loadLocationMapConfig();
   }
 
   loadContactHeroConfig() {
@@ -279,6 +293,78 @@ export class ContactComponent implements OnInit {
     if (this.officeHoursConfig && this.officeHoursConfig.notes.length > 1) {
       this.officeHoursConfig.notes.splice(index, 1);
     }
+  }
+
+  // Location Map Methods
+  loadLocationMapConfig() {
+    this.locationMapLoading = true;
+    this.locationMapError = false;
+
+    this.locationMapApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.locationMapConfig = config;
+        this.originalLocationMapConfig = JSON.parse(JSON.stringify(config));
+        this.safeMapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(config.mapEmbedUrl);
+        this.locationMapLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading location map config:', error);
+        this.locationMapError = true;
+        this.locationMapLoading = false;
+      }
+    });
+  }
+
+  startEditingLocationMap() {
+    this.isEditingLocationMap = true;
+  }
+
+  stopEditingLocationMap() {
+    if (this.locationMapConfig) {
+      this.locationMapApiService.saveConfig(this.locationMapConfig).subscribe({
+        next: () => {
+          this.originalLocationMapConfig = JSON.parse(JSON.stringify(this.locationMapConfig!));
+          this.isEditingLocationMap = false;
+          this.editingLocationMapElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving location map config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingLocationMap() {
+    if (this.originalLocationMapConfig) {
+      this.locationMapConfig = JSON.parse(JSON.stringify(this.originalLocationMapConfig));
+    }
+    this.isEditingLocationMap = false;
+    this.editingLocationMapElement = null;
+  }
+
+  resetLocationMapToOriginal() {
+    if (this.originalLocationMapConfig) {
+      this.locationMapConfig = JSON.parse(JSON.stringify(this.originalLocationMapConfig));
+    }
+  }
+
+  startInlineEditLocationMap(element: string) {
+    this.editingLocationMapElement = element;
+  }
+
+  stopInlineEditLocationMap() {
+    this.editingLocationMapElement = null;
+  }
+
+  onLocationMapColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onLocationMapFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
   }
 
   onSubmit() {
