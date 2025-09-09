@@ -1,0 +1,51 @@
+{
+  "sectionTitle": "Preventive Care",
+  "sectionSubtitle": "Keeping your smile healthy starts with prevention",
+  "sectionIcon": "🦷",
+  "services": [
+    {
+      "icon": "🦷",
+      "title": "Routine Checkups & Cleanings",
+      "description": "Regular dental checkups and professional cleanings are the foundation of good oral health. We recommend visits every 6 months to catch issues early and keep your smile bright.",
+      "features": [
+        "Comprehensive oral examination",
+        "Professional teeth cleaning",
+        "Digital X-rays when needed",
+        "Oral cancer screening"
+      ]
+    },
+    {
+      "icon": "👨‍👩‍👧‍👦",
+      "title": "Family & Children's Dental Services",
+      "description": "We welcome patients of all ages and provide gentle, age-appropriate care for children to help them develop positive dental habits for life.",
+      "features": [
+        "Child-friendly environment",
+        "Early cavity detection",
+        "Dental sealants",
+        "Fluoride treatments"
+      ]
+    },
+    {
+      "icon": "📚",
+      "title": "Oral Health Education",
+      "description": "We believe in empowering our patients with knowledge about proper oral hygiene and dental care practices.",
+      "features": [
+        "Brushing and flossing techniques",
+        "Nutrition guidance",
+        "Preventive care tips",
+        "Lifestyle recommendations"
+      ]
+    }
+  ],
+  "sectionTitleColor": "#1e3c72",
+  "sectionSubtitleColor": "#666666",
+  "backgroundColor": "#ffffff",
+  "cardTitleColor": "#1e3c72",
+  "cardDescriptionColor": "#666666",
+  "cardFeaturesColor": "#333333",
+  "sectionTitleFontFamily": "Arial, sans-serif",
+  "sectionSubtitleFontFamily": "Arial, sans-serif",
+  "cardTitleFontFamily": "Arial, sans-serif",
+  "cardDescriptionFontFamily": "Arial, sans-serif",
+  "cardFeaturesFontFamily": "Arial, sans-serif"
+}

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ServicesHeroApiService, SimpleServicesHeroConfig } from './services/services-hero-api.service';
+import { PreventiveCareApiService, SimplePreventiveCareConfig } from './services/preventive-care-api.service';
 
 @Component({
   selector: 'app-services',
@@ -18,6 +19,14 @@ export class ServicesComponent implements OnInit {
   servicesHeroError = false;
   isEditingServicesHero = false;
   editingServicesHeroElement: string | null = null;
+
+  // Preventive Care Configuration
+  preventiveCareConfig: SimplePreventiveCareConfig | null = null;
+  originalPreventiveCareConfig: SimplePreventiveCareConfig | null = null;
+  preventiveCareLoading = false;
+  preventiveCareError = false;
+  isEditingPreventiveCare = false;
+  editingPreventiveCareElement: string | null = null;
   services = [
     {
       title: 'General Dentistry',
@@ -41,10 +50,14 @@ export class ServicesComponent implements OnInit {
     }
   ];
 
-  constructor(private servicesHeroApiService: ServicesHeroApiService) {}
+  constructor(
+    private servicesHeroApiService: ServicesHeroApiService,
+    private preventiveCareApiService: PreventiveCareApiService
+  ) {}
 
   ngOnInit() {
     this.loadServicesHeroConfig();
+    this.loadPreventiveCareConfig();
   }
 
   // Services Hero Configuration Methods
@@ -116,5 +129,105 @@ export class ServicesComponent implements OnInit {
   onServicesHeroFontChange() {
     // This method is called when any font input changes
     // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  // Preventive Care Configuration Methods
+  loadPreventiveCareConfig() {
+    this.preventiveCareLoading = true;
+    this.preventiveCareError = false;
+
+    this.preventiveCareApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.preventiveCareConfig = config;
+        this.originalPreventiveCareConfig = JSON.parse(JSON.stringify(config));
+        this.preventiveCareLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading preventive care config:', error);
+        this.preventiveCareError = true;
+        this.preventiveCareLoading = false;
+      }
+    });
+  }
+
+  startEditingPreventiveCare() {
+    this.isEditingPreventiveCare = true;
+  }
+
+  stopEditingPreventiveCare() {
+    if (this.preventiveCareConfig) {
+      this.preventiveCareApiService.saveConfig(this.preventiveCareConfig).subscribe({
+        next: () => {
+          this.originalPreventiveCareConfig = JSON.parse(JSON.stringify(this.preventiveCareConfig!));
+          this.isEditingPreventiveCare = false;
+          this.editingPreventiveCareElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving preventive care config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingPreventiveCare() {
+    if (this.originalPreventiveCareConfig) {
+      this.preventiveCareConfig = JSON.parse(JSON.stringify(this.originalPreventiveCareConfig));
+    }
+    this.isEditingPreventiveCare = false;
+    this.editingPreventiveCareElement = null;
+  }
+
+  resetPreventiveCareToOriginal() {
+    if (this.originalPreventiveCareConfig) {
+      this.preventiveCareConfig = JSON.parse(JSON.stringify(this.originalPreventiveCareConfig));
+    }
+  }
+
+  startInlineEditPreventiveCare(element: string) {
+    this.editingPreventiveCareElement = element;
+  }
+
+  stopInlineEditPreventiveCare() {
+    this.editingPreventiveCareElement = null;
+  }
+
+  onPreventiveCareColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onPreventiveCareFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addPreventiveCareService() {
+    if (this.preventiveCareConfig) {
+      this.preventiveCareConfig.services.push({
+        icon: '🦷',
+        title: 'New Service',
+        description: 'Service description',
+        features: ['Feature 1', 'Feature 2']
+      });
+    }
+  }
+
+  removePreventiveCareService(index: number) {
+    if (this.preventiveCareConfig && this.preventiveCareConfig.services.length > 1) {
+      this.preventiveCareConfig.services.splice(index, 1);
+    }
+  }
+
+  addPreventiveCareFeature(serviceIndex: number) {
+    if (this.preventiveCareConfig) {
+      this.preventiveCareConfig.services[serviceIndex].features.push('New Feature');
+    }
+  }
+
+  removePreventiveCareFeature(serviceIndex: number, featureIndex: number) {
+    if (this.preventiveCareConfig) {
+      this.preventiveCareConfig.services[serviceIndex].features.splice(featureIndex, 1);
+    }
   }
 }

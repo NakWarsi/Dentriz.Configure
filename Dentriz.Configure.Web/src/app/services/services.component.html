@@ -131,53 +131,291 @@
 </section> -->
 
 <!-- Preventive Care -->
-<section id="preventive" class="service-section">
+<section id="preventive" class="service-section" 
+         *ngIf="!preventiveCareLoading && !preventiveCareError && preventiveCareConfig"
+         [style.background-color]="preventiveCareConfig.backgroundColor">
   <div class="container">
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingPreventiveCare">
+      <button class="edit-btn-floating" (click)="startEditingPreventiveCare()" title="Edit Preventive Care Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
     <div class="service-header">
-      <div class="service-icon">🦷</div>
-      <h2>Preventive Care</h2>
-      <p>Keeping your smile healthy starts with prevention</p>
+      <!-- Section Icon -->
+      <div class="editable-element">
+        <div class="service-icon" *ngIf="!isEditingPreventiveCare || editingPreventiveCareElement !== 'sectionIcon'"
+             (click)="startInlineEditPreventiveCare('sectionIcon')">
+          <span>{{ preventiveCareConfig.sectionIcon }}</span>
+          <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
+        </div>
+        <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'sectionIcon'"
+               [(ngModel)]="preventiveCareConfig.sectionIcon"
+               (blur)="stopInlineEditPreventiveCare()"
+               (keyup.enter)="stopInlineEditPreventiveCare()"
+               class="inline-edit-input"
+               placeholder="Enter icon"
+               title="Edit section icon">
+      </div>
+
+      <!-- Section Title -->
+      <div class="editable-element">
+        <h2 *ngIf="!isEditingPreventiveCare || editingPreventiveCareElement !== 'sectionTitle'"
+            [style.color]="preventiveCareConfig.sectionTitleColor"
+            [style.font-family]="preventiveCareConfig.sectionTitleFontFamily"
+            (click)="startInlineEditPreventiveCare('sectionTitle')">
+          <span>{{ preventiveCareConfig.sectionTitle }}</span>
+          <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
+        </h2>
+        <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'sectionTitle'"
+               [(ngModel)]="preventiveCareConfig.sectionTitle"
+               (blur)="stopInlineEditPreventiveCare()"
+               (keyup.enter)="stopInlineEditPreventiveCare()"
+               class="inline-edit-input"
+               [style.color]="preventiveCareConfig.sectionTitleColor"
+               [style.font-family]="preventiveCareConfig.sectionTitleFontFamily"
+               placeholder="Enter section title"
+               title="Edit section title">
+        <div *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'sectionTitle'" class="inline-controls">
+          <select [(ngModel)]="preventiveCareConfig.sectionTitleFontFamily" (change)="onPreventiveCareFontChange()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color" 
+                 [(ngModel)]="preventiveCareConfig.sectionTitleColor"
+                 (change)="onPreventiveCareColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
+      </div>
+
+      <!-- Section Subtitle -->
+      <div class="editable-element">
+        <p *ngIf="!isEditingPreventiveCare || editingPreventiveCareElement !== 'sectionSubtitle'"
+           [style.color]="preventiveCareConfig.sectionSubtitleColor"
+           [style.font-family]="preventiveCareConfig.sectionSubtitleFontFamily"
+           (click)="startInlineEditPreventiveCare('sectionSubtitle')">
+          <span>{{ preventiveCareConfig.sectionSubtitle }}</span>
+          <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
+        </p>
+        <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'sectionSubtitle'"
+               [(ngModel)]="preventiveCareConfig.sectionSubtitle"
+               (blur)="stopInlineEditPreventiveCare()"
+               (keyup.enter)="stopInlineEditPreventiveCare()"
+               class="inline-edit-input"
+               [style.color]="preventiveCareConfig.sectionSubtitleColor"
+               [style.font-family]="preventiveCareConfig.sectionSubtitleFontFamily"
+               placeholder="Enter section subtitle"
+               title="Edit section subtitle">
+        <div *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'sectionSubtitle'" class="inline-controls">
+          <select [(ngModel)]="preventiveCareConfig.sectionSubtitleFontFamily" (change)="onPreventiveCareFontChange()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color" 
+                 [(ngModel)]="preventiveCareConfig.sectionSubtitleColor"
+                 (change)="onPreventiveCareColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
+      </div>
     </div>
     
     <div class="services-grid">
-      <div class="service-card">
-        <div class="service-icon-small">🦷</div>
-        <h3>Routine Checkups & Cleanings</h3>
-        <p>Regular dental checkups and professional cleanings are the foundation of good oral health. We recommend visits every 6 months to catch issues early and keep your smile bright.</p>
+      <div class="service-card" *ngFor="let service of preventiveCareConfig.services; let i = index">
+        <!-- Service Icon -->
+        <div class="editable-element">
+          <div class="service-icon-small" *ngIf="!isEditingPreventiveCare || editingPreventiveCareElement !== 'serviceIcon_' + i"
+               (click)="startInlineEditPreventiveCare('serviceIcon_' + i)">
+            <span>{{ service.icon }}</span>
+            <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
+          </div>
+          <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceIcon_' + i"
+                 [(ngModel)]="service.icon"
+                 (blur)="stopInlineEditPreventiveCare()"
+                 (keyup.enter)="stopInlineEditPreventiveCare()"
+                 class="inline-edit-input"
+                 placeholder="Enter icon"
+                 title="Edit service icon">
+        </div>
+
+        <!-- Service Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingPreventiveCare || editingPreventiveCareElement !== 'serviceTitle_' + i"
+              [style.color]="preventiveCareConfig.cardTitleColor"
+              [style.font-family]="preventiveCareConfig.cardTitleFontFamily"
+              (click)="startInlineEditPreventiveCare('serviceTitle_' + i)">
+            <span>{{ service.title }}</span>
+            <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
+          </h3>
+          <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceTitle_' + i"
+                 [(ngModel)]="service.title"
+                 (blur)="stopInlineEditPreventiveCare()"
+                 (keyup.enter)="stopInlineEditPreventiveCare()"
+                 class="inline-edit-input"
+                 [style.color]="preventiveCareConfig.cardTitleColor"
+                 [style.font-family]="preventiveCareConfig.cardTitleFontFamily"
+                 placeholder="Enter service title"
+                 title="Edit service title">
+          <div *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceTitle_' + i" class="inline-controls">
+            <select [(ngModel)]="preventiveCareConfig.cardTitleFontFamily" (change)="onPreventiveCareFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="preventiveCareConfig.cardTitleColor"
+                   (change)="onPreventiveCareColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <!-- Service Description -->
+        <div class="editable-element">
+          <p *ngIf="!isEditingPreventiveCare || editingPreventiveCareElement !== 'serviceDescription_' + i"
+             [style.color]="preventiveCareConfig.cardDescriptionColor"
+             [style.font-family]="preventiveCareConfig.cardDescriptionFontFamily"
+             (click)="startInlineEditPreventiveCare('serviceDescription_' + i)">
+            <span>{{ service.description }}</span>
+            <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceDescription_' + i"
+                    [(ngModel)]="service.description"
+                    (blur)="stopInlineEditPreventiveCare()"
+                    class="inline-edit-textarea"
+                    [style.color]="preventiveCareConfig.cardDescriptionColor"
+                    [style.font-family]="preventiveCareConfig.cardDescriptionFontFamily"
+                    placeholder="Enter service description"
+                    title="Edit service description"></textarea>
+          <div *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceDescription_' + i" class="inline-controls">
+            <select [(ngModel)]="preventiveCareConfig.cardDescriptionFontFamily" (change)="onPreventiveCareFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="preventiveCareConfig.cardDescriptionColor"
+                   (change)="onPreventiveCareColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <!-- Service Features -->
         <ul>
-          <li>Comprehensive oral examination</li>
-          <li>Professional teeth cleaning</li>
-          <li>Digital X-rays when needed</li>
-          <li>Oral cancer screening</li>
+          <li *ngFor="let feature of service.features; let j = index" class="editable-element">
+            <span *ngIf="!isEditingPreventiveCare || editingPreventiveCareElement !== 'serviceFeature_' + i + '_' + j"
+                  [style.color]="preventiveCareConfig.cardFeaturesColor"
+                  [style.font-family]="preventiveCareConfig.cardFeaturesFontFamily"
+                  (click)="startInlineEditPreventiveCare('serviceFeature_' + i + '_' + j)">
+              {{ feature }}
+              <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
+            </span>
+            <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceFeature_' + i + '_' + j"
+                   [(ngModel)]="service.features[j]"
+                   (blur)="stopInlineEditPreventiveCare()"
+                   (keyup.enter)="stopInlineEditPreventiveCare()"
+                   class="inline-edit-input"
+                   [style.color]="preventiveCareConfig.cardFeaturesColor"
+                   [style.font-family]="preventiveCareConfig.cardFeaturesFontFamily"
+                   placeholder="Enter feature"
+                   title="Edit feature">
+            <div *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceFeature_' + i + '_' + j" class="inline-controls">
+              <select [(ngModel)]="preventiveCareConfig.cardFeaturesFontFamily" (change)="onPreventiveCareFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="preventiveCareConfig.cardFeaturesColor"
+                     (change)="onPreventiveCareColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+              <button type="button" class="remove-item-btn" (click)="removePreventiveCareFeature(i, j)" title="Remove Feature">🗑️</button>
+            </div>
+          </li>
+          <li *ngIf="isEditingPreventiveCare" class="add-feature-item">
+            <button type="button" class="add-item-btn" (click)="addPreventiveCareFeature(i)" title="Add Feature">+ Add Feature</button>
+          </li>
         </ul>
+
+        <!-- Remove Service Button -->
+        <button *ngIf="isEditingPreventiveCare && preventiveCareConfig.services.length > 1" 
+                type="button" class="remove-service-btn" (click)="removePreventiveCareService(i)" title="Remove Service">
+          🗑️ Remove Service
+        </button>
       </div>
-      
-      <div class="service-card">
-        <div class="service-icon-small">👨‍👩‍👧‍👦</div>
-        <h3>Family & Children's Dental Services</h3>
-        <p>We welcome patients of all ages and provide gentle, age-appropriate care for children to help them develop positive dental habits for life.</p>
-        <ul>
-          <li>Child-friendly environment</li>
-          <li>Early cavity detection</li>
-          <li>Dental sealants</li>
-          <li>Fluoride treatments</li>
-        </ul>
+
+      <!-- Add Service Button -->
+      <div *ngIf="isEditingPreventiveCare" class="add-service-card">
+        <button type="button" class="add-service-btn" (click)="addPreventiveCareService()" title="Add Service">
+          + Add New Service
+        </button>
       </div>
-      
-      <div class="service-card">
-        <div class="service-icon-small">📚</div>
-        <h3>Oral Health Education</h3>
-        <p>We believe in empowering our patients with knowledge about proper oral hygiene and dental care practices.</p>
-        <ul>
-          <li>Brushing and flossing techniques</li>
-          <li>Nutrition guidance</li>
-          <li>Preventive care tips</li>
-          <li>Lifestyle recommendations</li>
-        </ul>
+    </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingPreventiveCare">
+      <h4>Section Styling</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" 
+                 [(ngModel)]="preventiveCareConfig.backgroundColor"
+                 (change)="onPreventiveCareColorChange()"
+                 class="color-picker"
+                 title="Background Color">
+        </div>
       </div>
+    </div>
+
+    <!-- Edit Actions (only when editing) -->
+    <div class="edit-actions" *ngIf="isEditingPreventiveCare">
+      <button class="save-btn" (click)="stopEditingPreventiveCare()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingPreventiveCare()">Cancel</button>
+      <button class="reset-btn" (click)="resetPreventiveCareToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="preventiveCareLoading">
+  <p>Loading preventive care information...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="preventiveCareError">
+  <p>Error loading preventive care information. Please try again later.</p>
+</div>
 
 <!-- Restorative Care -->
 <section id="restorative" class="service-section">
