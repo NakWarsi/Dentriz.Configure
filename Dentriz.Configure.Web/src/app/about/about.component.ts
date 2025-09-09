@@ -1,15 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { DoctorsApiService, SimpleDoctorsConfig } from './services/doctors-api.service';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './about.component.html',
   styleUrl: './about.component.css'
 })
 export class AboutComponent implements OnInit {
-  // Doctors carousel data
+  // Doctors Configuration
+  doctorsConfig: SimpleDoctorsConfig | null = null;
+  originalDoctorsConfig: SimpleDoctorsConfig | null = null;
+  doctorsLoading = false;
+  doctorsError = false;
+  isEditingDoctors = false;
+  editingDoctorsElement: string | null = null;
+
+  // Doctors carousel data (fallback)
   doctors = [
     {
       name: 'Dr. Rizwana Khan, BDS',
@@ -63,6 +73,8 @@ export class AboutComponent implements OnInit {
 
   currentDoctorIndex = 0;
 
+  constructor(private doctorsApiService: DoctorsApiService) {}
+
   // Navigation methods
   nextDoctor() {
     this.currentDoctorIndex = (this.currentDoctorIndex + 1) % this.doctors.length;
@@ -88,6 +100,7 @@ export class AboutComponent implements OnInit {
 
   // Auto-advance carousel (optional)
   ngOnInit() {
+    this.loadDoctorsConfig();
     // Auto-advance every 8 seconds
     setInterval(() => {
       this.nextDoctor();
@@ -114,4 +127,127 @@ export class AboutComponent implements OnInit {
       image: '��‍⚕️'
     }
   ];
+
+  // Doctors Configuration Methods
+  loadDoctorsConfig() {
+    this.doctorsLoading = true;
+    this.doctorsError = false;
+
+    this.doctorsApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.doctorsConfig = config;
+        this.originalDoctorsConfig = JSON.parse(JSON.stringify(config));
+        this.doctorsLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading doctors config:', error);
+        this.doctorsError = true;
+        this.doctorsLoading = false;
+      }
+    });
+  }
+
+  startEditingDoctors() {
+    this.isEditingDoctors = true;
+  }
+
+  stopEditingDoctors() {
+    if (this.doctorsConfig) {
+      this.doctorsApiService.saveConfig(this.doctorsConfig).subscribe({
+        next: () => {
+          this.originalDoctorsConfig = JSON.parse(JSON.stringify(this.doctorsConfig!));
+          this.isEditingDoctors = false;
+          this.editingDoctorsElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving doctors config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingDoctors() {
+    if (this.originalDoctorsConfig) {
+      this.doctorsConfig = JSON.parse(JSON.stringify(this.originalDoctorsConfig));
+    }
+    this.isEditingDoctors = false;
+    this.editingDoctorsElement = null;
+  }
+
+  resetDoctorsToOriginal() {
+    if (this.originalDoctorsConfig) {
+      this.doctorsConfig = JSON.parse(JSON.stringify(this.originalDoctorsConfig));
+    }
+  }
+
+  startInlineEditDoctors(element: string) {
+    this.editingDoctorsElement = element;
+  }
+
+  stopInlineEditDoctors() {
+    this.editingDoctorsElement = null;
+  }
+
+  onDoctorsColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onDoctorsFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addDoctor() {
+    if (this.doctorsConfig) {
+      this.doctorsConfig.doctors.push({
+        name: 'New Doctor - click to edit',
+        title: 'New Title - click to edit',
+        title2: 'New Title 2 - click to edit',
+        image: '/images/doctors/placeholder.jpg',
+        bio: ['New bio paragraph - click to edit'],
+        specialties: ['New Specialty - click to edit']
+      });
+    }
+  }
+
+  removeDoctor(index: number) {
+    if (this.doctorsConfig && this.doctorsConfig.doctors.length > 1) {
+      this.doctorsConfig.doctors.splice(index, 1);
+      // Adjust current index if needed
+      if (this.currentDoctorIndex >= this.doctorsConfig.doctors.length) {
+        this.currentDoctorIndex = this.doctorsConfig.doctors.length - 1;
+      }
+    }
+  }
+
+  addBioParagraph(doctorIndex: number) {
+    if (this.doctorsConfig) {
+      this.doctorsConfig.doctors[doctorIndex].bio.push('New bio paragraph - click to edit');
+    }
+  }
+
+  removeBioParagraph(doctorIndex: number, bioIndex: number) {
+    if (this.doctorsConfig && this.doctorsConfig.doctors[doctorIndex].bio.length > 1) {
+      this.doctorsConfig.doctors[doctorIndex].bio.splice(bioIndex, 1);
+    }
+  }
+
+  addSpecialty(doctorIndex: number) {
+    if (this.doctorsConfig) {
+      this.doctorsConfig.doctors[doctorIndex].specialties.push('New Specialty - click to edit');
+    }
+  }
+
+  removeSpecialty(doctorIndex: number, specialtyIndex: number) {
+    if (this.doctorsConfig && this.doctorsConfig.doctors[doctorIndex].specialties.length > 1) {
+      this.doctorsConfig.doctors[doctorIndex].specialties.splice(specialtyIndex, 1);
+    }
+  }
+
+  // Get current doctors array (from config or fallback)
+  get currentDoctors() {
+    return this.doctorsConfig?.doctors || this.doctors;
+  }
 }

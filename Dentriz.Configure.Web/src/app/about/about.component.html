@@ -1,37 +1,222 @@
 <!-- Meet Our Doctors -->
-<section id="doctors" class="doctors-section">
+<section id="doctors" class="doctors-section" 
+         *ngIf="!doctorsLoading && !doctorsError && doctorsConfig"
+         [style.background-color]="doctorsConfig.backgroundColor">
   <div class="container">
-    <h2 class="section-title">Meet the Top Dentists in Wakad & Hinjewadi</h2>
-    <p class="section-subtitle">
-    At DentRiz Dental Clinic, we believe every smile deserves to shine! Our expert dentists in Pune provide complete preventive, restorative, and cosmetic care - from dental implants in Wakad and cosmetic dentistry to trusted family dentistry - all under one roof with comfort and care you can trust.  
-    </p>
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingDoctors">
+      <button class="edit-btn-floating" (click)="startEditingDoctors()" title="Edit Doctors Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <!-- Section Title -->
+    <div class="editable-element">
+      <h2 class="section-title" 
+          *ngIf="!isEditingDoctors || editingDoctorsElement !== 'sectionTitle'"
+          [style.color]="doctorsConfig.sectionTitleColor"
+          [style.font-family]="doctorsConfig.sectionTitleFontFamily"
+          (click)="startInlineEditDoctors('sectionTitle')">
+        {{ doctorsConfig.sectionTitle }}
+        <span class="edit-icon" *ngIf="isEditingDoctors">✏️</span>
+      </h2>
+      <input *ngIf="isEditingDoctors && editingDoctorsElement === 'sectionTitle'"
+             [(ngModel)]="doctorsConfig.sectionTitle"
+             (blur)="stopInlineEditDoctors()"
+             (keyup.enter)="stopInlineEditDoctors()"
+             class="inline-edit-input"
+             [style.color]="doctorsConfig.sectionTitleColor"
+             [style.font-family]="doctorsConfig.sectionTitleFontFamily"
+             placeholder="Enter section title"
+             title="Edit section title">
+      <div *ngIf="isEditingDoctors && editingDoctorsElement === 'sectionTitle'" class="inline-controls">
+        <select [(ngModel)]="doctorsConfig.sectionTitleFontFamily" (change)="onDoctorsFontChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="doctorsConfig.sectionTitleColor"
+               (change)="onDoctorsColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
+
+    <!-- Section Subtitle -->
+    <div class="editable-element">
+      <p class="section-subtitle" 
+         *ngIf="!isEditingDoctors || editingDoctorsElement !== 'sectionSubtitle'"
+         [style.color]="doctorsConfig.sectionSubtitleColor"
+         [style.font-family]="doctorsConfig.sectionSubtitleFontFamily"
+         (click)="startInlineEditDoctors('sectionSubtitle')">
+        {{ doctorsConfig.sectionSubtitle }}
+        <span class="edit-icon" *ngIf="isEditingDoctors">✏️</span>
+      </p>
+      <textarea *ngIf="isEditingDoctors && editingDoctorsElement === 'sectionSubtitle'"
+                [(ngModel)]="doctorsConfig.sectionSubtitle"
+                (blur)="stopInlineEditDoctors()"
+                (keyup.enter)="stopInlineEditDoctors()"
+                class="inline-edit-textarea"
+                [style.color]="doctorsConfig.sectionSubtitleColor"
+                [style.font-family]="doctorsConfig.sectionSubtitleFontFamily"
+                placeholder="Enter section subtitle"
+                title="Edit section subtitle"></textarea>
+      <div *ngIf="isEditingDoctors && editingDoctorsElement === 'sectionSubtitle'" class="inline-controls">
+        <select [(ngModel)]="doctorsConfig.sectionSubtitleFontFamily" (change)="onDoctorsFontChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="doctorsConfig.sectionSubtitleColor"
+               (change)="onDoctorsColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
     
     <div class="doctors-carousel">
       <div class="carousel-container">
         <div class="doctor-card">          
           <div class="doctor-info">
-            <h3>{{ doctors[currentDoctorIndex].name }}</h3>
-            <p class="doctor-title">{{ doctors[currentDoctorIndex].title }}</p>
-            <div class="doctor-bio">
-              <p *ngFor="let paragraph of doctors[currentDoctorIndex].bio" [innerHTML]="paragraph"></p>
+            <!-- Doctor Name -->
+            <div class="editable-element">
+              <h3 *ngIf="!isEditingDoctors || editingDoctorsElement !== 'doctorName_' + currentDoctorIndex"
+                  [style.color]="doctorsConfig.doctorNameColor"
+                  [style.font-family]="doctorsConfig.doctorNameFontFamily"
+                  (click)="startInlineEditDoctors('doctorName_' + currentDoctorIndex)">
+                {{ currentDoctors[currentDoctorIndex].name }}
+                <span class="edit-icon" *ngIf="isEditingDoctors">✏️</span>
+              </h3>
+              <input *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorName_' + currentDoctorIndex"
+                     [(ngModel)]="currentDoctors[currentDoctorIndex].name"
+                     (blur)="stopInlineEditDoctors()"
+                     (keyup.enter)="stopInlineEditDoctors()"
+                     class="inline-edit-input"
+                     [style.color]="doctorsConfig.doctorNameColor"
+                     [style.font-family]="doctorsConfig.doctorNameFontFamily"
+                     placeholder="Enter doctor name"
+                     title="Edit doctor name">
             </div>
+
+            <!-- Doctor Title -->
+            <div class="editable-element">
+              <p class="doctor-title" 
+                 *ngIf="!isEditingDoctors || editingDoctorsElement !== 'doctorTitle_' + currentDoctorIndex"
+                 [style.color]="doctorsConfig.doctorTitleColor"
+                 [style.font-family]="doctorsConfig.doctorTitleFontFamily"
+                 (click)="startInlineEditDoctors('doctorTitle_' + currentDoctorIndex)">
+                {{ currentDoctors[currentDoctorIndex].title }}
+                <span class="edit-icon" *ngIf="isEditingDoctors">✏️</span>
+              </p>
+              <input *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorTitle_' + currentDoctorIndex"
+                     [(ngModel)]="currentDoctors[currentDoctorIndex].title"
+                     (blur)="stopInlineEditDoctors()"
+                     (keyup.enter)="stopInlineEditDoctors()"
+                     class="inline-edit-input"
+                     [style.color]="doctorsConfig.doctorTitleColor"
+                     [style.font-family]="doctorsConfig.doctorTitleFontFamily"
+                     placeholder="Enter doctor title"
+                     title="Edit doctor title">
+            </div>
+
+            <!-- Doctor Bio -->
+            <div class="doctor-bio">
+              <div *ngFor="let paragraph of currentDoctors[currentDoctorIndex].bio; let bioIndex = index" class="editable-element">
+                <p *ngIf="!isEditingDoctors || editingDoctorsElement !== 'doctorBio_' + currentDoctorIndex + '_' + bioIndex"
+                   [style.color]="doctorsConfig.doctorBioColor"
+                   [style.font-family]="doctorsConfig.doctorBioFontFamily"
+                   (click)="startInlineEditDoctors('doctorBio_' + currentDoctorIndex + '_' + bioIndex)"
+                   [innerHTML]="paragraph">
+                </p>
+                <textarea *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorBio_' + currentDoctorIndex + '_' + bioIndex"
+                          [(ngModel)]="currentDoctors[currentDoctorIndex].bio[bioIndex]"
+                          (blur)="stopInlineEditDoctors()"
+                          (keyup.enter)="stopInlineEditDoctors()"
+                          class="inline-edit-textarea"
+                          [style.color]="doctorsConfig.doctorBioColor"
+                          [style.font-family]="doctorsConfig.doctorBioFontFamily"
+                          [placeholder]="'Enter bio paragraph ' + (bioIndex + 1)"
+                          [title]="'Edit bio paragraph ' + (bioIndex + 1)"></textarea>
+                <div *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorBio_' + currentDoctorIndex + '_' + bioIndex" class="inline-controls">
+                  <button class="remove-item-btn" 
+                          (click)="removeBioParagraph(currentDoctorIndex, bioIndex)" 
+                          title="Remove this bio paragraph"
+                          *ngIf="currentDoctors[currentDoctorIndex].bio.length > 1">
+                    ❌
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Add Bio Paragraph Button -->
+              <div class="add-item-section" *ngIf="isEditingDoctors">
+                <button class="add-item-btn" (click)="addBioParagraph(currentDoctorIndex)" title="Add new bio paragraph">
+                  ➕ Add Bio Paragraph
+                </button>
+              </div>
+            </div>
+
+            <!-- Doctor Specialties -->
             <div class="doctor-specialties">
-              <span *ngFor="let specialty of doctors[currentDoctorIndex].specialties">{{ specialty }}</span>
+              <div *ngFor="let specialty of currentDoctors[currentDoctorIndex].specialties; let specialtyIndex = index" class="editable-element">
+                <span *ngIf="!isEditingDoctors || editingDoctorsElement !== 'doctorSpecialty_' + currentDoctorIndex + '_' + specialtyIndex"
+                      [style.color]="doctorsConfig.specialtyColor"
+                      [style.font-family]="doctorsConfig.specialtyFontFamily"
+                      (click)="startInlineEditDoctors('doctorSpecialty_' + currentDoctorIndex + '_' + specialtyIndex)">
+                  {{ specialty }}
+                  <span class="edit-icon" *ngIf="isEditingDoctors">✏️</span>
+                </span>
+                <input *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorSpecialty_' + currentDoctorIndex + '_' + specialtyIndex"
+                       [(ngModel)]="currentDoctors[currentDoctorIndex].specialties[specialtyIndex]"
+                       (blur)="stopInlineEditDoctors()"
+                       (keyup.enter)="stopInlineEditDoctors()"
+                       class="inline-edit-input"
+                       [style.color]="doctorsConfig.specialtyColor"
+                       [style.font-family]="doctorsConfig.specialtyFontFamily"
+                       [placeholder]="'Enter specialty ' + (specialtyIndex + 1)"
+                       [title]="'Edit specialty ' + (specialtyIndex + 1)">
+                <div *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorSpecialty_' + currentDoctorIndex + '_' + specialtyIndex" class="inline-controls">
+                  <button class="remove-item-btn" 
+                          (click)="removeSpecialty(currentDoctorIndex, specialtyIndex)" 
+                          title="Remove this specialty"
+                          *ngIf="currentDoctors[currentDoctorIndex].specialties.length > 1">
+                    ❌
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Add Specialty Button -->
+              <div class="add-item-section" *ngIf="isEditingDoctors">
+                <button class="add-item-btn" (click)="addSpecialty(currentDoctorIndex)" title="Add new specialty">
+                  ➕ Add Specialty
+                </button>
+              </div>
             </div>
           </div>
           <div>
           <div class="doctor-image">
             <img 
-              [src]="doctors[currentDoctorIndex].image" 
-              [alt]="doctors[currentDoctorIndex].name"
+              [src]="currentDoctors[currentDoctorIndex].image" 
+              [alt]="currentDoctors[currentDoctorIndex].name"
               class="doctor-img"
               (error)="onImageError($event)">
             <div class="doctor-placeholder" style="display: none;">
               <span>👨‍⚕️</span>
             </div>
           </div>
-          <div class="doctor-title2">{{ doctors[currentDoctorIndex].title }} 
-            <div class="doctor-title3">{{ doctors[currentDoctorIndex].title2 }}
+          <div class="doctor-title2">{{ currentDoctors[currentDoctorIndex].title }} 
+            <div class="doctor-title3">{{ currentDoctors[currentDoctorIndex].title2 }}
             </div>            
             </div>
         </div>
@@ -47,7 +232,7 @@
         <!-- Doctor indicators -->
         <div class="carousel-indicators">
           <button 
-            *ngFor="let doctor of doctors; let i = index" 
+            *ngFor="let doctor of currentDoctors; let i = index" 
             class="indicator" 
             [class.active]="i === currentDoctorIndex"
             (click)="goToDoctor(i)"
@@ -56,8 +241,47 @@
         </div>
       </div>
     </div>
+
+    <!-- Add Doctor Button -->
+    <div class="add-item-section" *ngIf="isEditingDoctors">
+      <button class="add-item-btn" (click)="addDoctor()" title="Add new doctor">
+        ➕ Add Doctor
+      </button>
+    </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingDoctors">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" 
+                 [(ngModel)]="doctorsConfig.backgroundColor"
+                 (change)="onDoctorsColorChange()"
+                 class="color-picker"
+                 title="Background Color">
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Actions (only when editing) -->
+    <div class="edit-actions" *ngIf="isEditingDoctors">
+      <button class="save-btn" (click)="stopEditingDoctors()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingDoctors()">Cancel</button>
+      <button class="reset-btn" (click)="resetDoctorsToOriginal()">Reset to Original</button>
+    </div>
   </div>
 </section>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="doctorsLoading">
+  <p>Loading doctors information...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="doctorsError">
+  <p>Error loading doctors information. Please try again later.</p>
+</div>
 
 <!-- Our Values -->
 <section class="values-section">
