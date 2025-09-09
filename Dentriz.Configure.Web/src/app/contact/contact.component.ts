@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ContactHeroApiService, SimpleContactHeroConfig } from './services/contact-hero-api.service';
 import { ContactInfoApiService, SimpleContactInfoConfig } from './services/contact-info-api.service';
+import { OfficeHoursApiService, SimpleOfficeHoursConfig } from './services/office-hours-api.service';
 
 @Component({
   selector: 'app-contact',
@@ -28,6 +29,14 @@ export class ContactComponent implements OnInit {
   isEditingContactInfo = false;
   editingContactInfoElement: string | null = null;
 
+  // Office Hours Configuration
+  officeHoursConfig: SimpleOfficeHoursConfig | null = null;
+  originalOfficeHoursConfig: SimpleOfficeHoursConfig | null = null;
+  officeHoursLoading = false;
+  officeHoursError = false;
+  isEditingOfficeHours = false;
+  editingOfficeHoursElement: string | null = null;
+
   contactForm = {
     name: '',
     email: '',
@@ -38,12 +47,14 @@ export class ContactComponent implements OnInit {
 
   constructor(
     private contactHeroApiService: ContactHeroApiService,
-    private contactInfoApiService: ContactInfoApiService
+    private contactInfoApiService: ContactInfoApiService,
+    private officeHoursApiService: OfficeHoursApiService
   ) {}
 
   ngOnInit() {
     this.loadContactHeroConfig();
     this.loadContactInfoConfig();
+    this.loadOfficeHoursConfig();
   }
 
   loadContactHeroConfig() {
@@ -185,6 +196,89 @@ export class ContactComponent implements OnInit {
   onContactInfoFontChange() {
     // This method is called when any font input changes
     // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  // Office Hours Methods
+  loadOfficeHoursConfig() {
+    this.officeHoursLoading = true;
+    this.officeHoursError = false;
+
+    this.officeHoursApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.officeHoursConfig = config;
+        this.originalOfficeHoursConfig = JSON.parse(JSON.stringify(config));
+        this.officeHoursLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading office hours config:', error);
+        this.officeHoursError = true;
+        this.officeHoursLoading = false;
+      }
+    });
+  }
+
+  startEditingOfficeHours() {
+    this.isEditingOfficeHours = true;
+  }
+
+  stopEditingOfficeHours() {
+    if (this.officeHoursConfig) {
+      this.officeHoursApiService.saveConfig(this.officeHoursConfig).subscribe({
+        next: () => {
+          this.originalOfficeHoursConfig = JSON.parse(JSON.stringify(this.officeHoursConfig!));
+          this.isEditingOfficeHours = false;
+          this.editingOfficeHoursElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving office hours config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingOfficeHours() {
+    if (this.originalOfficeHoursConfig) {
+      this.officeHoursConfig = JSON.parse(JSON.stringify(this.originalOfficeHoursConfig));
+    }
+    this.isEditingOfficeHours = false;
+    this.editingOfficeHoursElement = null;
+  }
+
+  resetOfficeHoursToOriginal() {
+    if (this.originalOfficeHoursConfig) {
+      this.officeHoursConfig = JSON.parse(JSON.stringify(this.originalOfficeHoursConfig));
+    }
+  }
+
+  startInlineEditOfficeHours(element: string) {
+    this.editingOfficeHoursElement = element;
+  }
+
+  stopInlineEditOfficeHours() {
+    this.editingOfficeHoursElement = null;
+  }
+
+  onOfficeHoursColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onOfficeHoursFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addNote() {
+    if (this.officeHoursConfig) {
+      this.officeHoursConfig.notes.push('New note - click to edit');
+    }
+  }
+
+  removeNote(index: number) {
+    if (this.officeHoursConfig && this.officeHoursConfig.notes.length > 1) {
+      this.officeHoursConfig.notes.splice(index, 1);
+    }
   }
 
   onSubmit() {

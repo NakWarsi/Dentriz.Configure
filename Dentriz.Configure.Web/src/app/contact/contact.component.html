@@ -521,54 +521,518 @@
   </div>
 </section>
 
-<!-- Office Hours -->
-<section class="hours-section">
+<!-- Office Hours Loading and Error States -->
+<div class="loading-container" *ngIf="officeHoursLoading">
+  <p>Loading office hours section...</p>
+</div>
+
+<div class="error-container" *ngIf="officeHoursError">
+  <p>Error loading office hours section. Please try again.</p>
+  <button (click)="loadOfficeHoursConfig()">Retry</button>
+</div>
+
+<!-- Office Hours Section -->
+<section class="hours-section" 
+         *ngIf="!officeHoursLoading && !officeHoursError && officeHoursConfig"
+         [style.background-color]="officeHoursConfig.backgroundColor">
   <div class="container">
-    <h2 class="section-title">Office Hours</h2>
-    <p class="section-subtitle">Convenient hours to fit your busy schedule</p>
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingOfficeHours">
+      <button class="edit-btn-floating" (click)="startEditingOfficeHours()" title="Edit Office Hours Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <!-- Section Title -->
+    <div class="editable-element">
+      <h2 class="section-title" 
+          *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'sectionTitle'"
+          [style.color]="officeHoursConfig.sectionTitleColor"
+          [style.font-family]="officeHoursConfig.sectionTitleFontFamily"
+          (click)="startInlineEditOfficeHours('sectionTitle')">
+        {{ officeHoursConfig.sectionTitle }}
+        <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+      </h2>
+      <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'sectionTitle'"
+             [(ngModel)]="officeHoursConfig.sectionTitle"
+             (blur)="stopInlineEditOfficeHours()"
+             (keyup.enter)="stopInlineEditOfficeHours()"
+             class="inline-edit-input"
+             [style.color]="officeHoursConfig.sectionTitleColor"
+             [style.font-family]="officeHoursConfig.sectionTitleFontFamily"
+             placeholder="Enter section title"
+             title="Edit section title">
+      <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'sectionTitle'" class="inline-controls">
+        <select [(ngModel)]="officeHoursConfig.sectionTitleFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="officeHoursConfig.sectionTitleColor"
+               (change)="onOfficeHoursColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
+
+    <!-- Section Subtitle -->
+    <div class="editable-element">
+      <p class="section-subtitle" 
+         *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'sectionSubtitle'"
+         [style.color]="officeHoursConfig.sectionSubtitleColor"
+         [style.font-family]="officeHoursConfig.sectionSubtitleFontFamily"
+         (click)="startInlineEditOfficeHours('sectionSubtitle')">
+        {{ officeHoursConfig.sectionSubtitle }}
+        <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+      </p>
+      <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'sectionSubtitle'"
+             [(ngModel)]="officeHoursConfig.sectionSubtitle"
+             (blur)="stopInlineEditOfficeHours()"
+             (keyup.enter)="stopInlineEditOfficeHours()"
+             class="inline-edit-input"
+             [style.color]="officeHoursConfig.sectionSubtitleColor"
+             [style.font-family]="officeHoursConfig.sectionSubtitleFontFamily"
+             placeholder="Enter section subtitle"
+             title="Edit section subtitle">
+      <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'sectionSubtitle'" class="inline-controls">
+        <select [(ngModel)]="officeHoursConfig.sectionSubtitleFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="officeHoursConfig.sectionSubtitleColor"
+               (change)="onOfficeHoursColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
     
     <div class="hours-content">
       <div class="hours-table">
+        <!-- Monday -->
         <div class="hours-row">
-          <div class="day">Monday</div>
-          <div class="time">10:00 AM - 10:00 PM</div>
+          <div class="day" [style.color]="officeHoursConfig.dayTextColor" [style.font-family]="officeHoursConfig.dayTextFontFamily">Monday</div>
+          <div class="time-editable">
+            <div class="editable-element">
+              <div class="time" 
+                   *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'mondayTime'"
+                   [style.color]="officeHoursConfig.timeTextColor"
+                   [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                   (click)="startInlineEditOfficeHours('mondayTime')">
+                {{ officeHoursConfig.mondayTime }}
+                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+              </div>
+              <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'mondayTime'"
+                     [(ngModel)]="officeHoursConfig.mondayTime"
+                     (blur)="stopInlineEditOfficeHours()"
+                     (keyup.enter)="stopInlineEditOfficeHours()"
+                     class="inline-edit-input"
+                     [style.color]="officeHoursConfig.timeTextColor"
+                     [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                     placeholder="Enter Monday hours"
+                     title="Edit Monday hours">
+              <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'mondayTime'" class="inline-controls">
+                <select [(ngModel)]="officeHoursConfig.timeTextFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="officeHoursConfig.timeTextColor"
+                       (change)="onOfficeHoursColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Tuesday -->
         <div class="hours-row">
-          <div class="day">Tuesday</div>
-          <div class="time">10:00 AM - 10:00 PM</div>
+          <div class="day" [style.color]="officeHoursConfig.dayTextColor" [style.font-family]="officeHoursConfig.dayTextFontFamily">Tuesday</div>
+          <div class="time-editable">
+            <div class="editable-element">
+              <div class="time" 
+                   *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'tuesdayTime'"
+                   [style.color]="officeHoursConfig.timeTextColor"
+                   [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                   (click)="startInlineEditOfficeHours('tuesdayTime')">
+                {{ officeHoursConfig.tuesdayTime }}
+                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+              </div>
+              <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'tuesdayTime'"
+                     [(ngModel)]="officeHoursConfig.tuesdayTime"
+                     (blur)="stopInlineEditOfficeHours()"
+                     (keyup.enter)="stopInlineEditOfficeHours()"
+                     class="inline-edit-input"
+                     [style.color]="officeHoursConfig.timeTextColor"
+                     [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                     placeholder="Enter Tuesday hours"
+                     title="Edit Tuesday hours">
+              <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'tuesdayTime'" class="inline-controls">
+                <select [(ngModel)]="officeHoursConfig.timeTextFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="officeHoursConfig.timeTextColor"
+                       (change)="onOfficeHoursColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Wednesday -->
         <div class="hours-row">
-          <div class="day">Wednesday</div>
-          <div class="time">10:00 AM - 10:00 PM</div>
+          <div class="day" [style.color]="officeHoursConfig.dayTextColor" [style.font-family]="officeHoursConfig.dayTextFontFamily">Wednesday</div>
+          <div class="time-editable">
+            <div class="editable-element">
+              <div class="time" 
+                   *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'wednesdayTime'"
+                   [style.color]="officeHoursConfig.timeTextColor"
+                   [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                   (click)="startInlineEditOfficeHours('wednesdayTime')">
+                {{ officeHoursConfig.wednesdayTime }}
+                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+              </div>
+              <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'wednesdayTime'"
+                     [(ngModel)]="officeHoursConfig.wednesdayTime"
+                     (blur)="stopInlineEditOfficeHours()"
+                     (keyup.enter)="stopInlineEditOfficeHours()"
+                     class="inline-edit-input"
+                     [style.color]="officeHoursConfig.timeTextColor"
+                     [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                     placeholder="Enter Wednesday hours"
+                     title="Edit Wednesday hours">
+              <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'wednesdayTime'" class="inline-controls">
+                <select [(ngModel)]="officeHoursConfig.timeTextFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="officeHoursConfig.timeTextColor"
+                       (change)="onOfficeHoursColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Thursday -->
         <div class="hours-row">
-          <div class="day">Thursday</div>
-          <div class="time">10:00 AM - 10:00 PM</div>
+          <div class="day" [style.color]="officeHoursConfig.dayTextColor" [style.font-family]="officeHoursConfig.dayTextFontFamily">Thursday</div>
+          <div class="time-editable">
+            <div class="editable-element">
+              <div class="time" 
+                   *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'thursdayTime'"
+                   [style.color]="officeHoursConfig.timeTextColor"
+                   [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                   (click)="startInlineEditOfficeHours('thursdayTime')">
+                {{ officeHoursConfig.thursdayTime }}
+                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+              </div>
+              <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'thursdayTime'"
+                     [(ngModel)]="officeHoursConfig.thursdayTime"
+                     (blur)="stopInlineEditOfficeHours()"
+                     (keyup.enter)="stopInlineEditOfficeHours()"
+                     class="inline-edit-input"
+                     [style.color]="officeHoursConfig.timeTextColor"
+                     [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                     placeholder="Enter Thursday hours"
+                     title="Edit Thursday hours">
+              <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'thursdayTime'" class="inline-controls">
+                <select [(ngModel)]="officeHoursConfig.timeTextFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="officeHoursConfig.timeTextColor"
+                       (change)="onOfficeHoursColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Friday -->
         <div class="hours-row">
-          <div class="day">Friday</div>
-          <div class="time">10:00 AM - 10:00 PM</div>
+          <div class="day" [style.color]="officeHoursConfig.dayTextColor" [style.font-family]="officeHoursConfig.dayTextFontFamily">Friday</div>
+          <div class="time-editable">
+            <div class="editable-element">
+              <div class="time" 
+                   *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'fridayTime'"
+                   [style.color]="officeHoursConfig.timeTextColor"
+                   [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                   (click)="startInlineEditOfficeHours('fridayTime')">
+                {{ officeHoursConfig.fridayTime }}
+                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+              </div>
+              <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'fridayTime'"
+                     [(ngModel)]="officeHoursConfig.fridayTime"
+                     (blur)="stopInlineEditOfficeHours()"
+                     (keyup.enter)="stopInlineEditOfficeHours()"
+                     class="inline-edit-input"
+                     [style.color]="officeHoursConfig.timeTextColor"
+                     [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                     placeholder="Enter Friday hours"
+                     title="Edit Friday hours">
+              <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'fridayTime'" class="inline-controls">
+                <select [(ngModel)]="officeHoursConfig.timeTextFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="officeHoursConfig.timeTextColor"
+                       (change)="onOfficeHoursColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Saturday -->
         <div class="hours-row">
-          <div class="day">Saturday</div>
-          <div class="time">10:00 AM - 10:00 PM</div>
+          <div class="day" [style.color]="officeHoursConfig.dayTextColor" [style.font-family]="officeHoursConfig.dayTextFontFamily">Saturday</div>
+          <div class="time-editable">
+            <div class="editable-element">
+              <div class="time" 
+                   *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'saturdayTime'"
+                   [style.color]="officeHoursConfig.timeTextColor"
+                   [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                   (click)="startInlineEditOfficeHours('saturdayTime')">
+                {{ officeHoursConfig.saturdayTime }}
+                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+              </div>
+              <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'saturdayTime'"
+                     [(ngModel)]="officeHoursConfig.saturdayTime"
+                     (blur)="stopInlineEditOfficeHours()"
+                     (keyup.enter)="stopInlineEditOfficeHours()"
+                     class="inline-edit-input"
+                     [style.color]="officeHoursConfig.timeTextColor"
+                     [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                     placeholder="Enter Saturday hours"
+                     title="Edit Saturday hours">
+              <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'saturdayTime'" class="inline-controls">
+                <select [(ngModel)]="officeHoursConfig.timeTextFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="officeHoursConfig.timeTextColor"
+                       (change)="onOfficeHoursColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Sunday -->
         <div class="hours-row">
-          <div class="day">Sunday</div>
-          <div class="time">10:00 AM - 10:00 PM</div>
+          <div class="day" [style.color]="officeHoursConfig.dayTextColor" [style.font-family]="officeHoursConfig.dayTextFontFamily">Sunday</div>
+          <div class="time-editable">
+            <div class="editable-element">
+              <div class="time" 
+                   *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'sundayTime'"
+                   [style.color]="officeHoursConfig.timeTextColor"
+                   [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                   (click)="startInlineEditOfficeHours('sundayTime')">
+                {{ officeHoursConfig.sundayTime }}
+                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+              </div>
+              <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'sundayTime'"
+                     [(ngModel)]="officeHoursConfig.sundayTime"
+                     (blur)="stopInlineEditOfficeHours()"
+                     (keyup.enter)="stopInlineEditOfficeHours()"
+                     class="inline-edit-input"
+                     [style.color]="officeHoursConfig.timeTextColor"
+                     [style.font-family]="officeHoursConfig.timeTextFontFamily"
+                     placeholder="Enter Sunday hours"
+                     title="Edit Sunday hours">
+              <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'sundayTime'" class="inline-controls">
+                <select [(ngModel)]="officeHoursConfig.timeTextFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="officeHoursConfig.timeTextColor"
+                       (change)="onOfficeHoursColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       
       <div class="hours-note">
-        <h3>📋 Important Notes</h3>
-        <ul>
-          <li>We offer flexible appointment scheduling for our dental clinic in Wakad</li>
-          <li>Emergency appointments available outside regular hours</li>
-          <li>New patients welcome - call to schedule your first visit at the best dentist in Wakad</li>
-          <li>We accept most insurance plans for dental implants in Wakad and cosmetic dentistry in Wakad</li>
-          <li>Conveniently located dental clinic in Hinjewadi and Wakad for all your dental needs</li>
+        <!-- Notes Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'notesTitle'"
+              [style.color]="officeHoursConfig.notesTitleColor"
+              [style.font-family]="officeHoursConfig.notesTitleFontFamily"
+              (click)="startInlineEditOfficeHours('notesTitle')">
+            {{ officeHoursConfig.notesTitle }}
+            <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+          </h3>
+          <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'notesTitle'"
+                 [(ngModel)]="officeHoursConfig.notesTitle"
+                 (blur)="stopInlineEditOfficeHours()"
+                 (keyup.enter)="stopInlineEditOfficeHours()"
+                 class="inline-edit-input"
+                 [style.color]="officeHoursConfig.notesTitleColor"
+                 [style.font-family]="officeHoursConfig.notesTitleFontFamily"
+                 placeholder="Enter notes title"
+                 title="Edit notes title">
+          <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'notesTitle'" class="inline-controls">
+            <select [(ngModel)]="officeHoursConfig.notesTitleFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="officeHoursConfig.notesTitleColor"
+                   (change)="onOfficeHoursColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
+
+        <ul [style.color]="officeHoursConfig.notesTextColor" [style.font-family]="officeHoursConfig.notesTextFontFamily">
+          <li *ngFor="let note of officeHoursConfig.notes; let i = index" class="note-item">
+            <div class="editable-element">
+              <div class="note-text" 
+                   *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'note_' + i"
+                   [style.color]="officeHoursConfig.notesTextColor"
+                   [style.font-family]="officeHoursConfig.notesTextFontFamily"
+                   (click)="startInlineEditOfficeHours('note_' + i)">
+                {{ note }}
+                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+              </div>
+              <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'note_' + i"
+                     [(ngModel)]="officeHoursConfig.notes[i]"
+                     (blur)="stopInlineEditOfficeHours()"
+                     (keyup.enter)="stopInlineEditOfficeHours()"
+                     class="inline-edit-input"
+                     [style.color]="officeHoursConfig.notesTextColor"
+                     [style.font-family]="officeHoursConfig.notesTextFontFamily"
+                     [placeholder]="'Enter note ' + (i + 1)"
+                     [title]="'Edit note ' + (i + 1)">
+              <div *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'note_' + i" class="inline-controls">
+                <select [(ngModel)]="officeHoursConfig.notesTextFontFamily" (change)="onOfficeHoursFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="officeHoursConfig.notesTextColor"
+                       (change)="onOfficeHoursColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+                <button class="remove-note-btn" 
+                        (click)="removeNote(i)" 
+                        title="Remove this note"
+                        *ngIf="officeHoursConfig.notes.length > 1">
+                  ❌
+                </button>
+              </div>
+            </div>
+          </li>
         </ul>
+        
+        <!-- Add Note Button -->
+        <div class="add-note-section" *ngIf="isEditingOfficeHours">
+          <button class="add-note-btn" (click)="addNote()" title="Add new note">
+            ➕ Add Note
+          </button>
+        </div>
       </div>
+    </div>
+    
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingOfficeHours">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" [(ngModel)]="officeHoursConfig.backgroundColor" (change)="onOfficeHoursColorChange()" class="color-picker" title="Background Color">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Edit Actions -->
+    <div class="edit-actions" *ngIf="isEditingOfficeHours">
+      <button class="save-btn" (click)="stopEditingOfficeHours()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingOfficeHours()">Cancel</button>
+      <button class="reset-btn" (click)="resetOfficeHoursToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
