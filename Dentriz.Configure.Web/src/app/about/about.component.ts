@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { DoctorsApiService, SimpleDoctorsConfig } from './services/doctors-api.service';
 import { ValuesApiService, SimpleValuesConfig } from './services/values-api.service';
 import { TechnologyApiService, SimpleTechnologyConfig } from './services/technology-api.service';
+import { TestimonialsApiService, SimpleTestimonialsConfig } from './services/testimonials-api.service';
 
 @Component({
   selector: 'app-about',
@@ -36,6 +37,14 @@ export class AboutComponent implements OnInit {
   technologyError = false;
   isEditingTechnology = false;
   editingTechnologyElement: string | null = null;
+
+  // Testimonials Configuration
+  testimonialsConfig: SimpleTestimonialsConfig | null = null;
+  originalTestimonialsConfig: SimpleTestimonialsConfig | null = null;
+  testimonialsLoading = false;
+  testimonialsError = false;
+  isEditingTestimonials = false;
+  editingTestimonialsElement: string | null = null;
 
   // Doctors carousel data (fallback)
   doctors = [
@@ -94,7 +103,8 @@ export class AboutComponent implements OnInit {
   constructor(
     private doctorsApiService: DoctorsApiService,
     private valuesApiService: ValuesApiService,
-    private technologyApiService: TechnologyApiService
+    private technologyApiService: TechnologyApiService,
+    private testimonialsApiService: TestimonialsApiService
   ) {}
 
   // Navigation methods
@@ -125,6 +135,7 @@ export class AboutComponent implements OnInit {
     this.loadDoctorsConfig();
     this.loadValuesConfig();
     this.loadTechnologyConfig();
+    this.loadTestimonialsConfig();
     // Auto-advance every 8 seconds
     setInterval(() => {
       this.nextDoctor();
@@ -446,6 +457,94 @@ export class AboutComponent implements OnInit {
   removeTechnology(index: number) {
     if (this.technologyConfig && this.technologyConfig.technologies.length > 1) {
       this.technologyConfig.technologies.splice(index, 1);
+    }
+  }
+
+  // Testimonials Configuration Methods
+  loadTestimonialsConfig() {
+    this.testimonialsLoading = true;
+    this.testimonialsError = false;
+
+    this.testimonialsApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.testimonialsConfig = config;
+        this.originalTestimonialsConfig = JSON.parse(JSON.stringify(config));
+        this.testimonialsLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading testimonials config:', error);
+        this.testimonialsError = true;
+        this.testimonialsLoading = false;
+      }
+    });
+  }
+
+  startEditingTestimonials() {
+    this.isEditingTestimonials = true;
+  }
+
+  stopEditingTestimonials() {
+    if (this.testimonialsConfig) {
+      this.testimonialsApiService.saveConfig(this.testimonialsConfig).subscribe({
+        next: () => {
+          this.originalTestimonialsConfig = JSON.parse(JSON.stringify(this.testimonialsConfig!));
+          this.isEditingTestimonials = false;
+          this.editingTestimonialsElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving testimonials config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingTestimonials() {
+    if (this.originalTestimonialsConfig) {
+      this.testimonialsConfig = JSON.parse(JSON.stringify(this.originalTestimonialsConfig));
+    }
+    this.isEditingTestimonials = false;
+    this.editingTestimonialsElement = null;
+  }
+
+  resetTestimonialsToOriginal() {
+    if (this.originalTestimonialsConfig) {
+      this.testimonialsConfig = JSON.parse(JSON.stringify(this.originalTestimonialsConfig));
+    }
+  }
+
+  startInlineEditTestimonials(element: string) {
+    this.editingTestimonialsElement = element;
+  }
+
+  stopInlineEditTestimonials() {
+    this.editingTestimonialsElement = null;
+  }
+
+  onTestimonialsColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onTestimonialsFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addTestimonial() {
+    if (this.testimonialsConfig) {
+      this.testimonialsConfig.testimonials.push({
+        stars: '⭐⭐⭐⭐⭐',
+        text: 'New testimonial text - click to edit',
+        authorName: 'New Author - click to edit',
+        authorTitle: 'Verified Patient'
+      });
+    }
+  }
+
+  removeTestimonial(index: number) {
+    if (this.testimonialsConfig && this.testimonialsConfig.testimonials.length > 1) {
+      this.testimonialsConfig.testimonials.splice(index, 1);
     }
   }
 }

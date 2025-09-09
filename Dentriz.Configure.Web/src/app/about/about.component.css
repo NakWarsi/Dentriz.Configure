@@ -602,6 +602,11 @@
   position: relative;
 }
 
+/* Testimonials Section Editable Styles */
+.testimonials-section {
+  position: relative;
+}
+
 /* Floating Edit Button */
 .floating-edit-btn {
   position: absolute;
