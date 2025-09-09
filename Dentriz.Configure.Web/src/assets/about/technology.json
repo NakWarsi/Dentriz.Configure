@@ -1,0 +1,35 @@
+{
+  "sectionTitle": "Advanced Technology & Facilities",
+  "sectionSubtitle": "We're proud to offer an array of leading technologies to ensure your smile receives the tailored care it deserves!",
+  "technologies": [
+    {
+      "icon": "🖥️",
+      "title": "CEREC Same-Day Crowns",
+      "description": "Get your crown in a single visit with our advanced CEREC technology."
+    },
+    {
+      "icon": "📷",
+      "title": "CBCT Scanner",
+      "description": "3D imaging for comprehensive oral health insights and implant planning accuracy."
+    },
+    {
+      "icon": "💻",
+      "title": "PrimeScan Technology",
+      "description": "Cloud-based scanning for accurate digital impressions and treatment planning."
+    },
+    {
+      "icon": "🦷",
+      "title": "Digital X-Rays",
+      "description": "Lower radiation exposure and instant results with digital imaging."
+    }
+  ],
+  "sectionTitleColor": "#2c5aa0",
+  "sectionSubtitleColor": "#666666",
+  "techTitleColor": "#2c5aa0",
+  "techDescriptionColor": "#333333",
+  "backgroundColor": "#ffffff",
+  "sectionTitleFontFamily": "Arial, sans-serif",
+  "sectionSubtitleFontFamily": "Arial, sans-serif",
+  "techTitleFontFamily": "Arial, sans-serif",
+  "techDescriptionFontFamily": "Arial, sans-serif"
+}

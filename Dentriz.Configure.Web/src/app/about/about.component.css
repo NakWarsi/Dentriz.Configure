@@ -597,6 +597,11 @@
   position: relative;
 }
 
+/* Technology Section Editable Styles */
+.technology-section {
+  position: relative;
+}
+
 /* Floating Edit Button */
 .floating-edit-btn {
   position: absolute;

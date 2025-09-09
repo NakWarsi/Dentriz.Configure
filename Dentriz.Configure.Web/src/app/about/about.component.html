@@ -613,37 +613,234 @@
 </div>
 
 <!-- Technology & Facilities -->
-<section class="technology-section">
+<section class="technology-section" 
+         *ngIf="!technologyLoading && !technologyError && technologyConfig"
+         [style.background-color]="technologyConfig.backgroundColor">
   <div class="container">
-    <h2 class="section-title">Advanced Technology & Facilities</h2>
-    <p class="section-subtitle">
-      We're proud to offer an array of leading technologies to ensure your smile receives the tailored care it deserves!
-    </p>
+    <!-- Floating Edit Button -->
+    <div class="floating-edit-btn" *ngIf="!isEditingTechnology">
+      <button class="edit-btn-floating" (click)="startEditingTechnology()" title="Edit Technology Section">
+        <span class="edit-icon-floating">✏️</span>
+      </button>
+    </div>
+
+    <!-- Section Title -->
+    <div class="editable-element">
+      <h2 class="section-title" 
+          *ngIf="!isEditingTechnology || editingTechnologyElement !== 'sectionTitle'"
+          [style.color]="technologyConfig.sectionTitleColor"
+          [style.font-family]="technologyConfig.sectionTitleFontFamily"
+          (click)="startInlineEditTechnology('sectionTitle')">
+        {{ technologyConfig.sectionTitle }}
+        <span class="edit-icon" *ngIf="isEditingTechnology">✏️</span>
+      </h2>
+      <input *ngIf="isEditingTechnology && editingTechnologyElement === 'sectionTitle'"
+             [(ngModel)]="technologyConfig.sectionTitle"
+             (blur)="stopInlineEditTechnology()"
+             (keyup.enter)="stopInlineEditTechnology()"
+             class="inline-edit-input"
+             [style.color]="technologyConfig.sectionTitleColor"
+             [style.font-family]="technologyConfig.sectionTitleFontFamily"
+             placeholder="Enter section title"
+             title="Edit section title">
+      <div *ngIf="isEditingTechnology && editingTechnologyElement === 'sectionTitle'" class="inline-controls">
+        <select [(ngModel)]="technologyConfig.sectionTitleFontFamily" (change)="onTechnologyFontChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="technologyConfig.sectionTitleColor"
+               (change)="onTechnologyColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
+
+    <!-- Section Subtitle -->
+    <div class="editable-element">
+      <p class="section-subtitle" 
+         *ngIf="!isEditingTechnology || editingTechnologyElement !== 'sectionSubtitle'"
+         [style.color]="technologyConfig.sectionSubtitleColor"
+         [style.font-family]="technologyConfig.sectionSubtitleFontFamily"
+         (click)="startInlineEditTechnology('sectionSubtitle')">
+        {{ technologyConfig.sectionSubtitle }}
+        <span class="edit-icon" *ngIf="isEditingTechnology">✏️</span>
+      </p>
+      <textarea *ngIf="isEditingTechnology && editingTechnologyElement === 'sectionSubtitle'"
+                [(ngModel)]="technologyConfig.sectionSubtitle"
+                (blur)="stopInlineEditTechnology()"
+                (keyup.enter)="stopInlineEditTechnology()"
+                class="inline-edit-textarea"
+                [style.color]="technologyConfig.sectionSubtitleColor"
+                [style.font-family]="technologyConfig.sectionSubtitleFontFamily"
+                placeholder="Enter section subtitle"
+                title="Edit section subtitle"></textarea>
+      <div *ngIf="isEditingTechnology && editingTechnologyElement === 'sectionSubtitle'" class="inline-controls">
+        <select [(ngModel)]="technologyConfig.sectionSubtitleFontFamily" (change)="onTechnologyFontChange()" class="font-select-inline" title="Font Family">
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Times New Roman, serif">Times New Roman</option>
+          <option value="Helvetica, sans-serif">Helvetica</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Impact, sans-serif">Impact</option>
+          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        </select>
+        <input type="color" 
+               [(ngModel)]="technologyConfig.sectionSubtitleColor"
+               (change)="onTechnologyColorChange()"
+               class="color-picker-inline"
+               title="Color">
+      </div>
+    </div>
     
     <div class="tech-grid">
-      <div class="tech-item">
-        <div class="tech-icon">🖥️</div>
-        <h3>CEREC Same-Day Crowns</h3>
-        <p>Get your crown in a single visit with our advanced CEREC technology.</p>
+      <div class="tech-item" *ngFor="let tech of technologyConfig.technologies; let i = index">
+        <!-- Technology Icon -->
+        <div class="editable-element">
+          <div class="tech-icon" 
+               *ngIf="!isEditingTechnology || editingTechnologyElement !== 'techIcon_' + i"
+               (click)="startInlineEditTechnology('techIcon_' + i)">
+            {{ tech.icon }}
+            <span class="edit-icon" *ngIf="isEditingTechnology">✏️</span>
+          </div>
+          <input *ngIf="isEditingTechnology && editingTechnologyElement === 'techIcon_' + i"
+                 [(ngModel)]="tech.icon"
+                 (blur)="stopInlineEditTechnology()"
+                 (keyup.enter)="stopInlineEditTechnology()"
+                 class="inline-edit-input"
+                 placeholder="Enter icon"
+                 title="Edit icon">
+        </div>
+
+        <!-- Technology Title -->
+        <div class="editable-element">
+          <h3 *ngIf="!isEditingTechnology || editingTechnologyElement !== 'techTitle_' + i"
+              [style.color]="technologyConfig.techTitleColor"
+              [style.font-family]="technologyConfig.techTitleFontFamily"
+              (click)="startInlineEditTechnology('techTitle_' + i)">
+            {{ tech.title }}
+            <span class="edit-icon" *ngIf="isEditingTechnology">✏️</span>
+          </h3>
+          <input *ngIf="isEditingTechnology && editingTechnologyElement === 'techTitle_' + i"
+                 [(ngModel)]="tech.title"
+                 (blur)="stopInlineEditTechnology()"
+                 (keyup.enter)="stopInlineEditTechnology()"
+                 class="inline-edit-input"
+                 [style.color]="technologyConfig.techTitleColor"
+                 [style.font-family]="technologyConfig.techTitleFontFamily"
+                 placeholder="Enter technology title"
+                 title="Edit technology title">
+          <div *ngIf="isEditingTechnology && editingTechnologyElement === 'techTitle_' + i" class="inline-controls">
+            <select [(ngModel)]="technologyConfig.techTitleFontFamily" (change)="onTechnologyFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="technologyConfig.techTitleColor"
+                   (change)="onTechnologyColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+            <button class="remove-item-btn" 
+                    (click)="removeTechnology(i)" 
+                    title="Remove this technology"
+                    *ngIf="technologyConfig.technologies.length > 1">
+              ❌
+            </button>
+          </div>
+        </div>
+
+        <!-- Technology Description -->
+        <div class="editable-element">
+          <p *ngIf="!isEditingTechnology || editingTechnologyElement !== 'techDescription_' + i"
+             [style.color]="technologyConfig.techDescriptionColor"
+             [style.font-family]="technologyConfig.techDescriptionFontFamily"
+             (click)="startInlineEditTechnology('techDescription_' + i)">
+            {{ tech.description }}
+            <span class="edit-icon" *ngIf="isEditingTechnology">✏️</span>
+          </p>
+          <textarea *ngIf="isEditingTechnology && editingTechnologyElement === 'techDescription_' + i"
+                    [(ngModel)]="tech.description"
+                    (blur)="stopInlineEditTechnology()"
+                    (keyup.enter)="stopInlineEditTechnology()"
+                    class="inline-edit-textarea"
+                    [style.color]="technologyConfig.techDescriptionColor"
+                    [style.font-family]="technologyConfig.techDescriptionFontFamily"
+                    placeholder="Enter technology description"
+                    title="Edit technology description"></textarea>
+          <div *ngIf="isEditingTechnology && editingTechnologyElement === 'techDescription_' + i" class="inline-controls">
+            <select [(ngModel)]="technologyConfig.techDescriptionFontFamily" (change)="onTechnologyFontChange()" class="font-select-inline" title="Font Family">
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Courier New, monospace">Courier New</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+            </select>
+            <input type="color" 
+                   [(ngModel)]="technologyConfig.techDescriptionColor"
+                   (change)="onTechnologyColorChange()"
+                   class="color-picker-inline"
+                   title="Color">
+          </div>
+        </div>
       </div>
-      <div class="tech-item">
-        <div class="tech-icon">📷</div>
-        <h3>CBCT Scanner</h3>
-        <p>3D imaging for comprehensive oral health insights and implant planning accuracy.</p>
+    </div>
+
+    <!-- Add Technology Button -->
+    <div class="add-item-section" *ngIf="isEditingTechnology">
+      <button class="add-item-btn" (click)="addTechnology()" title="Add new technology">
+        ➕ Add Technology
+      </button>
+    </div>
+
+    <!-- Global Styling Controls (only when editing) -->
+    <div class="global-styling-controls" *ngIf="isEditingTechnology">
+      <h4>Section Background</h4>
+      <div class="styling-row">
+        <div class="styling-item">
+          <label>Background Color:</label>
+          <input type="color" 
+                 [(ngModel)]="technologyConfig.backgroundColor"
+                 (change)="onTechnologyColorChange()"
+                 class="color-picker"
+                 title="Background Color">
+        </div>
       </div>
-      <div class="tech-item">
-        <div class="tech-icon">💻</div>
-        <h3>PrimeScan Technology</h3>
-        <p>Cloud-based scanning for accurate digital impressions and treatment planning.</p>
-      </div>
-      <div class="tech-item">
-        <div class="tech-icon">🦷</div>
-        <h3>Digital X-Rays</h3>
-        <p>Lower radiation exposure and instant results with digital imaging.</p>
-      </div>
+    </div>
+
+    <!-- Edit Actions (only when editing) -->
+    <div class="edit-actions" *ngIf="isEditingTechnology">
+      <button class="save-btn" (click)="stopEditingTechnology()">Save Changes</button>
+      <button class="cancel-btn" (click)="cancelEditingTechnology()">Cancel</button>
+      <button class="reset-btn" (click)="resetTechnologyToOriginal()">Reset to Original</button>
     </div>
   </div>
 </section>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="technologyLoading">
+  <p>Loading technology information...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="technologyError">
+  <p>Error loading technology information. Please try again later.</p>
+</div>
 
 <!-- Testimonials -->
 <section class="testimonials-section">

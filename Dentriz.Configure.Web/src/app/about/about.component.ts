@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DoctorsApiService, SimpleDoctorsConfig } from './services/doctors-api.service';
 import { ValuesApiService, SimpleValuesConfig } from './services/values-api.service';
+import { TechnologyApiService, SimpleTechnologyConfig } from './services/technology-api.service';
 
 @Component({
   selector: 'app-about',
@@ -27,6 +28,14 @@ export class AboutComponent implements OnInit {
   valuesError = false;
   isEditingValues = false;
   editingValuesElement: string | null = null;
+
+  // Technology Configuration
+  technologyConfig: SimpleTechnologyConfig | null = null;
+  originalTechnologyConfig: SimpleTechnologyConfig | null = null;
+  technologyLoading = false;
+  technologyError = false;
+  isEditingTechnology = false;
+  editingTechnologyElement: string | null = null;
 
   // Doctors carousel data (fallback)
   doctors = [
@@ -84,7 +93,8 @@ export class AboutComponent implements OnInit {
 
   constructor(
     private doctorsApiService: DoctorsApiService,
-    private valuesApiService: ValuesApiService
+    private valuesApiService: ValuesApiService,
+    private technologyApiService: TechnologyApiService
   ) {}
 
   // Navigation methods
@@ -114,6 +124,7 @@ export class AboutComponent implements OnInit {
   ngOnInit() {
     this.loadDoctorsConfig();
     this.loadValuesConfig();
+    this.loadTechnologyConfig();
     // Auto-advance every 8 seconds
     setInterval(() => {
       this.nextDoctor();
@@ -348,6 +359,93 @@ export class AboutComponent implements OnInit {
   removeValue(index: number) {
     if (this.valuesConfig && this.valuesConfig.values.length > 1) {
       this.valuesConfig.values.splice(index, 1);
+    }
+  }
+
+  // Technology Configuration Methods
+  loadTechnologyConfig() {
+    this.technologyLoading = true;
+    this.technologyError = false;
+
+    this.technologyApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.technologyConfig = config;
+        this.originalTechnologyConfig = JSON.parse(JSON.stringify(config));
+        this.technologyLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading technology config:', error);
+        this.technologyError = true;
+        this.technologyLoading = false;
+      }
+    });
+  }
+
+  startEditingTechnology() {
+    this.isEditingTechnology = true;
+  }
+
+  stopEditingTechnology() {
+    if (this.technologyConfig) {
+      this.technologyApiService.saveConfig(this.technologyConfig).subscribe({
+        next: () => {
+          this.originalTechnologyConfig = JSON.parse(JSON.stringify(this.technologyConfig!));
+          this.isEditingTechnology = false;
+          this.editingTechnologyElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving technology config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingTechnology() {
+    if (this.originalTechnologyConfig) {
+      this.technologyConfig = JSON.parse(JSON.stringify(this.originalTechnologyConfig));
+    }
+    this.isEditingTechnology = false;
+    this.editingTechnologyElement = null;
+  }
+
+  resetTechnologyToOriginal() {
+    if (this.originalTechnologyConfig) {
+      this.technologyConfig = JSON.parse(JSON.stringify(this.originalTechnologyConfig));
+    }
+  }
+
+  startInlineEditTechnology(element: string) {
+    this.editingTechnologyElement = element;
+  }
+
+  stopInlineEditTechnology() {
+    this.editingTechnologyElement = null;
+  }
+
+  onTechnologyColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onTechnologyFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addTechnology() {
+    if (this.technologyConfig) {
+      this.technologyConfig.technologies.push({
+        icon: '⚙️',
+        title: 'New Technology - click to edit',
+        description: 'New technology description - click to edit'
+      });
+    }
+  }
+
+  removeTechnology(index: number) {
+    if (this.technologyConfig && this.technologyConfig.technologies.length > 1) {
+      this.technologyConfig.technologies.splice(index, 1);
     }
   }
 }
