@@ -5,6 +5,7 @@ import { ServicesHeroApiService, SimpleServicesHeroConfig } from './services/ser
 import { PreventiveCareApiService, SimplePreventiveCareConfig } from './services/preventive-care-api.service';
 import { RestorativeCareApiService, SimpleRestorativeCareConfig } from './services/restorative-care-api.service';
 import { CosmeticServicesApiService, SimpleCosmeticServicesConfig } from './services/cosmetic-services-api.service';
+import { TechnologySectionApiService, SimpleTechnologySectionConfig } from './services/technology-section-api.service';
 
 @Component({
   selector: 'app-services',
@@ -45,6 +46,14 @@ export class ServicesComponent implements OnInit {
   cosmeticServicesError = false;
   isEditingCosmeticServices = false;
   editingCosmeticServicesElement: string | null = null;
+
+  // Technology Section Configuration
+  technologySectionConfig: SimpleTechnologySectionConfig | null = null;
+  originalTechnologySectionConfig: SimpleTechnologySectionConfig | null = null;
+  technologySectionLoading = false;
+  technologySectionError = false;
+  isEditingTechnologySection = false;
+  editingTechnologySectionElement: string | null = null;
   services = [
     {
       title: 'General Dentistry',
@@ -72,7 +81,8 @@ export class ServicesComponent implements OnInit {
     private servicesHeroApiService: ServicesHeroApiService,
     private preventiveCareApiService: PreventiveCareApiService,
     private restorativeCareApiService: RestorativeCareApiService,
-    private cosmeticServicesApiService: CosmeticServicesApiService
+    private cosmeticServicesApiService: CosmeticServicesApiService,
+    private technologySectionApiService: TechnologySectionApiService
   ) {}
 
   ngOnInit() {
@@ -80,6 +90,7 @@ export class ServicesComponent implements OnInit {
     this.loadPreventiveCareConfig();
     this.loadRestorativeCareConfig();
     this.loadCosmeticServicesConfig();
+    this.loadTechnologySectionConfig();
   }
 
   // Services Hero Configuration Methods
@@ -450,6 +461,93 @@ export class ServicesComponent implements OnInit {
   removeCosmeticServicesFeature(serviceIndex: number, featureIndex: number) {
     if (this.cosmeticServicesConfig) {
       this.cosmeticServicesConfig.services[serviceIndex].features.splice(featureIndex, 1);
+    }
+  }
+
+  // Technology Section Configuration Methods
+  loadTechnologySectionConfig() {
+    this.technologySectionLoading = true;
+    this.technologySectionError = false;
+
+    this.technologySectionApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.technologySectionConfig = config;
+        this.originalTechnologySectionConfig = JSON.parse(JSON.stringify(config));
+        this.technologySectionLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading technology section config:', error);
+        this.technologySectionError = true;
+        this.technologySectionLoading = false;
+      }
+    });
+  }
+
+  startEditingTechnologySection() {
+    this.isEditingTechnologySection = true;
+  }
+
+  stopEditingTechnologySection() {
+    if (this.technologySectionConfig) {
+      this.technologySectionApiService.saveConfig(this.technologySectionConfig).subscribe({
+        next: () => {
+          this.originalTechnologySectionConfig = JSON.parse(JSON.stringify(this.technologySectionConfig!));
+          this.isEditingTechnologySection = false;
+          this.editingTechnologySectionElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving technology section config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingTechnologySection() {
+    if (this.originalTechnologySectionConfig) {
+      this.technologySectionConfig = JSON.parse(JSON.stringify(this.originalTechnologySectionConfig));
+    }
+    this.isEditingTechnologySection = false;
+    this.editingTechnologySectionElement = null;
+  }
+
+  resetTechnologySectionToOriginal() {
+    if (this.originalTechnologySectionConfig) {
+      this.technologySectionConfig = JSON.parse(JSON.stringify(this.originalTechnologySectionConfig));
+    }
+  }
+
+  startInlineEditTechnologySection(element: string) {
+    this.editingTechnologySectionElement = element;
+  }
+
+  stopInlineEditTechnologySection() {
+    this.editingTechnologySectionElement = null;
+  }
+
+  onTechnologySectionColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onTechnologySectionFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addTechnologySectionTechnology() {
+    if (this.technologySectionConfig) {
+      this.technologySectionConfig.technologies.push({
+        icon: '🖥️',
+        title: 'New Technology',
+        description: 'Technology description'
+      });
+    }
+  }
+
+  removeTechnologySectionTechnology(index: number) {
+    if (this.technologySectionConfig && this.technologySectionConfig.technologies.length > 1) {
+      this.technologySectionConfig.technologies.splice(index, 1);
     }
   }
 }
