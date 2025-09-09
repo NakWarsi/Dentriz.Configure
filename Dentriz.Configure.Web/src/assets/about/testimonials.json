@@ -1,0 +1,36 @@
+{
+  "sectionTitle": "What Our Patients Say",
+  "sectionSubtitle": "Read some of our amazing patient reviews and then contact us to experience our care for yourself!",
+  "testimonials": [
+    {
+      "stars": "⭐⭐⭐⭐⭐",
+      "text": "The staff at DentRiz Dental are friendly and efficient. Dr. Ahmed in particular is a joy to be around! The whole experience was comfortable and professional.",
+      "authorName": "Aleena O.",
+      "authorTitle": "Verified Patient"
+    },
+    {
+      "stars": "⭐⭐⭐⭐⭐",
+      "text": "First visit to DentRiz Dental and the staff couldn't be more friendly! It's amazing how much easier visiting the dentist is these days. Highly recommended!",
+      "authorName": "Mike Zita",
+      "authorTitle": "Verified Patient"
+    },
+    {
+      "stars": "⭐⭐⭐⭐⭐",
+      "text": "Staff here is amazing. Very knowledgeable and friendly. The office is exceptionally clean and operates efficiently. Highly recommended!",
+      "authorName": "Sneha Bhosle",
+      "authorTitle": "Verified Patient"
+    }
+  ],
+  "sectionTitleColor": "#2c5aa0",
+  "sectionSubtitleColor": "#666666",
+  "testimonialTextColor": "#333333",
+  "testimonialAuthorNameColor": "#2c5aa0",
+  "testimonialAuthorTitleColor": "#666666",
+  "testimonialStarsColor": "#ffd700",
+  "backgroundColor": "#f8f9fa",
+  "sectionTitleFontFamily": "Arial, sans-serif",
+  "sectionSubtitleFontFamily": "Arial, sans-serif",
+  "testimonialTextFontFamily": "Arial, sans-serif",
+  "testimonialAuthorNameFontFamily": "Arial, sans-serif",
+  "testimonialAuthorTitleFontFamily": "Arial, sans-serif"
+}

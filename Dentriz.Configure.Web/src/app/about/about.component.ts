@@ -1,15 +1,52 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { DoctorsApiService, SimpleDoctorsConfig } from './services/doctors-api.service';
+import { ValuesApiService, SimpleValuesConfig } from './services/values-api.service';
+import { TechnologyApiService, SimpleTechnologyConfig } from './services/technology-api.service';
+import { TestimonialsApiService, SimpleTestimonialsConfig } from './services/testimonials-api.service';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './about.component.html',
   styleUrl: './about.component.css'
 })
 export class AboutComponent implements OnInit {
-  // Doctors carousel data
+  // Doctors Configuration
+  doctorsConfig: SimpleDoctorsConfig | null = null;
+  originalDoctorsConfig: SimpleDoctorsConfig | null = null;
+  doctorsLoading = false;
+  doctorsError = false;
+  isEditingDoctors = false;
+  editingDoctorsElement: string | null = null;
+
+  // Values Configuration
+  valuesConfig: SimpleValuesConfig | null = null;
+  originalValuesConfig: SimpleValuesConfig | null = null;
+  valuesLoading = false;
+  valuesError = false;
+  isEditingValues = false;
+  editingValuesElement: string | null = null;
+
+  // Technology Configuration
+  technologyConfig: SimpleTechnologyConfig | null = null;
+  originalTechnologyConfig: SimpleTechnologyConfig | null = null;
+  technologyLoading = false;
+  technologyError = false;
+  isEditingTechnology = false;
+  editingTechnologyElement: string | null = null;
+
+  // Testimonials Configuration
+  testimonialsConfig: SimpleTestimonialsConfig | null = null;
+  originalTestimonialsConfig: SimpleTestimonialsConfig | null = null;
+  testimonialsLoading = false;
+  testimonialsError = false;
+  isEditingTestimonials = false;
+  editingTestimonialsElement: string | null = null;
+
+  // Doctors carousel data (fallback)
   doctors = [
     {
       name: 'Dr. Rizwana Khan, BDS',
@@ -63,6 +100,13 @@ export class AboutComponent implements OnInit {
 
   currentDoctorIndex = 0;
 
+  constructor(
+    private doctorsApiService: DoctorsApiService,
+    private valuesApiService: ValuesApiService,
+    private technologyApiService: TechnologyApiService,
+    private testimonialsApiService: TestimonialsApiService
+  ) {}
+
   // Navigation methods
   nextDoctor() {
     this.currentDoctorIndex = (this.currentDoctorIndex + 1) % this.doctors.length;
@@ -88,6 +132,10 @@ export class AboutComponent implements OnInit {
 
   // Auto-advance carousel (optional)
   ngOnInit() {
+    this.loadDoctorsConfig();
+    this.loadValuesConfig();
+    this.loadTechnologyConfig();
+    this.loadTestimonialsConfig();
     // Auto-advance every 8 seconds
     setInterval(() => {
       this.nextDoctor();
@@ -114,4 +162,389 @@ export class AboutComponent implements OnInit {
       image: '��‍⚕️'
     }
   ];
+
+  // Doctors Configuration Methods
+  loadDoctorsConfig() {
+    this.doctorsLoading = true;
+    this.doctorsError = false;
+
+    this.doctorsApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.doctorsConfig = config;
+        this.originalDoctorsConfig = JSON.parse(JSON.stringify(config));
+        this.doctorsLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading doctors config:', error);
+        this.doctorsError = true;
+        this.doctorsLoading = false;
+      }
+    });
+  }
+
+  startEditingDoctors() {
+    this.isEditingDoctors = true;
+  }
+
+  stopEditingDoctors() {
+    if (this.doctorsConfig) {
+      this.doctorsApiService.saveConfig(this.doctorsConfig).subscribe({
+        next: () => {
+          this.originalDoctorsConfig = JSON.parse(JSON.stringify(this.doctorsConfig!));
+          this.isEditingDoctors = false;
+          this.editingDoctorsElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving doctors config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingDoctors() {
+    if (this.originalDoctorsConfig) {
+      this.doctorsConfig = JSON.parse(JSON.stringify(this.originalDoctorsConfig));
+    }
+    this.isEditingDoctors = false;
+    this.editingDoctorsElement = null;
+  }
+
+  resetDoctorsToOriginal() {
+    if (this.originalDoctorsConfig) {
+      this.doctorsConfig = JSON.parse(JSON.stringify(this.originalDoctorsConfig));
+    }
+  }
+
+  startInlineEditDoctors(element: string) {
+    this.editingDoctorsElement = element;
+  }
+
+  stopInlineEditDoctors() {
+    this.editingDoctorsElement = null;
+  }
+
+  onDoctorsColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onDoctorsFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addDoctor() {
+    if (this.doctorsConfig) {
+      this.doctorsConfig.doctors.push({
+        name: 'New Doctor - click to edit',
+        title: 'New Title - click to edit',
+        title2: 'New Title 2 - click to edit',
+        image: '/images/doctors/placeholder.jpg',
+        bio: ['New bio paragraph - click to edit'],
+        specialties: ['New Specialty - click to edit']
+      });
+    }
+  }
+
+  removeDoctor(index: number) {
+    if (this.doctorsConfig && this.doctorsConfig.doctors.length > 1) {
+      this.doctorsConfig.doctors.splice(index, 1);
+      // Adjust current index if needed
+      if (this.currentDoctorIndex >= this.doctorsConfig.doctors.length) {
+        this.currentDoctorIndex = this.doctorsConfig.doctors.length - 1;
+      }
+    }
+  }
+
+  addBioParagraph(doctorIndex: number) {
+    if (this.doctorsConfig) {
+      this.doctorsConfig.doctors[doctorIndex].bio.push('New bio paragraph - click to edit');
+    }
+  }
+
+  removeBioParagraph(doctorIndex: number, bioIndex: number) {
+    if (this.doctorsConfig && this.doctorsConfig.doctors[doctorIndex].bio.length > 1) {
+      this.doctorsConfig.doctors[doctorIndex].bio.splice(bioIndex, 1);
+    }
+  }
+
+  addSpecialty(doctorIndex: number) {
+    if (this.doctorsConfig) {
+      this.doctorsConfig.doctors[doctorIndex].specialties.push('New Specialty - click to edit');
+    }
+  }
+
+  removeSpecialty(doctorIndex: number, specialtyIndex: number) {
+    if (this.doctorsConfig && this.doctorsConfig.doctors[doctorIndex].specialties.length > 1) {
+      this.doctorsConfig.doctors[doctorIndex].specialties.splice(specialtyIndex, 1);
+    }
+  }
+
+  // Get current doctors array (from config or fallback)
+  get currentDoctors() {
+    return this.doctorsConfig?.doctors || this.doctors;
+  }
+
+  // Values Configuration Methods
+  loadValuesConfig() {
+    this.valuesLoading = true;
+    this.valuesError = false;
+
+    this.valuesApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.valuesConfig = config;
+        this.originalValuesConfig = JSON.parse(JSON.stringify(config));
+        this.valuesLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading values config:', error);
+        this.valuesError = true;
+        this.valuesLoading = false;
+      }
+    });
+  }
+
+  startEditingValues() {
+    this.isEditingValues = true;
+  }
+
+  stopEditingValues() {
+    if (this.valuesConfig) {
+      this.valuesApiService.saveConfig(this.valuesConfig).subscribe({
+        next: () => {
+          this.originalValuesConfig = JSON.parse(JSON.stringify(this.valuesConfig!));
+          this.isEditingValues = false;
+          this.editingValuesElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving values config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingValues() {
+    if (this.originalValuesConfig) {
+      this.valuesConfig = JSON.parse(JSON.stringify(this.originalValuesConfig));
+    }
+    this.isEditingValues = false;
+    this.editingValuesElement = null;
+  }
+
+  resetValuesToOriginal() {
+    if (this.originalValuesConfig) {
+      this.valuesConfig = JSON.parse(JSON.stringify(this.originalValuesConfig));
+    }
+  }
+
+  startInlineEditValues(element: string) {
+    this.editingValuesElement = element;
+  }
+
+  stopInlineEditValues() {
+    this.editingValuesElement = null;
+  }
+
+  onValuesColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onValuesFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addValue() {
+    if (this.valuesConfig) {
+      this.valuesConfig.values.push({
+        icon: '⭐',
+        title: 'New Value - click to edit',
+        description: 'New value description - click to edit'
+      });
+    }
+  }
+
+  removeValue(index: number) {
+    if (this.valuesConfig && this.valuesConfig.values.length > 1) {
+      this.valuesConfig.values.splice(index, 1);
+    }
+  }
+
+  // Technology Configuration Methods
+  loadTechnologyConfig() {
+    this.technologyLoading = true;
+    this.technologyError = false;
+
+    this.technologyApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.technologyConfig = config;
+        this.originalTechnologyConfig = JSON.parse(JSON.stringify(config));
+        this.technologyLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading technology config:', error);
+        this.technologyError = true;
+        this.technologyLoading = false;
+      }
+    });
+  }
+
+  startEditingTechnology() {
+    this.isEditingTechnology = true;
+  }
+
+  stopEditingTechnology() {
+    if (this.technologyConfig) {
+      this.technologyApiService.saveConfig(this.technologyConfig).subscribe({
+        next: () => {
+          this.originalTechnologyConfig = JSON.parse(JSON.stringify(this.technologyConfig!));
+          this.isEditingTechnology = false;
+          this.editingTechnologyElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving technology config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingTechnology() {
+    if (this.originalTechnologyConfig) {
+      this.technologyConfig = JSON.parse(JSON.stringify(this.originalTechnologyConfig));
+    }
+    this.isEditingTechnology = false;
+    this.editingTechnologyElement = null;
+  }
+
+  resetTechnologyToOriginal() {
+    if (this.originalTechnologyConfig) {
+      this.technologyConfig = JSON.parse(JSON.stringify(this.originalTechnologyConfig));
+    }
+  }
+
+  startInlineEditTechnology(element: string) {
+    this.editingTechnologyElement = element;
+  }
+
+  stopInlineEditTechnology() {
+    this.editingTechnologyElement = null;
+  }
+
+  onTechnologyColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onTechnologyFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addTechnology() {
+    if (this.technologyConfig) {
+      this.technologyConfig.technologies.push({
+        icon: '⚙️',
+        title: 'New Technology - click to edit',
+        description: 'New technology description - click to edit'
+      });
+    }
+  }
+
+  removeTechnology(index: number) {
+    if (this.technologyConfig && this.technologyConfig.technologies.length > 1) {
+      this.technologyConfig.technologies.splice(index, 1);
+    }
+  }
+
+  // Testimonials Configuration Methods
+  loadTestimonialsConfig() {
+    this.testimonialsLoading = true;
+    this.testimonialsError = false;
+
+    this.testimonialsApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.testimonialsConfig = config;
+        this.originalTestimonialsConfig = JSON.parse(JSON.stringify(config));
+        this.testimonialsLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading testimonials config:', error);
+        this.testimonialsError = true;
+        this.testimonialsLoading = false;
+      }
+    });
+  }
+
+  startEditingTestimonials() {
+    this.isEditingTestimonials = true;
+  }
+
+  stopEditingTestimonials() {
+    if (this.testimonialsConfig) {
+      this.testimonialsApiService.saveConfig(this.testimonialsConfig).subscribe({
+        next: () => {
+          this.originalTestimonialsConfig = JSON.parse(JSON.stringify(this.testimonialsConfig!));
+          this.isEditingTestimonials = false;
+          this.editingTestimonialsElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving testimonials config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingTestimonials() {
+    if (this.originalTestimonialsConfig) {
+      this.testimonialsConfig = JSON.parse(JSON.stringify(this.originalTestimonialsConfig));
+    }
+    this.isEditingTestimonials = false;
+    this.editingTestimonialsElement = null;
+  }
+
+  resetTestimonialsToOriginal() {
+    if (this.originalTestimonialsConfig) {
+      this.testimonialsConfig = JSON.parse(JSON.stringify(this.originalTestimonialsConfig));
+    }
+  }
+
+  startInlineEditTestimonials(element: string) {
+    this.editingTestimonialsElement = element;
+  }
+
+  stopInlineEditTestimonials() {
+    this.editingTestimonialsElement = null;
+  }
+
+  onTestimonialsColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onTestimonialsFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addTestimonial() {
+    if (this.testimonialsConfig) {
+      this.testimonialsConfig.testimonials.push({
+        stars: '⭐⭐⭐⭐⭐',
+        text: 'New testimonial text - click to edit',
+        authorName: 'New Author - click to edit',
+        authorTitle: 'Verified Patient'
+      });
+    }
+  }
+
+  removeTestimonial(index: number) {
+    if (this.testimonialsConfig && this.testimonialsConfig.testimonials.length > 1) {
+      this.testimonialsConfig.testimonials.splice(index, 1);
+    }
+  }
 }
