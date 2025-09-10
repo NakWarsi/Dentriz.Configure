@@ -1,15 +1,101 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { GalleryHeroApiService, SimpleGalleryHeroConfig } from './services/gallery-hero-api.service';
 
 @Component({
   selector: 'app-smile-gallery',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './smile-gallery.component.html',
   styleUrls: ['./smile-gallery.component.css']
 })
-export class SmileGalleryComponent {
+export class SmileGalleryComponent implements OnInit {
+  // Gallery Hero Configuration
+  galleryHeroConfig: SimpleGalleryHeroConfig | null = null;
+  originalGalleryHeroConfig: SimpleGalleryHeroConfig | null = null;
+  galleryHeroLoading = false;
+  galleryHeroError = false;
+  isEditingGalleryHero = false;
+  editingGalleryHeroElement: string | null = null;
+
+  constructor(private galleryHeroApiService: GalleryHeroApiService) {}
+
+  ngOnInit() {
+    this.loadGalleryHeroConfig();
+  }
+
+  // Gallery Hero Configuration Methods
+  loadGalleryHeroConfig() {
+    this.galleryHeroLoading = true;
+    this.galleryHeroError = false;
+
+    this.galleryHeroApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.galleryHeroConfig = config;
+        this.originalGalleryHeroConfig = JSON.parse(JSON.stringify(config));
+        this.galleryHeroLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading gallery hero config:', error);
+        this.galleryHeroError = true;
+        this.galleryHeroLoading = false;
+      }
+    });
+  }
+
+  startEditingGalleryHero() {
+    this.isEditingGalleryHero = true;
+  }
+
+  stopEditingGalleryHero() {
+    if (this.galleryHeroConfig) {
+      this.galleryHeroApiService.saveConfig(this.galleryHeroConfig).subscribe({
+        next: () => {
+          this.originalGalleryHeroConfig = JSON.parse(JSON.stringify(this.galleryHeroConfig!));
+          this.isEditingGalleryHero = false;
+          this.editingGalleryHeroElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving gallery hero config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingGalleryHero() {
+    if (this.originalGalleryHeroConfig) {
+      this.galleryHeroConfig = JSON.parse(JSON.stringify(this.originalGalleryHeroConfig));
+    }
+    this.isEditingGalleryHero = false;
+    this.editingGalleryHeroElement = null;
+  }
+
+  resetGalleryHeroToOriginal() {
+    if (this.originalGalleryHeroConfig) {
+      this.galleryHeroConfig = JSON.parse(JSON.stringify(this.originalGalleryHeroConfig));
+    }
+  }
+
+  startInlineEditGalleryHero(element: string) {
+    this.editingGalleryHeroElement = element;
+  }
+
+  stopInlineEditGalleryHero() {
+    this.editingGalleryHeroElement = null;
+  }
+
+  onGalleryHeroColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onGalleryHeroFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
   // SEO-OPTIMIZED GALLERY SECTIONS - FOR SEARCH ENGINE OPTIMIZATION ONLY
   gallerySections = [
     { 
