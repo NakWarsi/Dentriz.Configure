@@ -1,0 +1,62 @@
+{
+  "gallerySections": [
+    { 
+      "id": "before-after", 
+      "title": "Before & After", 
+      "description": "See the amazing transformations of our patients with before and after photos of cosmetic dentistry procedures.",
+      "route": "/smile-gallery/before-after",
+      "color": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      "imageCount": 25
+    },
+    { 
+      "id": "smile-showcase", 
+      "title": "Smile Showcase", 
+      "description": "Beautiful smiles created through our comprehensive dental treatments and cosmetic procedures.",
+      "route": "/smile-gallery/smile-showcase",
+      "color": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+      "imageCount": 30
+    },
+    { 
+      "id": "our-work", 
+      "title": "Our Work", 
+      "description": "A collection of our finest dental work including implants, veneers, crowns, and restorative treatments.",
+      "route": "/smile-gallery/our-work",
+      "color": "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+      "imageCount": 40
+    },
+    { 
+      "id": "smile-transformations", 
+      "title": "Smile Transformations", 
+      "description": "Complete smile makeovers showing the journey from initial consultation to final results.",
+      "route": "/smile-gallery/smile-transformations",
+      "color": "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+      "imageCount": 20
+    },
+    { 
+      "id": "patient-stories", 
+      "title": "Patient Stories", 
+      "description": "Real patient experiences and testimonials with their dental journey and results.",
+      "route": "/smile-gallery/patient-stories",
+      "color": "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+      "imageCount": 15
+    },
+    { 
+      "id": "technology-showcase", 
+      "title": "Technology Showcase", 
+      "description": "Advanced dental technology and equipment used in our modern dental practice.",
+      "route": "/smile-gallery/technology-showcase",
+      "color": "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
+      "imageCount": 12
+    }
+  ],
+  "cardTitleColor": "#1e3c72",
+  "cardDescriptionColor": "#666666",
+  "placeholderTextColor": "#ffffff",
+  "imageCountColor": "#ffffff",
+  "backgroundColor": "transparent",
+  "cardBackgroundColor": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+  "cardTitleFontFamily": "Arial, sans-serif",
+  "cardDescriptionFontFamily": "Arial, sans-serif",
+  "placeholderTextFontFamily": "Arial, sans-serif",
+  "imageCountFontFamily": "Arial, sans-serif"
+}

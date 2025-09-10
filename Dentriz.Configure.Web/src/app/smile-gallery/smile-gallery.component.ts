@@ -1,15 +1,301 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { GalleryHeroApiService, SimpleGalleryHeroConfig } from './services/gallery-hero-api.service';
+import { GalleryContentApiService, SimpleGalleryContentConfig, GallerySection } from './services/gallery-content-api.service';
+import { GalleryStatsApiService, SimpleGalleryStatsConfig, GalleryStat } from './services/gallery-stats-api.service';
 
 @Component({
   selector: 'app-smile-gallery',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './smile-gallery.component.html',
   styleUrls: ['./smile-gallery.component.css']
 })
-export class SmileGalleryComponent {
+export class SmileGalleryComponent implements OnInit {
+  // Gallery Hero Configuration
+  galleryHeroConfig: SimpleGalleryHeroConfig | null = null;
+  originalGalleryHeroConfig: SimpleGalleryHeroConfig | null = null;
+  galleryHeroLoading = false;
+  galleryHeroError = false;
+  isEditingGalleryHero = false;
+  editingGalleryHeroElement: string | null = null;
+
+  // Gallery Content Configuration
+  galleryContentConfig: SimpleGalleryContentConfig | null = null;
+  originalGalleryContentConfig: SimpleGalleryContentConfig | null = null;
+  galleryContentLoading = false;
+  galleryContentError = false;
+  isEditingGalleryContent = false;
+  editingGalleryContentElement: string | null = null;
+
+  // Gallery Stats Configuration
+  galleryStatsConfig: SimpleGalleryStatsConfig | null = null;
+  originalGalleryStatsConfig: SimpleGalleryStatsConfig | null = null;
+  galleryStatsLoading = false;
+  galleryStatsError = false;
+  isEditingGalleryStats = false;
+  editingGalleryStatsElement: string | null = null;
+
+  constructor(
+    private galleryHeroApiService: GalleryHeroApiService,
+    private galleryContentApiService: GalleryContentApiService,
+    private galleryStatsApiService: GalleryStatsApiService
+  ) {}
+
+  ngOnInit() {
+    this.loadGalleryHeroConfig();
+    this.loadGalleryContentConfig();
+    this.loadGalleryStatsConfig();
+  }
+
+  // Gallery Hero Configuration Methods
+  loadGalleryHeroConfig() {
+    this.galleryHeroLoading = true;
+    this.galleryHeroError = false;
+
+    this.galleryHeroApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.galleryHeroConfig = config;
+        this.originalGalleryHeroConfig = JSON.parse(JSON.stringify(config));
+        this.galleryHeroLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading gallery hero config:', error);
+        this.galleryHeroError = true;
+        this.galleryHeroLoading = false;
+      }
+    });
+  }
+
+  startEditingGalleryHero() {
+    this.isEditingGalleryHero = true;
+  }
+
+  stopEditingGalleryHero() {
+    if (this.galleryHeroConfig) {
+      this.galleryHeroApiService.saveConfig(this.galleryHeroConfig).subscribe({
+        next: () => {
+          this.originalGalleryHeroConfig = JSON.parse(JSON.stringify(this.galleryHeroConfig!));
+          this.isEditingGalleryHero = false;
+          this.editingGalleryHeroElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving gallery hero config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingGalleryHero() {
+    if (this.originalGalleryHeroConfig) {
+      this.galleryHeroConfig = JSON.parse(JSON.stringify(this.originalGalleryHeroConfig));
+    }
+    this.isEditingGalleryHero = false;
+    this.editingGalleryHeroElement = null;
+  }
+
+  resetGalleryHeroToOriginal() {
+    if (this.originalGalleryHeroConfig) {
+      this.galleryHeroConfig = JSON.parse(JSON.stringify(this.originalGalleryHeroConfig));
+    }
+  }
+
+  startInlineEditGalleryHero(element: string) {
+    this.editingGalleryHeroElement = element;
+  }
+
+  stopInlineEditGalleryHero() {
+    this.editingGalleryHeroElement = null;
+  }
+
+  onGalleryHeroColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onGalleryHeroFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  // Gallery Content Configuration Methods
+  loadGalleryContentConfig() {
+    this.galleryContentLoading = true;
+    this.galleryContentError = false;
+
+    this.galleryContentApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.galleryContentConfig = config;
+        this.originalGalleryContentConfig = JSON.parse(JSON.stringify(config));
+        this.galleryContentLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading gallery content config:', error);
+        this.galleryContentError = true;
+        this.galleryContentLoading = false;
+      }
+    });
+  }
+
+  startEditingGalleryContent() {
+    this.isEditingGalleryContent = true;
+  }
+
+  stopEditingGalleryContent() {
+    if (this.galleryContentConfig) {
+      this.galleryContentApiService.saveConfig(this.galleryContentConfig).subscribe({
+        next: () => {
+          this.originalGalleryContentConfig = JSON.parse(JSON.stringify(this.galleryContentConfig!));
+          this.isEditingGalleryContent = false;
+          this.editingGalleryContentElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving gallery content config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingGalleryContent() {
+    if (this.originalGalleryContentConfig) {
+      this.galleryContentConfig = JSON.parse(JSON.stringify(this.originalGalleryContentConfig));
+    }
+    this.isEditingGalleryContent = false;
+    this.editingGalleryContentElement = null;
+  }
+
+  resetGalleryContentToOriginal() {
+    if (this.originalGalleryContentConfig) {
+      this.galleryContentConfig = JSON.parse(JSON.stringify(this.originalGalleryContentConfig));
+    }
+  }
+
+  startInlineEditGalleryContent(element: string) {
+    this.editingGalleryContentElement = element;
+  }
+
+  stopInlineEditGalleryContent() {
+    this.editingGalleryContentElement = null;
+  }
+
+  onGalleryContentColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onGalleryContentFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addGalleryContentSection() {
+    if (this.galleryContentConfig) {
+      this.galleryContentConfig.gallerySections.push({
+        id: 'new-section-' + Date.now(),
+        title: 'New Gallery Section',
+        description: 'Gallery section description',
+        route: '/smile-gallery/new-section',
+        color: this.galleryContentConfig.cardBackgroundColor,
+        imageCount: 0
+      });
+    }
+  }
+
+  removeGalleryContentSection(index: number) {
+    if (this.galleryContentConfig && this.galleryContentConfig.gallerySections.length > 1) {
+      this.galleryContentConfig.gallerySections.splice(index, 1);
+    }
+  }
+
+  // Gallery Stats Configuration Methods
+  loadGalleryStatsConfig() {
+    this.galleryStatsLoading = true;
+    this.galleryStatsError = false;
+
+    this.galleryStatsApiService.loadConfig().subscribe({
+      next: (config) => {
+        this.galleryStatsConfig = config;
+        this.originalGalleryStatsConfig = JSON.parse(JSON.stringify(config));
+        this.galleryStatsLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading gallery stats config:', error);
+        this.galleryStatsError = true;
+        this.galleryStatsLoading = false;
+      }
+    });
+  }
+
+  startEditingGalleryStats() {
+    this.isEditingGalleryStats = true;
+  }
+
+  stopEditingGalleryStats() {
+    if (this.galleryStatsConfig) {
+      this.galleryStatsApiService.saveConfig(this.galleryStatsConfig).subscribe({
+        next: () => {
+          this.originalGalleryStatsConfig = JSON.parse(JSON.stringify(this.galleryStatsConfig!));
+          this.isEditingGalleryStats = false;
+          this.editingGalleryStatsElement = null;
+        },
+        error: (error) => {
+          console.error('Error saving gallery stats config:', error);
+          alert('Error saving changes. Please try again.');
+        }
+      });
+    }
+  }
+
+  cancelEditingGalleryStats() {
+    if (this.originalGalleryStatsConfig) {
+      this.galleryStatsConfig = JSON.parse(JSON.stringify(this.originalGalleryStatsConfig));
+    }
+    this.isEditingGalleryStats = false;
+    this.editingGalleryStatsElement = null;
+  }
+
+  resetGalleryStatsToOriginal() {
+    if (this.originalGalleryStatsConfig) {
+      this.galleryStatsConfig = JSON.parse(JSON.stringify(this.originalGalleryStatsConfig));
+    }
+  }
+
+  startInlineEditGalleryStats(element: string) {
+    this.editingGalleryStatsElement = element;
+  }
+
+  stopInlineEditGalleryStats() {
+    this.editingGalleryStatsElement = null;
+  }
+
+  onGalleryStatsColorChange() {
+    // This method is called when any color input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  onGalleryStatsFontChange() {
+    // This method is called when any font input changes
+    // The actual saving happens when the user clicks "Save Changes"
+  }
+
+  addGalleryStatsStat() {
+    if (this.galleryStatsConfig) {
+      this.galleryStatsConfig.galleryStats.push({
+        number: '100%',
+        label: 'New Stat Label'
+      });
+    }
+  }
+
+  removeGalleryStatsStat(index: number) {
+    if (this.galleryStatsConfig && this.galleryStatsConfig.galleryStats.length > 1) {
+      this.galleryStatsConfig.galleryStats.splice(index, 1);
+    }
+  }
   // SEO-OPTIMIZED GALLERY SECTIONS - FOR SEARCH ENGINE OPTIMIZATION ONLY
   gallerySections = [
     { 
