@@ -16,7 +16,7 @@
           <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a></li>
           <li class="dropdown" (mouseenter)="onServicesMouseEnter()" (mouseleave)="onServicesMouseLeave()">
             <a routerLink="/services" routerLinkActive="active" class="dropdown-toggle" (click)="closeMenu()">Services</a>
-            <ul class="dropdown-menu" [class.dropdown-open]="isServicesOpen">
+            <!-- <ul class="dropdown-menu" [class.dropdown-open]="isServicesOpen">
               <li><a routerLink="/services/preventive-care" (click)="closeMenu(); closeServices()">Preventive Care</a></li>
               <li><a routerLink="/services/restorative-care" (click)="closeMenu(); closeServices()">Restorative Care</a></li>
               <li><a routerLink="/services/cosmetic-services" (click)="closeMenu(); closeServices()">Cosmetic Services</a></li>
@@ -29,10 +29,10 @@
               <li><a routerLink="/services/orthodontics" (click)="closeMenu(); closeServices()">Orthodontics</a></li>
               <li><a routerLink="/services/pediatric-dentistry" (click)="closeMenu(); closeServices()">Pediatric Dentistry</a></li>
               <li><a routerLink="/services/oral-surgery" (click)="closeMenu(); closeServices()">Oral Surgery</a></li>
-            </ul>
+            </ul> -->
           </li>
           <li><a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About Us</a></li>
-          <li><a routerLink="/reviews" routerLinkActive="active" (click)="closeMenu()">Reviews</a></li>
+          <!-- <li><a routerLink="/reviews" routerLinkActive="active" (click)="closeMenu()">Reviews</a></li> -->
           <li><a routerLink="/smile-gallery" routerLinkActive="active" (click)="closeMenu()">Our Smiles</a></li>
           <li><a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">Contact</a></li>
         </ul>
