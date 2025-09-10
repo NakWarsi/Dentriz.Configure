@@ -1,59 +1,499 @@
 <div class="smile-gallery">
   <div class="seo-badge">SEO</div>
   
-  <div class="gallery-hero">
+  <section class="gallery-hero" 
+           *ngIf="!galleryHeroLoading && !galleryHeroError && galleryHeroConfig"
+           [style.background-color]="galleryHeroConfig.backgroundColor">
     <div class="container">
-      <h1 class="gallery-title">Dentriz Dental Clinic -smile gallery</h1>
-      <p class="gallery-subtitle">Cosmetic dentistry in Wakad and dental implants in Pune. Professional teeth whitening in Wakad and veneers in Wakad at DentRiz Dental Clinic - the top dentist in Pune.</p>
+      <!-- Floating Edit Button -->
+      <div class="floating-edit-btn" *ngIf="!isEditingGalleryHero">
+        <button class="edit-btn-floating" (click)="startEditingGalleryHero()" title="Edit Gallery Hero">
+          <span class="edit-icon-floating">✏️</span>
+        </button>
+      </div>
+
+      <!-- Gallery Title -->
+      <div class="editable-element">
+        <h1 class="gallery-title" 
+            *ngIf="!isEditingGalleryHero || editingGalleryHeroElement !== 'galleryTitle'"
+            [style.color]="galleryHeroConfig.galleryTitleColor"
+            [style.font-family]="galleryHeroConfig.galleryTitleFontFamily"
+            (click)="startInlineEditGalleryHero('galleryTitle')">
+          <span>{{ galleryHeroConfig.galleryTitle }}</span>
+          <span class="edit-icon" *ngIf="isEditingGalleryHero">✏️</span>
+        </h1>
+        <input *ngIf="isEditingGalleryHero && editingGalleryHeroElement === 'galleryTitle'"
+               [(ngModel)]="galleryHeroConfig.galleryTitle"
+               (blur)="stopInlineEditGalleryHero()"
+               (keyup.enter)="stopInlineEditGalleryHero()"
+               class="inline-edit-input"
+               [style.color]="galleryHeroConfig.galleryTitleColor"
+               [style.font-family]="galleryHeroConfig.galleryTitleFontFamily"
+               placeholder="Enter gallery title"
+               title="Edit gallery title">
+        <div *ngIf="isEditingGalleryHero && editingGalleryHeroElement === 'galleryTitle'" class="inline-controls">
+          <select [(ngModel)]="galleryHeroConfig.galleryTitleFontFamily" (change)="onGalleryHeroFontChange()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color" 
+                 [(ngModel)]="galleryHeroConfig.galleryTitleColor"
+                 (change)="onGalleryHeroColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
+      </div>
+
+      <!-- Gallery Subtitle -->
+      <div class="editable-element">
+        <p class="gallery-subtitle" 
+           *ngIf="!isEditingGalleryHero || editingGalleryHeroElement !== 'gallerySubtitle'"
+           [style.color]="galleryHeroConfig.gallerySubtitleColor"
+           [style.font-family]="galleryHeroConfig.gallerySubtitleFontFamily"
+           (click)="startInlineEditGalleryHero('gallerySubtitle')">
+          <span>{{ galleryHeroConfig.gallerySubtitle }}</span>
+          <span class="edit-icon" *ngIf="isEditingGalleryHero">✏️</span>
+        </p>
+        <textarea *ngIf="isEditingGalleryHero && editingGalleryHeroElement === 'gallerySubtitle'"
+                  [(ngModel)]="galleryHeroConfig.gallerySubtitle"
+                  (blur)="stopInlineEditGalleryHero()"
+                  class="inline-edit-textarea"
+                  [style.color]="galleryHeroConfig.gallerySubtitleColor"
+                  [style.font-family]="galleryHeroConfig.gallerySubtitleFontFamily"
+                  placeholder="Enter gallery subtitle"
+                  title="Edit gallery subtitle"></textarea>
+        <div *ngIf="isEditingGalleryHero && editingGalleryHeroElement === 'gallerySubtitle'" class="inline-controls">
+          <select [(ngModel)]="galleryHeroConfig.gallerySubtitleFontFamily" (change)="onGalleryHeroFontChange()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color" 
+                 [(ngModel)]="galleryHeroConfig.gallerySubtitleColor"
+                 (change)="onGalleryHeroColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
+      </div>
+
+      <!-- Global Styling Controls (only when editing) -->
+      <div class="global-styling-controls" *ngIf="isEditingGalleryHero">
+        <h4>Gallery Hero Styling</h4>
+        <div class="styling-row">
+          <div class="styling-item">
+            <label>Background Color:</label>
+            <input type="color" 
+                   [(ngModel)]="galleryHeroConfig.backgroundColor"
+                   (change)="onGalleryHeroColorChange()"
+                   class="color-picker"
+                   title="Background Color">
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Actions (only when editing) -->
+      <div class="edit-actions" *ngIf="isEditingGalleryHero">
+        <button class="save-btn" (click)="stopEditingGalleryHero()">Save Changes</button>
+        <button class="cancel-btn" (click)="cancelEditingGalleryHero()">Cancel</button>
+        <button class="reset-btn" (click)="resetGalleryHeroToOriginal()">Reset to Original</button>
+      </div>
     </div>
+  </section>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="galleryHeroLoading">
+    <p>Loading gallery hero information...</p>
   </div>
 
-  <div class="gallery-content">
+  <!-- Error State -->
+  <div class="error-container" *ngIf="galleryHeroError">
+    <p>Error loading gallery hero information. Please try again later.</p>
+  </div>
+
+  
+  <section class="gallery-content" 
+           *ngIf="!galleryContentLoading && !galleryContentError && galleryContentConfig"
+           [style.background-color]="galleryContentConfig.backgroundColor"
+           [class.is-editing]="isEditingGalleryContent">
     <div class="container">
+      <!-- Floating Edit Button -->
+      <div class="floating-edit-btn" *ngIf="!isEditingGalleryContent">
+        <button class="edit-btn-floating" (click)="startEditingGalleryContent()" title="Edit Gallery Content">
+          <span class="edit-icon-floating">✏️</span>
+        </button>
+      </div>
+
       <div class="gallery-grid">
-        <div class="gallery-card" *ngFor="let section of gallerySections" [routerLink]="section.route">
+        <div class="gallery-card" *ngFor="let section of galleryContentConfig.gallerySections; let i = index">
           <div class="seo-badge-card">SEO</div>
-          <div class="card-image" [style.background]="section.color">
+          <div class="card-image" [style.background]="galleryContentConfig.cardBackgroundColor">
             <div class="image-placeholder">
-              <span class="placeholder-text">{{ section.title }}</span>
-              <div class="image-count">{{ section.imageCount }} Photos</div>
+              <!-- Placeholder Text -->
+              <div class="editable-element">
+                <span class="placeholder-text" 
+                      *ngIf="!isEditingGalleryContent || editingGalleryContentElement !== 'placeholderText_' + i"
+                      [style.color]="galleryContentConfig.placeholderTextColor"
+                      [style.font-family]="galleryContentConfig.placeholderTextFontFamily"
+                      (click)="startInlineEditGalleryContent('placeholderText_' + i)">
+                  {{ section.title }}
+                  <span class="edit-icon" *ngIf="isEditingGalleryContent">✏️</span>
+                </span>
+                <input *ngIf="isEditingGalleryContent && editingGalleryContentElement === 'placeholderText_' + i"
+                       [(ngModel)]="section.title"
+                       (blur)="stopInlineEditGalleryContent()"
+                       (keyup.enter)="stopInlineEditGalleryContent()"
+                       class="inline-edit-input"
+                       [style.color]="galleryContentConfig.placeholderTextColor"
+                       [style.font-family]="galleryContentConfig.placeholderTextFontFamily"
+                       placeholder="Enter section title"
+                       title="Edit section title">
+                <div *ngIf="isEditingGalleryContent && editingGalleryContentElement === 'placeholderText_' + i" class="inline-controls">
+                  <select [(ngModel)]="galleryContentConfig.placeholderTextFontFamily" (change)="onGalleryContentFontChange()" class="font-select-inline" title="Font Family">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="Times New Roman, serif">Times New Roman</option>
+                    <option value="Helvetica, sans-serif">Helvetica</option>
+                    <option value="Verdana, sans-serif">Verdana</option>
+                    <option value="Courier New, monospace">Courier New</option>
+                    <option value="Impact, sans-serif">Impact</option>
+                    <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                  </select>
+                  <input type="color" 
+                         [(ngModel)]="galleryContentConfig.placeholderTextColor"
+                         (change)="onGalleryContentColorChange()"
+                         class="color-picker-inline"
+                         title="Color">
+                </div>
+              </div>
+
+              <!-- Image Count -->
+              <div class="editable-element">
+                <div class="image-count" 
+                     *ngIf="!isEditingGalleryContent || editingGalleryContentElement !== 'imageCount_' + i"
+                     [style.color]="galleryContentConfig.imageCountColor"
+                     [style.font-family]="galleryContentConfig.imageCountFontFamily"
+                     (click)="startInlineEditGalleryContent('imageCount_' + i)">
+                  {{ section.imageCount }} Photos
+                  <span class="edit-icon" *ngIf="isEditingGalleryContent">✏️</span>
+                </div>
+                <input *ngIf="isEditingGalleryContent && editingGalleryContentElement === 'imageCount_' + i"
+                       [(ngModel)]="section.imageCount"
+                       (blur)="stopInlineEditGalleryContent()"
+                       (keyup.enter)="stopInlineEditGalleryContent()"
+                       class="inline-edit-input"
+                       [style.color]="galleryContentConfig.imageCountColor"
+                       [style.font-family]="galleryContentConfig.imageCountFontFamily"
+                       placeholder="Enter image count"
+                       title="Edit image count"
+                       type="number">
+                <div *ngIf="isEditingGalleryContent && editingGalleryContentElement === 'imageCount_' + i" class="inline-controls">
+                  <select [(ngModel)]="galleryContentConfig.imageCountFontFamily" (change)="onGalleryContentFontChange()" class="font-select-inline" title="Font Family">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="Times New Roman, serif">Times New Roman</option>
+                    <option value="Helvetica, sans-serif">Helvetica</option>
+                    <option value="Verdana, sans-serif">Verdana</option>
+                    <option value="Courier New, monospace">Courier New</option>
+                    <option value="Impact, sans-serif">Impact</option>
+                    <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                  </select>
+                  <input type="color" 
+                         [(ngModel)]="galleryContentConfig.imageCountColor"
+                         (change)="onGalleryContentColorChange()"
+                         class="color-picker-inline"
+                         title="Color">
+                </div>
+              </div>
             </div>
           </div>
           <div class="card-content">
-            <h3 class="card-title">{{ section.title }}</h3>
-            <p class="card-description">{{ section.description }}</p>
-            <div class="card-action">
+            <!-- Card Title -->
+            <div class="editable-element">
+              <h3 class="card-title" 
+                  *ngIf="!isEditingGalleryContent || editingGalleryContentElement !== 'cardTitle_' + i"
+                  [style.color]="galleryContentConfig.cardTitleColor"
+                  [style.font-family]="galleryContentConfig.cardTitleFontFamily"
+                  (click)="startInlineEditGalleryContent('cardTitle_' + i)">
+                <span>{{ section.title }}</span>
+                <span class="edit-icon" *ngIf="isEditingGalleryContent">✏️</span>
+              </h3>
+              <input *ngIf="isEditingGalleryContent && editingGalleryContentElement === 'cardTitle_' + i"
+                     [(ngModel)]="section.title"
+                     (blur)="stopInlineEditGalleryContent()"
+                     (keyup.enter)="stopInlineEditGalleryContent()"
+                     class="inline-edit-input"
+                     [style.color]="galleryContentConfig.cardTitleColor"
+                     [style.font-family]="galleryContentConfig.cardTitleFontFamily"
+                     placeholder="Enter card title"
+                     title="Edit card title">
+              <div *ngIf="isEditingGalleryContent && editingGalleryContentElement === 'cardTitle_' + i" class="inline-controls">
+                <select [(ngModel)]="galleryContentConfig.cardTitleFontFamily" (change)="onGalleryContentFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="galleryContentConfig.cardTitleColor"
+                       (change)="onGalleryContentColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+
+            <!-- Card Description -->
+            <div class="editable-element">
+              <p class="card-description" 
+                 *ngIf="!isEditingGalleryContent || editingGalleryContentElement !== 'cardDescription_' + i"
+                 [style.color]="galleryContentConfig.cardDescriptionColor"
+                 [style.font-family]="galleryContentConfig.cardDescriptionFontFamily"
+                 (click)="startInlineEditGalleryContent('cardDescription_' + i)">
+                <span>{{ section.description }}</span>
+                <span class="edit-icon" *ngIf="isEditingGalleryContent">✏️</span>
+              </p>
+              <textarea *ngIf="isEditingGalleryContent && editingGalleryContentElement === 'cardDescription_' + i"
+                        [(ngModel)]="section.description"
+                        (blur)="stopInlineEditGalleryContent()"
+                        class="inline-edit-textarea"
+                        [style.color]="galleryContentConfig.cardDescriptionColor"
+                        [style.font-family]="galleryContentConfig.cardDescriptionFontFamily"
+                        placeholder="Enter card description"
+                        title="Edit card description"></textarea>
+              <div *ngIf="isEditingGalleryContent && editingGalleryContentElement === 'cardDescription_' + i" class="inline-controls">
+                <select [(ngModel)]="galleryContentConfig.cardDescriptionFontFamily" (change)="onGalleryContentFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="galleryContentConfig.cardDescriptionColor"
+                       (change)="onGalleryContentColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+              </div>
+            </div>
+
+            <div class="card-action" [routerLink]="section.route">
               <span class="view-gallery">View Gallery</span>
               <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </div>
+
+            <!-- Remove Section Button -->
+            <button *ngIf="isEditingGalleryContent && galleryContentConfig.gallerySections.length > 1" 
+                    type="button" class="remove-section-btn" (click)="removeGalleryContentSection(i)" title="Remove Section">
+              🗑️ Remove Section
+            </button>
+          </div>
+        </div>
+
+        <!-- Add Section Button -->
+        <div *ngIf="isEditingGalleryContent" class="add-section-card">
+          <button type="button" class="add-section-btn" (click)="addGalleryContentSection()" title="Add Section">
+            + Add New Section
+          </button>
+        </div>
+      </div>
+
+      <!-- Global Styling Controls (only when editing) -->
+      <div class="global-styling-controls" *ngIf="isEditingGalleryContent">
+        <h4>Gallery Content Styling</h4>
+        <div class="styling-row">
+          <div class="styling-item">
+            <label>Section Background:</label>
+            <input type="color" 
+                   [(ngModel)]="galleryContentConfig.backgroundColor"
+                   (change)="onGalleryContentColorChange()"
+                   class="color-picker"
+                   title="Section Background Color">
+          </div>
+          <div class="styling-item">
+            <label>Card Background:</label>
+            <input type="color" 
+                   [(ngModel)]="galleryContentConfig.cardBackgroundColor"
+                   (change)="onGalleryContentColorChange()"
+                   class="color-picker"
+                   title="Card Background Color">
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <div class="gallery-stats">
-    <div class="container">
-      <div class="stats-grid">
-        <div class="stat-item">
-          <div class="stat-number">500+</div>
-          <div class="stat-label">Cosmetic Dentistry Cases in Wakad</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">1000+</div>
-          <div class="stat-label">Dental Implants in Pune</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">15+</div>
-          <div class="stat-label">Years of Dental Care in Wakad</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">98%</div>
-          <div class="stat-label">Satisfaction at Best Dental Clinic in Wakad</div>
-        </div>
+      <!-- Edit Actions (only when editing) -->
+      <div class="edit-actions" *ngIf="isEditingGalleryContent">
+        <button class="save-btn" (click)="stopEditingGalleryContent()">Save Changes</button>
+        <button class="cancel-btn" (click)="cancelEditingGalleryContent()">Cancel</button>
+        <button class="reset-btn" (click)="resetGalleryContentToOriginal()">Reset to Original</button>
       </div>
     </div>
+  </section>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="galleryContentLoading">
+    <p>Loading gallery content information...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-container" *ngIf="galleryContentError">
+    <p>Error loading gallery content information. Please try again later.</p>
+  </div>
+
+  <section class="gallery-stats" 
+           *ngIf="!galleryStatsLoading && !galleryStatsError && galleryStatsConfig"
+           [style.background-color]="galleryStatsConfig.backgroundColor"
+           [class.is-editing]="isEditingGalleryStats">
+    <div class="container">
+      <!-- Floating Edit Button -->
+      <div class="floating-edit-btn" *ngIf="!isEditingGalleryStats">
+        <button class="edit-btn-floating" (click)="startEditingGalleryStats()" title="Edit Gallery Stats">
+          <span class="edit-icon-floating">✏️</span>
+        </button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-item" *ngFor="let stat of galleryStatsConfig.galleryStats; let i = index">
+          <!-- Stat Number -->
+          <div class="editable-element">
+            <div class="stat-number" 
+                 *ngIf="!isEditingGalleryStats || editingGalleryStatsElement !== 'statNumber_' + i"
+                 [style.color]="galleryStatsConfig.statNumberColor"
+                 [style.font-family]="galleryStatsConfig.statNumberFontFamily"
+                 (click)="startInlineEditGalleryStats('statNumber_' + i)">
+              <span>{{ stat.number }}</span>
+              <span class="edit-icon" *ngIf="isEditingGalleryStats">✏️</span>
+            </div>
+            <input *ngIf="isEditingGalleryStats && editingGalleryStatsElement === 'statNumber_' + i"
+                   [(ngModel)]="stat.number"
+                   (blur)="stopInlineEditGalleryStats()"
+                   (keyup.enter)="stopInlineEditGalleryStats()"
+                   class="inline-edit-input"
+                   [style.color]="galleryStatsConfig.statNumberColor"
+                   [style.font-family]="galleryStatsConfig.statNumberFontFamily"
+                   placeholder="Enter stat number"
+                   title="Edit stat number">
+            <div *ngIf="isEditingGalleryStats && editingGalleryStatsElement === 'statNumber_' + i" class="inline-controls">
+              <select [(ngModel)]="galleryStatsConfig.statNumberFontFamily" (change)="onGalleryStatsFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="galleryStatsConfig.statNumberColor"
+                     (change)="onGalleryStatsColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+
+          <!-- Stat Label -->
+          <div class="editable-element">
+            <div class="stat-label" 
+                 *ngIf="!isEditingGalleryStats || editingGalleryStatsElement !== 'statLabel_' + i"
+                 [style.color]="galleryStatsConfig.statLabelColor"
+                 [style.font-family]="galleryStatsConfig.statLabelFontFamily"
+                 (click)="startInlineEditGalleryStats('statLabel_' + i)">
+              <span>{{ stat.label }}</span>
+              <span class="edit-icon" *ngIf="isEditingGalleryStats">✏️</span>
+            </div>
+            <input *ngIf="isEditingGalleryStats && editingGalleryStatsElement === 'statLabel_' + i"
+                   [(ngModel)]="stat.label"
+                   (blur)="stopInlineEditGalleryStats()"
+                   (keyup.enter)="stopInlineEditGalleryStats()"
+                   class="inline-edit-input"
+                   [style.color]="galleryStatsConfig.statLabelColor"
+                   [style.font-family]="galleryStatsConfig.statLabelFontFamily"
+                   placeholder="Enter stat label"
+                   title="Edit stat label">
+            <div *ngIf="isEditingGalleryStats && editingGalleryStatsElement === 'statLabel_' + i" class="inline-controls">
+              <select [(ngModel)]="galleryStatsConfig.statLabelFontFamily" (change)="onGalleryStatsFontChange()" class="font-select-inline" title="Font Family">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Helvetica, sans-serif">Helvetica</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Impact, sans-serif">Impact</option>
+                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+              </select>
+              <input type="color" 
+                     [(ngModel)]="galleryStatsConfig.statLabelColor"
+                     (change)="onGalleryStatsColorChange()"
+                     class="color-picker-inline"
+                     title="Color">
+            </div>
+          </div>
+
+          <!-- Remove Stat Button -->
+          <button *ngIf="isEditingGalleryStats && galleryStatsConfig.galleryStats.length > 1" 
+                  type="button" class="remove-stat-btn" (click)="removeGalleryStatsStat(i)" title="Remove Stat">
+            🗑️ Remove Stat
+          </button>
+        </div>
+
+        <!-- Add Stat Button -->
+        <div *ngIf="isEditingGalleryStats" class="add-stat-item">
+          <button type="button" class="add-stat-btn" (click)="addGalleryStatsStat()" title="Add Stat">
+            + Add New Stat
+          </button>
+        </div>
+      </div>
+
+      <!-- Global Styling Controls (only when editing) -->
+      <div class="global-styling-controls" *ngIf="isEditingGalleryStats">
+        <h4>Gallery Stats Styling</h4>
+        <div class="styling-row">
+          <div class="styling-item">
+            <label>Background Color:</label>
+            <input type="color" 
+                   [(ngModel)]="galleryStatsConfig.backgroundColor"
+                   (change)="onGalleryStatsColorChange()"
+                   class="color-picker"
+                   title="Background Color">
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Actions (only when editing) -->
+      <div class="edit-actions" *ngIf="isEditingGalleryStats">
+        <button class="save-btn" (click)="stopEditingGalleryStats()">Save Changes</button>
+        <button class="cancel-btn" (click)="cancelEditingGalleryStats()">Cancel</button>
+        <button class="reset-btn" (click)="resetGalleryStatsToOriginal()">Reset to Original</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="galleryStatsLoading">
+    <p>Loading gallery stats information...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-container" *ngIf="galleryStatsError">
+    <p>Error loading gallery stats information. Please try again later.</p>
   </div>
 </div>
