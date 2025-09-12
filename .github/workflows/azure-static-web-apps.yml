@@ -33,7 +33,7 @@ jobs:
       
       - name: Build Application
         working-directory: ./Dentriz.Configure.Web
-        run: npm run build
+        run: npm run build:static
       
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
