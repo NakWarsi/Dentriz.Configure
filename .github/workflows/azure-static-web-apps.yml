@@ -74,6 +74,15 @@ jobs:
           echo "Looking for index.html:"
           find build-output/ -name "index.html" -type f
       
+      - name: Move Artifacts to Root
+        run: |
+          echo "Moving artifacts from build-output to root directory"
+          cp -r build-output/* ./
+          echo "Files in root directory:"
+          ls -la
+          echo "Looking for index.html in root:"
+          find . -name "index.html" -type f -maxdepth 2
+      
       - name: Deploy to Azure Web App
         id: deploy
         uses: Azure/static-web-apps-deploy@v1
@@ -82,7 +91,6 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: "/"
-          app_artifact_location: "./build-output"
           api_location: ""
           output_location: ""
           skip_app_build: true
