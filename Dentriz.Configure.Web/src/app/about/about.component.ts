@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { DoctorsApiService, SimpleDoctorsConfig } from './services/doctors-api.service';
 import { ValuesApiService, SimpleValuesConfig } from './services/values-api.service';
 import { TechnologyApiService, SimpleTechnologyConfig } from './services/technology-api.service';
 import { TestimonialsApiService, SimpleTestimonialsConfig } from './services/testimonials-api.service';
+import { GlobalConfigService, GlobalConfig } from '../config/global-config.service';
 
 @Component({
   selector: 'app-about',
@@ -13,7 +15,7 @@ import { TestimonialsApiService, SimpleTestimonialsConfig } from './services/tes
   templateUrl: './about.component.html',
   styleUrl: './about.component.css'
 })
-export class AboutComponent implements OnInit {
+export class AboutComponent implements OnInit, OnDestroy {
   // Doctors Configuration
   doctorsConfig: SimpleDoctorsConfig | null = null;
   originalDoctorsConfig: SimpleDoctorsConfig | null = null;
@@ -100,11 +102,16 @@ export class AboutComponent implements OnInit {
 
   currentDoctorIndex = 0;
 
+  // Global configuration properties
+  globalConfig: GlobalConfig = { isEditingEnabled: true, showEditButtons: true };
+  private configSubscription?: Subscription;
+
   constructor(
     private doctorsApiService: DoctorsApiService,
     private valuesApiService: ValuesApiService,
     private technologyApiService: TechnologyApiService,
-    private testimonialsApiService: TestimonialsApiService
+    private testimonialsApiService: TestimonialsApiService,
+    private globalConfigService: GlobalConfigService
   ) {}
 
   // Navigation methods
@@ -132,6 +139,15 @@ export class AboutComponent implements OnInit {
 
   // Auto-advance carousel (optional)
   ngOnInit() {
+    // Subscribe to global configuration changes
+    this.configSubscription = this.globalConfigService.config$.subscribe(config => {
+      this.globalConfig = config;
+      // If editing is disabled globally, stop all editing modes
+      if (!config.isEditingEnabled) {
+        this.stopAllEditing();
+      }
+    });
+
     this.loadDoctorsConfig();
     this.loadValuesConfig();
     this.loadTechnologyConfig();
@@ -140,6 +156,24 @@ export class AboutComponent implements OnInit {
     setInterval(() => {
       this.nextDoctor();
     }, 8000);
+  }
+
+  ngOnDestroy() {
+    if (this.configSubscription) {
+      this.configSubscription.unsubscribe();
+    }
+  }
+
+  // Stop all editing modes
+  private stopAllEditing(): void {
+    this.isEditingDoctors = false;
+    this.isEditingValues = false;
+    this.isEditingTechnology = false;
+    this.isEditingTestimonials = false;
+    this.editingDoctorsElement = null;
+    this.editingValuesElement = null;
+    this.editingTechnologyElement = null;
+    this.editingTestimonialsElement = null;
   }
 
   teamMembers = [
@@ -183,6 +217,10 @@ export class AboutComponent implements OnInit {
   }
 
   startEditingDoctors() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingDoctors = true;
   }
 
@@ -217,6 +255,7 @@ export class AboutComponent implements OnInit {
   }
 
   startInlineEditDoctors(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingDoctors) return;
     this.editingDoctorsElement = element;
   }
 
@@ -306,6 +345,10 @@ export class AboutComponent implements OnInit {
   }
 
   startEditingValues() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingValues = true;
   }
 
@@ -340,6 +383,7 @@ export class AboutComponent implements OnInit {
   }
 
   startInlineEditValues(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingValues) return;
     this.editingValuesElement = element;
   }
 
@@ -393,6 +437,10 @@ export class AboutComponent implements OnInit {
   }
 
   startEditingTechnology() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingTechnology = true;
   }
 
@@ -427,6 +475,7 @@ export class AboutComponent implements OnInit {
   }
 
   startInlineEditTechnology(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingTechnology) return;
     this.editingTechnologyElement = element;
   }
 
@@ -480,6 +529,10 @@ export class AboutComponent implements OnInit {
   }
 
   startEditingTestimonials() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingTestimonials = true;
   }
 
@@ -514,6 +567,7 @@ export class AboutComponent implements OnInit {
   }
 
   startInlineEditTestimonials(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingTestimonials) return;
     this.editingTestimonialsElement = element;
   }
 

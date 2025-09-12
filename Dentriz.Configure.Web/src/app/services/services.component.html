@@ -4,7 +4,7 @@
          [style.background-color]="servicesHeroConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingServicesHero">
+    <div class="floating-edit-btn" *ngIf="globalConfig.showEditButtons && !isEditingServicesHero">
       <button class="edit-btn-floating" (click)="startEditingServicesHero()" title="Edit Services Hero Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -17,7 +17,7 @@
           [style.font-family]="servicesHeroConfig.titleFontFamily"
           (click)="startInlineEditServicesHero('title')">
         <span>{{ servicesHeroConfig.title }}</span>
-        <span class="edit-icon" *ngIf="isEditingServicesHero">✏️</span>
+            <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingServicesHero">✏️</span>
       </h1>
       <input *ngIf="isEditingServicesHero && editingServicesHeroElement === 'title'"
              [(ngModel)]="servicesHeroConfig.title"
@@ -54,7 +54,7 @@
          [style.font-family]="servicesHeroConfig.subtitleFontFamily"
          (click)="startInlineEditServicesHero('subtitle')">
         <span>{{ servicesHeroConfig.subtitle }}</span>
-        <span class="edit-icon" *ngIf="isEditingServicesHero">✏️</span>
+            <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingServicesHero">✏️</span>
       </p>
       <input *ngIf="isEditingServicesHero && editingServicesHeroElement === 'subtitle'"
              [(ngModel)]="servicesHeroConfig.subtitle"
@@ -136,7 +136,7 @@
          [style.background-color]="preventiveCareConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingPreventiveCare">
+    <div class="floating-edit-btn" *ngIf="globalConfig.showEditButtons && !isEditingPreventiveCare">
       <button class="edit-btn-floating" (click)="startEditingPreventiveCare()" title="Edit Preventive Care Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -148,7 +148,7 @@
         <div class="service-icon" *ngIf="!isEditingPreventiveCare || editingPreventiveCareElement !== 'sectionIcon'"
              (click)="startInlineEditPreventiveCare('sectionIcon')">
           <span>{{ preventiveCareConfig.sectionIcon }}</span>
-          <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
+          <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingPreventiveCare">✏️</span>
         </div>
         <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'sectionIcon'"
                [(ngModel)]="preventiveCareConfig.sectionIcon"
@@ -166,7 +166,7 @@
             [style.font-family]="preventiveCareConfig.sectionTitleFontFamily"
             (click)="startInlineEditPreventiveCare('sectionTitle')">
           <span>{{ preventiveCareConfig.sectionTitle }}</span>
-          <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
+          <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingPreventiveCare">✏️</span>
         </h2>
         <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'sectionTitle'"
                [(ngModel)]="preventiveCareConfig.sectionTitle"
@@ -203,7 +203,7 @@
            [style.font-family]="preventiveCareConfig.sectionSubtitleFontFamily"
            (click)="startInlineEditPreventiveCare('sectionSubtitle')">
           <span>{{ preventiveCareConfig.sectionSubtitle }}</span>
-          <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
+          <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingPreventiveCare">✏️</span>
         </p>
         <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'sectionSubtitle'"
                [(ngModel)]="preventiveCareConfig.sectionSubtitle"
@@ -241,7 +241,7 @@
           <div class="service-icon-small" *ngIf="!isEditingPreventiveCare || editingPreventiveCareElement !== 'serviceIcon_' + i"
                (click)="startInlineEditPreventiveCare('serviceIcon_' + i)">
             <span>{{ service.icon }}</span>
-            <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
+            <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingPreventiveCare">✏️</span>
           </div>
           <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceIcon_' + i"
                  [(ngModel)]="service.icon"
@@ -259,7 +259,7 @@
               [style.font-family]="preventiveCareConfig.cardTitleFontFamily"
               (click)="startInlineEditPreventiveCare('serviceTitle_' + i)">
             <span>{{ service.title }}</span>
-            <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
+            <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingPreventiveCare">✏️</span>
           </h3>
           <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceTitle_' + i"
                  [(ngModel)]="service.title"
@@ -296,7 +296,7 @@
              [style.font-family]="preventiveCareConfig.cardDescriptionFontFamily"
              (click)="startInlineEditPreventiveCare('serviceDescription_' + i)">
             <span>{{ service.description }}</span>
-            <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
+            <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingPreventiveCare">✏️</span>
           </p>
           <textarea *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceDescription_' + i"
                     [(ngModel)]="service.description"
@@ -333,7 +333,7 @@
                   [style.font-family]="preventiveCareConfig.cardFeaturesFontFamily"
                   (click)="startInlineEditPreventiveCare('serviceFeature_' + i + '_' + j)">
               {{ feature }}
-              <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
+              <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingPreventiveCare">✏️</span>
             </span>
             <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceFeature_' + i + '_' + j"
                    [(ngModel)]="service.features[j]"
@@ -423,7 +423,7 @@
          [style.background-color]="restorativeCareConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingRestorativeCare">
+    <div class="floating-edit-btn" *ngIf="globalConfig.showEditButtons && !isEditingRestorativeCare">
       <button class="edit-btn-floating" (click)="startEditingRestorativeCare()" title="Edit Restorative Care Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -435,7 +435,7 @@
         <div class="service-icon" *ngIf="!isEditingRestorativeCare || editingRestorativeCareElement !== 'sectionIcon'"
              (click)="startInlineEditRestorativeCare('sectionIcon')">
           <span>{{ restorativeCareConfig.sectionIcon }}</span>
-          <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
+          <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingRestorativeCare">✏️</span>
         </div>
         <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'sectionIcon'"
                [(ngModel)]="restorativeCareConfig.sectionIcon"
@@ -453,7 +453,7 @@
             [style.font-family]="restorativeCareConfig.sectionTitleFontFamily"
             (click)="startInlineEditRestorativeCare('sectionTitle')">
           <span>{{ restorativeCareConfig.sectionTitle }}</span>
-          <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
+          <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingRestorativeCare">✏️</span>
         </h2>
         <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'sectionTitle'"
                [(ngModel)]="restorativeCareConfig.sectionTitle"
@@ -490,7 +490,7 @@
            [style.font-family]="restorativeCareConfig.sectionSubtitleFontFamily"
            (click)="startInlineEditRestorativeCare('sectionSubtitle')">
           <span>{{ restorativeCareConfig.sectionSubtitle }}</span>
-          <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
+          <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingRestorativeCare">✏️</span>
         </p>
         <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'sectionSubtitle'"
                [(ngModel)]="restorativeCareConfig.sectionSubtitle"
@@ -528,7 +528,7 @@
           <div class="service-icon-small" *ngIf="!isEditingRestorativeCare || editingRestorativeCareElement !== 'serviceIcon_' + i"
                (click)="startInlineEditRestorativeCare('serviceIcon_' + i)">
             <span>{{ service.icon }}</span>
-            <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
+            <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingRestorativeCare">✏️</span>
           </div>
           <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceIcon_' + i"
                  [(ngModel)]="service.icon"
@@ -546,7 +546,7 @@
               [style.font-family]="restorativeCareConfig.cardTitleFontFamily"
               (click)="startInlineEditRestorativeCare('serviceTitle_' + i)">
             <span>{{ service.title }}</span>
-            <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
+            <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingRestorativeCare">✏️</span>
           </h3>
           <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceTitle_' + i"
                  [(ngModel)]="service.title"
@@ -583,7 +583,7 @@
              [style.font-family]="restorativeCareConfig.cardDescriptionFontFamily"
              (click)="startInlineEditRestorativeCare('serviceDescription_' + i)">
             <span>{{ service.description }}</span>
-            <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
+            <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingRestorativeCare">✏️</span>
           </p>
           <textarea *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceDescription_' + i"
                     [(ngModel)]="service.description"
@@ -620,7 +620,7 @@
                   [style.font-family]="restorativeCareConfig.cardFeaturesFontFamily"
                   (click)="startInlineEditRestorativeCare('serviceFeature_' + i + '_' + j)">
               {{ feature }}
-              <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
+              <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingRestorativeCare">✏️</span>
             </span>
             <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceFeature_' + i + '_' + j"
                    [(ngModel)]="service.features[j]"
@@ -710,7 +710,7 @@
          [style.background-color]="cosmeticServicesConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingCosmeticServices">
+    <div class="floating-edit-btn" *ngIf="globalConfig.showEditButtons && !isEditingCosmeticServices">
       <button class="edit-btn-floating" (click)="startEditingCosmeticServices()" title="Edit Cosmetic Services Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -722,7 +722,7 @@
         <div class="service-icon" *ngIf="!isEditingCosmeticServices || editingCosmeticServicesElement !== 'sectionIcon'"
              (click)="startInlineEditCosmeticServices('sectionIcon')">
           <span>{{ cosmeticServicesConfig.sectionIcon }}</span>
-          <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
+          <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingCosmeticServices">✏️</span>
         </div>
         <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'sectionIcon'"
                [(ngModel)]="cosmeticServicesConfig.sectionIcon"
@@ -740,7 +740,7 @@
             [style.font-family]="cosmeticServicesConfig.sectionTitleFontFamily"
             (click)="startInlineEditCosmeticServices('sectionTitle')">
           <span>{{ cosmeticServicesConfig.sectionTitle }}</span>
-          <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
+          <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingCosmeticServices">✏️</span>
         </h2>
         <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'sectionTitle'"
                [(ngModel)]="cosmeticServicesConfig.sectionTitle"
@@ -777,7 +777,7 @@
            [style.font-family]="cosmeticServicesConfig.sectionSubtitleFontFamily"
            (click)="startInlineEditCosmeticServices('sectionSubtitle')">
           <span>{{ cosmeticServicesConfig.sectionSubtitle }}</span>
-          <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
+          <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingCosmeticServices">✏️</span>
         </p>
         <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'sectionSubtitle'"
                [(ngModel)]="cosmeticServicesConfig.sectionSubtitle"
@@ -815,7 +815,7 @@
           <div class="service-icon-small" *ngIf="!isEditingCosmeticServices || editingCosmeticServicesElement !== 'serviceIcon_' + i"
                (click)="startInlineEditCosmeticServices('serviceIcon_' + i)">
             <span>{{ service.icon }}</span>
-            <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
+            <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingCosmeticServices">✏️</span>
           </div>
           <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceIcon_' + i"
                  [(ngModel)]="service.icon"
@@ -833,7 +833,7 @@
               [style.font-family]="cosmeticServicesConfig.cardTitleFontFamily"
               (click)="startInlineEditCosmeticServices('serviceTitle_' + i)">
             <span>{{ service.title }}</span>
-            <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
+            <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingCosmeticServices">✏️</span>
           </h3>
           <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceTitle_' + i"
                  [(ngModel)]="service.title"
@@ -870,7 +870,7 @@
              [style.font-family]="cosmeticServicesConfig.cardDescriptionFontFamily"
              (click)="startInlineEditCosmeticServices('serviceDescription_' + i)">
             <span>{{ service.description }}</span>
-            <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
+            <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingCosmeticServices">✏️</span>
           </p>
           <textarea *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceDescription_' + i"
                     [(ngModel)]="service.description"
@@ -907,7 +907,7 @@
                   [style.font-family]="cosmeticServicesConfig.cardFeaturesFontFamily"
                   (click)="startInlineEditCosmeticServices('serviceFeature_' + i + '_' + j)">
               {{ feature }}
-              <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
+              <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingCosmeticServices">✏️</span>
             </span>
             <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceFeature_' + i + '_' + j"
                    [(ngModel)]="service.features[j]"
@@ -997,7 +997,7 @@
          [style.background]="technologySectionConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingTechnologySection">
+    <div class="floating-edit-btn" *ngIf="globalConfig.showEditButtons && !isEditingTechnologySection">
       <button class="edit-btn-floating" (click)="startEditingTechnologySection()" title="Edit Technology Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -1084,7 +1084,7 @@
           <div class="tech-icon" *ngIf="!isEditingTechnologySection || editingTechnologySectionElement !== 'techIcon_' + i"
                (click)="startInlineEditTechnologySection('techIcon_' + i)">
             <span>{{ technology.icon }}</span>
-            <span class="edit-icon" *ngIf="isEditingTechnologySection">✏️</span>
+            <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingTechnologySection">✏️</span>
           </div>
           <input *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'techIcon_' + i"
                  [(ngModel)]="technology.icon"
@@ -1102,7 +1102,7 @@
               [style.font-family]="technologySectionConfig.cardTitleFontFamily"
               (click)="startInlineEditTechnologySection('techTitle_' + i)">
             <span>{{ technology.title }}</span>
-            <span class="edit-icon" *ngIf="isEditingTechnologySection">✏️</span>
+            <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingTechnologySection">✏️</span>
           </h3>
           <input *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'techTitle_' + i"
                  [(ngModel)]="technology.title"
@@ -1139,7 +1139,7 @@
              [style.font-family]="technologySectionConfig.cardDescriptionFontFamily"
              (click)="startInlineEditTechnologySection('techDescription_' + i)">
             <span>{{ technology.description }}</span>
-            <span class="edit-icon" *ngIf="isEditingTechnologySection">✏️</span>
+            <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingTechnologySection">✏️</span>
           </p>
           <textarea *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'techDescription_' + i"
                     [(ngModel)]="technology.description"

@@ -6,7 +6,7 @@
            [style.background-color]="galleryHeroConfig.backgroundColor">
     <div class="container">
       <!-- Floating Edit Button -->
-      <div class="floating-edit-btn" *ngIf="!isEditingGalleryHero">
+      <div class="floating-edit-btn" *ngIf="globalConfig.showEditButtons && !isEditingGalleryHero">
         <button class="edit-btn-floating" (click)="startEditingGalleryHero()" title="Edit Gallery Hero">
           <span class="edit-icon-floating">✏️</span>
         </button>
@@ -20,7 +20,7 @@
             [style.font-family]="galleryHeroConfig.galleryTitleFontFamily"
             (click)="startInlineEditGalleryHero('galleryTitle')">
           <span>{{ galleryHeroConfig.galleryTitle }}</span>
-          <span class="edit-icon" *ngIf="isEditingGalleryHero">✏️</span>
+            <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingGalleryHero">✏️</span>
         </h1>
         <input *ngIf="isEditingGalleryHero && editingGalleryHeroElement === 'galleryTitle'"
                [(ngModel)]="galleryHeroConfig.galleryTitle"
@@ -58,7 +58,7 @@
            [style.font-family]="galleryHeroConfig.gallerySubtitleFontFamily"
            (click)="startInlineEditGalleryHero('gallerySubtitle')">
           <span>{{ galleryHeroConfig.gallerySubtitle }}</span>
-          <span class="edit-icon" *ngIf="isEditingGalleryHero">✏️</span>
+            <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingGalleryHero">✏️</span>
         </p>
         <textarea *ngIf="isEditingGalleryHero && editingGalleryHeroElement === 'gallerySubtitle'"
                   [(ngModel)]="galleryHeroConfig.gallerySubtitle"
@@ -128,7 +128,7 @@
            [class.is-editing]="isEditingGalleryContent">
     <div class="container">
       <!-- Floating Edit Button -->
-      <div class="floating-edit-btn" *ngIf="!isEditingGalleryContent">
+      <div class="floating-edit-btn" *ngIf="globalConfig.showEditButtons && !isEditingGalleryContent">
         <button class="edit-btn-floating" (click)="startEditingGalleryContent()" title="Edit Gallery Content">
           <span class="edit-icon-floating">✏️</span>
         </button>
@@ -147,7 +147,7 @@
                       [style.font-family]="galleryContentConfig.placeholderTextFontFamily"
                       (click)="startInlineEditGalleryContent('placeholderText_' + i)">
                   {{ section.title }}
-                  <span class="edit-icon" *ngIf="isEditingGalleryContent">✏️</span>
+                  <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingGalleryContent">✏️</span>
                 </span>
                 <input *ngIf="isEditingGalleryContent && editingGalleryContentElement === 'placeholderText_' + i"
                        [(ngModel)]="section.title"
@@ -185,7 +185,7 @@
                      [style.font-family]="galleryContentConfig.imageCountFontFamily"
                      (click)="startInlineEditGalleryContent('imageCount_' + i)">
                   {{ section.imageCount }} Photos
-                  <span class="edit-icon" *ngIf="isEditingGalleryContent">✏️</span>
+                  <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingGalleryContent">✏️</span>
                 </div>
                 <input *ngIf="isEditingGalleryContent && editingGalleryContentElement === 'imageCount_' + i"
                        [(ngModel)]="section.imageCount"
@@ -226,7 +226,7 @@
                   [style.font-family]="galleryContentConfig.cardTitleFontFamily"
                   (click)="startInlineEditGalleryContent('cardTitle_' + i)">
                 <span>{{ section.title }}</span>
-                <span class="edit-icon" *ngIf="isEditingGalleryContent">✏️</span>
+                <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingGalleryContent">✏️</span>
               </h3>
               <input *ngIf="isEditingGalleryContent && editingGalleryContentElement === 'cardTitle_' + i"
                      [(ngModel)]="section.title"
@@ -264,7 +264,7 @@
                  [style.font-family]="galleryContentConfig.cardDescriptionFontFamily"
                  (click)="startInlineEditGalleryContent('cardDescription_' + i)">
                 <span>{{ section.description }}</span>
-                <span class="edit-icon" *ngIf="isEditingGalleryContent">✏️</span>
+                <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingGalleryContent">✏️</span>
               </p>
               <textarea *ngIf="isEditingGalleryContent && editingGalleryContentElement === 'cardDescription_' + i"
                         [(ngModel)]="section.description"
@@ -364,7 +364,7 @@
            [class.is-editing]="isEditingGalleryStats">
     <div class="container">
       <!-- Floating Edit Button -->
-      <div class="floating-edit-btn" *ngIf="!isEditingGalleryStats">
+      <div class="floating-edit-btn" *ngIf="globalConfig.showEditButtons && !isEditingGalleryStats">
         <button class="edit-btn-floating" (click)="startEditingGalleryStats()" title="Edit Gallery Stats">
           <span class="edit-icon-floating">✏️</span>
         </button>
@@ -380,7 +380,7 @@
                  [style.font-family]="galleryStatsConfig.statNumberFontFamily"
                  (click)="startInlineEditGalleryStats('statNumber_' + i)">
               <span>{{ stat.number }}</span>
-              <span class="edit-icon" *ngIf="isEditingGalleryStats">✏️</span>
+              <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingGalleryStats">✏️</span>
             </div>
             <input *ngIf="isEditingGalleryStats && editingGalleryStatsElement === 'statNumber_' + i"
                    [(ngModel)]="stat.number"
@@ -418,7 +418,7 @@
                  [style.font-family]="galleryStatsConfig.statLabelFontFamily"
                  (click)="startInlineEditGalleryStats('statLabel_' + i)">
               <span>{{ stat.label }}</span>
-              <span class="edit-icon" *ngIf="isEditingGalleryStats">✏️</span>
+              <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingGalleryStats">✏️</span>
             </div>
             <input *ngIf="isEditingGalleryStats && editingGalleryStatsElement === 'statLabel_' + i"
                    [(ngModel)]="stat.label"

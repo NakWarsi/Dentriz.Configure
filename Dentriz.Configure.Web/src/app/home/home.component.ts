@@ -1,11 +1,13 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 import { FounderSectionApiService, SimpleFounderConfig } from './services/founder-section-api.service';
 import { NewPatientSectionApiService, SimpleNewPatientConfig } from './services/new-patient-section-api.service';
 import { ReasonsSectionApiService, SimpleReasonsConfig } from './services/reasons-section-api.service';
 import { ServicesSectionApiService, SimpleServicesConfig } from './services/services-section-api.service';
+import { GlobalConfigService, GlobalConfig } from '../config/global-config.service';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +16,7 @@ import { ServicesSectionApiService, SimpleServicesConfig } from './services/serv
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   // Founder section properties (following reference project pattern)
   @ViewChild('subtitleInput') subtitleInput!: ElementRef<HTMLInputElement>;
   
@@ -49,12 +51,17 @@ export class HomeComponent implements OnInit {
   originalServicesData: any = {};
   editingServicesElement: string | null = null;
 
+  // Global configuration properties
+  globalConfig: GlobalConfig = { isEditingEnabled: true, showEditButtons: true };
+  private configSubscription?: Subscription;
+
   constructor(
     private http: HttpClient,
     private founderSectionApiService: FounderSectionApiService,
     private newPatientSectionApiService: NewPatientSectionApiService,
     private reasonsSectionApiService: ReasonsSectionApiService,
-    private servicesSectionApiService: ServicesSectionApiService
+    private servicesSectionApiService: ServicesSectionApiService,
+    private globalConfigService: GlobalConfigService
   ) {}
 
   // Clinic images carousel
@@ -113,6 +120,15 @@ export class HomeComponent implements OnInit {
 
   // Auto-advance carousel (optional)
   ngOnInit() {
+    // Subscribe to global configuration changes
+    this.configSubscription = this.globalConfigService.config$.subscribe(config => {
+      this.globalConfig = config;
+      // If editing is disabled globally, stop all editing modes
+      if (!config.isEditingEnabled) {
+        this.stopAllEditing();
+      }
+    });
+
     this.loadFounderSectionConfig();
     this.loadNewPatientSectionConfig();
     this.loadReasonsSectionConfig();
@@ -121,6 +137,24 @@ export class HomeComponent implements OnInit {
     setInterval(() => {
       this.nextImage();
     }, 5000);
+  }
+
+  ngOnDestroy() {
+    if (this.configSubscription) {
+      this.configSubscription.unsubscribe();
+    }
+  }
+
+  // Stop all editing modes
+  private stopAllEditing(): void {
+    this.isEditingFounder = false;
+    this.isEditingNewPatient = false;
+    this.isEditingReasons = false;
+    this.isEditingServices = false;
+    this.editingElement = null;
+    this.editingNewPatientElement = null;
+    this.editingReasonsElement = null;
+    this.editingServicesElement = null;
   }
 
   // Founder section methods (following reference project pattern)
@@ -151,6 +185,10 @@ export class HomeComponent implements OnInit {
   }
 
   startEditingFounder(): void {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     console.log('Edit button clicked, starting founder editing mode...');
     if (!this.founderConfig) {
       console.log('No founder config available');
@@ -280,7 +318,7 @@ export class HomeComponent implements OnInit {
   }
 
   startInlineEdit(element: string): void {
-    if (!this.isEditingFounder) return;
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingFounder) return;
     this.editingElement = element;
   }
 
@@ -376,6 +414,10 @@ export class HomeComponent implements OnInit {
   }
 
   startEditingNewPatient(): void {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     console.log('Edit button clicked, starting new patient editing mode...');
     if (!this.newPatientConfig) {
       console.log('No new patient config available');
@@ -414,7 +456,7 @@ export class HomeComponent implements OnInit {
   }
 
   startInlineEditNewPatient(element: string): void {
-    if (!this.isEditingNewPatient) return;
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingNewPatient) return;
     this.editingNewPatientElement = element;
   }
 
@@ -540,6 +582,10 @@ export class HomeComponent implements OnInit {
   }
 
   startEditingReasons(): void {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     console.log('Edit button clicked, starting reasons editing mode...');
     if (!this.reasonsConfig) {
       console.log('No reasons config available');
@@ -578,7 +624,7 @@ export class HomeComponent implements OnInit {
   }
 
   startInlineEditReasons(element: string): void {
-    if (!this.isEditingReasons) return;
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingReasons) return;
     this.editingReasonsElement = element;
   }
 
@@ -733,6 +779,10 @@ export class HomeComponent implements OnInit {
   }
 
   startEditingServices(): void {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     console.log('Edit button clicked, starting services editing mode...');
     if (!this.servicesConfig) {
       console.log('No services config available');
@@ -771,7 +821,7 @@ export class HomeComponent implements OnInit {
   }
 
   startInlineEditServices(element: string): void {
-    if (!this.isEditingServices) return;
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingServices) return;
     this.editingServicesElement = element;
   }
 

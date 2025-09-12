@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { HeaderApiService, SimpleHeaderConfig, NavItem } from './services/header-api.service';
+import { GlobalConfigService, GlobalConfig } from '../config/global-config.service';
 
 @Component({
   selector: 'app-header',
@@ -11,7 +13,7 @@ import { HeaderApiService, SimpleHeaderConfig, NavItem } from './services/header
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   // Header Configuration
   headerConfig: SimpleHeaderConfig | null = null;
   originalHeaderConfig: SimpleHeaderConfig | null = null;
@@ -24,10 +26,38 @@ export class HeaderComponent implements OnInit {
   isMenuOpen = false;
   isServicesOpen = false;
 
-  constructor(private headerApiService: HeaderApiService) {}
+  // Global configuration properties
+  globalConfig: GlobalConfig = { isEditingEnabled: true, showEditButtons: true };
+  private configSubscription?: Subscription;
+
+  constructor(
+    private headerApiService: HeaderApiService,
+    private globalConfigService: GlobalConfigService
+  ) {}
 
   ngOnInit() {
+    // Subscribe to global configuration changes
+    this.configSubscription = this.globalConfigService.config$.subscribe(config => {
+      this.globalConfig = config;
+      // If editing is disabled globally, stop all editing modes
+      if (!config.isEditingEnabled) {
+        this.stopAllEditing();
+      }
+    });
+
     this.loadHeaderConfig();
+  }
+
+  ngOnDestroy() {
+    if (this.configSubscription) {
+      this.configSubscription.unsubscribe();
+    }
+  }
+
+  // Stop all editing modes
+  private stopAllEditing(): void {
+    this.isEditingHeader = false;
+    this.editingHeaderElement = null;
   }
 
   toggleMenu() {
@@ -76,6 +106,10 @@ export class HeaderComponent implements OnInit {
   }
 
   startEditingHeader() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingHeader = true;
   }
 
@@ -110,6 +144,7 @@ export class HeaderComponent implements OnInit {
   }
 
   startInlineEditHeader(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingHeader) return;
     this.editingHeaderElement = element;
   }
 

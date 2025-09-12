@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { GalleryHeroApiService, SimpleGalleryHeroConfig } from './services/gallery-hero-api.service';
 import { GalleryContentApiService, SimpleGalleryContentConfig, GallerySection } from './services/gallery-content-api.service';
 import { GalleryStatsApiService, SimpleGalleryStatsConfig, GalleryStat } from './services/gallery-stats-api.service';
+import { GlobalConfigService, GlobalConfig } from '../config/global-config.service';
 
 @Component({
   selector: 'app-smile-gallery',
@@ -13,7 +15,7 @@ import { GalleryStatsApiService, SimpleGalleryStatsConfig, GalleryStat } from '.
   templateUrl: './smile-gallery.component.html',
   styleUrls: ['./smile-gallery.component.css']
 })
-export class SmileGalleryComponent implements OnInit {
+export class SmileGalleryComponent implements OnInit, OnDestroy {
   // Gallery Hero Configuration
   galleryHeroConfig: SimpleGalleryHeroConfig | null = null;
   originalGalleryHeroConfig: SimpleGalleryHeroConfig | null = null;
@@ -38,16 +40,46 @@ export class SmileGalleryComponent implements OnInit {
   isEditingGalleryStats = false;
   editingGalleryStatsElement: string | null = null;
 
+  // Global configuration properties
+  globalConfig: GlobalConfig = { isEditingEnabled: true, showEditButtons: true };
+  private configSubscription?: Subscription;
+
   constructor(
     private galleryHeroApiService: GalleryHeroApiService,
     private galleryContentApiService: GalleryContentApiService,
-    private galleryStatsApiService: GalleryStatsApiService
+    private galleryStatsApiService: GalleryStatsApiService,
+    private globalConfigService: GlobalConfigService
   ) {}
 
   ngOnInit() {
+    // Subscribe to global configuration changes
+    this.configSubscription = this.globalConfigService.config$.subscribe(config => {
+      this.globalConfig = config;
+      // If editing is disabled globally, stop all editing modes
+      if (!config.isEditingEnabled) {
+        this.stopAllEditing();
+      }
+    });
+
     this.loadGalleryHeroConfig();
     this.loadGalleryContentConfig();
     this.loadGalleryStatsConfig();
+  }
+
+  ngOnDestroy() {
+    if (this.configSubscription) {
+      this.configSubscription.unsubscribe();
+    }
+  }
+
+  // Stop all editing modes
+  private stopAllEditing(): void {
+    this.isEditingGalleryHero = false;
+    this.isEditingGalleryContent = false;
+    this.isEditingGalleryStats = false;
+    this.editingGalleryHeroElement = null;
+    this.editingGalleryContentElement = null;
+    this.editingGalleryStatsElement = null;
   }
 
   // Gallery Hero Configuration Methods
@@ -70,6 +102,10 @@ export class SmileGalleryComponent implements OnInit {
   }
 
   startEditingGalleryHero() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingGalleryHero = true;
   }
 
@@ -104,6 +140,7 @@ export class SmileGalleryComponent implements OnInit {
   }
 
   startInlineEditGalleryHero(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingGalleryHero) return;
     this.editingGalleryHeroElement = element;
   }
 
@@ -141,6 +178,10 @@ export class SmileGalleryComponent implements OnInit {
   }
 
   startEditingGalleryContent() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingGalleryContent = true;
   }
 
@@ -175,6 +216,7 @@ export class SmileGalleryComponent implements OnInit {
   }
 
   startInlineEditGalleryContent(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingGalleryContent) return;
     this.editingGalleryContentElement = element;
   }
 
@@ -231,6 +273,10 @@ export class SmileGalleryComponent implements OnInit {
   }
 
   startEditingGalleryStats() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingGalleryStats = true;
   }
 
@@ -265,6 +311,7 @@ export class SmileGalleryComponent implements OnInit {
   }
 
   startInlineEditGalleryStats(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingGalleryStats) return;
     this.editingGalleryStatsElement = element;
   }
 

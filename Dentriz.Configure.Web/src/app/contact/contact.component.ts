@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 import { ContactHeroApiService, SimpleContactHeroConfig } from './services/contact-hero-api.service';
 import { ContactInfoApiService, SimpleContactInfoConfig } from './services/contact-info-api.service';
 import { OfficeHoursApiService, SimpleOfficeHoursConfig } from './services/office-hours-api.service';
 import { LocationMapApiService, SimpleLocationMapConfig } from './services/location-map-api.service';
 import { InsurancePaymentApiService, SimpleInsurancePaymentConfig } from './services/insurance-payment-api.service';
 import { FAQApiService, SimpleFAQConfig } from './services/faq-api.service';
+import { GlobalConfigService, GlobalConfig } from '../config/global-config.service';
 
 @Component({
   selector: 'app-contact',
@@ -16,7 +18,7 @@ import { FAQApiService, SimpleFAQConfig } from './services/faq-api.service';
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.css'
 })
-export class ContactComponent implements OnInit {
+export class ContactComponent implements OnInit, OnDestroy {
   // Contact Hero Configuration
   contactHeroConfig: SimpleContactHeroConfig | null = null;
   originalContactHeroConfig: SimpleContactHeroConfig | null = null;
@@ -74,6 +76,10 @@ export class ContactComponent implements OnInit {
     message: ''
   };
 
+  // Global configuration properties
+  globalConfig: GlobalConfig = { isEditingEnabled: true, showEditButtons: true };
+  private configSubscription?: Subscription;
+
   constructor(
     private contactHeroApiService: ContactHeroApiService,
     private contactInfoApiService: ContactInfoApiService,
@@ -81,16 +87,44 @@ export class ContactComponent implements OnInit {
     private locationMapApiService: LocationMapApiService,
     private insurancePaymentApiService: InsurancePaymentApiService,
     private faqApiService: FAQApiService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private globalConfigService: GlobalConfigService
   ) {}
 
   ngOnInit() {
+    // Subscribe to global configuration changes
+    this.configSubscription = this.globalConfigService.config$.subscribe(config => {
+      this.globalConfig = config;
+      // If editing is disabled globally, stop all editing modes
+      if (!config.isEditingEnabled) {
+        this.stopAllEditing();
+      }
+    });
+
     this.loadContactHeroConfig();
     this.loadContactInfoConfig();
     this.loadOfficeHoursConfig();
     this.loadLocationMapConfig();
     this.loadInsurancePaymentConfig();
     this.loadFAQConfig();
+  }
+
+  ngOnDestroy() {
+    if (this.configSubscription) {
+      this.configSubscription.unsubscribe();
+    }
+  }
+
+  // Stop all editing modes
+  private stopAllEditing(): void {
+    this.isEditingContactHero = false;
+    this.isEditingContactInfo = false;
+    this.isEditingOfficeHours = false;
+    this.isEditingLocationMap = false;
+    this.editingElement = null;
+    this.editingContactInfoElement = null;
+    this.editingOfficeHoursElement = null;
+    this.editingLocationMapElement = null;
   }
 
   loadContactHeroConfig() {
@@ -112,6 +146,10 @@ export class ContactComponent implements OnInit {
   }
 
   startEditingContactHero() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingContactHero = true;
   }
 
@@ -146,6 +184,7 @@ export class ContactComponent implements OnInit {
   }
 
   startInlineEdit(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingContactHero) return;
     this.editingElement = element;
   }
 
@@ -183,6 +222,10 @@ export class ContactComponent implements OnInit {
   }
 
   startEditingContactInfo() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingContactInfo = true;
   }
 
@@ -217,6 +260,7 @@ export class ContactComponent implements OnInit {
   }
 
   startInlineEditContactInfo(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingContactInfo) return;
     this.editingContactInfoElement = element;
   }
 
@@ -254,6 +298,10 @@ export class ContactComponent implements OnInit {
   }
 
   startEditingOfficeHours() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingOfficeHours = true;
   }
 
@@ -288,6 +336,7 @@ export class ContactComponent implements OnInit {
   }
 
   startInlineEditOfficeHours(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingOfficeHours) return;
     this.editingOfficeHoursElement = element;
   }
 
@@ -338,6 +387,10 @@ export class ContactComponent implements OnInit {
   }
 
   startEditingLocationMap() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingLocationMap = true;
   }
 
@@ -372,6 +425,7 @@ export class ContactComponent implements OnInit {
   }
 
   startInlineEditLocationMap(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingLocationMap) return;
     this.editingLocationMapElement = element;
   }
 
@@ -409,6 +463,10 @@ export class ContactComponent implements OnInit {
   }
 
   startEditingInsurancePayment() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingInsurancePayment = true;
   }
 
@@ -443,6 +501,7 @@ export class ContactComponent implements OnInit {
   }
 
   startInlineEditInsurancePayment(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingInsurancePayment) return;
     this.editingInsurancePaymentElement = element;
   }
 
@@ -516,6 +575,10 @@ export class ContactComponent implements OnInit {
   }
 
   startEditingFAQ() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingFAQ = true;
   }
 
@@ -550,6 +613,7 @@ export class ContactComponent implements OnInit {
   }
 
   startInlineEditFAQ(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingFAQ) return;
     this.editingFAQElement = element;
   }
 

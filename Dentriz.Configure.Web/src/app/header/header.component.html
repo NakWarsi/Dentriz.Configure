@@ -2,7 +2,7 @@
   <div class="main-header">
     <div class="container">
       <!-- Floating Edit Button -->
-      <button class="floating-edit-btn" (click)="startEditingHeader()" *ngIf="!isEditingHeader">
+      <button class="floating-edit-btn" (click)="startEditingHeader()" *ngIf="globalConfig.showEditButtons && !isEditingHeader">
         <span class="edit-icon-floating">✏️</span>
       </button>
 
@@ -15,7 +15,7 @@
               <h1 [style.color]="headerConfig?.logoTextColor" [style.font-family]="headerConfig?.clinicNameFontFamily">
                 {{ headerConfig?.clinicName }}
               </h1>
-              <span class="edit-icon" *ngIf="!isEditingHeader">✏️</span>
+              <span class="edit-icon" *ngIf="globalConfig.showEditButtons && !isEditingHeader">✏️</span>
             </div>
             <div *ngIf="isEditingHeader && editingHeaderElement === 'clinic-name'" class="inline-edit-container">
               <input type="text" [(ngModel)]="headerConfig!.clinicName" class="inline-edit-input" 
@@ -36,7 +36,7 @@
               <span class="tagline" [style.color]="headerConfig?.taglineColor" [style.font-family]="headerConfig?.taglineFontFamily">
                 {{ headerConfig?.tagline }}
               </span>
-              <span class="edit-icon" *ngIf="!isEditingHeader">✏️</span>
+              <span class="edit-icon" *ngIf="globalConfig.showEditButtons && !isEditingHeader">✏️</span>
             </div>
             <div *ngIf="isEditingHeader && editingHeaderElement === 'tagline'" class="inline-edit-container">
               <input type="text" [(ngModel)]="headerConfig!.tagline" class="inline-edit-input" 
@@ -68,7 +68,7 @@
                  [style.font-family]="headerConfig?.navLinkFontFamily">
                 {{ navItem.label }}
               </a>
-              <span class="edit-icon" *ngIf="!isEditingHeader">✏️</span>
+              <span class="edit-icon" *ngIf="globalConfig.showEditButtons && !isEditingHeader">✏️</span>
             </div>
             <div *ngIf="isEditingHeader && editingHeaderElement === 'nav-item-' + i" class="inline-edit-container">
               <input type="text" [(ngModel)]="navItem.label" class="inline-edit-input" 

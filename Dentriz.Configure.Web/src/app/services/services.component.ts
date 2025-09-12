@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { ServicesHeroApiService, SimpleServicesHeroConfig } from './services/services-hero-api.service';
 import { PreventiveCareApiService, SimplePreventiveCareConfig } from './services/preventive-care-api.service';
 import { RestorativeCareApiService, SimpleRestorativeCareConfig } from './services/restorative-care-api.service';
 import { CosmeticServicesApiService, SimpleCosmeticServicesConfig } from './services/cosmetic-services-api.service';
 import { TechnologySectionApiService, SimpleTechnologySectionConfig } from './services/technology-section-api.service';
+import { GlobalConfigService, GlobalConfig } from '../config/global-config.service';
 
 @Component({
   selector: 'app-services',
@@ -14,7 +16,7 @@ import { TechnologySectionApiService, SimpleTechnologySectionConfig } from './se
   templateUrl: './services.component.html',
   styleUrl: './services.component.css'
 })
-export class ServicesComponent implements OnInit {
+export class ServicesComponent implements OnInit, OnDestroy {
   // Services Hero Configuration
   servicesHeroConfig: SimpleServicesHeroConfig | null = null;
   originalServicesHeroConfig: SimpleServicesHeroConfig | null = null;
@@ -77,20 +79,54 @@ export class ServicesComponent implements OnInit {
     }
   ];
 
+  // Global configuration properties
+  globalConfig: GlobalConfig = { isEditingEnabled: true, showEditButtons: true };
+  private configSubscription?: Subscription;
+
   constructor(
     private servicesHeroApiService: ServicesHeroApiService,
     private preventiveCareApiService: PreventiveCareApiService,
     private restorativeCareApiService: RestorativeCareApiService,
     private cosmeticServicesApiService: CosmeticServicesApiService,
-    private technologySectionApiService: TechnologySectionApiService
+    private technologySectionApiService: TechnologySectionApiService,
+    private globalConfigService: GlobalConfigService
   ) {}
 
   ngOnInit() {
+    // Subscribe to global configuration changes
+    this.configSubscription = this.globalConfigService.config$.subscribe(config => {
+      this.globalConfig = config;
+      // If editing is disabled globally, stop all editing modes
+      if (!config.isEditingEnabled) {
+        this.stopAllEditing();
+      }
+    });
+
     this.loadServicesHeroConfig();
     this.loadPreventiveCareConfig();
     this.loadRestorativeCareConfig();
     this.loadCosmeticServicesConfig();
     this.loadTechnologySectionConfig();
+  }
+
+  ngOnDestroy() {
+    if (this.configSubscription) {
+      this.configSubscription.unsubscribe();
+    }
+  }
+
+  // Stop all editing modes
+  private stopAllEditing(): void {
+    this.isEditingServicesHero = false;
+    this.isEditingPreventiveCare = false;
+    this.isEditingRestorativeCare = false;
+    this.isEditingCosmeticServices = false;
+    this.isEditingTechnologySection = false;
+    this.editingServicesHeroElement = null;
+    this.editingPreventiveCareElement = null;
+    this.editingRestorativeCareElement = null;
+    this.editingCosmeticServicesElement = null;
+    this.editingTechnologySectionElement = null;
   }
 
   // Services Hero Configuration Methods
@@ -113,6 +149,10 @@ export class ServicesComponent implements OnInit {
   }
 
   startEditingServicesHero() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingServicesHero = true;
   }
 
@@ -147,6 +187,7 @@ export class ServicesComponent implements OnInit {
   }
 
   startInlineEditServicesHero(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingServicesHero) return;
     this.editingServicesHeroElement = element;
   }
 
@@ -184,6 +225,10 @@ export class ServicesComponent implements OnInit {
   }
 
   startEditingPreventiveCare() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingPreventiveCare = true;
   }
 
@@ -218,6 +263,7 @@ export class ServicesComponent implements OnInit {
   }
 
   startInlineEditPreventiveCare(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingPreventiveCare) return;
     this.editingPreventiveCareElement = element;
   }
 
@@ -284,6 +330,10 @@ export class ServicesComponent implements OnInit {
   }
 
   startEditingRestorativeCare() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingRestorativeCare = true;
   }
 
@@ -318,6 +368,7 @@ export class ServicesComponent implements OnInit {
   }
 
   startInlineEditRestorativeCare(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingRestorativeCare) return;
     this.editingRestorativeCareElement = element;
   }
 
@@ -384,6 +435,10 @@ export class ServicesComponent implements OnInit {
   }
 
   startEditingCosmeticServices() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingCosmeticServices = true;
   }
 
@@ -418,6 +473,7 @@ export class ServicesComponent implements OnInit {
   }
 
   startInlineEditCosmeticServices(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingCosmeticServices) return;
     this.editingCosmeticServicesElement = element;
   }
 
@@ -484,6 +540,10 @@ export class ServicesComponent implements OnInit {
   }
 
   startEditingTechnologySection() {
+    if (!this.globalConfig.isEditingEnabled) {
+      console.log('Editing is disabled globally');
+      return;
+    }
     this.isEditingTechnologySection = true;
   }
 
@@ -518,6 +578,7 @@ export class ServicesComponent implements OnInit {
   }
 
   startInlineEditTechnologySection(element: string) {
+    if (!this.globalConfig.isEditingEnabled || !this.isEditingTechnologySection) return;
     this.editingTechnologySectionElement = element;
   }
 

@@ -4,17 +4,19 @@ import { CommonModule } from '@angular/common';
 import { Meta } from '@angular/platform-browser';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
+import { GlobalConfigToggleComponent } from './config/global-config-toggle.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, HeaderComponent, FooterComponent],
+  imports: [RouterOutlet, CommonModule, HeaderComponent, FooterComponent, GlobalConfigToggleComponent],
   template: `
     <app-header></app-header>
     <main>
       <router-outlet></router-outlet>
     </main>
     <app-footer></app-footer>
+    <app-global-config-toggle></app-global-config-toggle>
   `,
   styles: []
 })
