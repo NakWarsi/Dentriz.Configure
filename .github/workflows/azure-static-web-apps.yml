@@ -35,6 +35,14 @@ jobs:
         working-directory: ./Dentriz.Configure.Web
         run: npm run build:static
       
+      - name: List Build Output
+        working-directory: ./Dentriz.Configure.Web
+        run: |
+          echo "Build output structure:"
+          ls -la dist/
+          ls -la dist/DentrizWeb/
+          ls -la dist/DentrizWeb/browser/
+      
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -57,7 +65,14 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
-          path: ./Dentriz.Configure.Web/dist/DentrizWeb/browser
+          path: ./build-output
+      
+      - name: Verify Build Artifacts
+        run: |
+          echo "Downloaded artifacts structure:"
+          ls -la build-output/
+          echo "Looking for index.html:"
+          find build-output/ -name "index.html" -type f
       
       - name: Deploy to Azure Web App
         id: deploy
@@ -66,7 +81,7 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "./Dentriz.Configure.Web/dist/DentrizWeb/browser"
+          app_location: "./build-output"
           api_location: ""
           output_location: ""
 
