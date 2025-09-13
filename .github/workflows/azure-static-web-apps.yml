@@ -84,12 +84,12 @@ jobs:
           echo "Contents of build-output (detailed):"
           find build-output/ -type f -name "*.html" -o -name "*.js" -o -name "*.css" | head -10
           
-          echo "Copying files from build-output to root..."
-          if [ -d "build-output" ] && [ "$(ls -A build-output)" ]; then
-            cp -r build-output/* ./
+          echo "Copying files from build-output/browser to root..."
+          if [ -d "build-output/browser" ] && [ "$(ls -A build-output/browser)" ]; then
+            cp -r build-output/browser/* ./
             echo "Copy completed successfully"
           else
-            echo "ERROR: build-output directory is empty or doesn't exist"
+            echo "ERROR: build-output/browser directory is empty or doesn't exist"
             exit 1
           fi
           
