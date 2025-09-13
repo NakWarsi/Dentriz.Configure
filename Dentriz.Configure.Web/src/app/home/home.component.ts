@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -14,7 +14,7 @@ import { ServicesSectionApiService, SimpleServicesConfig } from './services/serv
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   // Founder section properties (following reference project pattern)
   @ViewChild('subtitleInput') subtitleInput!: ElementRef<HTMLInputElement>;
   
@@ -48,6 +48,36 @@ export class HomeComponent implements OnInit {
   isEditingServices = false;
   originalServicesData: any = {};
   editingServicesElement: string | null = null;
+
+  // Cache to prevent reloading data
+  private static dataCache: {
+    founder?: SimpleFounderConfig;
+    newPatient?: SimpleNewPatientConfig;
+    reasons?: SimpleReasonsConfig;
+    services?: SimpleServicesConfig;
+  } = {};
+
+  // Timer for carousel auto-advance
+  private carouselTimer?: any;
+
+  // Method to clear cache (useful for development or when data changes)
+  public static clearCache(): void {
+    HomeComponent.dataCache = {};
+  }
+
+  // Method to force refresh all data (clears cache and reloads)
+  public refreshAllData(): void {
+    HomeComponent.clearCache();
+    this.founderLoading = true;
+    this.newPatientLoading = true;
+    this.reasonsLoading = true;
+    this.servicesLoading = true;
+    this.founderError = false;
+    this.newPatientError = false;
+    this.reasonsError = false;
+    this.servicesError = false;
+    this.loadAllSections();
+  }
 
   constructor(
     private http: HttpClient,
@@ -113,14 +143,61 @@ export class HomeComponent implements OnInit {
 
   // Auto-advance carousel (optional)
   ngOnInit() {
-    this.loadFounderSectionConfig();
-    this.loadNewPatientSectionConfig();
-    this.loadReasonsSectionConfig();
-    this.loadServicesSectionConfig();
+    this.loadAllSections();
     // Auto-advance every 5 seconds
-    setInterval(() => {
+    this.carouselTimer = setInterval(() => {
       this.nextImage();
     }, 5000);
+  }
+
+  ngOnDestroy() {
+    // Clean up timer to prevent memory leaks
+    if (this.carouselTimer) {
+      clearInterval(this.carouselTimer);
+    }
+  }
+
+  private loadAllSections(): void {
+    console.log('🔄 Loading all sections...');
+    console.log('📦 Cache status:', HomeComponent.dataCache);
+    
+    // Check cache first and load immediately if available
+    if (HomeComponent.dataCache.founder) {
+      console.log('✅ Using cached founder config');
+      this.founderConfig = HomeComponent.dataCache.founder;
+      this.founderLoading = false;
+      this.applyDynamicStyles();
+    } else {
+      console.log('📥 Loading founder config from API');
+      this.loadFounderSectionConfig();
+    }
+
+    if (HomeComponent.dataCache.newPatient) {
+      console.log('✅ Using cached new patient config');
+      this.newPatientConfig = HomeComponent.dataCache.newPatient;
+      this.newPatientLoading = false;
+    } else {
+      console.log('📥 Loading new patient config from API');
+      this.loadNewPatientSectionConfig();
+    }
+
+    if (HomeComponent.dataCache.reasons) {
+      console.log('✅ Using cached reasons config');
+      this.reasonsConfig = HomeComponent.dataCache.reasons;
+      this.reasonsLoading = false;
+    } else {
+      console.log('📥 Loading reasons config from API');
+      this.loadReasonsSectionConfig();
+    }
+
+    if (HomeComponent.dataCache.services) {
+      console.log('✅ Using cached services config');
+      this.servicesConfig = HomeComponent.dataCache.services;
+      this.servicesLoading = false;
+    } else {
+      console.log('📥 Loading services config from API');
+      this.loadServicesSectionConfig();
+    }
   }
 
   // Founder section methods (following reference project pattern)
@@ -130,6 +207,9 @@ export class HomeComponent implements OnInit {
         console.log('Founder section config loaded successfully:', config);
         this.founderConfig = config;
         this.founderLoading = false;
+        
+        // Cache the config for future use
+        HomeComponent.dataCache.founder = config;
         
         // Apply styles immediately after config loads
         this.applyDynamicStyles();
@@ -356,6 +436,9 @@ export class HomeComponent implements OnInit {
         this.newPatientConfig = config;
         this.newPatientLoading = false;
         
+        // Cache the config for future use
+        HomeComponent.dataCache.newPatient = config;
+        
         // Apply styles immediately after config loads
         this.applyNewPatientDynamicStyles();
         
@@ -519,6 +602,9 @@ export class HomeComponent implements OnInit {
         console.log('Reasons section config loaded successfully:', config);
         this.reasonsConfig = config;
         this.reasonsLoading = false;
+        
+        // Cache the config for future use
+        HomeComponent.dataCache.reasons = config;
         
         // Apply styles immediately after config loads
         this.applyReasonsDynamicStyles();
@@ -712,6 +798,9 @@ export class HomeComponent implements OnInit {
         console.log('Services section config loaded successfully:', config);
         this.servicesConfig = config;
         this.servicesLoading = false;
+        
+        // Cache the config for future use
+        HomeComponent.dataCache.services = config;
         
         // Apply styles immediately after config loads
         this.applyServicesDynamicStyles();
