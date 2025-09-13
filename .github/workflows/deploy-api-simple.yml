@@ -3,7 +3,7 @@ name: Deploy .NET API to Azure (Simple)
 on:
   push:
     tags:
-      - 'api-v*'  # Triggers on tags like api-v1.0.0, api-v1.2.3, etc.
+      - 'release/api-v*'  # Triggers on tags like api-v1.0.0, api-v1.2.3, etc.
   workflow_dispatch:  # Allows manual triggering
 
 env:
