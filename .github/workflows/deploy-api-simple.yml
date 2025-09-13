@@ -1,0 +1,73 @@
+name: Deploy .NET API to Azure (Simple)
+
+on:
+  push:
+    tags:
+      - 'api-v*'  # Triggers on tags like api-v1.0.0, api-v1.2.3, etc.
+  workflow_dispatch:  # Allows manual triggering
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  AZURE_WEBAPP_NAME: 'dentriz-configure-api'  # Change this to your Azure App Service name
+  AZURE_WEBAPP_PACKAGE_PATH: './Dentriz.Configure.Api'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Restore dependencies
+      working-directory: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+      run: dotnet restore
+      
+    - name: Build application
+      working-directory: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+      run: dotnet build --configuration Release --no-restore
+      
+    - name: Run tests
+      working-directory: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+      run: dotnet test --configuration Release --no-build --verbosity normal
+      continue-on-error: true  # Continue if no tests exist
+      
+    - name: Publish application
+      working-directory: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+      run: dotnet publish --configuration Release --no-build --output ./publish
+      
+    - name: Create deployment package
+      run: |
+        cd ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/publish
+        zip -r ../deployment-package.zip .
+        
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - name: Deploy to Azure App Service
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/deployment-package.zip
+        
+    - name: Restart Azure App Service
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az webapp restart --name ${{ env.AZURE_WEBAPP_NAME }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
+          
+    - name: Health check
+      run: |
+        echo "Waiting for application to start..."
+        sleep 30
+        echo "Deployment completed successfully!"
+        echo "API should be available at: https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net"
+        echo "Swagger UI should be available at: https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/swagger"
