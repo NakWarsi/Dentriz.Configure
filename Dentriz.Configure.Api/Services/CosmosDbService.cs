@@ -47,7 +47,7 @@ namespace Dentriz.Configure.Api.Services
                 var doc = response.Resource;
                 
                 // Debug: Log the raw document to see what's actually in Cosmos DB
-                _logger.LogInformation("Raw document from Cosmos DB: {Document}", System.Text.Json.JsonSerializer.Serialize(doc));
+                //_logger.LogInformation("Raw document from Cosmos DB: {Document}", System.Text.Json.JsonSerializer.Serialize(doc));
                 
                 // Convert dynamic document to HeaderConfig
                 var config = new HeaderConfig
@@ -184,7 +184,7 @@ namespace Dentriz.Configure.Api.Services
 
                 // Log what we're trying to parse
                 var jsonString = System.Text.Json.JsonSerializer.Serialize(navItems);
-                _logger.LogInformation("NavItems JSON from Cosmos DB: {NavItemsJson}", jsonString);
+                //_logger.LogInformation("NavItems JSON from Cosmos DB: {NavItemsJson}", jsonString);
 
                 // Try to deserialize as array first
                 if (navItems is System.Collections.IEnumerable enumerable)
@@ -212,7 +212,7 @@ namespace Dentriz.Configure.Api.Services
                     PropertyNameCaseInsensitive = true
                 });
 
-                _logger.LogInformation("Direct deserialization result: {Count} items", directItems?.Count ?? 0);
+                //_logger.LogInformation("Direct deserialization result: {Count} items", directItems?.Count ?? 0);
                 return directItems ?? new List<NavItem>();
             }
             catch (Exception ex)
