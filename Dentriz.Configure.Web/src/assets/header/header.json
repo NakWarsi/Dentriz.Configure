@@ -9,7 +9,7 @@
     { "label": "About Us", "route": "/about", "exact": false },
     { "label": "Our Smiles", "route": "/smile-gallery", "exact": false },
     { "label": "Contact", "route": "/contact", "exact": false }
-  ],
+  ], 
   "backgroundColor": "#ffffff",
   "textColor": "#1e3c72",
   "logoTextColor": "#1e3c72",
