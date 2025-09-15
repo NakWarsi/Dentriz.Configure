@@ -30,7 +30,7 @@ export interface SimpleValuesConfig {
   providedIn: 'root'
 })
 export class ValuesApiService {
-  private configUrl = 'http://localhost:5000/api/config/values';
+  private configUrl = 'http://localhost:5208/api/AboutValues';
   private localStorageKey = 'valuesConfig';
   private JSON_FILE_PATH = './assets/about/values.json';
 
@@ -43,19 +43,60 @@ export class ValuesApiService {
       return of(localConfig);
     }
 
-    // For now, directly use constants data instead of trying API
-    console.log('Loading values config from constants');
-    const defaultConfig = this.getDefaultConfig();
-    this.saveConfigToLocalStorage(defaultConfig);
-    return of(defaultConfig);
+    // Try to load from API
+    console.log('Loading values config from API:', this.configUrl);
+    return this.http.get(this.configUrl, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      map((apiConfig: any) => {
+        console.log('Received API config:', apiConfig);
+        return this.mapApiConfigToSimpleConfig(apiConfig);
+      }),
+      tap(config => {
+        console.log('Mapped config:', config);
+        this.saveConfigToLocalStorage(config);
+      }),
+      catchError(error => {
+        console.error('Error loading config from API, falling back to default constants:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        const defaultConfig = this.getDefaultConfig();
+        this.saveConfigToLocalStorage(defaultConfig);
+        return of(defaultConfig);
+      })
+    );
   }
 
   saveConfig(config: SimpleValuesConfig): Observable<any> {
     this.saveConfigToLocalStorage(config);
-    return this.http.post(this.configUrl, config).pipe(
+    const apiConfig = this.mapSimpleConfigToApiConfig(config);
+    
+    console.log('Saving values config to API:', apiConfig);
+    
+    return this.http.post(this.configUrl, apiConfig, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      tap((response) => {
+        console.log('Configuration saved successfully to API:', response);
+        alert('Configuration saved successfully to server!');
+      }),
       catchError(error => {
         console.error('Error saving config to API, local storage updated:', error);
-        alert('Configuration saved locally, but failed to save to server. Please check the API.');
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        alert(`Configuration saved locally, but failed to save to server. Error: ${error.status} - ${error.statusText}`);
         return of(null);
       })
     );
@@ -105,5 +146,37 @@ export class ValuesApiService {
 
   private getDefaultConfig(): SimpleValuesConfig {
     return this.mapToSimpleConfig({});
+  }
+
+  private mapApiConfigToSimpleConfig(apiConfig: any): SimpleValuesConfig {
+    return {
+      // Section Content
+      sectionTitle: apiConfig.sectionTitle || VALUES_CONSTANTS.DEFAULT_SECTION_TITLE,
+      values: apiConfig.values || [...VALUES_CONSTANTS.DEFAULT_VALUES],
+
+      // Styling
+      sectionTitleColor: apiConfig.sectionTitleColor || VALUES_CONSTANTS.DEFAULT_COLORS.SECTION_TITLE,
+      valueTitleColor: apiConfig.valueTitleColor || VALUES_CONSTANTS.DEFAULT_COLORS.VALUE_TITLE,
+      valueDescriptionColor: apiConfig.valueDescriptionColor || VALUES_CONSTANTS.DEFAULT_COLORS.VALUE_DESCRIPTION,
+      backgroundColor: apiConfig.backgroundColor || VALUES_CONSTANTS.DEFAULT_COLORS.BACKGROUND,
+
+      sectionTitleFontFamily: apiConfig.sectionTitleFontFamily || VALUES_CONSTANTS.DEFAULT_FONTS.SECTION_TITLE,
+      valueTitleFontFamily: apiConfig.valueTitleFontFamily || VALUES_CONSTANTS.DEFAULT_FONTS.VALUE_TITLE,
+      valueDescriptionFontFamily: apiConfig.valueDescriptionFontFamily || VALUES_CONSTANTS.DEFAULT_FONTS.VALUE_DESCRIPTION
+    };
+  }
+
+  private mapSimpleConfigToApiConfig(simpleConfig: SimpleValuesConfig): any {
+    return {
+      sectionTitle: simpleConfig.sectionTitle,
+      values: simpleConfig.values,
+      sectionTitleColor: simpleConfig.sectionTitleColor,
+      valueTitleColor: simpleConfig.valueTitleColor,
+      valueDescriptionColor: simpleConfig.valueDescriptionColor,
+      backgroundColor: simpleConfig.backgroundColor,
+      sectionTitleFontFamily: simpleConfig.sectionTitleFontFamily,
+      valueTitleFontFamily: simpleConfig.valueTitleFontFamily,
+      valueDescriptionFontFamily: simpleConfig.valueDescriptionFontFamily
+    };
   }
 }

@@ -40,7 +40,7 @@ export interface SimpleDoctorsConfig {
   providedIn: 'root'
 })
 export class DoctorsApiService {
-  private configUrl = 'http://localhost:5000/api/config/doctors';
+  private configUrl = 'http://localhost:5208/api/AboutDoctors';
   private localStorageKey = 'doctorsConfig';
   private JSON_FILE_PATH = './assets/about/doctors.json';
 
@@ -53,19 +53,60 @@ export class DoctorsApiService {
       return of(localConfig);
     }
 
-    // For now, directly use constants data instead of trying API
-    console.log('Loading doctors config from constants');
-    const defaultConfig = this.getDefaultConfig();
-    this.saveConfigToLocalStorage(defaultConfig);
-    return of(defaultConfig);
+    // Try to load from API
+    console.log('Loading doctors config from API:', this.configUrl);
+    return this.http.get(this.configUrl, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      map((apiConfig: any) => {
+        console.log('Received API config:', apiConfig);
+        return this.mapApiConfigToSimpleConfig(apiConfig);
+      }),
+      tap(config => {
+        console.log('Mapped config:', config);
+        this.saveConfigToLocalStorage(config);
+      }),
+      catchError(error => {
+        console.error('Error loading config from API, falling back to default constants:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        const defaultConfig = this.getDefaultConfig();
+        this.saveConfigToLocalStorage(defaultConfig);
+        return of(defaultConfig);
+      })
+    );
   }
 
   saveConfig(config: SimpleDoctorsConfig): Observable<any> {
     this.saveConfigToLocalStorage(config);
-    return this.http.post(this.configUrl, config).pipe(
+    const apiConfig = this.mapSimpleConfigToApiConfig(config);
+    
+    console.log('Saving doctors config to API:', apiConfig);
+    
+    return this.http.post(this.configUrl, apiConfig, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      tap((response) => {
+        console.log('Configuration saved successfully to API:', response);
+        alert('Configuration saved successfully to server!');
+      }),
       catchError(error => {
         console.error('Error saving config to API, local storage updated:', error);
-        alert('Configuration saved locally, but failed to save to server. Please check the API.');
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        alert(`Configuration saved locally, but failed to save to server. Error: ${error.status} - ${error.statusText}`);
         return of(null);
       })
     );
@@ -122,5 +163,51 @@ export class DoctorsApiService {
 
   private getDefaultConfig(): SimpleDoctorsConfig {
     return this.mapToSimpleConfig({});
+  }
+
+  private mapApiConfigToSimpleConfig(apiConfig: any): SimpleDoctorsConfig {
+    return {
+      // Section Content
+      sectionTitle: apiConfig.sectionTitle || DOCTORS_CONSTANTS.DEFAULT_SECTION_TITLE,
+      sectionSubtitle: apiConfig.sectionSubtitle || DOCTORS_CONSTANTS.DEFAULT_SECTION_SUBTITLE,
+      doctors: apiConfig.doctors || [...DOCTORS_CONSTANTS.DEFAULT_DOCTORS],
+
+      // Styling
+      sectionTitleColor: apiConfig.sectionTitleColor || DOCTORS_CONSTANTS.DEFAULT_COLORS.SECTION_TITLE,
+      sectionSubtitleColor: apiConfig.sectionSubtitleColor || DOCTORS_CONSTANTS.DEFAULT_COLORS.SECTION_SUBTITLE,
+      doctorNameColor: apiConfig.doctorNameColor || DOCTORS_CONSTANTS.DEFAULT_COLORS.DOCTOR_NAME,
+      doctorTitleColor: apiConfig.doctorTitleColor || DOCTORS_CONSTANTS.DEFAULT_COLORS.DOCTOR_TITLE,
+      doctorBioColor: apiConfig.doctorBioColor || DOCTORS_CONSTANTS.DEFAULT_COLORS.DOCTOR_BIO,
+      specialtyColor: apiConfig.specialtyColor || DOCTORS_CONSTANTS.DEFAULT_COLORS.SPECIALTY,
+      backgroundColor: apiConfig.backgroundColor || DOCTORS_CONSTANTS.DEFAULT_COLORS.BACKGROUND,
+
+      sectionTitleFontFamily: apiConfig.sectionTitleFontFamily || DOCTORS_CONSTANTS.DEFAULT_FONTS.SECTION_TITLE,
+      sectionSubtitleFontFamily: apiConfig.sectionSubtitleFontFamily || DOCTORS_CONSTANTS.DEFAULT_FONTS.SECTION_SUBTITLE,
+      doctorNameFontFamily: apiConfig.doctorNameFontFamily || DOCTORS_CONSTANTS.DEFAULT_FONTS.DOCTOR_NAME,
+      doctorTitleFontFamily: apiConfig.doctorTitleFontFamily || DOCTORS_CONSTANTS.DEFAULT_FONTS.DOCTOR_TITLE,
+      doctorBioFontFamily: apiConfig.doctorBioFontFamily || DOCTORS_CONSTANTS.DEFAULT_FONTS.DOCTOR_BIO,
+      specialtyFontFamily: apiConfig.specialtyFontFamily || DOCTORS_CONSTANTS.DEFAULT_FONTS.SPECIALTY
+    };
+  }
+
+  private mapSimpleConfigToApiConfig(simpleConfig: SimpleDoctorsConfig): any {
+    return {
+      sectionTitle: simpleConfig.sectionTitle,
+      sectionSubtitle: simpleConfig.sectionSubtitle,
+      doctors: simpleConfig.doctors,
+      sectionTitleColor: simpleConfig.sectionTitleColor,
+      sectionSubtitleColor: simpleConfig.sectionSubtitleColor,
+      doctorNameColor: simpleConfig.doctorNameColor,
+      doctorTitleColor: simpleConfig.doctorTitleColor,
+      doctorBioColor: simpleConfig.doctorBioColor,
+      specialtyColor: simpleConfig.specialtyColor,
+      backgroundColor: simpleConfig.backgroundColor,
+      sectionTitleFontFamily: simpleConfig.sectionTitleFontFamily,
+      sectionSubtitleFontFamily: simpleConfig.sectionSubtitleFontFamily,
+      doctorNameFontFamily: simpleConfig.doctorNameFontFamily,
+      doctorTitleFontFamily: simpleConfig.doctorTitleFontFamily,
+      doctorBioFontFamily: simpleConfig.doctorBioFontFamily,
+      specialtyFontFamily: simpleConfig.specialtyFontFamily
+    };
   }
 }
