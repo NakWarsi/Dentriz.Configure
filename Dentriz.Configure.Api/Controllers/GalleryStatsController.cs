@@ -8,12 +8,12 @@ namespace Dentriz.Configure.Api.Controllers
     [Route("api/[controller]")]
     public class GalleryStatsController : ControllerBase
     {
-        private readonly ICosmosDbService _cosmosDbService;
+        private readonly IGalleryStatsService _galleryStatsService;
         private readonly ILogger<GalleryStatsController> _logger;
 
-        public GalleryStatsController(ICosmosDbService cosmosDbService, ILogger<GalleryStatsController> logger)
+        public GalleryStatsController(IGalleryStatsService galleryStatsService, ILogger<GalleryStatsController> logger)
         {
-            _cosmosDbService = cosmosDbService;
+            _galleryStatsService = galleryStatsService;
             _logger = logger;
         }
 
@@ -25,12 +25,12 @@ namespace Dentriz.Configure.Api.Controllers
         {
             try
             {
-                var config = await _cosmosDbService.GetGalleryStatsAsync();
+                var config = await _galleryStatsService.GetGalleryStatsAsync();
                 if (config == null)
                 {
                     // Create default configuration if it doesn't exist
                     _logger.LogInformation("Gallery stats configuration not found, creating default configuration");
-                    config = await _cosmosDbService.CreateOrUpdateGalleryStatsAsync(new Models.GalleryStats());
+                    config = await _galleryStatsService.CreateOrUpdateGalleryStatsAsync(new Models.GalleryStats());
                 }
                 return Ok(config);
             }
@@ -54,7 +54,7 @@ namespace Dentriz.Configure.Api.Controllers
                     return BadRequest(new { message = "Gallery stats configuration is required" });
                 }
 
-                var savedConfig = await _cosmosDbService.CreateOrUpdateGalleryStatsAsync(config);
+                var savedConfig = await _galleryStatsService.CreateOrUpdateGalleryStatsAsync(config);
                 return Ok(savedConfig);
             }
             catch (Exception ex)
@@ -78,13 +78,13 @@ namespace Dentriz.Configure.Api.Controllers
                 }
 
                 // Check if configuration exists
-                var existingConfig = await _cosmosDbService.GetGalleryStatsAsync();
+                var existingConfig = await _galleryStatsService.GetGalleryStatsAsync();
                 if (existingConfig == null)
                 {
                     return NotFound(new { message = "Gallery stats configuration not found" });
                 }
 
-                var savedConfig = await _cosmosDbService.CreateOrUpdateGalleryStatsAsync(config);
+                var savedConfig = await _galleryStatsService.CreateOrUpdateGalleryStatsAsync(config);
                 return Ok(savedConfig);
             }
             catch (Exception ex)
@@ -102,7 +102,7 @@ namespace Dentriz.Configure.Api.Controllers
         {
             try
             {
-                var result = await _cosmosDbService.DeleteGalleryStatsAsync();
+                var result = await _galleryStatsService.DeleteGalleryStatsAsync();
                 if (result)
                 {
                     return Ok(new { message = "Gallery stats configuration deleted successfully" });

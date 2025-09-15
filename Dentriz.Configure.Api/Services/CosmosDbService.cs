@@ -29,8 +29,9 @@ namespace Dentriz.Configure.Api.Services
     public class CosmosDbService : ICosmosDbService
     {
         private readonly CosmosClient _cosmosClient;
-        private readonly Container _container;
+        private readonly string _databaseName;
         private readonly ILogger<CosmosDbService> _logger;
+        private readonly Dictionary<string, Container> _containers;
 
         public CosmosDbService(IConfiguration configuration, ILogger<CosmosDbService> logger)
         {
@@ -43,26 +44,39 @@ namespace Dentriz.Configure.Api.Services
             }
 
             _cosmosClient = new CosmosClient(connectionString);
+            _databaseName = configuration["CosmosDB:DatabaseName"] ?? "Dentriz";
             
-            var databaseName = configuration["CosmosDB:DatabaseName"] ?? "DentrizConfigure";
-            var containerName = configuration["CosmosDB:ContainerName"] ?? "Configurations";
-            
-            _container = _cosmosClient.GetContainer(databaseName, containerName);
+            // Initialize containers
+            _containers = new Dictionary<string, Container>
+            {
+                { "Header", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:Header"] ?? "header") },
+                { "GalleryContent", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:GalleryContent"] ?? "GalleryContent") },
+                { "GalleryHero", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:GalleryHero"] ?? "GalleryHero") },
+                { "GalleryStats", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:GalleryStats"] ?? "GalleryStats") }
+            };
         }
 
+        private Container GetContainer(string containerType)
+        {
+            if (!_containers.TryGetValue(containerType, out var container))
+            {
+                throw new InvalidOperationException($"Container type '{containerType}' is not configured");
+            }
+            return container;
+        }
+
+        // Header Repository Methods
         public async Task<HeaderConfig?> GetHeaderConfigAsync()
         {
             try
             {
-                var response = await _container.ReadItemAsync<dynamic>(
+                var container = GetContainer("Header");
+                var response = await container.ReadItemAsync<dynamic>(
                     id: "header-config",
                     partitionKey: new PartitionKey("header-config")
                 );
 
                 var doc = response.Resource;
-                
-                // Debug: Log the raw document to see what's actually in Cosmos DB
-                //_logger.LogInformation("Raw document from Cosmos DB: {Document}", System.Text.Json.JsonSerializer.Serialize(doc));
                 
                 // Convert dynamic document to HeaderConfig
                 var config = new HeaderConfig
@@ -141,7 +155,8 @@ namespace Dentriz.Configure.Api.Services
                     version = config.Version
                 };
 
-                var response = await _container.UpsertItemAsync(
+                var container = GetContainer("Header");
+                var response = await container.UpsertItemAsync(
                     item: document,
                     partitionKey: new PartitionKey(config.Id)
                 );
@@ -167,7 +182,8 @@ namespace Dentriz.Configure.Api.Services
         {
             try
             {
-                await _container.DeleteItemAsync<HeaderConfig>(
+                var container = GetContainer("Header");
+                await container.DeleteItemAsync<HeaderConfig>(
                     id: "header-config",
                     partitionKey: new PartitionKey("header-config")
                 );
@@ -187,62 +203,13 @@ namespace Dentriz.Configure.Api.Services
             }
         }
 
-        private List<NavItem> ParseNavItems(dynamic navItems)
-        {
-            try
-            {
-                if (navItems == null)
-                {
-                    _logger.LogInformation("NavItems is null in Cosmos DB document");
-                    return new List<NavItem>();
-                }
-
-                // Log what we're trying to parse
-                var jsonString = System.Text.Json.JsonSerializer.Serialize(navItems);
-                //_logger.LogInformation("NavItems JSON from Cosmos DB: {NavItemsJson}", jsonString);
-
-                // Try to deserialize as array first
-                if (navItems is System.Collections.IEnumerable enumerable)
-                {
-                    var items = new List<NavItem>();
-                    foreach (var item in enumerable)
-                    {
-                        var itemJson = System.Text.Json.JsonSerializer.Serialize(item);
-                        var navItem = System.Text.Json.JsonSerializer.Deserialize<NavItem>(itemJson, new System.Text.Json.JsonSerializerOptions
-                        {
-                            PropertyNameCaseInsensitive = true
-                        });
-                        if (navItem != null)
-                        {
-                            items.Add(navItem);
-                        }
-                    }
-                    _logger.LogInformation("Successfully parsed {Count} navigation items", items.Count);
-                    return items;
-                }
-
-                // Fallback: try direct deserialization
-                var directItems = System.Text.Json.JsonSerializer.Deserialize<List<NavItem>>(jsonString, new System.Text.Json.JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-
-                //_logger.LogInformation("Direct deserialization result: {Count} items", directItems?.Count ?? 0);
-                return directItems ?? new List<NavItem>();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error parsing navigation items from Cosmos DB");
-                return new List<NavItem>();
-            }
-        }
-
-        // Gallery Content Methods
+        // Gallery Content Repository Methods
         public async Task<GalleryContent?> GetGalleryContentAsync()
         {
             try
             {
-                var response = await _container.ReadItemAsync<dynamic>(
+                var container = GetContainer("GalleryContent");
+                var response = await container.ReadItemAsync<dynamic>(
                     id: "gallery-content",
                     partitionKey: new PartitionKey("gallery-content")
                 );
@@ -304,7 +271,8 @@ namespace Dentriz.Configure.Api.Services
                     version = config.Version
                 };
 
-                await _container.UpsertItemAsync(
+                var container = GetContainer("GalleryContent");
+                await container.UpsertItemAsync(
                     item: document,
                     partitionKey: new PartitionKey(config.Id)
                 );
@@ -328,7 +296,8 @@ namespace Dentriz.Configure.Api.Services
         {
             try
             {
-                await _container.DeleteItemAsync<dynamic>(
+                var container = GetContainer("GalleryContent");
+                await container.DeleteItemAsync<dynamic>(
                     id: "gallery-content",
                     partitionKey: new PartitionKey("gallery-content")
                 );
@@ -348,12 +317,13 @@ namespace Dentriz.Configure.Api.Services
             }
         }
 
-        // Gallery Hero Methods
+        // Gallery Hero Repository Methods
         public async Task<GalleryHero?> GetGalleryHeroAsync()
         {
             try
             {
-                var response = await _container.ReadItemAsync<dynamic>(
+                var container = GetContainer("GalleryHero");
+                var response = await container.ReadItemAsync<dynamic>(
                     id: "gallery-hero",
                     partitionKey: new PartitionKey("gallery-hero")
                 );
@@ -407,7 +377,8 @@ namespace Dentriz.Configure.Api.Services
                     version = config.Version
                 };
 
-                await _container.UpsertItemAsync(
+                var container = GetContainer("GalleryHero");
+                await container.UpsertItemAsync(
                     item: document,
                     partitionKey: new PartitionKey(config.Id)
                 );
@@ -431,7 +402,8 @@ namespace Dentriz.Configure.Api.Services
         {
             try
             {
-                await _container.DeleteItemAsync<dynamic>(
+                var container = GetContainer("GalleryHero");
+                await container.DeleteItemAsync<dynamic>(
                     id: "gallery-hero",
                     partitionKey: new PartitionKey("gallery-hero")
                 );
@@ -451,12 +423,13 @@ namespace Dentriz.Configure.Api.Services
             }
         }
 
-        // Gallery Stats Methods
+        // Gallery Stats Repository Methods
         public async Task<GalleryStats?> GetGalleryStatsAsync()
         {
             try
             {
-                var response = await _container.ReadItemAsync<dynamic>(
+                var container = GetContainer("GalleryStats");
+                var response = await container.ReadItemAsync<dynamic>(
                     id: "gallery-stats",
                     partitionKey: new PartitionKey("gallery-stats")
                 );
@@ -508,7 +481,8 @@ namespace Dentriz.Configure.Api.Services
                     version = config.Version
                 };
 
-                await _container.UpsertItemAsync(
+                var container = GetContainer("GalleryStats");
+                await container.UpsertItemAsync(
                     item: document,
                     partitionKey: new PartitionKey(config.Id)
                 );
@@ -532,7 +506,8 @@ namespace Dentriz.Configure.Api.Services
         {
             try
             {
-                await _container.DeleteItemAsync<dynamic>(
+                var container = GetContainer("GalleryStats");
+                await container.DeleteItemAsync<dynamic>(
                     id: "gallery-stats",
                     partitionKey: new PartitionKey("gallery-stats")
                 );
@@ -549,6 +524,54 @@ namespace Dentriz.Configure.Api.Services
             {
                 _logger.LogError(ex, "Error deleting gallery stats from Cosmos DB");
                 throw;
+            }
+        }
+
+        // Helper Methods
+        private List<NavItem> ParseNavItems(dynamic navItems)
+        {
+            try
+            {
+                if (navItems == null)
+                {
+                    _logger.LogInformation("NavItems is null in Cosmos DB document");
+                    return new List<NavItem>();
+                }
+
+                var jsonString = System.Text.Json.JsonSerializer.Serialize(navItems);
+
+                // Try to deserialize as array first
+                if (navItems is System.Collections.IEnumerable enumerable)
+                {
+                    var items = new List<NavItem>();
+                    foreach (var item in enumerable)
+                    {
+                        var itemJson = System.Text.Json.JsonSerializer.Serialize(item);
+                        var navItem = System.Text.Json.JsonSerializer.Deserialize<NavItem>(itemJson, new System.Text.Json.JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+                        if (navItem != null)
+                        {
+                            items.Add(navItem);
+                        }
+                    }
+                    _logger.LogInformation("Successfully parsed {Count} navigation items", items.Count);
+                    return items;
+                }
+
+                // Fallback: try direct deserialization
+                var directItems = System.Text.Json.JsonSerializer.Deserialize<List<NavItem>>(jsonString, new System.Text.Json.JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return directItems ?? new List<NavItem>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error parsing navigation items from Cosmos DB");
+                return new List<NavItem>();
             }
         }
 

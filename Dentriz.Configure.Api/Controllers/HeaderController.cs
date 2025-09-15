@@ -9,12 +9,12 @@ namespace Dentriz.Configure.Api.Controllers
     [Route("api/[controller]")]
     public class HeaderController : ControllerBase
     {
-        private readonly ICosmosDbService _cosmosDbService;
+        private readonly IHeaderService _headerService;
         private readonly ILogger<HeaderController> _logger;
 
-        public HeaderController(ICosmosDbService cosmosDbService, ILogger<HeaderController> logger)
+        public HeaderController(IHeaderService headerService, ILogger<HeaderController> logger)
         {
-            _cosmosDbService = cosmosDbService;
+            _headerService = headerService;
             _logger = logger;
         }
 
@@ -27,7 +27,7 @@ namespace Dentriz.Configure.Api.Controllers
         {
             try
             {
-                var config = await _cosmosDbService.GetHeaderConfigAsync();
+                var config = await _headerService.GetHeaderConfigAsync();
                 
                 if (config == null)
                 {
@@ -61,7 +61,7 @@ namespace Dentriz.Configure.Api.Controllers
                 }
 
                 // Get existing configuration from Cosmos DB or create new one
-                var existingConfig = await _cosmosDbService.GetHeaderConfigAsync();
+                var existingConfig = await _headerService.GetHeaderConfigAsync();
                 if (existingConfig == null)
                 {
                     _logger.LogInformation("No existing header config found, creating new configuration");
@@ -76,7 +76,7 @@ namespace Dentriz.Configure.Api.Controllers
                 var updatedConfig = UpdateHeaderConfig(existingConfig, request);
 
                 // Save to Cosmos DB
-                var savedConfig = await _cosmosDbService.CreateOrUpdateHeaderConfigAsync(updatedConfig);
+                var savedConfig = await _headerService.CreateOrUpdateHeaderConfigAsync(updatedConfig);
 
                 _logger.LogInformation("Header configuration successfully saved to Cosmos DB");
                 return Ok(savedConfig);
@@ -104,7 +104,7 @@ namespace Dentriz.Configure.Api.Controllers
                 }
 
                 // Get existing configuration from Cosmos DB
-                var existingConfig = await _cosmosDbService.GetHeaderConfigAsync();
+                var existingConfig = await _headerService.GetHeaderConfigAsync();
                 if (existingConfig == null)
                 {
                     _logger.LogWarning("Header configuration not found in Cosmos DB for update");
@@ -115,7 +115,7 @@ namespace Dentriz.Configure.Api.Controllers
                 var updatedConfig = UpdateHeaderConfig(existingConfig, request);
 
                 // Save to Cosmos DB
-                var savedConfig = await _cosmosDbService.CreateOrUpdateHeaderConfigAsync(updatedConfig);
+                var savedConfig = await _headerService.CreateOrUpdateHeaderConfigAsync(updatedConfig);
 
                 _logger.LogInformation("Header configuration successfully updated in Cosmos DB");
                 return Ok(savedConfig);
@@ -136,7 +136,7 @@ namespace Dentriz.Configure.Api.Controllers
         {
             try
             {
-                var deleted = await _cosmosDbService.DeleteHeaderConfigAsync();
+                var deleted = await _headerService.DeleteHeaderConfigAsync();
                 
                 if (deleted)
                 {
@@ -165,7 +165,7 @@ namespace Dentriz.Configure.Api.Controllers
             try
             {
                 var defaultConfig = new HeaderConfig();
-                var savedConfig = await _cosmosDbService.CreateOrUpdateHeaderConfigAsync(defaultConfig);
+                var savedConfig = await _headerService.CreateOrUpdateHeaderConfigAsync(defaultConfig);
 
                 _logger.LogInformation("Header configuration reset to default values");
                 return Ok(savedConfig);
@@ -177,39 +177,39 @@ namespace Dentriz.Configure.Api.Controllers
             }
         }
 
-        /// <summary>
-        /// Update navigation items
-        /// </summary>
-        /// <param name="navItems">Navigation items to update</param>
-        /// <returns>Updated header configuration</returns>
-        [HttpPut("nav-items")]
-        public async Task<ActionResult<HeaderConfig>> UpdateNavItems([FromBody] List<NavItem> navItems)
-        {
-            try
-            {
-                if (navItems == null || !navItems.Any())
-                {
-                    return BadRequest(new { message = "Navigation items cannot be empty" });
-                }
+        ///// <summary>
+        ///// Update navigation items
+        ///// </summary>
+        ///// <param name="navItems">Navigation items to update</param>
+        ///// <returns>Updated header configuration</returns>
+        //[HttpPut("nav-items")]
+        //public async Task<ActionResult<HeaderConfig>> UpdateNavItems([FromBody] List<NavItem> navItems)
+        //{
+        //    try
+        //    {
+        //        if (navItems == null || !navItems.Any())
+        //        {
+        //            return BadRequest(new { message = "Navigation items cannot be empty" });
+        //        }
 
-                // Get existing configuration
-                var existingConfig = await _cosmosDbService.GetHeaderConfigAsync() ?? new HeaderConfig();
+        //        // Get existing configuration
+        //        var existingConfig = await _cosmosDbService.GetHeaderConfigAsync() ?? new HeaderConfig();
                 
-                // Update navigation items
-                existingConfig.NavItems = navItems;
+        //        // Update navigation items
+        //        existingConfig.NavItems = navItems;
 
-                // Save to Cosmos DB
-                var savedConfig = await _cosmosDbService.CreateOrUpdateHeaderConfigAsync(existingConfig);
+        //        // Save to Cosmos DB
+        //        var savedConfig = await _headerService.CreateOrUpdateHeaderConfigAsync(existingConfig);
 
-                _logger.LogInformation("Navigation items successfully updated");
-                return Ok(savedConfig);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error updating navigation items");
-                return StatusCode(500, new { message = "Internal server error while updating navigation items" });
-            }
-        }
+        //        _logger.LogInformation("Navigation items successfully updated");
+        //        return Ok(savedConfig);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Error updating navigation items");
+        //        return StatusCode(500, new { message = "Internal server error while updating navigation items" });
+        //    }
+        //}
 
         private HeaderConfig UpdateHeaderConfig(HeaderConfig existing, HeaderConfigRequest request)
         {

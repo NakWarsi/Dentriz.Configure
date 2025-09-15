@@ -8,12 +8,12 @@ namespace Dentriz.Configure.Api.Controllers
     [Route("api/[controller]")]
     public class GalleryContentController : ControllerBase
     {
-        private readonly ICosmosDbService _cosmosDbService;
+        private readonly IGalleryContentService _galleryContentService;
         private readonly ILogger<GalleryContentController> _logger;
 
-        public GalleryContentController(ICosmosDbService cosmosDbService, ILogger<GalleryContentController> logger)
+        public GalleryContentController(IGalleryContentService galleryContentService, ILogger<GalleryContentController> logger)
         {
-            _cosmosDbService = cosmosDbService;
+            _galleryContentService = galleryContentService;
             _logger = logger;
         }
 
@@ -25,12 +25,12 @@ namespace Dentriz.Configure.Api.Controllers
         {
             try
             {
-                var config = await _cosmosDbService.GetGalleryContentAsync();
+                var config = await _galleryContentService.GetGalleryContentAsync();
                 if (config == null)
                 {
                     // Create default configuration if it doesn't exist
                     _logger.LogInformation("Gallery content configuration not found, creating default configuration");
-                    config = await _cosmosDbService.CreateOrUpdateGalleryContentAsync(new Models.GalleryContent());
+                    config = await _galleryContentService.CreateOrUpdateGalleryContentAsync(new Models.GalleryContent());
                 }
                 return Ok(config);
             }
@@ -54,7 +54,7 @@ namespace Dentriz.Configure.Api.Controllers
                     return BadRequest(new { message = "Gallery content configuration is required" });
                 }
 
-                var savedConfig = await _cosmosDbService.CreateOrUpdateGalleryContentAsync(config);
+                var savedConfig = await _galleryContentService.CreateOrUpdateGalleryContentAsync(config);
                 return Ok(savedConfig);
             }
             catch (Exception ex)
@@ -78,13 +78,13 @@ namespace Dentriz.Configure.Api.Controllers
                 }
 
                 // Check if configuration exists
-                var existingConfig = await _cosmosDbService.GetGalleryContentAsync();
+                var existingConfig = await _galleryContentService.GetGalleryContentAsync();
                 if (existingConfig == null)
                 {
                     return NotFound(new { message = "Gallery content configuration not found" });
                 }
 
-                var savedConfig = await _cosmosDbService.CreateOrUpdateGalleryContentAsync(config);
+                var savedConfig = await _galleryContentService.CreateOrUpdateGalleryContentAsync(config);
                 return Ok(savedConfig);
             }
             catch (Exception ex)
@@ -102,7 +102,7 @@ namespace Dentriz.Configure.Api.Controllers
         {
             try
             {
-                var result = await _cosmosDbService.DeleteGalleryContentAsync();
+                var result = await _galleryContentService.DeleteGalleryContentAsync();
                 if (result)
                 {
                     return Ok(new { message = "Gallery content configuration deleted successfully" });

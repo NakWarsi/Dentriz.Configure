@@ -8,12 +8,12 @@ namespace Dentriz.Configure.Api.Controllers
     [Route("api/[controller]")]
     public class GalleryHeroController : ControllerBase
     {
-        private readonly ICosmosDbService _cosmosDbService;
+        private readonly IGalleryHeroService _galleryHeroService;
         private readonly ILogger<GalleryHeroController> _logger;
 
-        public GalleryHeroController(ICosmosDbService cosmosDbService, ILogger<GalleryHeroController> logger)
+        public GalleryHeroController(IGalleryHeroService galleryHeroService, ILogger<GalleryHeroController> logger)
         {
-            _cosmosDbService = cosmosDbService;
+            _galleryHeroService = galleryHeroService;
             _logger = logger;
         }
 
@@ -25,12 +25,12 @@ namespace Dentriz.Configure.Api.Controllers
         {
             try
             {
-                var config = await _cosmosDbService.GetGalleryHeroAsync();
+                var config = await _galleryHeroService.GetGalleryHeroAsync();
                 if (config == null)
                 {
                     // Create default configuration if it doesn't exist
                     _logger.LogInformation("Gallery hero configuration not found, creating default configuration");
-                    config = await _cosmosDbService.CreateOrUpdateGalleryHeroAsync(new Models.GalleryHero());
+                    config = await _galleryHeroService.CreateOrUpdateGalleryHeroAsync(new Models.GalleryHero());
                 }
                 return Ok(config);
             }
@@ -54,7 +54,7 @@ namespace Dentriz.Configure.Api.Controllers
                     return BadRequest(new { message = "Gallery hero configuration is required" });
                 }
 
-                var savedConfig = await _cosmosDbService.CreateOrUpdateGalleryHeroAsync(config);
+                var savedConfig = await _galleryHeroService.CreateOrUpdateGalleryHeroAsync(config);
                 return Ok(savedConfig);
             }
             catch (Exception ex)
@@ -78,13 +78,13 @@ namespace Dentriz.Configure.Api.Controllers
                 }
 
                 // Check if configuration exists
-                var existingConfig = await _cosmosDbService.GetGalleryHeroAsync();
+                var existingConfig = await _galleryHeroService.GetGalleryHeroAsync();
                 if (existingConfig == null)
                 {
                     return NotFound(new { message = "Gallery hero configuration not found" });
                 }
 
-                var savedConfig = await _cosmosDbService.CreateOrUpdateGalleryHeroAsync(config);
+                var savedConfig = await _galleryHeroService.CreateOrUpdateGalleryHeroAsync(config);
                 return Ok(savedConfig);
             }
             catch (Exception ex)
@@ -102,7 +102,7 @@ namespace Dentriz.Configure.Api.Controllers
         {
             try
             {
-                var result = await _cosmosDbService.DeleteGalleryHeroAsync();
+                var result = await _galleryHeroService.DeleteGalleryHeroAsync();
                 if (result)
                 {
                     return Ok(new { message = "Gallery hero configuration deleted successfully" });

@@ -1,4 +1,5 @@
 using Dentriz.Configure.Api.Services;
+using Dentriz.Configure.Api.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +10,43 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add Cosmos DB service
-builder.Services.AddSingleton<ICosmosDbService, CosmosDbService>();
+// Add Cosmos DB Configuration Service
+builder.Services.AddSingleton<ICosmosDbConfigurationService, CosmosDbConfigurationService>();
+
+// Add Repositories
+builder.Services.AddScoped<IHeaderRepository>(provider =>
+{
+    var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
+    var logger = provider.GetRequiredService<ILogger<HeaderRepository>>();
+    return new HeaderRepository(configService.GetHeaderContainer(), logger);
+});
+
+builder.Services.AddScoped<IGalleryContentRepository>(provider =>
+{
+    var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
+    var logger = provider.GetRequiredService<ILogger<GalleryContentRepository>>();
+    return new GalleryContentRepository(configService.GetGalleryContentContainer(), logger);
+});
+
+builder.Services.AddScoped<IGalleryHeroRepository>(provider =>
+{
+    var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
+    var logger = provider.GetRequiredService<ILogger<GalleryHeroRepository>>();
+    return new GalleryHeroRepository(configService.GetGalleryHeroContainer(), logger);
+});
+
+builder.Services.AddScoped<IGalleryStatsRepository>(provider =>
+{
+    var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
+    var logger = provider.GetRequiredService<ILogger<GalleryStatsRepository>>();
+    return new GalleryStatsRepository(configService.GetGalleryStatsContainer(), logger);
+});
+
+// Add Services
+builder.Services.AddScoped<IHeaderService, HeaderService>();
+builder.Services.AddScoped<IGalleryContentService, GalleryContentService>();
+builder.Services.AddScoped<IGalleryHeroService, GalleryHeroService>();
+builder.Services.AddScoped<IGalleryStatsService, GalleryStatsService>();
 
 // Add CORS
 builder.Services.AddCors(options =>
