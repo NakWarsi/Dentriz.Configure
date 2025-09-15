@@ -42,11 +42,46 @@ builder.Services.AddScoped<IGalleryStatsRepository>(provider =>
     return new GalleryStatsRepository(configService.GetGalleryStatsContainer(), logger);
 });
 
+// Add About Repositories
+builder.Services.AddScoped<IAboutDoctorsRepository>(provider =>
+{
+    var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
+    var logger = provider.GetRequiredService<ILogger<AboutDoctorsRepository>>();
+    return new AboutDoctorsRepository(configService.GetAboutDoctorsContainer(), logger);
+});
+
+builder.Services.AddScoped<IAboutValuesRepository>(provider =>
+{
+    var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
+    var logger = provider.GetRequiredService<ILogger<AboutValuesRepository>>();
+    return new AboutValuesRepository(configService.GetAboutValuesContainer(), logger);
+});
+
+builder.Services.AddScoped<IAboutTestimonialsRepository>(provider =>
+{
+    var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
+    var logger = provider.GetRequiredService<ILogger<AboutTestimonialsRepository>>();
+    return new AboutTestimonialsRepository(configService.GetAboutTestimonialsContainer(), logger);
+});
+
+builder.Services.AddScoped<IAboutTechnologyRepository>(provider =>
+{
+    var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
+    var logger = provider.GetRequiredService<ILogger<AboutTechnologyRepository>>();
+    return new AboutTechnologyRepository(configService.GetAboutTechnologyContainer(), logger);
+});
+
 // Add Services
 builder.Services.AddScoped<IHeaderService, HeaderService>();
 builder.Services.AddScoped<IGalleryContentService, GalleryContentService>();
 builder.Services.AddScoped<IGalleryHeroService, GalleryHeroService>();
 builder.Services.AddScoped<IGalleryStatsService, GalleryStatsService>();
+
+// Add About Services
+builder.Services.AddScoped<IAboutDoctorsService, AboutDoctorsService>();
+builder.Services.AddScoped<IAboutValuesService, AboutValuesService>();
+builder.Services.AddScoped<IAboutTestimonialsService, AboutTestimonialsService>();
+builder.Services.AddScoped<IAboutTechnologyService, AboutTechnologyService>();
 
 // Add CORS
 builder.Services.AddCors(options =>

@@ -8,6 +8,10 @@ namespace Dentriz.Configure.Api.Services
         Container GetGalleryContentContainer();
         Container GetGalleryHeroContainer();
         Container GetGalleryStatsContainer();
+        Container GetAboutDoctorsContainer();
+        Container GetAboutValuesContainer();
+        Container GetAboutTestimonialsContainer();
+        Container GetAboutTechnologyContainer();
     }
 
     public class CosmosDbConfigurationService : ICosmosDbConfigurationService
@@ -33,7 +37,11 @@ namespace Dentriz.Configure.Api.Services
                 { "Header", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:Header"] ?? "header") },
                 { "GalleryContent", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:GalleryContent"] ?? "GalleryContent") },
                 { "GalleryHero", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:GalleryHero"] ?? "GalleryHero") },
-                { "GalleryStats", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:GalleryStats"] ?? "GalleryStats") }
+                { "GalleryStats", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:GalleryStats"] ?? "GalleryStats") },
+                { "AboutDoctors", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:AboutDoctors"] ?? "About-Doctors") },
+                { "AboutValues", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:AboutValues"] ?? "About-Values") },
+                { "AboutTestimonials", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:AboutTestimonials"] ?? "About-Testimonials") },
+                { "AboutTechnology", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:AboutTechnology"] ?? "About-Technology") }
             };
         }
 
@@ -55,6 +63,26 @@ namespace Dentriz.Configure.Api.Services
         public Container GetGalleryStatsContainer()
         {
             return _containers["GalleryStats"];
+        }
+
+        public Container GetAboutDoctorsContainer()
+        {
+            return _containers["AboutDoctors"];
+        }
+
+        public Container GetAboutValuesContainer()
+        {
+            return _containers["AboutValues"];
+        }
+
+        public Container GetAboutTestimonialsContainer()
+        {
+            return _containers["AboutTestimonials"];
+        }
+
+        public Container GetAboutTechnologyContainer()
+        {
+            return _containers["AboutTechnology"];
         }
     }
 }
