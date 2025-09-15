@@ -46,7 +46,7 @@ export interface SimpleInsurancePaymentConfig {
   providedIn: 'root'
 })
 export class InsurancePaymentApiService {
-  private configUrl = 'http://localhost:5000/api/config/insurance-payment';
+  private configUrl = 'http://localhost:5208/api/ContactPayments';
   private localStorageKey = 'insurancePaymentConfig';
   private JSON_FILE_PATH = './assets/contact/insurance-payment.json';
 
@@ -59,19 +59,60 @@ export class InsurancePaymentApiService {
       return of(localConfig);
     }
 
-    // For now, directly use constants data instead of trying API
-    console.log('Loading insurance payment config from constants');
-    const defaultConfig = this.getDefaultConfig();
-    this.saveConfigToLocalStorage(defaultConfig);
-    return of(defaultConfig);
+    // Try to load from API
+    console.log('Loading insurance payment config from API:', this.configUrl);
+    return this.http.get(this.configUrl, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      map((apiConfig: any) => {
+        console.log('Received API config:', apiConfig);
+        return this.mapApiConfigToSimpleConfig(apiConfig);
+      }),
+      tap(config => {
+        console.log('Mapped config:', config);
+        this.saveConfigToLocalStorage(config);
+      }),
+      catchError(error => {
+        console.error('Error loading config from API, falling back to default constants:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        const defaultConfig = this.getDefaultConfig();
+        this.saveConfigToLocalStorage(defaultConfig);
+        return of(defaultConfig);
+      })
+    );
   }
 
   saveConfig(config: SimpleInsurancePaymentConfig): Observable<any> {
     this.saveConfigToLocalStorage(config);
-    return this.http.post(this.configUrl, config).pipe(
+    const apiConfig = this.mapSimpleConfigToApiConfig(config);
+    
+    console.log('Saving insurance payment config to API:', apiConfig);
+    
+    return this.http.post(this.configUrl, apiConfig, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      tap((response) => {
+        console.log('Configuration saved successfully to API:', response);
+        alert('Configuration saved successfully to server!');
+      }),
       catchError(error => {
         console.error('Error saving config to API, local storage updated:', error);
-        alert('Configuration saved locally, but failed to save to server. Please check the API.');
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        alert(`Configuration saved locally, but failed to save to server. Error: ${error.status} - ${error.statusText}`);
         return of(null);
       })
     );
@@ -143,5 +184,75 @@ export class InsurancePaymentApiService {
 
   private getDefaultConfig(): SimpleInsurancePaymentConfig {
     return this.mapToSimpleConfig({});
+  }
+
+  private mapApiConfigToSimpleConfig(apiConfig: any): SimpleInsurancePaymentConfig {
+    return {
+      // Section Content
+      sectionTitle: apiConfig.sectionTitle || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_SECTION_TITLE,
+      sectionSubtitle: apiConfig.sectionSubtitle || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_SECTION_SUBTITLE,
+      
+      // Insurance Plans Card
+      insuranceIcon: apiConfig.insuranceIcon || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_INSURANCE_ICON,
+      insuranceTitle: apiConfig.insuranceTitle || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_INSURANCE_TITLE,
+      insuranceDescription: apiConfig.insuranceDescription || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_INSURANCE_DESCRIPTION,
+      insuranceItems: apiConfig.insuranceItems || [...INSURANCE_PAYMENT_CONSTANTS.DEFAULT_INSURANCE_ITEMS],
+      
+      // Payment Options Card
+      paymentIcon: apiConfig.paymentIcon || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_PAYMENT_ICON,
+      paymentTitle: apiConfig.paymentTitle || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_PAYMENT_TITLE,
+      paymentDescription: apiConfig.paymentDescription || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_PAYMENT_DESCRIPTION,
+      paymentItems: apiConfig.paymentItems || [...INSURANCE_PAYMENT_CONSTANTS.DEFAULT_PAYMENT_ITEMS],
+      
+      // New Patient Special Card
+      specialIcon: apiConfig.specialIcon || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_SPECIAL_ICON,
+      specialTitle: apiConfig.specialTitle || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_SPECIAL_TITLE,
+      specialDescription: apiConfig.specialDescription || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_SPECIAL_DESCRIPTION,
+      specialItems: apiConfig.specialItems || [...INSURANCE_PAYMENT_CONSTANTS.DEFAULT_SPECIAL_ITEMS],
+
+      // Styling
+      sectionTitleColor: apiConfig.sectionTitleColor || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_COLORS.SECTION_TITLE,
+      sectionSubtitleColor: apiConfig.sectionSubtitleColor || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_COLORS.SECTION_SUBTITLE,
+      cardTitleColor: apiConfig.cardTitleColor || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_COLORS.CARD_TITLE,
+      cardDescriptionColor: apiConfig.cardDescriptionColor || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_COLORS.CARD_DESCRIPTION,
+      cardItemColor: apiConfig.cardItemColor || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_COLORS.CARD_ITEM,
+      backgroundColor: apiConfig.backgroundColor || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_COLORS.BACKGROUND,
+
+      sectionTitleFontFamily: apiConfig.sectionTitleFontFamily || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_FONTS.SECTION_TITLE,
+      sectionSubtitleFontFamily: apiConfig.sectionSubtitleFontFamily || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_FONTS.SECTION_SUBTITLE,
+      cardTitleFontFamily: apiConfig.cardTitleFontFamily || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_FONTS.CARD_TITLE,
+      cardDescriptionFontFamily: apiConfig.cardDescriptionFontFamily || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_FONTS.CARD_DESCRIPTION,
+      cardItemFontFamily: apiConfig.cardItemFontFamily || INSURANCE_PAYMENT_CONSTANTS.DEFAULT_FONTS.CARD_ITEM
+    };
+  }
+
+  private mapSimpleConfigToApiConfig(simpleConfig: SimpleInsurancePaymentConfig): any {
+    return {
+      sectionTitle: simpleConfig.sectionTitle,
+      sectionSubtitle: simpleConfig.sectionSubtitle,
+      insuranceIcon: simpleConfig.insuranceIcon,
+      insuranceTitle: simpleConfig.insuranceTitle,
+      insuranceDescription: simpleConfig.insuranceDescription,
+      insuranceItems: simpleConfig.insuranceItems,
+      paymentIcon: simpleConfig.paymentIcon,
+      paymentTitle: simpleConfig.paymentTitle,
+      paymentDescription: simpleConfig.paymentDescription,
+      paymentItems: simpleConfig.paymentItems,
+      specialIcon: simpleConfig.specialIcon,
+      specialTitle: simpleConfig.specialTitle,
+      specialDescription: simpleConfig.specialDescription,
+      specialItems: simpleConfig.specialItems,
+      sectionTitleColor: simpleConfig.sectionTitleColor,
+      sectionSubtitleColor: simpleConfig.sectionSubtitleColor,
+      cardTitleColor: simpleConfig.cardTitleColor,
+      cardDescriptionColor: simpleConfig.cardDescriptionColor,
+      cardItemColor: simpleConfig.cardItemColor,
+      backgroundColor: simpleConfig.backgroundColor,
+      sectionTitleFontFamily: simpleConfig.sectionTitleFontFamily,
+      sectionSubtitleFontFamily: simpleConfig.sectionSubtitleFontFamily,
+      cardTitleFontFamily: simpleConfig.cardTitleFontFamily,
+      cardDescriptionFontFamily: simpleConfig.cardDescriptionFontFamily,
+      cardItemFontFamily: simpleConfig.cardItemFontFamily
+    };
   }
 }

@@ -50,7 +50,7 @@ export interface SimpleLocationMapConfig {
   providedIn: 'root'
 })
 export class LocationMapApiService {
-  private configUrl = 'http://localhost:5000/api/config/location-map';
+  private configUrl = 'http://localhost:5208/api/ContactLocation';
   private localStorageKey = 'locationMapConfig';
   private JSON_FILE_PATH = './assets/contact/location-map.json';
 
@@ -63,19 +63,60 @@ export class LocationMapApiService {
       return of(localConfig);
     }
 
-    // For now, directly use constants data instead of trying API
-    console.log('Loading location map config from constants');
-    const defaultConfig = this.getDefaultConfig();
-    this.saveConfigToLocalStorage(defaultConfig);
-    return of(defaultConfig);
+    // Try to load from API
+    console.log('Loading location map config from API:', this.configUrl);
+    return this.http.get(this.configUrl, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      map((apiConfig: any) => {
+        console.log('Received API config:', apiConfig);
+        return this.mapApiConfigToSimpleConfig(apiConfig);
+      }),
+      tap(config => {
+        console.log('Mapped config:', config);
+        this.saveConfigToLocalStorage(config);
+      }),
+      catchError(error => {
+        console.error('Error loading config from API, falling back to default constants:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        const defaultConfig = this.getDefaultConfig();
+        this.saveConfigToLocalStorage(defaultConfig);
+        return of(defaultConfig);
+      })
+    );
   }
 
   saveConfig(config: SimpleLocationMapConfig): Observable<any> {
     this.saveConfigToLocalStorage(config);
-    return this.http.post(this.configUrl, config).pipe(
+    const apiConfig = this.mapSimpleConfigToApiConfig(config);
+    
+    console.log('Saving location map config to API:', apiConfig);
+    
+    return this.http.post(this.configUrl, apiConfig, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      tap((response) => {
+        console.log('Configuration saved successfully to API:', response);
+        alert('Configuration saved successfully to server!');
+      }),
       catchError(error => {
         console.error('Error saving config to API, local storage updated:', error);
-        alert('Configuration saved locally, but failed to save to server. Please check the API.');
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        alert(`Configuration saved locally, but failed to save to server. Error: ${error.status} - ${error.statusText}`);
         return of(null);
       })
     );
@@ -151,5 +192,85 @@ export class LocationMapApiService {
 
   private getDefaultConfig(): SimpleLocationMapConfig {
     return this.mapToSimpleConfig({});
+  }
+
+  private mapApiConfigToSimpleConfig(apiConfig: any): SimpleLocationMapConfig {
+    return {
+      // Section Content
+      sectionTitle: apiConfig.sectionTitle || LOCATION_MAP_CONSTANTS.DEFAULT_SECTION_TITLE,
+      sectionDescription: apiConfig.sectionDescription || LOCATION_MAP_CONSTANTS.DEFAULT_SECTION_DESCRIPTION,
+      
+      // Location Details
+      addressTitle: apiConfig.addressTitle || LOCATION_MAP_CONSTANTS.DEFAULT_ADDRESS_TITLE,
+      addressContent: apiConfig.addressContent || LOCATION_MAP_CONSTANTS.DEFAULT_ADDRESS_CONTENT,
+      parkingTitle: apiConfig.parkingTitle || LOCATION_MAP_CONSTANTS.DEFAULT_PARKING_TITLE,
+      parkingContent: apiConfig.parkingContent || LOCATION_MAP_CONSTANTS.DEFAULT_PARKING_CONTENT,
+      transitTitle: apiConfig.transitTitle || LOCATION_MAP_CONSTANTS.DEFAULT_TRANSIT_TITLE,
+      transitContent: apiConfig.transitContent || LOCATION_MAP_CONSTANTS.DEFAULT_TRANSIT_CONTENT,
+      metroTitle: apiConfig.metroTitle || LOCATION_MAP_CONSTANTS.DEFAULT_METRO_TITLE,
+      metroContent: apiConfig.metroContent || LOCATION_MAP_CONSTANTS.DEFAULT_METRO_CONTENT,
+      
+      // Map Section
+      mapTitle: apiConfig.mapTitle || LOCATION_MAP_CONSTANTS.DEFAULT_MAP_TITLE,
+      mapEmbedUrl: apiConfig.mapEmbedUrl || LOCATION_MAP_CONSTANTS.DEFAULT_MAP_EMBED_URL,
+      mapLocation: apiConfig.mapLocation || LOCATION_MAP_CONSTANTS.DEFAULT_MAP_LOCATION,
+      mapHours: apiConfig.mapHours || LOCATION_MAP_CONSTANTS.DEFAULT_MAP_HOURS,
+      directionsLink: apiConfig.directionsLink || LOCATION_MAP_CONSTANTS.DEFAULT_DIRECTIONS_LINK,
+      directionsText: apiConfig.directionsText || LOCATION_MAP_CONSTANTS.DEFAULT_DIRECTIONS_TEXT,
+
+      // Styling
+      sectionTitleColor: apiConfig.sectionTitleColor || LOCATION_MAP_CONSTANTS.DEFAULT_COLORS.SECTION_TITLE,
+      sectionDescriptionColor: apiConfig.sectionDescriptionColor || LOCATION_MAP_CONSTANTS.DEFAULT_COLORS.SECTION_DESCRIPTION,
+      detailTitleColor: apiConfig.detailTitleColor || LOCATION_MAP_CONSTANTS.DEFAULT_COLORS.DETAIL_TITLE,
+      detailContentColor: apiConfig.detailContentColor || LOCATION_MAP_CONSTANTS.DEFAULT_COLORS.DETAIL_CONTENT,
+      mapTitleColor: apiConfig.mapTitleColor || LOCATION_MAP_CONSTANTS.DEFAULT_COLORS.MAP_TITLE,
+      mapInfoColor: apiConfig.mapInfoColor || LOCATION_MAP_CONSTANTS.DEFAULT_COLORS.MAP_INFO,
+      mapLinkColor: apiConfig.mapLinkColor || LOCATION_MAP_CONSTANTS.DEFAULT_COLORS.MAP_LINK,
+      backgroundColor: apiConfig.backgroundColor || LOCATION_MAP_CONSTANTS.DEFAULT_COLORS.BACKGROUND,
+
+      sectionTitleFontFamily: apiConfig.sectionTitleFontFamily || LOCATION_MAP_CONSTANTS.DEFAULT_FONTS.SECTION_TITLE,
+      sectionDescriptionFontFamily: apiConfig.sectionDescriptionFontFamily || LOCATION_MAP_CONSTANTS.DEFAULT_FONTS.SECTION_DESCRIPTION,
+      detailTitleFontFamily: apiConfig.detailTitleFontFamily || LOCATION_MAP_CONSTANTS.DEFAULT_FONTS.DETAIL_TITLE,
+      detailContentFontFamily: apiConfig.detailContentFontFamily || LOCATION_MAP_CONSTANTS.DEFAULT_FONTS.DETAIL_CONTENT,
+      mapTitleFontFamily: apiConfig.mapTitleFontFamily || LOCATION_MAP_CONSTANTS.DEFAULT_FONTS.MAP_TITLE,
+      mapInfoFontFamily: apiConfig.mapInfoFontFamily || LOCATION_MAP_CONSTANTS.DEFAULT_FONTS.MAP_INFO,
+      mapLinkFontFamily: apiConfig.mapLinkFontFamily || LOCATION_MAP_CONSTANTS.DEFAULT_FONTS.MAP_LINK
+    };
+  }
+
+  private mapSimpleConfigToApiConfig(simpleConfig: SimpleLocationMapConfig): any {
+    return {
+      sectionTitle: simpleConfig.sectionTitle,
+      sectionDescription: simpleConfig.sectionDescription,
+      addressTitle: simpleConfig.addressTitle,
+      addressContent: simpleConfig.addressContent,
+      parkingTitle: simpleConfig.parkingTitle,
+      parkingContent: simpleConfig.parkingContent,
+      transitTitle: simpleConfig.transitTitle,
+      transitContent: simpleConfig.transitContent,
+      metroTitle: simpleConfig.metroTitle,
+      metroContent: simpleConfig.metroContent,
+      mapTitle: simpleConfig.mapTitle,
+      mapEmbedUrl: simpleConfig.mapEmbedUrl,
+      mapLocation: simpleConfig.mapLocation,
+      mapHours: simpleConfig.mapHours,
+      directionsLink: simpleConfig.directionsLink,
+      directionsText: simpleConfig.directionsText,
+      sectionTitleColor: simpleConfig.sectionTitleColor,
+      sectionDescriptionColor: simpleConfig.sectionDescriptionColor,
+      detailTitleColor: simpleConfig.detailTitleColor,
+      detailContentColor: simpleConfig.detailContentColor,
+      mapTitleColor: simpleConfig.mapTitleColor,
+      mapInfoColor: simpleConfig.mapInfoColor,
+      mapLinkColor: simpleConfig.mapLinkColor,
+      backgroundColor: simpleConfig.backgroundColor,
+      sectionTitleFontFamily: simpleConfig.sectionTitleFontFamily,
+      sectionDescriptionFontFamily: simpleConfig.sectionDescriptionFontFamily,
+      detailTitleFontFamily: simpleConfig.detailTitleFontFamily,
+      detailContentFontFamily: simpleConfig.detailContentFontFamily,
+      mapTitleFontFamily: simpleConfig.mapTitleFontFamily,
+      mapInfoFontFamily: simpleConfig.mapInfoFontFamily,
+      mapLinkFontFamily: simpleConfig.mapLinkFontFamily
+    };
   }
 }
