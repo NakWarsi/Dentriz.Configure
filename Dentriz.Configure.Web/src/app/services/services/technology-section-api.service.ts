@@ -33,7 +33,7 @@ export interface SimpleTechnologySectionConfig {
   providedIn: 'root'
 })
 export class TechnologySectionApiService {
-  private configUrl = 'http://localhost:5000/api/config/technology-section';
+  private configUrl = 'http://localhost:5208/api/ServicesTechnologySection';
   private localStorageKey = 'technologySectionConfig';
   private JSON_FILE_PATH = './assets/services/technology-section.json';
 
@@ -46,19 +46,60 @@ export class TechnologySectionApiService {
       return of(localConfig);
     }
 
-    // For now, directly use constants data instead of trying API
-    console.log('Loading technology section config from constants');
-    const defaultConfig = this.getDefaultConfig();
-    this.saveConfigToLocalStorage(defaultConfig);
-    return of(defaultConfig);
+    // Try to load from API
+    console.log('Loading technology section config from API:', this.configUrl);
+    return this.http.get(this.configUrl, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      map((apiConfig: any) => {
+        console.log('Received API config:', apiConfig);
+        return this.mapApiConfigToSimpleConfig(apiConfig);
+      }),
+      tap(config => {
+        console.log('Mapped config:', config);
+        this.saveConfigToLocalStorage(config);
+      }),
+      catchError(error => {
+        console.error('Error loading config from API, falling back to default constants:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        const defaultConfig = this.getDefaultConfig();
+        this.saveConfigToLocalStorage(defaultConfig);
+        return of(defaultConfig);
+      })
+    );
   }
 
   saveConfig(config: SimpleTechnologySectionConfig): Observable<any> {
     this.saveConfigToLocalStorage(config);
-    return this.http.post(this.configUrl, config).pipe(
+    const apiConfig = this.mapSimpleConfigToApiConfig(config);
+    
+    console.log('Saving technology section config to API:', apiConfig);
+    
+    return this.http.post(this.configUrl, apiConfig, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      tap((response) => {
+        console.log('Configuration saved successfully to API:', response);
+        alert('Configuration saved successfully to server!');
+      }),
       catchError(error => {
         console.error('Error saving config to API, local storage updated:', error);
-        alert('Configuration saved locally, but failed to save to server. Please check the API.');
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        alert(`Configuration saved locally, but failed to save to server. Error: ${error.status} - ${error.statusText}`);
         return of(null);
       })
     );
@@ -111,5 +152,41 @@ export class TechnologySectionApiService {
 
   private getDefaultConfig(): SimpleTechnologySectionConfig {
     return this.mapToSimpleConfig({});
+  }
+
+  private mapApiConfigToSimpleConfig(apiConfig: any): SimpleTechnologySectionConfig {
+    const constants = TECHNOLOGY_SECTION_CONSTANTS;
+    
+    return {
+      sectionTitle: apiConfig.sectionTitle || constants.DEFAULT_SECTION_TITLE,
+      sectionSubtitle: apiConfig.sectionSubtitle || constants.DEFAULT_SECTION_SUBTITLE,
+      technologies: apiConfig.technologies || constants.DEFAULT_TECHNOLOGIES,
+      sectionTitleColor: apiConfig.sectionTitleColor || constants.DEFAULT_COLORS.SECTION_TITLE,
+      sectionSubtitleColor: apiConfig.sectionSubtitleColor || constants.DEFAULT_COLORS.SECTION_SUBTITLE,
+      backgroundColor: apiConfig.backgroundColor || constants.DEFAULT_COLORS.BACKGROUND,
+      cardTitleColor: apiConfig.cardTitleColor || constants.DEFAULT_COLORS.CARD_TITLE,
+      cardDescriptionColor: apiConfig.cardDescriptionColor || constants.DEFAULT_COLORS.CARD_DESCRIPTION,
+      sectionTitleFontFamily: apiConfig.sectionTitleFontFamily || constants.DEFAULT_FONTS.SECTION_TITLE,
+      sectionSubtitleFontFamily: apiConfig.sectionSubtitleFontFamily || constants.DEFAULT_FONTS.SECTION_SUBTITLE,
+      cardTitleFontFamily: apiConfig.cardTitleFontFamily || constants.DEFAULT_FONTS.CARD_TITLE,
+      cardDescriptionFontFamily: apiConfig.cardDescriptionFontFamily || constants.DEFAULT_FONTS.CARD_DESCRIPTION
+    };
+  }
+
+  private mapSimpleConfigToApiConfig(simpleConfig: SimpleTechnologySectionConfig): any {
+    return {
+      sectionTitle: simpleConfig.sectionTitle,
+      sectionSubtitle: simpleConfig.sectionSubtitle,
+      technologies: simpleConfig.technologies,
+      sectionTitleColor: simpleConfig.sectionTitleColor,
+      sectionSubtitleColor: simpleConfig.sectionSubtitleColor,
+      backgroundColor: simpleConfig.backgroundColor,
+      cardTitleColor: simpleConfig.cardTitleColor,
+      cardDescriptionColor: simpleConfig.cardDescriptionColor,
+      sectionTitleFontFamily: simpleConfig.sectionTitleFontFamily,
+      sectionSubtitleFontFamily: simpleConfig.sectionSubtitleFontFamily,
+      cardTitleFontFamily: simpleConfig.cardTitleFontFamily,
+      cardDescriptionFontFamily: simpleConfig.cardDescriptionFontFamily
+    };
   }
 }
