@@ -261,11 +261,32 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     console.log('Saving founder section config:', this.founderConfig);
     
-    // Save to localStorage as backup - only in browser
-    if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem('dentrizFounderSectionConfig', JSON.stringify(this.founderConfig));
-      console.log('Founder section config saved to localStorage');
-    }
+    this.founderSectionApiService.saveConfig(this.founderConfig).subscribe({
+      next: (response) => {
+        console.log('✅ Founder section config saved to API:', response);
+        // Also save to localStorage as backup
+        try {
+          if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.setItem('dentrizFounderSectionConfig', JSON.stringify(this.founderConfig));
+            console.log('✅ Founder section config also saved to localStorage');
+          }
+        } catch (error) {
+          console.error('❌ Error saving founder section config to localStorage:', error);
+        }
+      },
+      error: (error) => {
+        console.error('❌ Error saving founder section config to API:', error);
+        // Fallback to localStorage only
+        try {
+          if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.setItem('dentrizFounderSectionConfig', JSON.stringify(this.founderConfig));
+            console.log('✅ Founder section config saved to localStorage as fallback');
+          }
+        } catch (localError) {
+          console.error('❌ Error saving founder section config to localStorage:', localError);
+        }
+      }
+    });
   }
 
   cancelEditingFounder(): void {
@@ -288,12 +309,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   addSpecialty(): void {
     if (!this.founderConfig) return;
-    this.founderConfig.specialties.push('');
+    this.founderConfig.specialties = [...this.founderConfig.specialties, ''];
   }
 
   removeSpecialty(index: number): void {
     if (!this.founderConfig) return;
-    this.founderConfig.specialties.splice(index, 1);
+    this.founderConfig.specialties = this.founderConfig.specialties.filter((_, i) => i !== index);
   }
 
   applyDynamicStyles(): void {
@@ -484,10 +505,35 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   saveNewPatientSectionConfig(): void {
     if (!this.newPatientConfig) return;
-    // Implement API call to save config
-    console.log('Saving new patient config:', this.newPatientConfig);
-    // For now, just log and exit edit mode
-    this.isEditingNewPatient = false;
+
+    console.log('Saving new patient section config:', this.newPatientConfig);
+    
+    this.newPatientSectionApiService.saveConfig(this.newPatientConfig).subscribe({
+      next: (response) => {
+        console.log('✅ New patient section config saved to API:', response);
+        // Also save to localStorage as backup
+        try {
+          if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.setItem('dentrizNewPatientSectionConfig', JSON.stringify(this.newPatientConfig));
+            console.log('✅ New patient section config also saved to localStorage');
+          }
+        } catch (error) {
+          console.error('❌ Error saving new patient section config to localStorage:', error);
+        }
+      },
+      error: (error) => {
+        console.error('❌ Error saving new patient section config to API:', error);
+        // Fallback to localStorage only
+        try {
+          if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.setItem('dentrizNewPatientSectionConfig', JSON.stringify(this.newPatientConfig));
+            console.log('✅ New patient section config saved to localStorage as fallback');
+          }
+        } catch (localError) {
+          console.error('❌ Error saving new patient section config to localStorage:', localError);
+        }
+      }
+    });
   }
 
   resetNewPatientToOriginal(): void {
@@ -651,10 +697,35 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   saveReasonsSectionConfig(): void {
     if (!this.reasonsConfig) return;
-    // Implement API call to save config
-    console.log('Saving reasons config:', this.reasonsConfig);
-    // For now, just log and exit edit mode
-    this.isEditingReasons = false;
+
+    console.log('Saving reasons section config:', this.reasonsConfig);
+    
+    this.reasonsSectionApiService.saveConfig(this.reasonsConfig).subscribe({
+      next: (response) => {
+        console.log('✅ Reasons section config saved to API:', response);
+        // Also save to localStorage as backup
+        try {
+          if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.setItem('dentrizReasonsSectionConfig', JSON.stringify(this.reasonsConfig));
+            console.log('✅ Reasons section config also saved to localStorage');
+          }
+        } catch (error) {
+          console.error('❌ Error saving reasons section config to localStorage:', error);
+        }
+      },
+      error: (error) => {
+        console.error('❌ Error saving reasons section config to API:', error);
+        // Fallback to localStorage only
+        try {
+          if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.setItem('dentrizReasonsSectionConfig', JSON.stringify(this.reasonsConfig));
+            console.log('✅ Reasons section config saved to localStorage as fallback');
+          }
+        } catch (localError) {
+          console.error('❌ Error saving reasons section config to localStorage:', localError);
+        }
+      }
+    });
   }
 
   resetReasonsToOriginal(): void {
@@ -780,15 +851,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   addReasonItem(reasonNumber: number): void {
     if (!this.reasonsConfig) return;
     const itemsProperty = `reason${reasonNumber}Items` as keyof SimpleReasonsConfig;
-    const items = this.reasonsConfig[itemsProperty] as string[];
-    items.push('');
+    const items = this.reasonsConfig[itemsProperty] as readonly string[];
+    (this.reasonsConfig as any)[itemsProperty] = [...items, ''];
   }
 
   removeReasonItem(reasonNumber: number, index: number): void {
     if (!this.reasonsConfig) return;
     const itemsProperty = `reason${reasonNumber}Items` as keyof SimpleReasonsConfig;
-    const items = this.reasonsConfig[itemsProperty] as string[];
-    items.splice(index, 1);
+    const items = this.reasonsConfig[itemsProperty] as readonly string[];
+    (this.reasonsConfig as any)[itemsProperty] = items.filter((_, i) => i !== index);
   }
 
   // Services Section methods (following same pattern as other sections)
@@ -847,10 +918,35 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   saveServicesSectionConfig(): void {
     if (!this.servicesConfig) return;
-    // Implement API call to save config
-    console.log('Saving services config:', this.servicesConfig);
-    // For now, just log and exit edit mode
-    this.isEditingServices = false;
+
+    console.log('Saving services section config:', this.servicesConfig);
+    
+    this.servicesSectionApiService.saveConfig(this.servicesConfig).subscribe({
+      next: (response) => {
+        console.log('✅ Services section config saved to API:', response);
+        // Also save to localStorage as backup
+        try {
+          if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.setItem('dentrizServicesSectionConfig', JSON.stringify(this.servicesConfig));
+            console.log('✅ Services section config also saved to localStorage');
+          }
+        } catch (error) {
+          console.error('❌ Error saving services section config to localStorage:', error);
+        }
+      },
+      error: (error) => {
+        console.error('❌ Error saving services section config to API:', error);
+        // Fallback to localStorage only
+        try {
+          if (typeof window !== 'undefined' && window.localStorage) {
+            localStorage.setItem('dentrizServicesSectionConfig', JSON.stringify(this.servicesConfig));
+            console.log('✅ Services section config saved to localStorage as fallback');
+          }
+        } catch (localError) {
+          console.error('❌ Error saving services section config to localStorage:', localError);
+        }
+      }
+    });
   }
 
   resetServicesToOriginal(): void {
@@ -986,14 +1082,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   addServiceItem(serviceNumber: number): void {
     if (!this.servicesConfig) return;
     const itemsProperty = `service${serviceNumber}Items` as keyof SimpleServicesConfig;
-    const items = this.servicesConfig[itemsProperty] as string[];
-    items.push('');
+    const items = this.servicesConfig[itemsProperty] as readonly string[];
+    (this.servicesConfig as any)[itemsProperty] = [...items, ''];
   }
 
   removeServiceItem(serviceNumber: number, index: number): void {
     if (!this.servicesConfig) return;
     const itemsProperty = `service${serviceNumber}Items` as keyof SimpleServicesConfig;
-    const items = this.servicesConfig[itemsProperty] as string[];
-    items.splice(index, 1);
+    const items = this.servicesConfig[itemsProperty] as readonly string[];
+    (this.servicesConfig as any)[itemsProperty] = items.filter((_, i) => i !== index);
   }
 }
