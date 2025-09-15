@@ -22,7 +22,7 @@ namespace Dentriz.Configure.Api.Services
 
         public async Task<ServicesHero> GetServicesHeroAsync()
         {
-            var hero = await _servicesHeroRepository.GetByIdAsync("services-hero"); // Assuming a fixed ID for the single document
+            var hero = await _servicesHeroRepository.GetServicesHeroAsync();
             if (hero == null)
             {
                 // Create a default document if it doesn't exist
@@ -37,7 +37,7 @@ namespace Dentriz.Configure.Api.Services
                     TitleFontFamily = "Arial, sans-serif",
                     SubtitleFontFamily = "Arial, sans-serif"
                 };
-                await _servicesHeroRepository.CreateOrUpdateAsync(hero);
+                await _servicesHeroRepository.CreateOrUpdateServicesHeroAsync(hero);
             }
             return hero;
         }
@@ -45,12 +45,12 @@ namespace Dentriz.Configure.Api.Services
         public async Task<ServicesHero> CreateOrUpdateServicesHeroAsync(ServicesHero hero)
         {
             hero.Id = "services-hero"; // Ensure consistent ID
-            return await _servicesHeroRepository.CreateOrUpdateAsync(hero);
+            return await _servicesHeroRepository.CreateOrUpdateServicesHeroAsync(hero);
         }
 
         public async Task DeleteServicesHeroAsync(string id)
         {
-            await _servicesHeroRepository.DeleteAsync(id);
+            await _servicesHeroRepository.DeleteServicesHeroAsync();
         }
     }
 }

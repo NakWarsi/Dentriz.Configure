@@ -20,6 +20,7 @@ namespace Dentriz.Configure.Api.Services
         Container GetContactPaymentsContainer();
         Container GetServicesHeroContainer();
         Container GetServicesTechnologySectionContainer();
+        Container GetServicesContainer();
     }
 
     public class CosmosDbConfigurationService : ICosmosDbConfigurationService
@@ -57,7 +58,8 @@ namespace Dentriz.Configure.Api.Services
                 { "ContactOfficeHours", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:ContactOfficeHours"] ?? "Contact-Office-Hours") },
                 { "ContactPayments", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:ContactPayments"] ?? "Contact-Payments") },
                 { "ServicesHero", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:ServicesHero"] ?? "Services-Hero") },
-                { "ServicesTechnologySection", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:ServicesTechnologySection"] ?? "Services-Tech-Section") }
+                { "ServicesTechnologySection", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:ServicesTechnologySection"] ?? "Services-Tech-Section") },
+                { "Services", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:Services"] ?? "Services") }
             };
         }
 
@@ -139,6 +141,11 @@ namespace Dentriz.Configure.Api.Services
         public Container GetServicesTechnologySectionContainer()
         {
             return _containers["ServicesTechnologySection"];
+        }
+
+        public Container GetServicesContainer()
+        {
+            return _containers["Services"];
         }
     }
 }

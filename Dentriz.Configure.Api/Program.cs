@@ -129,6 +129,13 @@ builder.Services.AddScoped<IServicesTechnologySectionRepository>(provider =>
     return new ServicesTechnologySectionRepository(configService.GetServicesTechnologySectionContainer(), logger);
 });
 
+builder.Services.AddScoped<IServicesRepository>(provider =>
+{
+    var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
+    var logger = provider.GetRequiredService<ILogger<ServicesRepository>>();
+    return new ServicesRepository(configService.GetServicesContainer(), logger);
+});
+
 // Add Services
 builder.Services.AddScoped<IHeaderService, HeaderService>();
 builder.Services.AddScoped<IGalleryContentService, GalleryContentService>();
@@ -152,6 +159,7 @@ builder.Services.AddScoped<IContactPaymentsService, ContactPaymentsService>();
 // Add Services Services
 builder.Services.AddScoped<IServicesHeroService, ServicesHeroService>();
 builder.Services.AddScoped<IServicesTechnologySectionService, ServicesTechnologySectionService>();
+builder.Services.AddScoped<IServicesService, ServicesService>();
 
 // Add CORS
 builder.Services.AddCors(options =>

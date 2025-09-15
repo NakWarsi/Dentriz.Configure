@@ -22,7 +22,7 @@ namespace Dentriz.Configure.Api.Services
 
         public async Task<ServicesTechnologySection> GetServicesTechnologySectionAsync()
         {
-            var technologySection = await _servicesTechnologySectionRepository.GetByIdAsync("services-technology-section"); // Assuming a fixed ID for the single document
+            var technologySection = await _servicesTechnologySectionRepository.GetServicesTechnologySectionAsync();
             if (technologySection == null)
             {
                 // Create a default document if it doesn't exist
@@ -68,7 +68,7 @@ namespace Dentriz.Configure.Api.Services
                     CardTitleFontFamily = "Arial, sans-serif",
                     CardDescriptionFontFamily = "Arial, sans-serif"
                 };
-                await _servicesTechnologySectionRepository.CreateOrUpdateAsync(technologySection);
+                await _servicesTechnologySectionRepository.CreateOrUpdateServicesTechnologySectionAsync(technologySection);
             }
             return technologySection;
         }
@@ -76,12 +76,12 @@ namespace Dentriz.Configure.Api.Services
         public async Task<ServicesTechnologySection> CreateOrUpdateServicesTechnologySectionAsync(ServicesTechnologySection technologySection)
         {
             technologySection.Id = "services-technology-section"; // Ensure consistent ID
-            return await _servicesTechnologySectionRepository.CreateOrUpdateAsync(technologySection);
+            return await _servicesTechnologySectionRepository.CreateOrUpdateServicesTechnologySectionAsync(technologySection);
         }
 
         public async Task DeleteServicesTechnologySectionAsync(string id)
         {
-            await _servicesTechnologySectionRepository.DeleteAsync(id);
+            await _servicesTechnologySectionRepository.DeleteServicesTechnologySectionAsync();
         }
     }
 }
