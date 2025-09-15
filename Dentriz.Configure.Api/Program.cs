@@ -136,6 +136,35 @@ builder.Services.AddScoped<IServicesRepository>(provider =>
     return new ServicesRepository(configService.GetServicesContainer(), logger);
 });
 
+// Add Home Repositories
+builder.Services.AddScoped<IHomeFounderRepository>(provider =>
+{
+    var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
+    var logger = provider.GetRequiredService<ILogger<HomeFounderRepository>>();
+    return new HomeFounderRepository(configService.GetHomeFounderContainer(), logger);
+});
+
+builder.Services.AddScoped<IHomeNewPatientRepository>(provider =>
+{
+    var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
+    var logger = provider.GetRequiredService<ILogger<HomeNewPatientRepository>>();
+    return new HomeNewPatientRepository(configService.GetHomeNewPatientContainer(), logger);
+});
+
+builder.Services.AddScoped<IHomeReasonsRepository>(provider =>
+{
+    var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
+    var logger = provider.GetRequiredService<ILogger<HomeReasonsRepository>>();
+    return new HomeReasonsRepository(configService.GetHomeReasonsContainer(), logger);
+});
+
+builder.Services.AddScoped<IHomeServicesRepository>(provider =>
+{
+    var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
+    var logger = provider.GetRequiredService<ILogger<HomeServicesRepository>>();
+    return new HomeServicesRepository(configService.GetHomeServicesContainer(), logger);
+});
+
 // Add Services
 builder.Services.AddScoped<IHeaderService, HeaderService>();
 builder.Services.AddScoped<IGalleryContentService, GalleryContentService>();
@@ -160,6 +189,12 @@ builder.Services.AddScoped<IContactPaymentsService, ContactPaymentsService>();
 builder.Services.AddScoped<IServicesHeroService, ServicesHeroService>();
 builder.Services.AddScoped<IServicesTechnologySectionService, ServicesTechnologySectionService>();
 builder.Services.AddScoped<IServicesService, ServicesService>();
+
+// Add Home Services
+builder.Services.AddScoped<IHomeFounderService, HomeFounderService>();
+builder.Services.AddScoped<IHomeNewPatientService, HomeNewPatientService>();
+builder.Services.AddScoped<IHomeReasonsService, HomeReasonsService>();
+builder.Services.AddScoped<IHomeServicesService, HomeServicesService>();
 
 // Add CORS
 builder.Services.AddCors(options =>
