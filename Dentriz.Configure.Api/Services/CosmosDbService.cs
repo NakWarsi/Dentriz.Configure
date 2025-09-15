@@ -9,6 +9,21 @@ namespace Dentriz.Configure.Api.Services
         Task<HeaderConfig?> GetHeaderConfigAsync();
         Task<HeaderConfig> CreateOrUpdateHeaderConfigAsync(HeaderConfig config);
         Task<bool> DeleteHeaderConfigAsync();
+
+        // Gallery Content methods
+        Task<GalleryContent?> GetGalleryContentAsync();
+        Task<GalleryContent> CreateOrUpdateGalleryContentAsync(GalleryContent config);
+        Task<bool> DeleteGalleryContentAsync();
+
+        // Gallery Hero methods
+        Task<GalleryHero?> GetGalleryHeroAsync();
+        Task<GalleryHero> CreateOrUpdateGalleryHeroAsync(GalleryHero config);
+        Task<bool> DeleteGalleryHeroAsync();
+
+        // Gallery Stats methods
+        Task<GalleryStats?> GetGalleryStatsAsync();
+        Task<GalleryStats> CreateOrUpdateGalleryStatsAsync(GalleryStats config);
+        Task<bool> DeleteGalleryStatsAsync();
     }
 
     public class CosmosDbService : ICosmosDbService
@@ -220,6 +235,389 @@ namespace Dentriz.Configure.Api.Services
                 _logger.LogError(ex, "Error parsing navigation items from Cosmos DB");
                 return new List<NavItem>();
             }
+        }
+
+        // Gallery Content Methods
+        public async Task<GalleryContent?> GetGalleryContentAsync()
+        {
+            try
+            {
+                var response = await _container.ReadItemAsync<dynamic>(
+                    id: "gallery-content",
+                    partitionKey: new PartitionKey("gallery-content")
+                );
+
+                var doc = response.Resource;
+                var config = new GalleryContent
+                {
+                    Id = doc.id ?? "gallery-content",
+                    GallerySections = ParseGallerySections(doc.gallerySections),
+                    CardTitleColor = doc.cardTitleColor ?? "#1e3c72",
+                    CardDescriptionColor = doc.cardDescriptionColor ?? "#666666",
+                    PlaceholderTextColor = doc.placeholderTextColor ?? "#ffffff",
+                    ImageCountColor = doc.imageCountColor ?? "#ffffff",
+                    BackgroundColor = doc.backgroundColor ?? "transparent",
+                    CardBackgroundColor = doc.cardBackgroundColor ?? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                    CardTitleFontFamily = doc.cardTitleFontFamily ?? "Arial, sans-serif",
+                    CardDescriptionFontFamily = doc.cardDescriptionFontFamily ?? "Arial, sans-serif",
+                    PlaceholderTextFontFamily = doc.placeholderTextFontFamily ?? "Arial, sans-serif",
+                    ImageCountFontFamily = doc.imageCountFontFamily ?? "Arial, sans-serif",
+                    LastUpdated = doc.lastUpdated ?? DateTime.UtcNow,
+                    Version = doc.version ?? "1.0"
+                };
+
+                return config;
+            }
+            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving gallery content from Cosmos DB");
+                throw;
+            }
+        }
+
+        public async Task<GalleryContent> CreateOrUpdateGalleryContentAsync(GalleryContent config)
+        {
+            try
+            {
+                config.LastUpdated = DateTime.UtcNow;
+                config.Id = "gallery-content";
+
+                var document = new
+                {
+                    id = config.Id,
+                    gallerySections = config.GallerySections,
+                    cardTitleColor = config.CardTitleColor,
+                    cardDescriptionColor = config.CardDescriptionColor,
+                    placeholderTextColor = config.PlaceholderTextColor,
+                    imageCountColor = config.ImageCountColor,
+                    backgroundColor = config.BackgroundColor,
+                    cardBackgroundColor = config.CardBackgroundColor,
+                    cardTitleFontFamily = config.CardTitleFontFamily,
+                    cardDescriptionFontFamily = config.CardDescriptionFontFamily,
+                    placeholderTextFontFamily = config.PlaceholderTextFontFamily,
+                    imageCountFontFamily = config.ImageCountFontFamily,
+                    lastUpdated = config.LastUpdated,
+                    version = config.Version
+                };
+
+                await _container.UpsertItemAsync(
+                    item: document,
+                    partitionKey: new PartitionKey(config.Id)
+                );
+
+                _logger.LogInformation("Gallery content successfully saved to Cosmos DB");
+                return config;
+            }
+            catch (CosmosException ex)
+            {
+                _logger.LogError(ex, "Cosmos DB error saving gallery content: {StatusCode} - {Message}", ex.StatusCode, ex.Message);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving gallery content to Cosmos DB");
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteGalleryContentAsync()
+        {
+            try
+            {
+                await _container.DeleteItemAsync<dynamic>(
+                    id: "gallery-content",
+                    partitionKey: new PartitionKey("gallery-content")
+                );
+
+                _logger.LogInformation("Gallery content successfully deleted from Cosmos DB");
+                return true;
+            }
+            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                _logger.LogWarning("Gallery content not found for deletion");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting gallery content from Cosmos DB");
+                throw;
+            }
+        }
+
+        // Gallery Hero Methods
+        public async Task<GalleryHero?> GetGalleryHeroAsync()
+        {
+            try
+            {
+                var response = await _container.ReadItemAsync<dynamic>(
+                    id: "gallery-hero",
+                    partitionKey: new PartitionKey("gallery-hero")
+                );
+
+                var doc = response.Resource;
+                var config = new GalleryHero
+                {
+                    Id = doc.id ?? "gallery-hero",
+                    GalleryTitle = doc.galleryTitle ?? "Dentriz Dental Clinic - Smile Gallery",
+                    GallerySubtitle = doc.gallerySubtitle ?? "Cosmetic dentistry in Wakad and dental implants in Pune.",
+                    GalleryTitleColor = doc.galleryTitleColor ?? "#1e3c72",
+                    GallerySubtitleColor = doc.gallerySubtitleColor ?? "#666666",
+                    BackgroundColor = doc.backgroundColor ?? "rgb(231, 241, 235)",
+                    GalleryTitleFontFamily = doc.galleryTitleFontFamily ?? "Arial, sans-serif",
+                    GallerySubtitleFontFamily = doc.gallerySubtitleFontFamily ?? "Arial, sans-serif",
+                    LastUpdated = doc.lastUpdated ?? DateTime.UtcNow,
+                    Version = doc.version ?? "1.0"
+                };
+
+                return config;
+            }
+            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving gallery hero from Cosmos DB");
+                throw;
+            }
+        }
+
+        public async Task<GalleryHero> CreateOrUpdateGalleryHeroAsync(GalleryHero config)
+        {
+            try
+            {
+                config.LastUpdated = DateTime.UtcNow;
+                config.Id = "gallery-hero";
+
+                var document = new
+                {
+                    id = config.Id,
+                    galleryTitle = config.GalleryTitle,
+                    gallerySubtitle = config.GallerySubtitle,
+                    galleryTitleColor = config.GalleryTitleColor,
+                    gallerySubtitleColor = config.GallerySubtitleColor,
+                    backgroundColor = config.BackgroundColor,
+                    galleryTitleFontFamily = config.GalleryTitleFontFamily,
+                    gallerySubtitleFontFamily = config.GallerySubtitleFontFamily,
+                    lastUpdated = config.LastUpdated,
+                    version = config.Version
+                };
+
+                await _container.UpsertItemAsync(
+                    item: document,
+                    partitionKey: new PartitionKey(config.Id)
+                );
+
+                _logger.LogInformation("Gallery hero successfully saved to Cosmos DB");
+                return config;
+            }
+            catch (CosmosException ex)
+            {
+                _logger.LogError(ex, "Cosmos DB error saving gallery hero: {StatusCode} - {Message}", ex.StatusCode, ex.Message);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving gallery hero to Cosmos DB");
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteGalleryHeroAsync()
+        {
+            try
+            {
+                await _container.DeleteItemAsync<dynamic>(
+                    id: "gallery-hero",
+                    partitionKey: new PartitionKey("gallery-hero")
+                );
+
+                _logger.LogInformation("Gallery hero successfully deleted from Cosmos DB");
+                return true;
+            }
+            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                _logger.LogWarning("Gallery hero not found for deletion");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting gallery hero from Cosmos DB");
+                throw;
+            }
+        }
+
+        // Gallery Stats Methods
+        public async Task<GalleryStats?> GetGalleryStatsAsync()
+        {
+            try
+            {
+                var response = await _container.ReadItemAsync<dynamic>(
+                    id: "gallery-stats",
+                    partitionKey: new PartitionKey("gallery-stats")
+                );
+
+                var doc = response.Resource;
+                var config = new GalleryStats
+                {
+                    Id = doc.id ?? "gallery-stats",
+                    GalleryStatsList = ParseStatItems(doc.galleryStats),
+                    StatNumberColor = doc.statNumberColor ?? "#1e3c72",
+                    StatLabelColor = doc.statLabelColor ?? "#666666",
+                    BackgroundColor = doc.backgroundColor ?? "#f8f9fa",
+                    StatNumberFontFamily = doc.statNumberFontFamily ?? "Arial, sans-serif",
+                    StatLabelFontFamily = doc.statLabelFontFamily ?? "Arial, sans-serif",
+                    LastUpdated = doc.lastUpdated ?? DateTime.UtcNow,
+                    Version = doc.version ?? "1.0"
+                };
+
+                return config;
+            }
+            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving gallery stats from Cosmos DB");
+                throw;
+            }
+        }
+
+        public async Task<GalleryStats> CreateOrUpdateGalleryStatsAsync(GalleryStats config)
+        {
+            try
+            {
+                config.LastUpdated = DateTime.UtcNow;
+                config.Id = "gallery-stats";
+
+                var document = new
+                {
+                    id = config.Id,
+                    galleryStats = config.GalleryStatsList,
+                    statNumberColor = config.StatNumberColor,
+                    statLabelColor = config.StatLabelColor,
+                    backgroundColor = config.BackgroundColor,
+                    statNumberFontFamily = config.StatNumberFontFamily,
+                    statLabelFontFamily = config.StatLabelFontFamily,
+                    lastUpdated = config.LastUpdated,
+                    version = config.Version
+                };
+
+                await _container.UpsertItemAsync(
+                    item: document,
+                    partitionKey: new PartitionKey(config.Id)
+                );
+
+                _logger.LogInformation("Gallery stats successfully saved to Cosmos DB");
+                return config;
+            }
+            catch (CosmosException ex)
+            {
+                _logger.LogError(ex, "Cosmos DB error saving gallery stats: {StatusCode} - {Message}", ex.StatusCode, ex.Message);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving gallery stats to Cosmos DB");
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteGalleryStatsAsync()
+        {
+            try
+            {
+                await _container.DeleteItemAsync<dynamic>(
+                    id: "gallery-stats",
+                    partitionKey: new PartitionKey("gallery-stats")
+                );
+
+                _logger.LogInformation("Gallery stats successfully deleted from Cosmos DB");
+                return true;
+            }
+            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                _logger.LogWarning("Gallery stats not found for deletion");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting gallery stats from Cosmos DB");
+                throw;
+            }
+        }
+
+        private List<GallerySection> ParseGallerySections(dynamic gallerySections)
+        {
+            try
+            {
+                if (gallerySections == null)
+                {
+                    return GetDefaultGallerySections();
+                }
+
+                var jsonString = System.Text.Json.JsonSerializer.Serialize(gallerySections);
+                var sections = System.Text.Json.JsonSerializer.Deserialize<List<GallerySection>>(jsonString, new System.Text.Json.JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return sections ?? GetDefaultGallerySections();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error parsing gallery sections from Cosmos DB");
+                return GetDefaultGallerySections();
+            }
+        }
+
+        private List<StatItem> ParseStatItems(dynamic statItems)
+        {
+            try
+            {
+                if (statItems == null)
+                {
+                    return GetDefaultStatItems();
+                }
+
+                var jsonString = System.Text.Json.JsonSerializer.Serialize(statItems);
+                var items = System.Text.Json.JsonSerializer.Deserialize<List<StatItem>>(jsonString, new System.Text.Json.JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return items ?? GetDefaultStatItems();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error parsing stat items from Cosmos DB");
+                return GetDefaultStatItems();
+            }
+        }
+
+        private List<GallerySection> GetDefaultGallerySections()
+        {
+            return new List<GallerySection>
+            {
+                new GallerySection { Id = "before-after", Title = "Before & After", Description = "See the amazing transformations", Route = "/smile-gallery/before-after", Color = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", ImageCount = 25 },
+                new GallerySection { Id = "smile-showcase", Title = "Smile Showcase", Description = "Beautiful smiles created", Route = "/smile-gallery/smile-showcase", Color = "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", ImageCount = 30 }
+            };
+        }
+
+        private List<StatItem> GetDefaultStatItems()
+        {
+            return new List<StatItem>
+            {
+                new StatItem { Number = "500+", Label = "Cosmetic Dentistry Cases in Wakad" },
+                new StatItem { Number = "1000+", Label = "Dental Implants in Pune" },
+                new StatItem { Number = "15+", Label = "Years of Dental Care in Wakad" },
+                new StatItem { Number = "98%", Label = "Satisfaction at Best Dental Clinic in Wakad" }
+            };
         }
     }
 }
