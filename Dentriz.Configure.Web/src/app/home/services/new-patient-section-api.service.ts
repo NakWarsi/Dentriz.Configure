@@ -103,32 +103,12 @@ export class NewPatientSectionApiService {
           return this.mapApiConfigToSimpleConfig(data);
         }),
         catchError(error => {
-          console.warn('⚠️ API failed, falling back to JSON file:', error);
-          return this.loadFromJsonFile();
-        })
-      );
-  }
-
-  /**
-   * Load configuration from JSON file as fallback
-   */
-  private loadFromJsonFile(): Observable<SimpleNewPatientConfig> {
-    const configUrl = './home-new-patient-section.json';
-    
-    console.log('📥 Loading new patient config from JSON file:', configUrl);
-    
-    return this.http.get<any>(configUrl, this.httpOptions)
-      .pipe(
-        map((data: any) => {
-          console.log('✅ New patient config loaded successfully from JSON:', data);
-          return this.mapApiConfigToSimpleConfig(data);
-        }),
-        catchError(error => {
-          console.error(`❌ Failed to load new patient config from JSON:`, error);
+          console.warn('⚠️ API failed, falling back to localStorage:', error);
           return this.loadFromLocalStorage();
         })
       );
   }
+
 
   /**
    * Load configuration from localStorage as final fallback

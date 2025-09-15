@@ -72,32 +72,12 @@ export class FounderSectionApiService {
           return this.mapApiConfigToSimpleConfig(data);
         }),
         catchError(error => {
-          console.warn('⚠️ API failed, falling back to JSON file:', error);
-          return this.loadFromJsonFile();
-        })
-      );
-  }
-
-  /**
-   * Load configuration from JSON file as fallback
-   */
-  private loadFromJsonFile(): Observable<SimpleFounderConfig> {
-    const configUrl = './home-founder-section.json';
-    
-    console.log('📥 Loading founder config from JSON file:', configUrl);
-    
-    return this.http.get<any>(configUrl, this.httpOptions)
-      .pipe(
-        map((data: any) => {
-          console.log('✅ Founder config loaded successfully from JSON:', data);
-          return this.mapApiConfigToSimpleConfig(data);
-        }),
-        catchError(error => {
-          console.error(`❌ Failed to load founder config from JSON:`, error);
+          console.warn('⚠️ API failed, falling back to localStorage:', error);
           return this.loadFromLocalStorage();
         })
       );
   }
+
 
   /**
    * Load configuration from localStorage as final fallback
