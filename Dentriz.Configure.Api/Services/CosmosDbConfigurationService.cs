@@ -18,6 +18,8 @@ namespace Dentriz.Configure.Api.Services
         Container GetContactLocationContainer();
         Container GetContactOfficeHoursContainer();
         Container GetContactPaymentsContainer();
+        Container GetServicesHeroContainer();
+        Container GetServicesTechnologySectionContainer();
     }
 
     public class CosmosDbConfigurationService : ICosmosDbConfigurationService
@@ -53,7 +55,9 @@ namespace Dentriz.Configure.Api.Services
                 { "ContactInfo", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:ContactInfo"] ?? "Contact-Info") },
                 { "ContactLocation", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:ContactLocation"] ?? "Contact-Location") },
                 { "ContactOfficeHours", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:ContactOfficeHours"] ?? "Contact-Office-Hours") },
-                { "ContactPayments", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:ContactPayments"] ?? "Contact-Payments") }
+                { "ContactPayments", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:ContactPayments"] ?? "Contact-Payments") },
+                { "ServicesHero", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:ServicesHero"] ?? "Services-Hero") },
+                { "ServicesTechnologySection", _cosmosClient.GetContainer(_databaseName, configuration["CosmosDB:Containers:ServicesTechnologySection"] ?? "Services-Tech-Section") }
             };
         }
 
@@ -125,6 +129,16 @@ namespace Dentriz.Configure.Api.Services
         public Container GetContactPaymentsContainer()
         {
             return _containers["ContactPayments"];
+        }
+
+        public Container GetServicesHeroContainer()
+        {
+            return _containers["ServicesHero"];
+        }
+
+        public Container GetServicesTechnologySectionContainer()
+        {
+            return _containers["ServicesTechnologySection"];
         }
     }
 }
