@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environments/environment';
 import { DoctorsApiService, SimpleDoctorsConfig } from './services/doctors-api.service';
 import { ValuesApiService, SimpleValuesConfig } from './services/values-api.service';
 import { TechnologyApiService, SimpleTechnologyConfig } from './services/technology-api.service';
@@ -14,6 +15,9 @@ import { TestimonialsApiService, SimpleTestimonialsConfig } from './services/tes
   styleUrl: './about.component.css'
 })
 export class AboutComponent implements OnInit {
+  // Environment configuration
+  isEditingEnabled = environment.enableEditing;
+  
   // Doctors Configuration
   doctorsConfig: SimpleDoctorsConfig | null = null;
   originalDoctorsConfig: SimpleDoctorsConfig | null = null;
