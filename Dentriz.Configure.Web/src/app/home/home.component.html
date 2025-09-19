@@ -448,7 +448,7 @@
 <section class="new-patients" *ngIf="!newPatientLoading && !newPatientError && newPatientConfig">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingNewPatient">
+    <div class="floating-edit-btn" *ngIf="!isEditingNewPatient && isEditingEnabled">
       <button class="edit-btn-floating" (click)="startEditingNewPatient()" title="Edit New Patient Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -463,9 +463,9 @@
             <h3 *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'mainTitle'"
                 [style.color]="newPatientConfig.mainTitleColor"
                 [style.font-family]="newPatientConfig.mainTitleFontFamily"
-                (click)="startInlineEditNewPatient('mainTitle')">
+                (click)="isEditingEnabled ? startInlineEditNewPatient('mainTitle') : null">
               {{ newPatientConfig.mainTitle }}
-              <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingNewPatient && isEditingEnabled">✏️</span>
             </h3>
             <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'mainTitle'"
                    [(ngModel)]="newPatientConfig.mainTitle"
@@ -501,9 +501,9 @@
               <h4 *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'addressTitle'"
                   [style.color]="newPatientConfig.addressTitleColor"
                   [style.font-family]="newPatientConfig.addressTitleFontFamily"
-                  (click)="startInlineEditNewPatient('addressTitle')">
+                  (click)="isEditingEnabled ? startInlineEditNewPatient('addressTitle') : null">
                 {{ newPatientConfig.addressTitle }}
-                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingNewPatient && isEditingEnabled">✏️</span>
               </h4>
               <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'addressTitle'"
                      [(ngModel)]="newPatientConfig.addressTitle"
@@ -536,9 +536,9 @@
               <p *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'addressContent'"
                  [style.color]="newPatientConfig.addressContentColor"
                  [style.font-family]="newPatientConfig.addressContentFontFamily"
-                 (click)="startInlineEditNewPatient('addressContent')"
+                 (click)="isEditingEnabled ? startInlineEditNewPatient('addressContent') : null"
                  [innerHTML]="newPatientConfig.addressContent">
-                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingNewPatient && isEditingEnabled">✏️</span>
               </p>
               <textarea *ngIf="isEditingNewPatient && editingNewPatientElement === 'addressContent'"
                         [(ngModel)]="newPatientConfig.addressContent"
@@ -575,9 +575,9 @@
               <h4 *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'parkingTitle'"
                   [style.color]="newPatientConfig.parkingTitleColor"
                   [style.font-family]="newPatientConfig.parkingTitleFontFamily"
-                  (click)="startInlineEditNewPatient('parkingTitle')">
+                  (click)="isEditingEnabled ? startInlineEditNewPatient('parkingTitle') : null">
                 {{ newPatientConfig.parkingTitle }}
-                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingNewPatient && isEditingEnabled">✏️</span>
               </h4>
               <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'parkingTitle'"
                      [(ngModel)]="newPatientConfig.parkingTitle"
@@ -610,9 +610,9 @@
               <p *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'parkingContent'"
                  [style.color]="newPatientConfig.parkingContentColor"
                  [style.font-family]="newPatientConfig.parkingContentFontFamily"
-                 (click)="startInlineEditNewPatient('parkingContent')">
+                 (click)="isEditingEnabled ? startInlineEditNewPatient('parkingContent') : null">
                 {{ newPatientConfig.parkingContent }}
-                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingNewPatient && isEditingEnabled">✏️</span>
               </p>
               <textarea *ngIf="isEditingNewPatient && editingNewPatientElement === 'parkingContent'"
                         [(ngModel)]="newPatientConfig.parkingContent"
@@ -650,9 +650,9 @@
                [style.color]="newPatientConfig.buttonTextColor"
                [style.font-family]="newPatientConfig.buttonTextFontFamily"
                *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'buttonText'"
-               (click)="startInlineEditNewPatient('buttonText')">
+               (click)="isEditingEnabled ? startInlineEditNewPatient('buttonText') : null">
               {{ newPatientConfig.buttonText }}
-              <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingNewPatient && isEditingEnabled">✏️</span>
             </a>
             <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'buttonText'"
                    [(ngModel)]="newPatientConfig.buttonText"
@@ -722,9 +722,9 @@
             <h3 *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'mapTitle'"
                 [style.color]="newPatientConfig.mapTitleColor"
                 [style.font-family]="newPatientConfig.mapTitleFontFamily"
-                (click)="startInlineEditNewPatient('mapTitle')">
+                (click)="isEditingEnabled ? startInlineEditNewPatient('mapTitle') : null">
               {{ newPatientConfig.mapTitle }}
-              <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingNewPatient && isEditingEnabled">✏️</span>
             </h3>
             <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'mapTitle'"
                    [(ngModel)]="newPatientConfig.mapTitle"
@@ -774,9 +774,9 @@
               <p *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'locationText'"
                  [style.color]="newPatientConfig.locationTextColor"
                  [style.font-family]="newPatientConfig.locationTextFontFamily"
-                 (click)="startInlineEditNewPatient('locationText')">
+                 (click)="isEditingEnabled ? startInlineEditNewPatient('locationText') : null">
                 <strong>{{ newPatientConfig.locationText }}</strong>
-                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingNewPatient && isEditingEnabled">✏️</span>
               </p>
               <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'locationText'"
                      [(ngModel)]="newPatientConfig.locationText"
@@ -811,9 +811,9 @@
               <p *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'hoursText'"
                  [style.color]="newPatientConfig.hoursTextColor"
                  [style.font-family]="newPatientConfig.hoursTextFontFamily"
-                 (click)="startInlineEditNewPatient('hoursText')">
+                 (click)="isEditingEnabled ? startInlineEditNewPatient('hoursText') : null">
                 <strong>{{ newPatientConfig.hoursText }}</strong>
-                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingNewPatient && isEditingEnabled">✏️</span>
               </p>
               <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'hoursText'"
                      [(ngModel)]="newPatientConfig.hoursText"
@@ -851,9 +851,9 @@
                  [style.color]="newPatientConfig.directionsTextColor"
                  [style.font-family]="newPatientConfig.directionsTextFontFamily"
                  *ngIf="!isEditingNewPatient || editingNewPatientElement !== 'directionsText'"
-                 (click)="startInlineEditNewPatient('directionsText')">
+                 (click)="isEditingEnabled ? startInlineEditNewPatient('directionsText') : null">
                 {{ newPatientConfig.directionsText }}
-                <span class="edit-icon" *ngIf="isEditingNewPatient">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingNewPatient && isEditingEnabled">✏️</span>
               </a>
               <input *ngIf="isEditingNewPatient && editingNewPatientElement === 'directionsText'"
                      [(ngModel)]="newPatientConfig.directionsText"
@@ -899,7 +899,7 @@
     </div>
 
     <!-- Edit Actions -->
-    <div class="edit-actions" *ngIf="isEditingNewPatient">
+    <div class="edit-actions" *ngIf="isEditingNewPatient && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingNewPatient()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingNewPatient()">Cancel</button>
       <button class="reset-btn" (click)="resetNewPatientToOriginal()">Reset to Original</button>
@@ -920,7 +920,7 @@
 <section class="reasons" *ngIf="!reasonsLoading && !reasonsError && reasonsConfig">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingReasons">
+    <div class="floating-edit-btn" *ngIf="!isEditingReasons && isEditingEnabled">
       <button class="edit-btn-floating" (click)="startEditingReasons()" title="Edit Reasons Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -933,9 +933,9 @@
             [style.color]="reasonsConfig.sectionTitleColor"
             [style.font-family]="reasonsConfig.sectionTitleFontFamily"
             *ngIf="!isEditingReasons || editingReasonsElement !== 'sectionTitle'"
-            (click)="startInlineEditReasons('sectionTitle')">
+            (click)="isEditingEnabled ? startInlineEditReasons('sectionTitle') : null">
           {{ reasonsConfig.sectionTitle }}
-          <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+          <span class="edit-icon" *ngIf="isEditingReasons && isEditingEnabled">✏️</span>
         </h2>
         <input *ngIf="isEditingReasons && editingReasonsElement === 'sectionTitle'"
                [(ngModel)]="reasonsConfig.sectionTitle"
@@ -971,9 +971,9 @@
            [style.color]="reasonsConfig.sectionIntroColor"
            [style.font-family]="reasonsConfig.sectionIntroFontFamily"
            *ngIf="!isEditingReasons || editingReasonsElement !== 'sectionIntro'"
-           (click)="startInlineEditReasons('sectionIntro')"
+           (click)="isEditingEnabled ? startInlineEditReasons('sectionIntro') : null"
            [innerHTML]="reasonsConfig.sectionIntro">
-          <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+          <span class="edit-icon" *ngIf="isEditingReasons && isEditingEnabled">✏️</span>
         </p>
         <textarea *ngIf="isEditingReasons && editingReasonsElement === 'sectionIntro'"
                   [(ngModel)]="reasonsConfig.sectionIntro"
@@ -1011,9 +1011,9 @@
             <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason1Title'"
                 [style.color]="reasonsConfig.reason1TitleColor"
                 [style.font-family]="reasonsConfig.reason1TitleFontFamily"
-                (click)="startInlineEditReasons('reason1Title')">
+                (click)="isEditingEnabled ? startInlineEditReasons('reason1Title') : null">
               {{ reasonsConfig.reason1Title }}
-              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingReasons && isEditingEnabled">✏️</span>
             </h3>
             <input *ngIf="isEditingReasons && editingReasonsElement === 'reason1Title'"
                    [(ngModel)]="reasonsConfig.reason1Title"
@@ -1058,9 +1058,9 @@
             <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason2Title'"
                 [style.color]="reasonsConfig.reason2TitleColor"
                 [style.font-family]="reasonsConfig.reason2TitleFontFamily"
-                (click)="startInlineEditReasons('reason2Title')">
+                (click)="isEditingEnabled ? startInlineEditReasons('reason2Title') : null">
               {{ reasonsConfig.reason2Title }}
-              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingReasons && isEditingEnabled">✏️</span>
             </h3>
             <input *ngIf="isEditingReasons && editingReasonsElement === 'reason2Title'"
                    [(ngModel)]="reasonsConfig.reason2Title"
@@ -1105,9 +1105,9 @@
             <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason3Title'"
                 [style.color]="reasonsConfig.reason3TitleColor"
                 [style.font-family]="reasonsConfig.reason3TitleFontFamily"
-                (click)="startInlineEditReasons('reason3Title')">
+                (click)="isEditingEnabled ? startInlineEditReasons('reason3Title') : null">
               {{ reasonsConfig.reason3Title }}
-              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingReasons && isEditingEnabled">✏️</span>
             </h3>
             <input *ngIf="isEditingReasons && editingReasonsElement === 'reason3Title'"
                    [(ngModel)]="reasonsConfig.reason3Title"
@@ -1152,9 +1152,9 @@
             <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason4Title'"
                 [style.color]="reasonsConfig.reason4TitleColor"
                 [style.font-family]="reasonsConfig.reason4TitleFontFamily"
-                (click)="startInlineEditReasons('reason4Title')">
+                (click)="isEditingEnabled ? startInlineEditReasons('reason4Title') : null">
               {{ reasonsConfig.reason4Title }}
-              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingReasons && isEditingEnabled">✏️</span>
             </h3>
             <input *ngIf="isEditingReasons && editingReasonsElement === 'reason4Title'"
                    [(ngModel)]="reasonsConfig.reason4Title"
@@ -1199,9 +1199,9 @@
             <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason5Title'"
                 [style.color]="reasonsConfig.reason5TitleColor"
                 [style.font-family]="reasonsConfig.reason5TitleFontFamily"
-                (click)="startInlineEditReasons('reason5Title')">
+                (click)="isEditingEnabled ? startInlineEditReasons('reason5Title') : null">
               {{ reasonsConfig.reason5Title }}
-              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingReasons && isEditingEnabled">✏️</span>
             </h3>
             <input *ngIf="isEditingReasons && editingReasonsElement === 'reason5Title'"
                    [(ngModel)]="reasonsConfig.reason5Title"
@@ -1246,9 +1246,9 @@
             <h3 *ngIf="!isEditingReasons || editingReasonsElement !== 'reason6Title'"
                 [style.color]="reasonsConfig.reason6TitleColor"
                 [style.font-family]="reasonsConfig.reason6TitleFontFamily"
-                (click)="startInlineEditReasons('reason6Title')">
+                (click)="isEditingEnabled ? startInlineEditReasons('reason6Title') : null">
               {{ reasonsConfig.reason6Title }}
-              <span class="edit-icon" *ngIf="isEditingReasons">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingReasons && isEditingEnabled">✏️</span>
             </h3>
             <input *ngIf="isEditingReasons && editingReasonsElement === 'reason6Title'"
                    [(ngModel)]="reasonsConfig.reason6Title"
@@ -1300,7 +1300,7 @@
     </div>
 
     <!-- Edit Actions -->
-    <div class="edit-actions" *ngIf="isEditingReasons">
+    <div class="edit-actions" *ngIf="isEditingReasons && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingReasons()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingReasons()">Cancel</button>
       <button class="reset-btn" (click)="resetReasonsToOriginal()">Reset to Original</button>
@@ -1322,7 +1322,7 @@
 <section class="services-overview" *ngIf="!servicesLoading && !servicesError && servicesConfig">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingServices">
+    <div class="floating-edit-btn" *ngIf="!isEditingServices && isEditingEnabled">
       <button class="edit-btn-floating" (click)="startEditingServices()" title="Edit Services Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -1335,9 +1335,9 @@
             [style.color]="servicesConfig.sectionTitleColor"
             [style.font-family]="servicesConfig.sectionTitleFontFamily"
             *ngIf="!isEditingServices || editingServicesElement !== 'sectionTitle'"
-            (click)="startInlineEditServices('sectionTitle')">
+            (click)="isEditingEnabled ? startInlineEditServices('sectionTitle') : null">
           {{ servicesConfig.sectionTitle }}
-          <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+          <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
         </h2>
         <input *ngIf="isEditingServices && editingServicesElement === 'sectionTitle'"
                [(ngModel)]="servicesConfig.sectionTitle"
@@ -1374,9 +1374,9 @@
           <h3 *ngIf="!isEditingServices || editingServicesElement !== 'service1Title'"
               [style.color]="servicesConfig.service1TitleColor"
               [style.font-family]="servicesConfig.service1TitleFontFamily"
-              (click)="startInlineEditServices('service1Title')">
+              (click)="isEditingEnabled ? startInlineEditServices('service1Title') : null">
             {{ servicesConfig.service1Title }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingServices && editingServicesElement === 'service1Title'"
                  [(ngModel)]="servicesConfig.service1Title"
@@ -1408,7 +1408,7 @@
         <!-- Service 1 Items with inline editing -->
         <div class="editable-element">
           <div *ngIf="!isEditingServices || editingServicesElement !== 'service1Items'" 
-               (click)="startInlineEditServices('service1Items')" 
+               (click)="isEditingEnabled ? startInlineEditServices('service1Items') : null" 
                class="service-items-container">
             <ul class="service-items-list" 
                 [style.color]="servicesConfig.service1ItemsColor"
@@ -1417,7 +1417,7 @@
                   [style.color]="servicesConfig.service1ItemsColor"
                   [style.font-family]="servicesConfig.service1ItemsFontFamily">{{ item }}</li>
         </ul>
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </div>
           <div *ngIf="isEditingServices && editingServicesElement === 'service1Items'" class="service-items-edit-inline">
             <div class="service-item" *ngFor="let item of servicesConfig.service1Items; let i = index">
@@ -1455,9 +1455,9 @@
              [style.color]="servicesConfig.service1ButtonColor"
              [style.font-family]="servicesConfig.service1ButtonFontFamily"
              *ngIf="!isEditingServices || editingServicesElement !== 'service1ButtonText'"
-             (click)="startInlineEditServices('service1ButtonText')">
+             (click)="isEditingEnabled ? startInlineEditServices('service1ButtonText') : null">
             {{ servicesConfig.service1ButtonText }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </a>
           <input *ngIf="isEditingServices && editingServicesElement === 'service1ButtonText'"
                  [(ngModel)]="servicesConfig.service1ButtonText"
@@ -1494,9 +1494,9 @@
           <h3 *ngIf="!isEditingServices || editingServicesElement !== 'service2Title'"
               [style.color]="servicesConfig.service2TitleColor"
               [style.font-family]="servicesConfig.service2TitleFontFamily"
-              (click)="startInlineEditServices('service2Title')">
+              (click)="isEditingEnabled ? startInlineEditServices('service2Title') : null">
             {{ servicesConfig.service2Title }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingServices && editingServicesElement === 'service2Title'"
                  [(ngModel)]="servicesConfig.service2Title"
@@ -1528,7 +1528,7 @@
         <!-- Service 2 Items with inline editing -->
         <div class="editable-element">
           <div *ngIf="!isEditingServices || editingServicesElement !== 'service2Items'" 
-               (click)="startInlineEditServices('service2Items')" 
+               (click)="isEditingEnabled ? startInlineEditServices('service2Items') : null" 
                class="service-items-container">
             <ul class="service-items-list" 
                 [style.color]="servicesConfig.service2ItemsColor"
@@ -1537,7 +1537,7 @@
                   [style.color]="servicesConfig.service2ItemsColor"
                   [style.font-family]="servicesConfig.service2ItemsFontFamily">{{ item }}</li>
         </ul>
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </div>
           <div *ngIf="isEditingServices && editingServicesElement === 'service2Items'" class="service-items-edit-inline">
             <div class="service-item" *ngFor="let item of servicesConfig.service2Items; let i = index">
@@ -1575,9 +1575,9 @@
              [style.color]="servicesConfig.service2ButtonColor"
              [style.font-family]="servicesConfig.service2ButtonFontFamily"
              *ngIf="!isEditingServices || editingServicesElement !== 'service2ButtonText'"
-             (click)="startInlineEditServices('service2ButtonText')">
+             (click)="isEditingEnabled ? startInlineEditServices('service2ButtonText') : null">
             {{ servicesConfig.service2ButtonText }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </a>
           <input *ngIf="isEditingServices && editingServicesElement === 'service2ButtonText'"
                  [(ngModel)]="servicesConfig.service2ButtonText"
@@ -1614,9 +1614,9 @@
           <h3 *ngIf="!isEditingServices || editingServicesElement !== 'service3Title'"
               [style.color]="servicesConfig.service3TitleColor"
               [style.font-family]="servicesConfig.service3TitleFontFamily"
-              (click)="startInlineEditServices('service3Title')">
+              (click)="isEditingEnabled ? startInlineEditServices('service3Title') : null">
             {{ servicesConfig.service3Title }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingServices && editingServicesElement === 'service3Title'"
                  [(ngModel)]="servicesConfig.service3Title"
@@ -1648,7 +1648,7 @@
         <!-- Service 3 Items with inline editing -->
         <div class="editable-element">
           <div *ngIf="!isEditingServices || editingServicesElement !== 'service3Items'" 
-               (click)="startInlineEditServices('service3Items')" 
+               (click)="isEditingEnabled ? startInlineEditServices('service3Items') : null" 
                class="service-items-container">
             <ul class="service-items-list" 
                 [style.color]="servicesConfig.service3ItemsColor"
@@ -1657,7 +1657,7 @@
                   [style.color]="servicesConfig.service3ItemsColor"
                   [style.font-family]="servicesConfig.service3ItemsFontFamily">{{ item }}</li>
         </ul>
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </div>
           <div *ngIf="isEditingServices && editingServicesElement === 'service3Items'" class="service-items-edit-inline">
             <div class="service-item" *ngFor="let item of servicesConfig.service3Items; let i = index">
@@ -1695,9 +1695,9 @@
              [style.color]="servicesConfig.service3ButtonColor"
              [style.font-family]="servicesConfig.service3ButtonFontFamily"
              *ngIf="!isEditingServices || editingServicesElement !== 'service3ButtonText'"
-             (click)="startInlineEditServices('service3ButtonText')">
+             (click)="isEditingEnabled ? startInlineEditServices('service3ButtonText') : null">
             {{ servicesConfig.service3ButtonText }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </a>
           <input *ngIf="isEditingServices && editingServicesElement === 'service3ButtonText'"
                  [(ngModel)]="servicesConfig.service3ButtonText"
@@ -1734,9 +1734,9 @@
           <h3 *ngIf="!isEditingServices || editingServicesElement !== 'service4Title'"
               [style.color]="servicesConfig.service4TitleColor"
               [style.font-family]="servicesConfig.service4TitleFontFamily"
-              (click)="startInlineEditServices('service4Title')">
+              (click)="isEditingEnabled ? startInlineEditServices('service4Title') : null">
             {{ servicesConfig.service4Title }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingServices && editingServicesElement === 'service4Title'"
                  [(ngModel)]="servicesConfig.service4Title"
@@ -1768,7 +1768,7 @@
         <!-- Service 4 Items with inline editing -->
         <div class="editable-element">
           <div *ngIf="!isEditingServices || editingServicesElement !== 'service4Items'" 
-               (click)="startInlineEditServices('service4Items')" 
+               (click)="isEditingEnabled ? startInlineEditServices('service4Items') : null" 
                class="service-items-container">
             <ul class="service-items-list" 
                 [style.color]="servicesConfig.service4ItemsColor"
@@ -1777,7 +1777,7 @@
                   [style.color]="servicesConfig.service4ItemsColor"
                   [style.font-family]="servicesConfig.service4ItemsFontFamily">{{ item }}</li>
             </ul>
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </div>
           <div *ngIf="isEditingServices && editingServicesElement === 'service4Items'" class="service-items-edit-inline">
             <div class="service-item" *ngFor="let item of servicesConfig.service4Items; let i = index">
@@ -1817,7 +1817,7 @@
              *ngIf="!isEditingServices || editingServicesElement !== 'service4ButtonText'"
              (click)="startInlineEditServices('service4ButtonText')">
             {{ servicesConfig.service4ButtonText }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </a>
           <input *ngIf="isEditingServices && editingServicesElement === 'service4ButtonText'"
                  [(ngModel)]="servicesConfig.service4ButtonText"
@@ -1856,7 +1856,7 @@
               [style.font-family]="servicesConfig.service5TitleFontFamily"
               (click)="startInlineEditServices('service5Title')">
             {{ servicesConfig.service5Title }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingServices && editingServicesElement === 'service5Title'"
                  [(ngModel)]="servicesConfig.service5Title"
@@ -1897,7 +1897,7 @@
                   [style.color]="servicesConfig.service5ItemsColor"
                   [style.font-family]="servicesConfig.service5ItemsFontFamily">{{ item }}</li>
             </ul>
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </div>
           <div *ngIf="isEditingServices && editingServicesElement === 'service5Items'" class="service-items-edit-inline">
             <div class="service-item" *ngFor="let item of servicesConfig.service5Items; let i = index">
@@ -1937,7 +1937,7 @@
              *ngIf="!isEditingServices || editingServicesElement !== 'service5ButtonText'"
              (click)="startInlineEditServices('service5ButtonText')">
             {{ servicesConfig.service5ButtonText }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </a>
           <input *ngIf="isEditingServices && editingServicesElement === 'service5ButtonText'"
                  [(ngModel)]="servicesConfig.service5ButtonText"
@@ -1976,7 +1976,7 @@
               [style.font-family]="servicesConfig.service6TitleFontFamily"
               (click)="startInlineEditServices('service6Title')">
             {{ servicesConfig.service6Title }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingServices && editingServicesElement === 'service6Title'"
                  [(ngModel)]="servicesConfig.service6Title"
@@ -2017,7 +2017,7 @@
                   [style.color]="servicesConfig.service6ItemsColor"
                   [style.font-family]="servicesConfig.service6ItemsFontFamily">{{ item }}</li>
             </ul>
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </div>
           <div *ngIf="isEditingServices && editingServicesElement === 'service6Items'" class="service-items-edit-inline">
             <div class="service-item" *ngFor="let item of servicesConfig.service6Items; let i = index">
@@ -2057,7 +2057,7 @@
              *ngIf="!isEditingServices || editingServicesElement !== 'service6ButtonText'"
              (click)="startInlineEditServices('service6ButtonText')">
             {{ servicesConfig.service6ButtonText }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </a>
           <input *ngIf="isEditingServices && editingServicesElement === 'service6ButtonText'"
                  [(ngModel)]="servicesConfig.service6ButtonText"
@@ -2096,7 +2096,7 @@
               [style.font-family]="servicesConfig.service7TitleFontFamily"
               (click)="startInlineEditServices('service7Title')">
             {{ servicesConfig.service7Title }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingServices && editingServicesElement === 'service7Title'"
                  [(ngModel)]="servicesConfig.service7Title"
@@ -2137,7 +2137,7 @@
                   [style.color]="servicesConfig.service7ItemsColor"
                   [style.font-family]="servicesConfig.service7ItemsFontFamily">{{ item }}</li>
             </ul>
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </div>
           <div *ngIf="isEditingServices && editingServicesElement === 'service7Items'" class="service-items-edit-inline">
             <div class="service-item" *ngFor="let item of servicesConfig.service7Items; let i = index">
@@ -2177,7 +2177,7 @@
              *ngIf="!isEditingServices || editingServicesElement !== 'service7ButtonText'"
              (click)="startInlineEditServices('service7ButtonText')">
             {{ servicesConfig.service7ButtonText }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </a>
           <input *ngIf="isEditingServices && editingServicesElement === 'service7ButtonText'"
                  [(ngModel)]="servicesConfig.service7ButtonText"
@@ -2216,7 +2216,7 @@
               [style.font-family]="servicesConfig.service8TitleFontFamily"
               (click)="startInlineEditServices('service8Title')">
             {{ servicesConfig.service8Title }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingServices && editingServicesElement === 'service8Title'"
                  [(ngModel)]="servicesConfig.service8Title"
@@ -2257,7 +2257,7 @@
                   [style.color]="servicesConfig.service8ItemsColor"
                   [style.font-family]="servicesConfig.service8ItemsFontFamily">{{ item }}</li>
             </ul>
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </div>
           <div *ngIf="isEditingServices && editingServicesElement === 'service8Items'" class="service-items-edit-inline">
             <div class="service-item" *ngFor="let item of servicesConfig.service8Items; let i = index">
@@ -2297,7 +2297,7 @@
              *ngIf="!isEditingServices || editingServicesElement !== 'service8ButtonText'"
              (click)="startInlineEditServices('service8ButtonText')">
             {{ servicesConfig.service8ButtonText }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </a>
           <input *ngIf="isEditingServices && editingServicesElement === 'service8ButtonText'"
                  [(ngModel)]="servicesConfig.service8ButtonText"
@@ -2336,7 +2336,7 @@
               [style.font-family]="servicesConfig.service9TitleFontFamily"
               (click)="startInlineEditServices('service9Title')">
             {{ servicesConfig.service9Title }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingServices && editingServicesElement === 'service9Title'"
                  [(ngModel)]="servicesConfig.service9Title"
@@ -2377,7 +2377,7 @@
                   [style.color]="servicesConfig.service9ItemsColor"
                   [style.font-family]="servicesConfig.service9ItemsFontFamily">{{ item }}</li>
             </ul>
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </div>
           <div *ngIf="isEditingServices && editingServicesElement === 'service9Items'" class="service-items-edit-inline">
             <div class="service-item" *ngFor="let item of servicesConfig.service9Items; let i = index">
@@ -2417,7 +2417,7 @@
              *ngIf="!isEditingServices || editingServicesElement !== 'service9ButtonText'"
              (click)="startInlineEditServices('service9ButtonText')">
             {{ servicesConfig.service9ButtonText }}
-            <span class="edit-icon" *ngIf="isEditingServices">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </a>
           <input *ngIf="isEditingServices && editingServicesElement === 'service9ButtonText'"
                  [(ngModel)]="servicesConfig.service9ButtonText"
@@ -2463,7 +2463,7 @@
     </div>
 
     <!-- Edit Actions -->
-    <div class="edit-actions" *ngIf="isEditingServices">
+    <div class="edit-actions" *ngIf="isEditingServices && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingServices()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingServices()">Cancel</button>
       <button class="reset-btn" (click)="resetServicesToOriginal()">Reset to Original</button>
