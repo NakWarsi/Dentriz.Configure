@@ -4,7 +4,11 @@
   "scripts": {
     "start": "node server.js",
     "build": "ng build --configuration production",
-    "build:static": "ng build --configuration production --output-path=dist/DentrizWeb/browser",
+    "build:static": "ng build --configuration static",
+    "build:dynamic": "ng build --configuration dynamic",
+    "serve:static": "ng serve --configuration static",
+    "serve:dynamic": "ng serve --configuration dynamic",
+    "serve": "ng serve --configuration dynamic",
     "postinstall": "npm run build:static"
   },
   "prettier": {

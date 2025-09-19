@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { TECHNOLOGY_SECTION_CONSTANTS } from '../constants/technology-section.constants';
+import { IDataService } from '../../core/interfaces/data-service.interface';
 
 export interface TechnologyCard {
   icon: string;
@@ -32,7 +33,7 @@ export interface SimpleTechnologySectionConfig {
 @Injectable({
   providedIn: 'root'
 })
-export class TechnologySectionApiService {
+export class TechnologySectionApiService implements IDataService<SimpleTechnologySectionConfig> {
   private configUrl = 'http://localhost:5208/api/ServicesTechnologySection';
   private localStorageKey = 'technologySectionConfig';
   private JSON_FILE_PATH = './assets/services/technology-section.json';
@@ -188,5 +189,9 @@ export class TechnologySectionApiService {
       cardTitleFontFamily: simpleConfig.cardTitleFontFamily,
       cardDescriptionFontFamily: simpleConfig.cardDescriptionFontFamily
     };
+  }
+
+  isEditingEnabled(): boolean {
+    return true; // API mode supports editing
   }
 }

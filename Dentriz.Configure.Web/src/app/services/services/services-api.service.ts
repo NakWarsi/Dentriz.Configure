@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
+import { IDataService } from '../../core/interfaces/data-service.interface';
 
 export interface ServiceItem {
   icon: string;
@@ -34,7 +35,7 @@ export interface SimpleServicesConfig {
 @Injectable({
   providedIn: 'root'
 })
-export class ServicesApiService {
+export class ServicesApiService implements IDataService<SimpleServicesConfig> {
   private configUrl = 'http://localhost:5208/api/Services';
   private localStorageKey = 'servicesConfig';
 
@@ -271,5 +272,9 @@ export class ServicesApiService {
         }
       ]
     };
+  }
+
+  isEditingEnabled(): boolean {
+    return true; // API mode supports editing
   }
 }

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { SERVICES_HERO_CONSTANTS } from '../constants/services-hero.constants';
+import { IDataService } from '../../core/interfaces/data-service.interface';
 
 export interface SimpleServicesHeroConfig {
   // Section Content
@@ -21,7 +22,7 @@ export interface SimpleServicesHeroConfig {
 @Injectable({
   providedIn: 'root'
 })
-export class ServicesHeroApiService {
+export class ServicesHeroApiService implements IDataService<SimpleServicesHeroConfig> {
   private configUrl = 'http://localhost:5208/api/ServicesHero';
   private localStorageKey = 'servicesHeroConfig';
   private JSON_FILE_PATH = './assets/services/services-hero.json';
@@ -162,5 +163,9 @@ export class ServicesHeroApiService {
       titleFontFamily: simpleConfig.titleFontFamily,
       subtitleFontFamily: simpleConfig.subtitleFontFamily
     };
+  }
+
+  isEditingEnabled(): boolean {
+    return true; // API mode supports editing
   }
 }
