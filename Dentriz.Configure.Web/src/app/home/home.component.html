@@ -2,7 +2,7 @@
 <section class="founder-section" *ngIf="!founderLoading && !founderError && founderConfig">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingFounder">
+    <div class="floating-edit-btn" *ngIf="!isEditingFounder && isEditingEnabled">
       <button class="edit-btn-floating" (click)="startEditingFounder()" title="Edit Founder Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -20,9 +20,9 @@
               [style.color]="founderConfig.subtitleColor"
               [style.font-family]="founderConfig.subtitleFontFamily"
               *ngIf="!isEditingFounder || editingElement !== 'subtitle'"
-              (click)="startInlineEdit('subtitle')">
+              (click)="isEditingEnabled ? startInlineEdit('subtitle') : null">
             {{ founderConfig.subtitle }}
-            <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingFounder && isEditingEnabled">✏️</span>
           </h2>
           <input *ngIf="isEditingFounder && editingElement === 'subtitle'"
                  [(ngModel)]="founderConfig.subtitle"
@@ -58,9 +58,9 @@
             <h3 *ngIf="!isEditingFounder || editingElement !== 'doctorName'"
                 [style.color]="founderConfig.doctorNameColor"
                 [style.font-family]="founderConfig.doctorNameFontFamily"
-                (click)="startInlineEdit('doctorName')">
+                (click)="isEditingEnabled ? startInlineEdit('doctorName') : null">
               {{ founderConfig.doctorName }}
-              <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingFounder && isEditingEnabled">✏️</span>
             </h3>
             <input *ngIf="isEditingFounder && editingElement === 'doctorName'"
                    [(ngModel)]="founderConfig.doctorName"
@@ -96,9 +96,9 @@
                *ngIf="!isEditingFounder || editingElement !== 'title'"
                [style.color]="founderConfig.titleColor"
                [style.font-family]="founderConfig.titleFontFamily"
-               (click)="startInlineEdit('title')">
+               (click)="isEditingEnabled ? startInlineEdit('title') : null">
               {{ founderConfig.title }}
-              <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingFounder && isEditingEnabled">✏️</span>
             </p>
             <input *ngIf="isEditingFounder && editingElement === 'title'"
                    [(ngModel)]="founderConfig.title"
@@ -134,9 +134,9 @@
                *ngIf="!isEditingFounder || editingElement !== 'description'"
                [style.color]="founderConfig.descriptionColor"
                [style.font-family]="founderConfig.descriptionFontFamily"
-               (click)="startInlineEdit('description')">
+               (click)="isEditingEnabled ? startInlineEdit('description') : null">
               {{ founderConfig.description }}
-              <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingFounder && isEditingEnabled">✏️</span>
             </p>
             <textarea *ngIf="isEditingFounder && editingElement === 'description'"
                       [(ngModel)]="founderConfig.description"
@@ -169,7 +169,7 @@
           <!-- Specialties with inline editing -->
           <div class="editable-element">
             <div *ngIf="!isEditingFounder || editingElement !== 'specialties'" 
-                 (click)="startInlineEdit('specialties')" 
+                 (click)="isEditingEnabled ? startInlineEdit('specialties') : null" 
                  class="specialties-container">
               <ul class="specialties-list" 
                   [style.color]="founderConfig.specialtiesColor"
@@ -178,7 +178,7 @@
                     [style.color]="founderConfig.specialtiesColor"
                     [style.font-family]="founderConfig.specialtiesFontFamily">{{ specialty }}</li>
           </ul>
-              <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingFounder && isEditingEnabled">✏️</span>
             </div>
             <div *ngIf="isEditingFounder && editingElement === 'specialties'" class="specialties-edit-inline">
               <div class="specialty-item" *ngFor="let specialty of founderConfig.specialties; let i = index">
@@ -217,9 +217,9 @@
                *ngIf="!isEditingFounder || editingElement !== 'mission'"
                [style.color]="founderConfig.missionColor"
                [style.font-family]="founderConfig.missionFontFamily"
-               (click)="startInlineEdit('mission')">
+               (click)="isEditingEnabled ? startInlineEdit('mission') : null">
               {{ founderConfig.mission }}
-              <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingFounder && isEditingEnabled">✏️</span>
             </p>
             <textarea *ngIf="isEditingFounder && editingElement === 'mission'"
                       [(ngModel)]="founderConfig.mission"
@@ -261,9 +261,9 @@
                  [style.color]="founderConfig.imageNameColor"
                  [style.font-family]="founderConfig.imageNameFontFamily"
                  *ngIf="!isEditingFounder || editingElement !== 'imageName'"
-                 (click)="startInlineEdit('imageName')">
+                 (click)="isEditingEnabled ? startInlineEdit('imageName') : null">
                 {{ founderConfig.imageName }}
-                <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingFounder && isEditingEnabled">✏️</span>
               </p>
               <input *ngIf="isEditingFounder && editingElement === 'imageName'"
                      [(ngModel)]="founderConfig.imageName"
@@ -299,9 +299,9 @@
                  [style.color]="founderConfig.credentialsColor"
                  [style.font-family]="founderConfig.credentialsFontFamily"
                  *ngIf="!isEditingFounder || editingElement !== 'credentials'"
-                 (click)="startInlineEdit('credentials')">
+                 (click)="isEditingEnabled ? startInlineEdit('credentials') : null">
                 {{ founderConfig.credentials }}
-                <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingFounder && isEditingEnabled">✏️</span>
               </p>
               <input *ngIf="isEditingFounder && editingElement === 'credentials'"
                      [(ngModel)]="founderConfig.credentials"
@@ -343,9 +343,9 @@
         <h4 *ngIf="!isEditingFounder || editingElement !== 'philosophyTitle'"
             [style.color]="founderConfig.philosophyTitleColor"
             [style.font-family]="founderConfig.philosophyTitleFontFamily"
-            (click)="startInlineEdit('philosophyTitle')">
+            (click)="isEditingEnabled ? startInlineEdit('philosophyTitle') : null">
           {{ founderConfig.philosophyTitle }}
-          <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+          <span class="edit-icon" *ngIf="isEditingFounder && isEditingEnabled">✏️</span>
         </h4>
         <input *ngIf="isEditingFounder && editingElement === 'philosophyTitle'"
                [(ngModel)]="founderConfig.philosophyTitle"
@@ -380,9 +380,9 @@
         <p *ngIf="!isEditingFounder || editingElement !== 'philosophyContent'"
            [style.color]="founderConfig.philosophyContentColor"
            [style.font-family]="founderConfig.philosophyContentFontFamily"
-           (click)="startInlineEdit('philosophyContent')">
+           (click)="isEditingEnabled ? startInlineEdit('philosophyContent') : null">
           {{ founderConfig.philosophyContent }}
-          <span class="edit-icon" *ngIf="isEditingFounder">✏️</span>
+          <span class="edit-icon" *ngIf="isEditingFounder && isEditingEnabled">✏️</span>
         </p>
         <textarea *ngIf="isEditingFounder && editingElement === 'philosophyContent'"
                   [(ngModel)]="founderConfig.philosophyContent"
@@ -414,7 +414,7 @@
     </div>
     
     <!-- Global Styling Controls (only when editing) -->
-    <div class="global-styling-controls" *ngIf="isEditingFounder">
+    <div class="global-styling-controls" *ngIf="isEditingFounder && isEditingEnabled">
       <h4>Section Background</h4>
       <div class="styling-row">
         <div class="styling-item">
@@ -425,7 +425,7 @@
     </div>
     
     <!-- Edit Actions -->
-    <div class="edit-actions" *ngIf="isEditingFounder">
+    <div class="edit-actions" *ngIf="isEditingFounder && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingFounder()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingFounder()">Cancel</button>
       <button class="reset-btn" (click)="resetFounderToOriginal()">Reset to Original</button>

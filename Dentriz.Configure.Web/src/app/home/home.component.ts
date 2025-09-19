@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { FounderSectionApiService, SimpleFounderConfig } from './services/founder-section-api.service';
 import { NewPatientSectionApiService, SimpleNewPatientConfig } from './services/new-patient-section-api.service';
 import { ReasonsSectionApiService, SimpleReasonsConfig } from './services/reasons-section-api.service';
@@ -15,6 +16,9 @@ import { ServicesSectionApiService, SimpleServicesConfig } from './services/serv
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  // Environment configuration
+  isEditingEnabled = environment.enableEditing;
+  
   // Founder section properties (following reference project pattern)
   @ViewChild('subtitleInput') subtitleInput!: ElementRef<HTMLInputElement>;
   
