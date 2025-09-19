@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environments/environment';
 import { ServicesHeroApiService, SimpleServicesHeroConfig } from './services/services-hero-api.service';
 import { TechnologySectionApiService, SimpleTechnologySectionConfig } from './services/technology-section-api.service';
 import { ServicesApiService, SimpleServicesConfig, Service } from './services/services-api.service';
@@ -13,6 +14,9 @@ import { ServicesApiService, SimpleServicesConfig, Service } from './services/se
   styleUrl: './services.component.css'
 })
 export class ServicesComponent implements OnInit {
+  // Environment configuration
+  isEditingEnabled = environment.enableEditing;
+  
   // Services Hero Configuration
   servicesHeroConfig: SimpleServicesHeroConfig | null = null;
   originalServicesHeroConfig: SimpleServicesHeroConfig | null = null;
