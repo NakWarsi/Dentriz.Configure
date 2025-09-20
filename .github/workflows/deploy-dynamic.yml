@@ -71,17 +71,21 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'production' }}
     steps:
-      - name: Configure App Service settings
-        uses: Azure/appservice-settings@v1
+      - name: Azure Login
+        uses: azure/login@v1
         with:
-          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-          app-settings-json: |
-            {
-              "ASPNETCORE_ENVIRONMENT": "Production",
-              "API_BASE_URL": "https://dentriz-configure-api.azurewebsites.net/api",
-              "NODE_ENV": "production",
-              "WEBSITE_NODE_DEFAULT_VERSION": "18.17.0"
-            }
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Configure App Service settings
+        run: |
+          az webapp config appsettings set \
+            --name ${{ secrets.AZURE_WEBAPP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --settings \
+              ASPNETCORE_ENVIRONMENT=Production \
+              API_BASE_URL=https://dentriz-configure-api.azurewebsites.net/api \
+              NODE_ENV=production \
+              WEBSITE_NODE_DEFAULT_VERSION=20.17.0
 
       - name: Inject API URL into environment
         run: |

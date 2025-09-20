@@ -2,7 +2,7 @@
 
 ## 📋 **Required GitHub Secrets for Dynamic Deployment**
 
-Since you already have the API deployed at `https://dentriz-configure-api.azurewebsites.net/`, you only need these **3 secrets** for dynamic web app deployment:
+Since you already have the API deployed at `https://dentriz-configure-api.azurewebsites.net/`, you need these **5 secrets** for dynamic web app deployment:
 
 ### **🔑 Essential Secrets:**
 
@@ -24,6 +24,53 @@ Since you already have the API deployed at `https://dentriz-configure-api.azurew
 - **Purpose:** URL of your deployed dynamic app (for notifications)
 - **Example:** `https://dentriz-dynamic-app.azurewebsites.net`
 - **How to get:** Azure Portal → App Services → Your app → Overview → URL
+
+#### **4. `AZURE_CREDENTIALS`** (NEW)
+- **Purpose:** Azure service principal credentials for app settings configuration
+- **Format:** JSON with service principal details
+- **How to get:** See detailed instructions below
+
+#### **5. `AZURE_RESOURCE_GROUP`** (NEW)
+- **Purpose:** Azure resource group name containing your App Service
+- **Example:** `dentriz-rg` or `myResourceGroup`
+- **How to get:** Azure Portal → Resource Groups → Your resource group name
+
+## 🔐 **Creating Azure Service Principal (AZURE_CREDENTIALS)**
+
+### **Step 1: Create Service Principal**
+Run this command in Azure CLI (or Azure Cloud Shell):
+
+```bash
+az ad sp create-for-rbac --name "github-actions-dentriz" --role contributor --scopes /subscriptions/{subscription-id}/resourceGroups/{resource-group-name} --sdk-auth
+```
+
+Replace:
+- `{subscription-id}` with your Azure subscription ID
+- `{resource-group-name}` with your resource group name
+
+### **Step 2: Copy the JSON Output**
+The command will output JSON like this:
+```json
+{
+  "clientId": "12345678-1234-1234-1234-123456789012",
+  "clientSecret": "your-client-secret",
+  "subscriptionId": "12345678-1234-1234-1234-123456789012",
+  "tenantId": "12345678-1234-1234-1234-123456789012",
+  "activeDirectoryEndpointUrl": "https://login.microsoftonline.com",
+  "resourceManagerEndpointUrl": "https://management.azure.com/",
+  "activeDirectoryGraphResourceId": "https://graph.windows.net/",
+  "sqlManagementEndpointUrl": "https://management.core.windows.net:8443/",
+  "galleryEndpointUrl": "https://gallery.azure.com/",
+  "managementEndpointUrl": "https://management.core.windows.net/"
+}
+```
+
+### **Step 3: Add to GitHub Secrets**
+1. Copy the entire JSON output
+2. Go to GitHub → Settings → Secrets and variables → Actions
+3. Click "New repository secret"
+4. Name: `AZURE_CREDENTIALS`
+5. Value: Paste the entire JSON (including the curly braces)
 
 ## 🛠️ **How to Add Secrets:**
 
