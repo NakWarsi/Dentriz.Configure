@@ -8,8 +8,7 @@
     "build:dynamic": "ng build --configuration dynamic",
     "serve:static": "ng serve --configuration static",
     "serve:dynamic": "ng serve --configuration dynamic",
-    "serve": "ng serve --configuration dynamic",
-    "postinstall": "npm run build:static"
+    "serve": "ng serve --configuration dynamic"
   },
   "prettier": {
     "overrides": [
