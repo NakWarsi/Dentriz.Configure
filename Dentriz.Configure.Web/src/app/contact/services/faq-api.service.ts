@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { FAQ_CONSTANTS } from '../constants/faq.constants';
+import { ApiConfigService } from '../../core/services/api-config.service';
 
 export interface FAQItem {
   question: string;

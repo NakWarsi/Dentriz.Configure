@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { CONTACT_INFO_CONSTANTS } from '../constants/contact-info.constants';
+import { ApiConfigService } from '../../core/services/api-config.service';
 
 export interface SimpleContactInfoConfig {
   // Phone Card

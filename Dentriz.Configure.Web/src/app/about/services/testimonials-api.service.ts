@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { TESTIMONIALS_CONSTANTS } from '../constants/testimonials.constants';
+import { ApiConfigService } from '../../core/services/api-config.service';
 
 export interface Testimonial {
   stars: string;

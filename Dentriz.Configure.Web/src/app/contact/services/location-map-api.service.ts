@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { LOCATION_MAP_CONSTANTS } from '../constants/location-map.constants';
+import { ApiConfigService } from '../../core/services/api-config.service';
 
 export interface SimpleLocationMapConfig {
   // Section Content

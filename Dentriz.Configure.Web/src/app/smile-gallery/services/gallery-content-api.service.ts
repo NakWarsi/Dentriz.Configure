@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { GALLERY_CONTENT_CONSTANTS } from '../constants/gallery-content.constants';
+import { ApiConfigService } from '../../core/services/api-config.service';
 
 export interface GallerySection {
   id: string;

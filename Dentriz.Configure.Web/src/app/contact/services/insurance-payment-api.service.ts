@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { INSURANCE_PAYMENT_CONSTANTS } from '../constants/insurance-payment.constants';
+import { ApiConfigService } from '../../core/services/api-config.service';
 
 export interface SimpleInsurancePaymentConfig {
   // Section Content

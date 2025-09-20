@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { TECHNOLOGY_CONSTANTS } from '../constants/technology.constants';
+import { ApiConfigService } from '../../core/services/api-config.service';
 
 export interface Technology {
   icon: string;

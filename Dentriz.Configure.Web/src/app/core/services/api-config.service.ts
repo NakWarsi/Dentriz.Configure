@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -7,9 +8,15 @@ import { environment } from '../../../environments/environment';
 export class ApiConfigService {
   private readonly baseUrl: string;
 
-  constructor() {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     // Use environment variable if available, otherwise fallback to environment config
-    this.baseUrl = (window as any).API_BASE_URL || environment.apiBaseUrl;
+    // Check if we're in browser environment to avoid SSR issues
+    if (isPlatformBrowser(this.platformId)) {
+      this.baseUrl = (window as any).API_BASE_URL || environment.apiBaseUrl;
+    } else {
+      // Server-side rendering: use environment config
+      this.baseUrl = environment.apiBaseUrl;
+    }
   }
 
   /**
