@@ -38,6 +38,22 @@ jobs:
           cd Dentriz.Configure.Web
           npm run build:dynamic
 
+      - name: Inject API URL into environment
+        run: |
+          cd Dentriz.Configure.Web/dist
+          # Create a script to inject API URL at runtime
+          cat > inject-api-url.js << 'EOF'
+          (function() {
+            // Set the API base URL from environment variable
+            if (typeof window !== 'undefined') {
+              window.API_BASE_URL = 'https://dentriz-configure-api.azurewebsites.net/api';
+            }
+          })();
+          EOF
+          
+          # Inject the script into index.html
+          sed -i 's|</head>|  <script src="inject-api-url.js"></script>\n</head>|' index.html
+
       - name: Upload dynamic build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -86,21 +102,6 @@ jobs:
               API_BASE_URL=https://dentriz-configure-api.azurewebsites.net/api \
               NODE_ENV=production \
               WEBSITE_NODE_DEFAULT_VERSION=20.17.0
-
-      - name: Inject API URL into environment
-        run: |
-          # Create a script to inject API URL at runtime
-          cat > ./dynamic-build/inject-api-url.js << 'EOF'
-          (function() {
-            // Set the API base URL from environment variable
-            if (typeof window !== 'undefined') {
-              window.API_BASE_URL = 'https://dentriz-configure-api.azurewebsites.net/api';
-            }
-          })();
-          EOF
-          
-          # Inject the script into index.html
-          sed -i 's|</head>|  <script src="inject-api-url.js"></script>\n</head>|' ./dynamic-build/index.html
 
   notify-deployment:
     needs: [deploy-app-service, configure-app-settings]
