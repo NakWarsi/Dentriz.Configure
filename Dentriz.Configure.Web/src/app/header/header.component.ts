@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environments/environment';
 import { HeaderApiService, SimpleHeaderConfig, NavItem } from './services/header-api.service';
 
 @Component({
@@ -12,6 +13,9 @@ import { HeaderApiService, SimpleHeaderConfig, NavItem } from './services/header
   styleUrl: './header.component.css'
 })
 export class HeaderComponent implements OnInit {
+  // Environment configuration
+  isEditingEnabled = environment.enableEditing;
+  
   // Header Configuration
   headerConfig: SimpleHeaderConfig | null = null;
   originalHeaderConfig: SimpleHeaderConfig | null = null;

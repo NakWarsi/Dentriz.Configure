@@ -2,7 +2,7 @@
   <div class="main-header">
     <div class="container">
       <!-- Floating Edit Button -->
-      <button class="floating-edit-btn" (click)="startEditingHeader()" *ngIf="!isEditingHeader">
+      <button class="floating-edit-btn" (click)="startEditingHeader()" *ngIf="!isEditingHeader && isEditingEnabled">
         <span class="edit-icon-floating">✏️</span>
       </button>
 
@@ -11,11 +11,11 @@
           <img [src]="headerConfig?.logoImage" [alt]="headerConfig?.logoAlt" [title]="headerConfig?.logoAlt || 'Logo'" class="logo-image">
           <div class="logo-text">
             <!-- Editable Clinic Name -->
-            <div class="editable-element" (click)="startInlineEditHeader('clinic-name')">
+            <div class="editable-element" (click)="isEditingEnabled ? startInlineEditHeader('clinic-name') : null">
               <h1 [style.color]="headerConfig?.logoTextColor" [style.font-family]="headerConfig?.clinicNameFontFamily">
                 {{ headerConfig?.clinicName }}
               </h1>
-              <span class="edit-icon" *ngIf="!isEditingHeader">✏️</span>
+              <span class="edit-icon" *ngIf="!isEditingHeader && isEditingEnabled">✏️</span>
             </div>
             <div *ngIf="isEditingHeader && editingHeaderElement === 'clinic-name'" class="inline-edit-container">
               <input type="text" [(ngModel)]="headerConfig!.clinicName" class="inline-edit-input" 
@@ -33,11 +33,11 @@
             </div>
 
             <!-- Editable Tagline -->
-            <div class="editable-element" (click)="startInlineEditHeader('tagline')">
+            <div class="editable-element" (click)="isEditingEnabled ? startInlineEditHeader('tagline') : null">
               <span class="tagline" [style.color]="headerConfig?.taglineColor" [style.font-family]="headerConfig?.taglineFontFamily">
                 {{ headerConfig?.tagline }}
               </span>
-              <span class="edit-icon" *ngIf="!isEditingHeader">✏️</span>
+              <span class="edit-icon" *ngIf="!isEditingHeader && isEditingEnabled">✏️</span>
             </div>
             <div *ngIf="isEditingHeader && editingHeaderElement === 'tagline'" class="inline-edit-container">
               <input type="text" [(ngModel)]="headerConfig!.tagline" class="inline-edit-input" 
@@ -61,7 +61,7 @@
         <ul class="nav-list">
           <li *ngFor="let navItem of headerConfig?.navItems; let i = index">
             <!-- Editable Navigation Item -->
-            <div class="editable-element" (click)="startInlineEditHeader('nav-item-' + i)">
+            <div class="editable-element" (click)="isEditingEnabled ? startInlineEditHeader('nav-item-' + i) : null">
               <a [routerLink]="navItem.route" 
                  [routerLinkActive]="'active'" 
                  [routerLinkActiveOptions]="{exact: navItem.exact}" 
@@ -70,7 +70,7 @@
                  [style.font-family]="headerConfig?.navLinkFontFamily">
                 {{ navItem.label }}
               </a>
-              <span class="edit-icon" *ngIf="!isEditingHeader">✏️</span>
+              <span class="edit-icon" *ngIf="!isEditingHeader && isEditingEnabled">✏️</span>
             </div>
             <div *ngIf="isEditingHeader && editingHeaderElement === 'nav-item-' + i" class="inline-edit-container">
               <input type="text" [(ngModel)]="navItem.label" class="inline-edit-input" 
@@ -106,7 +106,7 @@
     </div>
 
     <!-- Global Styling Controls -->
-    <div class="global-styling-controls" *ngIf="isEditingHeader">
+    <div class="global-styling-controls" *ngIf="isEditingHeader && isEditingEnabled">
       <div class="styling-row">
         <div class="styling-item">
           <label>Background Color (Header & Mobile Menu):</label>
@@ -124,7 +124,7 @@
     </div>
 
     <!-- Edit Actions -->
-    <div class="edit-actions" *ngIf="isEditingHeader">
+    <div class="edit-actions" *ngIf="isEditingHeader && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingHeader()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingHeader()">Cancel</button>
       <button class="reset-btn" (click)="resetHeaderToOriginal()">Reset to Original</button>
