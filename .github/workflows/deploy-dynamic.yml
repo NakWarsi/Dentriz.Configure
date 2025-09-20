@@ -26,26 +26,23 @@ jobs:
         with:
           node-version: '18.x'
           cache: 'npm'
-
-      - name: Cache Node.js dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          cache-dependency-path: 'Dentriz.Configure.Web/package-lock.json'
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          cd Dentriz.Configure.Web
+          npm ci
 
       - name: Build dynamic version
-        run: npm run build:dynamic
+        run: |
+          cd Dentriz.Configure.Web
+          npm run build:dynamic
 
       - name: Upload dynamic build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dynamic-build
-          path: dist/
+          path: Dentriz.Configure.Web/dist/
           retention-days: 7
 
   deploy-app-service:
