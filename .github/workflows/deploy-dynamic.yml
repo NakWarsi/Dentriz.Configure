@@ -94,10 +94,61 @@ jobs:
           echo "Express version:"
           node -e "try { console.log(require('./node_modules/express/package.json').version); } catch(e) { console.log('Express not found:', e.message); }"
 
+      - name: Show directory structure before verification
+        run: |
+          cd Dentriz.Configure.Web/dist/DentrizWeb/browser
+          echo "📁 Directory structure:"
+          find . -type f -name "*.js" -o -name "*.json" -o -name "*.html" | head -20
+          echo "📁 Node modules structure:"
+          ls -la node_modules/ | head -10 || echo "node_modules not found"
+
       - name: Run deployment verification
         run: |
           cd Dentriz.Configure.Web/dist/DentrizWeb/browser
-          cp ../../../../verify-deployment.js .
+          # Create verification script inline
+          cat > verify-deployment.js << 'EOF'
+          #!/usr/bin/env node
+          const fs = require('fs');
+          const path = require('path');
+          
+          console.log('🔍 Verifying deployment package...');
+          console.log('Current directory:', process.cwd());
+          
+          const requiredFiles = ['server.js', 'package.json', 'index.html'];
+          const requiredDirs = ['node_modules', 'node_modules/express'];
+          
+          console.log('\n📁 Checking required files:');
+          requiredFiles.forEach(file => {
+            const exists = fs.existsSync(file);
+            console.log(`  ${exists ? '✅' : '❌'} ${file}`);
+            if (!exists) {
+              console.error(`❌ Missing required file: ${file}`);
+              process.exit(1);
+            }
+          });
+          
+          console.log('\n📁 Checking required directories:');
+          requiredDirs.forEach(dir => {
+            const exists = fs.existsSync(dir);
+            console.log(`  ${exists ? '✅' : '❌'} ${dir}`);
+            if (!exists) {
+              console.error(`❌ Missing required directory: ${dir}`);
+              process.exit(1);
+            }
+          });
+          
+          console.log('\n🔧 Testing Express module:');
+          try {
+            const express = require('express');
+            console.log('✅ Express module loaded successfully');
+            console.log(`   Version: ${require('./node_modules/express/package.json').version}`);
+          } catch (error) {
+            console.error('❌ Failed to load Express module:', error.message);
+            process.exit(1);
+          }
+          
+          console.log('\n✅ Deployment package verification completed successfully!');
+          EOF
           node verify-deployment.js
 
       - name: Upload dynamic build artifacts

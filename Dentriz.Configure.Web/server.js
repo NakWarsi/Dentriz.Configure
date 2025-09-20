@@ -1,6 +1,17 @@
-const express = require('express');
-const path = require('path');
-const app = express();
+// Enhanced error handling for missing dependencies
+try {
+  const express = require('express');
+  const path = require('path');
+  
+  console.log('Express module loaded successfully');
+  console.log('Current working directory:', process.cwd());
+  console.log('__dirname:', __dirname);
+  console.log('Files in current directory:');
+  require('fs').readdirSync(__dirname).forEach(file => {
+    console.log('  -', file);
+  });
+  
+  const app = express();
 
 // Security headers
 app.use((req, res, next) => {
@@ -29,9 +40,24 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 
-// Start the app
-const port = process.env.PORT || 8080;
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
-  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-});
+  // Start the app
+  const port = process.env.PORT || 8080;
+  app.listen(port, () => {
+    console.log(`Server started on port ${port}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  });
+  
+} catch (error) {
+  console.error('Failed to start server:');
+  console.error('Error:', error.message);
+  console.error('Stack:', error.stack);
+  
+  // Check if it's a module not found error
+  if (error.code === 'MODULE_NOT_FOUND') {
+    console.error('Missing module:', error.message.split("'")[1]);
+    console.error('Please ensure all dependencies are installed.');
+    console.error('Run: npm install');
+  }
+  
+  process.exit(1);
+}
