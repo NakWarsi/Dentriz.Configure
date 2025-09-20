@@ -37,7 +37,7 @@ export interface SimpleRestorativeCareConfig {
   providedIn: 'root'
 })
 export class RestorativeCareApiService {
-  private configUrl = 'http://localhost:5000/api/config/restorative-care';
+  private configUrl = 'http://localhost:5208/api/restorative-care';
   private localStorageKey = 'restorativeCareConfig';
   private JSON_FILE_PATH = './assets/services/restorative-care.json';
 

@@ -40,7 +40,7 @@ export interface SimpleHeaderConfig {
   providedIn: 'root'
 })
 export class HeaderApiService {
-  private configUrl = 'http://localhost:5000/api/config/header';
+  private configUrl = 'http://localhost:5208/api/header';
   private localStorageKey = 'headerConfig';
   private JSON_FILE_PATH = './assets/header/header.json';
 

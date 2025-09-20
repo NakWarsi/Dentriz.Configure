@@ -37,7 +37,7 @@ export interface SimplePreventiveCareConfig {
   providedIn: 'root'
 })
 export class PreventiveCareApiService {
-  private configUrl = 'http://localhost:5000/api/config/preventive-care';
+  private configUrl = 'http://localhost:5208/api/preventive-care';
   private localStorageKey = 'preventiveCareConfig';
   private JSON_FILE_PATH = './assets/services/preventive-care.json';
 

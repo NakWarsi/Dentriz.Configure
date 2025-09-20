@@ -37,7 +37,7 @@ export interface SimpleCosmeticServicesConfig {
   providedIn: 'root'
 })
 export class CosmeticServicesApiService {
-  private configUrl = 'http://localhost:5000/api/config/cosmetic-services';
+  private configUrl = 'http://localhost:5208/api/cosmetic-services';
   private localStorageKey = 'cosmeticServicesConfig';
   private JSON_FILE_PATH = './assets/services/cosmetic-services.json';
 

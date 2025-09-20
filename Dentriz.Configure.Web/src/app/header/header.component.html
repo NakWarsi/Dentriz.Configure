@@ -8,7 +8,7 @@
 
       <div class="logo">
         <a routerLink="/">
-          <img [src]="headerConfig?.logoImage" [alt]="headerConfig?.logoAlt" class="logo-image">
+          <img [src]="headerConfig?.logoImage" [alt]="headerConfig?.logoAlt" [title]="headerConfig?.logoAlt || 'Logo'" class="logo-image">
           <div class="logo-text">
             <!-- Editable Clinic Name -->
             <div class="editable-element" (click)="startInlineEditHeader('clinic-name')">
@@ -19,15 +19,16 @@
             </div>
             <div *ngIf="isEditingHeader && editingHeaderElement === 'clinic-name'" class="inline-edit-container">
               <input type="text" [(ngModel)]="headerConfig!.clinicName" class="inline-edit-input" 
-                     (blur)="stopInlineEditHeader()" (keyup.enter)="stopInlineEditHeader()">
+                     (blur)="stopInlineEditHeader()" (keyup.enter)="stopInlineEditHeader()"
+                     placeholder="Enter clinic name" title="Edit clinic name">
               <div class="inline-controls">
-                <select [(ngModel)]="headerConfig!.clinicNameFontFamily" (change)="onHeaderFontChange()">
+                <select [(ngModel)]="headerConfig!.clinicNameFontFamily" (change)="onHeaderFontChange()" title="Font Family">
                   <option value="Arial, sans-serif">Arial</option>
                   <option value="Georgia, serif">Georgia</option>
                   <option value="Times New Roman, serif">Times New Roman</option>
                   <option value="Helvetica, sans-serif">Helvetica</option>
                 </select>
-                <input type="color" [(ngModel)]="headerConfig!.logoTextColor" (change)="onHeaderColorChange()">
+                <input type="color" [(ngModel)]="headerConfig!.logoTextColor" (change)="onHeaderColorChange()" title="Logo Text Color">
               </div>
             </div>
 
@@ -40,15 +41,16 @@
             </div>
             <div *ngIf="isEditingHeader && editingHeaderElement === 'tagline'" class="inline-edit-container">
               <input type="text" [(ngModel)]="headerConfig!.tagline" class="inline-edit-input" 
-                     (blur)="stopInlineEditHeader()" (keyup.enter)="stopInlineEditHeader()">
+                     (blur)="stopInlineEditHeader()" (keyup.enter)="stopInlineEditHeader()"
+                     placeholder="Enter tagline" title="Edit tagline">
               <div class="inline-controls">
-                <select [(ngModel)]="headerConfig!.taglineFontFamily" (change)="onHeaderFontChange()">
+                <select [(ngModel)]="headerConfig!.taglineFontFamily" (change)="onHeaderFontChange()" title="Font Family">
                   <option value="Arial, sans-serif">Arial</option>
                   <option value="Georgia, serif">Georgia</option>
                   <option value="Times New Roman, serif">Times New Roman</option>
                   <option value="Helvetica, sans-serif">Helvetica</option>
                 </select>
-                <input type="color" [(ngModel)]="headerConfig!.taglineColor" (change)="onHeaderColorChange()">
+                <input type="color" [(ngModel)]="headerConfig!.taglineColor" (change)="onHeaderColorChange()" title="Tagline Color">
               </div>
             </div>
           </div>
@@ -72,17 +74,18 @@
             </div>
             <div *ngIf="isEditingHeader && editingHeaderElement === 'nav-item-' + i" class="inline-edit-container">
               <input type="text" [(ngModel)]="navItem.label" class="inline-edit-input" 
-                     (blur)="stopInlineEditHeader()" (keyup.enter)="stopInlineEditHeader()">
+                     (blur)="stopInlineEditHeader()" (keyup.enter)="stopInlineEditHeader()"
+                     placeholder="Enter nav label" title="Edit navigation label">
               <input type="text" [(ngModel)]="navItem.route" class="inline-edit-input" 
-                     placeholder="Route" (blur)="stopInlineEditHeader()" (keyup.enter)="stopInlineEditHeader()">
+                     placeholder="Enter route" title="Edit navigation route" (blur)="stopInlineEditHeader()" (keyup.enter)="stopInlineEditHeader()">
               <div class="inline-controls">
-                <select [(ngModel)]="headerConfig!.navLinkFontFamily" (change)="onHeaderFontChange()">
+                <select [(ngModel)]="headerConfig!.navLinkFontFamily" (change)="onHeaderFontChange()" title="Font Family">
                   <option value="Arial, sans-serif">Arial</option>
                   <option value="Georgia, serif">Georgia</option>
                   <option value="Times New Roman, serif">Times New Roman</option>
                   <option value="Helvetica, sans-serif">Helvetica</option>
                 </select>
-                <input type="color" [(ngModel)]="headerConfig!.navLinkColor" (change)="onHeaderColorChange()">
+                <input type="color" [(ngModel)]="headerConfig!.navLinkColor" (change)="onHeaderColorChange()" title="Navigation Link Color">
                 <button class="remove-nav-btn" (click)="removeNavItem(i)">Remove</button>
               </div>
             </div>
@@ -107,15 +110,15 @@
       <div class="styling-row">
         <div class="styling-item">
           <label>Background Color (Header & Mobile Menu):</label>
-          <input type="color" [(ngModel)]="headerConfig!.backgroundColor" (change)="onHeaderBackgroundChange()">
+          <input type="color" [(ngModel)]="headerConfig!.backgroundColor" (change)="onHeaderBackgroundChange()" title="Background Color">
         </div>
         <div class="styling-item">
           <label>Nav Link Hover Color:</label>
-          <input type="color" [(ngModel)]="headerConfig!.navLinkHoverColor" (change)="onHeaderColorChange()">
+          <input type="color" [(ngModel)]="headerConfig!.navLinkHoverColor" (change)="onHeaderColorChange()" title="Navigation Link Hover Color">
         </div>
         <div class="styling-item">
           <label>Nav Link Active Color:</label>
-          <input type="color" [(ngModel)]="headerConfig!.navLinkActiveColor" (change)="onHeaderColorChange()">
+          <input type="color" [(ngModel)]="headerConfig!.navLinkActiveColor" (change)="onHeaderColorChange()" title="Navigation Link Active Color">
         </div>
       </div>
     </div>
