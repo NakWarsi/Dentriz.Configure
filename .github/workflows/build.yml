@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       node-version: ${{ steps.setup-node.outputs.node-version }}
-      dotnet-version: ${{ steps.setup-dotnet.outputs.dotnet-version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -23,12 +22,6 @@ jobs:
           node-version: '18.x'
           cache: 'npm'
 
-      - name: Setup .NET SDK
-        id: setup-dotnet
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '8.0.x'
-
       - name: Cache Node.js dependencies
         uses: actions/cache@v3
         with:
@@ -36,14 +29,6 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-
-      - name: Cache .NET dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
 
   build-static:
     needs: setup
@@ -99,31 +84,3 @@ jobs:
           path: dist/
           retention-days: 7
 
-  build-api:
-    needs: setup
-    runs-on: ubuntu-latest
-    if: contains(github.ref, 'release-dynamic-') || github.event_name == 'pull_request'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: ${{ needs.setup.outputs.dotnet-version }}
-
-      - name: Restore .NET dependencies
-        run: dotnet restore Dentriz.Configure.Api/Dentriz.Configure.Api.csproj
-
-      - name: Build .NET API
-        run: dotnet build Dentriz.Configure.Api/Dentriz.Configure.Api.csproj --configuration Release --no-restore
-
-      - name: Publish .NET API
-        run: dotnet publish Dentriz.Configure.Api/Dentriz.Configure.Api.csproj --configuration Release --output ./api-publish --no-build
-
-      - name: Upload API build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: api-build
-          path: api-publish/
-          retention-days: 7
