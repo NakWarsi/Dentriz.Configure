@@ -5,7 +5,7 @@
     "start": "node server.js",
     "build": "ng build --configuration production",
     "build:static": "ng build --configuration static",
-    "build:dynamic": "ng build --configuration dynamic",
+    "build:dynamic": "ng build --configuration dynamic --ssr=false",
     "serve:static": "ng serve --configuration static",
     "serve:dynamic": "ng serve --configuration dynamic",
     "serve": "ng serve --configuration dynamic"

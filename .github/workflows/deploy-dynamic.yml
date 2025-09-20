@@ -36,7 +36,7 @@ jobs:
       - name: Build dynamic version
         run: |
           cd Dentriz.Configure.Web
-          ng build --configuration dynamic --ssr=false
+          npm run build:dynamic
 
       - name: Inject API URL into environment
         run: |
