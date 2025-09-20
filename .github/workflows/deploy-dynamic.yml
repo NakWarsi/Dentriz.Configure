@@ -84,6 +84,21 @@ jobs:
           cd Dentriz.Configure.Web/dist/DentrizWeb/browser
           npm install express --production
 
+      - name: Verify Express installation
+        run: |
+          cd Dentriz.Configure.Web/dist/DentrizWeb/browser
+          echo "Checking if node_modules exists:"
+          ls -la node_modules/ || echo "node_modules not found"
+          echo "Checking Express specifically:"
+          ls -la node_modules/express/ || echo "Express not found"
+          echo "Express version:"
+          node -e "try { console.log(require('./node_modules/express/package.json').version); } catch(e) { console.log('Express not found:', e.message); }"
+
+      - name: Run deployment verification
+        run: |
+          cd Dentriz.Configure.Web/dist/DentrizWeb/browser
+          cp ../../../../verify-deployment.js .
+          node verify-deployment.js
 
       - name: Upload dynamic build artifacts
         uses: actions/upload-artifact@v4
@@ -105,6 +120,17 @@ jobs:
         with:
           name: dynamic-build
           path: ./dynamic-build
+
+      - name: Verify deployment package
+        run: |
+          echo "Contents of deployment package:"
+          ls -la ./dynamic-build/
+          echo "Checking for node_modules:"
+          ls -la ./dynamic-build/node_modules/ || echo "node_modules not found in package"
+          echo "Checking for Express:"
+          ls -la ./dynamic-build/node_modules/express/ || echo "Express not found in package"
+          echo "Checking for server.js:"
+          ls -la ./dynamic-build/server.js || echo "server.js not found"
 
       - name: Deploy to Azure App Service
         uses: Azure/webapps-deploy@v2
@@ -134,7 +160,8 @@ jobs:
               NODE_ENV=production \
               WEBSITE_NODE_DEFAULT_VERSION=20.17.0 \
               SCM_DO_BUILD_DURING_DEPLOYMENT=false \
-              WEBSITE_SKIP_CONTENTSHARE_VALIDATION=1
+              WEBSITE_SKIP_CONTENTSHARE_VALIDATION=1 \
+              WEBSITE_RUN_FROM_PACKAGE=0
 
       - name: Configure startup command
         run: |
