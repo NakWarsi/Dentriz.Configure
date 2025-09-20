@@ -87,3 +87,4 @@ jobs:
           path: Dentriz.Configure.Web/dist/
           retention-days: 7
 
+#aa
