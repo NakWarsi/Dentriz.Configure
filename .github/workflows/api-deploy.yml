@@ -2,7 +2,7 @@ name: Deploy API
 
 on:
   push:
-    branches: ['release-dynamic-*']
+    branches: ['release-api-*']
   workflow_dispatch:
     inputs:
       environment:

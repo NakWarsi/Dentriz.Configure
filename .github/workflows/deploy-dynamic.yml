@@ -15,23 +15,41 @@ on:
           - staging
 
 jobs:
-  download-build:
+  build-dynamic:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download dynamic build artifacts
-        uses: actions/download-artifact@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build dynamic version
+        run: npm run build:dynamic
+
+      - name: Upload dynamic build artifacts
+        uses: actions/upload-artifact@v3
         with:
           name: dynamic-build
-          path: ./dynamic-build
-
-      - name: List build contents
-        run: ls -la ./dynamic-build
+          path: dist/
+          retention-days: 7
 
   deploy-app-service:
-    needs: download-build
+    needs: build-dynamic
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'production' }}
     steps:

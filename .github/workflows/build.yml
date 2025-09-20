@@ -2,7 +2,7 @@ name: Build Application
 
 on:
   push:
-    branches: ['release-static-*', 'release-dynamic-*']
+    branches: ['release-static-*']
   pull_request:
     branches: ['main', 'develop']
 
