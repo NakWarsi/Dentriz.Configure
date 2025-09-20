@@ -40,7 +40,7 @@ jobs:
 
       - name: Inject API URL into environment
         run: |
-          cd Dentriz.Configure.Web/dist
+          cd Dentriz.Configure.Web/dist/DentrizWeb/browser
           # Create a script to inject API URL at runtime
           cat > inject-api-url.js << 'EOF'
           (function() {
@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dynamic-build
-          path: Dentriz.Configure.Web/dist/
+          path: Dentriz.Configure.Web/dist/DentrizWeb/browser/
           retention-days: 7
 
   deploy-app-service:
