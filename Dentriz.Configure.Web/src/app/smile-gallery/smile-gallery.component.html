@@ -6,7 +6,7 @@
            [style.background-color]="galleryHeroConfig.backgroundColor">
     <div class="container">
       <!-- Floating Edit Button -->
-      <div class="floating-edit-btn" *ngIf="!isEditingGalleryHero">
+      <div class="floating-edit-btn" *ngIf="!isEditingGalleryHero && isEditingEnabled">
         <button class="edit-btn-floating" (click)="startEditingGalleryHero()" title="Edit Gallery Hero">
           <span class="edit-icon-floating">✏️</span>
         </button>
@@ -18,9 +18,9 @@
             *ngIf="!isEditingGalleryHero || editingGalleryHeroElement !== 'galleryTitle'"
             [style.color]="galleryHeroConfig.galleryTitleColor"
             [style.font-family]="galleryHeroConfig.galleryTitleFontFamily"
-            (click)="startInlineEditGalleryHero('galleryTitle')">
+            (click)="isEditingEnabled ? startInlineEditGalleryHero('galleryTitle') : null">
           <span>{{ galleryHeroConfig.galleryTitle }}</span>
-          <span class="edit-icon" *ngIf="isEditingGalleryHero">✏️</span>
+          <span class="edit-icon" *ngIf="isEditingGalleryHero && isEditingEnabled">✏️</span>
         </h1>
         <input *ngIf="isEditingGalleryHero && editingGalleryHeroElement === 'galleryTitle'"
                [(ngModel)]="galleryHeroConfig.galleryTitle"
@@ -56,9 +56,9 @@
            *ngIf="!isEditingGalleryHero || editingGalleryHeroElement !== 'gallerySubtitle'"
            [style.color]="galleryHeroConfig.gallerySubtitleColor"
            [style.font-family]="galleryHeroConfig.gallerySubtitleFontFamily"
-           (click)="startInlineEditGalleryHero('gallerySubtitle')">
+           (click)="isEditingEnabled ? startInlineEditGalleryHero('gallerySubtitle') : null">
           <span>{{ galleryHeroConfig.gallerySubtitle }}</span>
-          <span class="edit-icon" *ngIf="isEditingGalleryHero">✏️</span>
+          <span class="edit-icon" *ngIf="isEditingGalleryHero && isEditingEnabled">✏️</span>
         </p>
         <textarea *ngIf="isEditingGalleryHero && editingGalleryHeroElement === 'gallerySubtitle'"
                   [(ngModel)]="galleryHeroConfig.gallerySubtitle"
@@ -88,7 +88,7 @@
       </div>
 
       <!-- Global Styling Controls (only when editing) -->
-      <div class="global-styling-controls" *ngIf="isEditingGalleryHero">
+      <div class="global-styling-controls" *ngIf="isEditingGalleryHero && isEditingEnabled">
         <h4>Gallery Hero Styling</h4>
         <div class="styling-row">
           <div class="styling-item">
@@ -103,7 +103,7 @@
       </div>
 
       <!-- Edit Actions (only when editing) -->
-      <div class="edit-actions" *ngIf="isEditingGalleryHero">
+      <div class="edit-actions" *ngIf="isEditingGalleryHero && isEditingEnabled">
         <button class="save-btn" (click)="stopEditingGalleryHero()">Save Changes</button>
         <button class="cancel-btn" (click)="cancelEditingGalleryHero()">Cancel</button>
         <button class="reset-btn" (click)="resetGalleryHeroToOriginal()">Reset to Original</button>
@@ -128,7 +128,7 @@
            [class.is-editing]="isEditingGalleryContent">
     <div class="container">
       <!-- Floating Edit Button -->
-      <div class="floating-edit-btn" *ngIf="!isEditingGalleryContent">
+      <div class="floating-edit-btn" *ngIf="!isEditingGalleryContent && isEditingEnabled">
         <button class="edit-btn-floating" (click)="startEditingGalleryContent()" title="Edit Gallery Content">
           <span class="edit-icon-floating">✏️</span>
         </button>
@@ -145,9 +145,9 @@
                       *ngIf="!isEditingGalleryContent || editingGalleryContentElement !== 'placeholderText_' + i"
                       [style.color]="galleryContentConfig.placeholderTextColor"
                       [style.font-family]="galleryContentConfig.placeholderTextFontFamily"
-                      (click)="startInlineEditGalleryContent('placeholderText_' + i)">
+                      (click)="isEditingEnabled ? startInlineEditGalleryContent('placeholderText_' + i) : null">
                   {{ section.title }}
-                  <span class="edit-icon" *ngIf="isEditingGalleryContent">✏️</span>
+                  <span class="edit-icon" *ngIf="isEditingGalleryContent && isEditingEnabled">✏️</span>
                 </span>
                 <input *ngIf="isEditingGalleryContent && editingGalleryContentElement === 'placeholderText_' + i"
                        [(ngModel)]="section.title"
@@ -183,9 +183,9 @@
                      *ngIf="!isEditingGalleryContent || editingGalleryContentElement !== 'imageCount_' + i"
                      [style.color]="galleryContentConfig.imageCountColor"
                      [style.font-family]="galleryContentConfig.imageCountFontFamily"
-                     (click)="startInlineEditGalleryContent('imageCount_' + i)">
+                     (click)="isEditingEnabled ? startInlineEditGalleryContent('imageCount_' + i) : null">
                   {{ section.imageCount }} Photos
-                  <span class="edit-icon" *ngIf="isEditingGalleryContent">✏️</span>
+                  <span class="edit-icon" *ngIf="isEditingGalleryContent && isEditingEnabled">✏️</span>
                 </div>
                 <input *ngIf="isEditingGalleryContent && editingGalleryContentElement === 'imageCount_' + i"
                        [(ngModel)]="section.imageCount"
@@ -224,9 +224,9 @@
                   *ngIf="!isEditingGalleryContent || editingGalleryContentElement !== 'cardTitle_' + i"
                   [style.color]="galleryContentConfig.cardTitleColor"
                   [style.font-family]="galleryContentConfig.cardTitleFontFamily"
-                  (click)="startInlineEditGalleryContent('cardTitle_' + i)">
+                  (click)="isEditingEnabled ? startInlineEditGalleryContent('cardTitle_' + i) : null">
                 <span>{{ section.title }}</span>
-                <span class="edit-icon" *ngIf="isEditingGalleryContent">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingGalleryContent && isEditingEnabled">✏️</span>
               </h3>
               <input *ngIf="isEditingGalleryContent && editingGalleryContentElement === 'cardTitle_' + i"
                      [(ngModel)]="section.title"
@@ -262,9 +262,9 @@
                  *ngIf="!isEditingGalleryContent || editingGalleryContentElement !== 'cardDescription_' + i"
                  [style.color]="galleryContentConfig.cardDescriptionColor"
                  [style.font-family]="galleryContentConfig.cardDescriptionFontFamily"
-                 (click)="startInlineEditGalleryContent('cardDescription_' + i)">
+                 (click)="isEditingEnabled ? startInlineEditGalleryContent('cardDescription_' + i) : null">
                 <span>{{ section.description }}</span>
-                <span class="edit-icon" *ngIf="isEditingGalleryContent">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingGalleryContent && isEditingEnabled">✏️</span>
               </p>
               <textarea *ngIf="isEditingGalleryContent && editingGalleryContentElement === 'cardDescription_' + i"
                         [(ngModel)]="section.description"
@@ -317,7 +317,7 @@
       </div>
 
       <!-- Global Styling Controls (only when editing) -->
-      <div class="global-styling-controls" *ngIf="isEditingGalleryContent">
+      <div class="global-styling-controls" *ngIf="isEditingGalleryContent && isEditingEnabled">
         <h4>Gallery Content Styling</h4>
         <div class="styling-row">
           <div class="styling-item">
@@ -340,7 +340,7 @@
       </div>
 
       <!-- Edit Actions (only when editing) -->
-      <div class="edit-actions" *ngIf="isEditingGalleryContent">
+      <div class="edit-actions" *ngIf="isEditingGalleryContent && isEditingEnabled">
         <button class="save-btn" (click)="stopEditingGalleryContent()">Save Changes</button>
         <button class="cancel-btn" (click)="cancelEditingGalleryContent()">Cancel</button>
         <button class="reset-btn" (click)="resetGalleryContentToOriginal()">Reset to Original</button>
@@ -364,7 +364,7 @@
            [class.is-editing]="isEditingGalleryStats">
     <div class="container">
       <!-- Floating Edit Button -->
-      <div class="floating-edit-btn" *ngIf="!isEditingGalleryStats">
+      <div class="floating-edit-btn" *ngIf="!isEditingGalleryStats && isEditingEnabled">
         <button class="edit-btn-floating" (click)="startEditingGalleryStats()" title="Edit Gallery Stats">
           <span class="edit-icon-floating">✏️</span>
         </button>
@@ -378,9 +378,9 @@
                  *ngIf="!isEditingGalleryStats || editingGalleryStatsElement !== 'statNumber_' + i"
                  [style.color]="galleryStatsConfig.statNumberColor"
                  [style.font-family]="galleryStatsConfig.statNumberFontFamily"
-                 (click)="startInlineEditGalleryStats('statNumber_' + i)">
+                 (click)="isEditingEnabled ? startInlineEditGalleryStats('statNumber_' + i) : null">
               <span>{{ stat.number }}</span>
-              <span class="edit-icon" *ngIf="isEditingGalleryStats">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingGalleryStats && isEditingEnabled">✏️</span>
             </div>
             <input *ngIf="isEditingGalleryStats && editingGalleryStatsElement === 'statNumber_' + i"
                    [(ngModel)]="stat.number"
@@ -416,9 +416,9 @@
                  *ngIf="!isEditingGalleryStats || editingGalleryStatsElement !== 'statLabel_' + i"
                  [style.color]="galleryStatsConfig.statLabelColor"
                  [style.font-family]="galleryStatsConfig.statLabelFontFamily"
-                 (click)="startInlineEditGalleryStats('statLabel_' + i)">
+                 (click)="isEditingEnabled ? startInlineEditGalleryStats('statLabel_' + i) : null">
               <span>{{ stat.label }}</span>
-              <span class="edit-icon" *ngIf="isEditingGalleryStats">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingGalleryStats && isEditingEnabled">✏️</span>
             </div>
             <input *ngIf="isEditingGalleryStats && editingGalleryStatsElement === 'statLabel_' + i"
                    [(ngModel)]="stat.label"
@@ -464,7 +464,7 @@
       </div>
 
       <!-- Global Styling Controls (only when editing) -->
-      <div class="global-styling-controls" *ngIf="isEditingGalleryStats">
+      <div class="global-styling-controls" *ngIf="isEditingGalleryStats && isEditingEnabled">
         <h4>Gallery Stats Styling</h4>
         <div class="styling-row">
           <div class="styling-item">
@@ -479,7 +479,7 @@
       </div>
 
       <!-- Edit Actions (only when editing) -->
-      <div class="edit-actions" *ngIf="isEditingGalleryStats">
+      <div class="edit-actions" *ngIf="isEditingGalleryStats && isEditingEnabled">
         <button class="save-btn" (click)="stopEditingGalleryStats()">Save Changes</button>
         <button class="cancel-btn" (click)="cancelEditingGalleryStats()">Cancel</button>
         <button class="reset-btn" (click)="resetGalleryStatsToOriginal()">Reset to Original</button>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environments/environment';
 import { GalleryHeroApiService, SimpleGalleryHeroConfig } from './services/gallery-hero-api.service';
 import { GalleryContentApiService, SimpleGalleryContentConfig, GallerySection } from './services/gallery-content-api.service';
 import { GalleryStatsApiService, SimpleGalleryStatsConfig, GalleryStat } from './services/gallery-stats-api.service';
@@ -14,6 +15,9 @@ import { GalleryStatsApiService, SimpleGalleryStatsConfig, GalleryStat } from '.
   styleUrls: ['./smile-gallery.component.css']
 })
 export class SmileGalleryComponent implements OnInit {
+  // Environment configuration
+  isEditingEnabled = environment.enableEditing;
+  
   // Gallery Hero Configuration
   galleryHeroConfig: SimpleGalleryHeroConfig | null = null;
   originalGalleryHeroConfig: SimpleGalleryHeroConfig | null = null;
