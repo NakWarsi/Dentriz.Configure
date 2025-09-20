@@ -50,11 +50,16 @@ export interface SimpleLocationMapConfig {
   providedIn: 'root'
 })
 export class LocationMapApiService {
-  private configUrl = 'http://localhost:5208/api/ContactLocation';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('ContactLocation');
+  }
   private localStorageKey = 'locationMapConfig';
   private JSON_FILE_PATH = './assets/contact/location-map.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleLocationMapConfig> {
     // Try to load from local storage first

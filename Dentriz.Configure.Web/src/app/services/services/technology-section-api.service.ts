@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { TECHNOLOGY_SECTION_CONSTANTS } from '../constants/technology-section.constants';
 import { IDataService } from '../../core/interfaces/data-service.interface';
+import { ApiConfigService } from '../../core/services/api-config.service';
 
 export interface TechnologyCard {
   icon: string;
@@ -34,11 +35,17 @@ export interface SimpleTechnologySectionConfig {
   providedIn: 'root'
 })
 export class TechnologySectionApiService implements IDataService<SimpleTechnologySectionConfig> {
-  private configUrl = 'http://localhost:5208/api/ServicesTechnologySection';
   private localStorageKey = 'technologySectionConfig';
   private JSON_FILE_PATH = './assets/services/technology-section.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
+
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('ServicesTechnologySection');
+  }
 
   loadConfig(): Observable<SimpleTechnologySectionConfig> {
     // Try to load from local storage first

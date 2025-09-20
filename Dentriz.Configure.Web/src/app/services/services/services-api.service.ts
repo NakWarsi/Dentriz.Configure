@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { IDataService } from '../../core/interfaces/data-service.interface';
+import { ApiConfigService } from '../../core/services/api-config.service';
 
 export interface ServiceItem {
   icon: string;
@@ -36,10 +37,16 @@ export interface SimpleServicesConfig {
   providedIn: 'root'
 })
 export class ServicesApiService implements IDataService<SimpleServicesConfig> {
-  private configUrl = 'http://localhost:5208/api/Services';
   private localStorageKey = 'servicesConfig';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
+
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('Services');
+  }
 
   loadConfig(): Observable<SimpleServicesConfig> {
     // Try to load from local storage first

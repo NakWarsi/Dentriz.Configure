@@ -26,11 +26,16 @@ export interface SimpleGalleryStatsConfig {
   providedIn: 'root'
 })
 export class GalleryStatsApiService {
-  private configUrl = 'http://localhost:5208/api/GalleryStats';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('GalleryStats');
+  }
   private localStorageKey = 'galleryStatsConfig';
   private JSON_FILE_PATH = './assets/smile-gallery/gallery-stats.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleGalleryStatsConfig> {
     // Try to load from local storage first

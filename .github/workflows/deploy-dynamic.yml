@@ -1,0 +1,99 @@
+name: Deploy Dynamic Version
+
+on:
+  push:
+    branches: ['release-dynamic-*']
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+jobs:
+  download-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download dynamic build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dynamic-build
+          path: ./dynamic-build
+
+      - name: List build contents
+        run: ls -la ./dynamic-build
+
+  deploy-app-service:
+    needs: download-build
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download dynamic build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dynamic-build
+          path: ./dynamic-build
+
+      - name: Deploy to Azure App Service
+        uses: Azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./dynamic-build
+
+  configure-app-settings:
+    needs: deploy-app-service
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    steps:
+      - name: Configure App Service settings
+        uses: Azure/appservice-settings@v1
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          app-settings-json: |
+            {
+              "ASPNETCORE_ENVIRONMENT": "Production",
+              "API_BASE_URL": "https://dentriz-configure-api.azurewebsites.net/api",
+              "NODE_ENV": "production",
+              "WEBSITE_NODE_DEFAULT_VERSION": "18.17.0"
+            }
+
+      - name: Inject API URL into environment
+        run: |
+          # Create a script to inject API URL at runtime
+          cat > ./dynamic-build/inject-api-url.js << 'EOF'
+          (function() {
+            // Set the API base URL from environment variable
+            if (typeof window !== 'undefined') {
+              window.API_BASE_URL = 'https://dentriz-configure-api.azurewebsites.net/api';
+            }
+          })();
+          EOF
+          
+          # Inject the script into index.html
+          sed -i 's|</head>|  <script src="inject-api-url.js"></script>\n</head>|' ./dynamic-build/index.html
+
+  notify-deployment:
+    needs: [deploy-app-service, configure-app-settings]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Notify deployment status
+        run: |
+          if [ "${{ needs.deploy-app-service.result }}" == "success" ] && [ "${{ needs.configure-app-settings.result }}" == "success" ]; then
+            echo "✅ Dynamic deployment successful!"
+            echo "🌐 App Service URL: ${{ secrets.AZURE_WEBAPP_URL }}"
+          else
+            echo "❌ Dynamic deployment failed!"
+            exit 1
+          fi

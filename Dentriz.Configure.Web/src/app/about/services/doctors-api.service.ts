@@ -40,11 +40,16 @@ export interface SimpleDoctorsConfig {
   providedIn: 'root'
 })
 export class DoctorsApiService {
-  private configUrl = 'http://localhost:5208/api/AboutDoctors';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('AboutDoctors');
+  }
   private localStorageKey = 'doctorsConfig';
   private JSON_FILE_PATH = './assets/about/doctors.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleDoctorsConfig> {
     // Try to load from local storage first

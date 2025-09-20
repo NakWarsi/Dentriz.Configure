@@ -18,10 +18,15 @@ export interface SimpleContactHeroConfig {
   providedIn: 'root'
 })
 export class ContactHeroApiService {
-  private configUrl = 'http://localhost:5208/api/ContactHero';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('ContactHero');
+  }
   private localStorageKey = 'contactHeroConfig';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleContactHeroConfig> {
     // Try to load from local storage first

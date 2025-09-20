@@ -30,11 +30,16 @@ export interface SimpleValuesConfig {
   providedIn: 'root'
 })
 export class ValuesApiService {
-  private configUrl = 'http://localhost:5208/api/AboutValues';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('AboutValues');
+  }
   private localStorageKey = 'valuesConfig';
   private JSON_FILE_PATH = './assets/about/values.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleValuesConfig> {
     // Try to load from local storage first

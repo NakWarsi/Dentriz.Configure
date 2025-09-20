@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { HEADER_CONSTANTS } from '../constants/header.constants';
+import { ApiConfigService } from '../../core/services/api-config.service';
 
 export interface NavItem {
   label: string;
@@ -40,11 +41,17 @@ export interface SimpleHeaderConfig {
   providedIn: 'root'
 })
 export class HeaderApiService {
-  private configUrl = 'http://localhost:5208/api/header';
   private localStorageKey = 'headerConfig';
   private JSON_FILE_PATH = './assets/header/header.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
+
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('header');
+  }
 
   loadConfig(): Observable<SimpleHeaderConfig> {
     // Try to load from local storage first

@@ -37,11 +37,16 @@ export interface SimpleRestorativeCareConfig {
   providedIn: 'root'
 })
 export class RestorativeCareApiService {
-  private configUrl = 'http://localhost:5208/api/restorative-care';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('restorative-care');
+  }
   private localStorageKey = 'restorativeCareConfig';
   private JSON_FILE_PATH = './assets/services/restorative-care.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleRestorativeCareConfig> {
     // Try to load from local storage first

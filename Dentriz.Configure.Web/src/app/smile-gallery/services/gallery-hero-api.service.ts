@@ -22,11 +22,16 @@ export interface SimpleGalleryHeroConfig {
   providedIn: 'root'
 })
 export class GalleryHeroApiService {
-  private configUrl = 'http://localhost:5208/api/GalleryHero';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('GalleryHero');
+  }
   private localStorageKey = 'galleryHeroConfig';
   private JSON_FILE_PATH = './assets/smile-gallery/gallery-hero.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleGalleryHeroConfig> {
     // Try to load from local storage first

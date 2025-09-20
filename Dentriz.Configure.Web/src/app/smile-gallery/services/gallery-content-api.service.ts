@@ -35,11 +35,16 @@ export interface SimpleGalleryContentConfig {
   providedIn: 'root'
 })
 export class GalleryContentApiService {
-  private configUrl = 'http://localhost:5208/api/GalleryContent';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('GalleryContent');
+  }
   private localStorageKey = 'galleryContentConfig';
   private JSON_FILE_PATH = './assets/smile-gallery/gallery-content.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleGalleryContentConfig> {
     // Try to load from local storage first

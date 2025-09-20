@@ -63,10 +63,15 @@ export interface SimpleContactInfoConfig {
   providedIn: 'root'
 })
 export class ContactInfoApiService {
-  private configUrl = 'http://localhost:5208/api/ContactInfo';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('ContactInfo');
+  }
   private localStorageKey = 'contactInfoConfig';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleContactInfoConfig> {
     // Try to load from local storage first

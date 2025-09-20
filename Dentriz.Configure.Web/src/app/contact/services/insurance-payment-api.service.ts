@@ -46,11 +46,16 @@ export interface SimpleInsurancePaymentConfig {
   providedIn: 'root'
 })
 export class InsurancePaymentApiService {
-  private configUrl = 'http://localhost:5208/api/ContactPayments';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('ContactPayments');
+  }
   private localStorageKey = 'insurancePaymentConfig';
   private JSON_FILE_PATH = './assets/contact/insurance-payment.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleInsurancePaymentConfig> {
     // Try to load from local storage first

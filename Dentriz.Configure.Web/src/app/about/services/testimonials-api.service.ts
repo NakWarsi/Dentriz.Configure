@@ -37,11 +37,16 @@ export interface SimpleTestimonialsConfig {
   providedIn: 'root'
 })
 export class TestimonialsApiService {
-  private configUrl = 'http://localhost:5208/api/AboutTestimonials';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('AboutTestimonials');
+  }
   private localStorageKey = 'testimonialsConfig';
   private JSON_FILE_PATH = './assets/about/testimonials.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleTestimonialsConfig> {
     // Try to load from local storage first

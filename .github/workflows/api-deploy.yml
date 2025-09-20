@@ -1,0 +1,111 @@
+name: Deploy API
+
+on:
+  push:
+    branches: ['release-dynamic-*']
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+jobs:
+  download-api-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download API build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: api-build
+          path: ./api-build
+
+      - name: List API build contents
+        run: ls -la ./api-build
+
+  deploy-api:
+    needs: download-api-build
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download API build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: api-build
+          path: ./api-build
+
+      - name: Deploy API to Azure App Service
+        uses: Azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_API_APP_NAME }}
+          publish-profile: ${{ secrets.AZURE_API_PUBLISH_PROFILE }}
+          package: ./api-build
+
+  configure-api-settings:
+    needs: deploy-api
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    steps:
+      - name: Configure API App Service settings
+        uses: Azure/appservice-settings@v1
+        with:
+          app-name: ${{ secrets.AZURE_API_APP_NAME }}
+          app-settings-json: |
+            {
+              "ASPNETCORE_ENVIRONMENT": "Production",
+              "ConnectionStrings__DefaultConnection": "${{ secrets.COSMOS_DB_CONNECTION_STRING }}",
+              "CORS__AllowedOrigins": "${{ secrets.FRONTEND_URLS }}",
+              "WEBSITE_NODE_DEFAULT_VERSION": "18.17.0",
+              "WEBSITE_RUN_FROM_PACKAGE": "1"
+            }
+
+  health-check:
+    needs: [deploy-api, configure-api-settings]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for API to start
+        run: sleep 30
+
+      - name: Health check API
+        run: |
+          API_URL="${{ secrets.API_BASE_URL }}/health"
+          echo "Checking API health at: $API_URL"
+          
+          for i in {1..5}; do
+            if curl -f -s "$API_URL" > /dev/null; then
+              echo "✅ API health check passed!"
+              exit 0
+            else
+              echo "⏳ Attempt $i/5: API not ready yet, waiting..."
+              sleep 10
+            fi
+          done
+          
+          echo "❌ API health check failed after 5 attempts"
+          exit 1
+
+  notify-deployment:
+    needs: [deploy-api, configure-api-settings, health-check]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Notify API deployment status
+        run: |
+          if [ "${{ needs.deploy-api.result }}" == "success" ] && [ "${{ needs.configure-api-settings.result }}" == "success" ] && [ "${{ needs.health-check.result }}" == "success" ]; then
+            echo "✅ API deployment successful!"
+            echo "🌐 API URL: ${{ secrets.API_BASE_URL }}"
+            echo "🔗 Swagger UI: ${{ secrets.API_BASE_URL }}/swagger"
+          else
+            echo "❌ API deployment failed!"
+            exit 1
+          fi

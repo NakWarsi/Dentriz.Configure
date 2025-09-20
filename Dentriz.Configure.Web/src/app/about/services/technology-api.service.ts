@@ -33,11 +33,16 @@ export interface SimpleTechnologyConfig {
   providedIn: 'root'
 })
 export class TechnologyApiService {
-  private configUrl = 'http://localhost:5208/api/AboutTechnology';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('AboutTechnology');
+  }
   private localStorageKey = 'technologyConfig';
   private JSON_FILE_PATH = './assets/about/technology.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleTechnologyConfig> {
     // Try to load from local storage first

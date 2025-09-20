@@ -32,11 +32,16 @@ export interface SimpleFAQConfig {
   providedIn: 'root'
 })
 export class FAQApiService {
-  private configUrl = 'http://localhost:5208/api/ContactFaq';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('ContactFaq');
+  }
   private localStorageKey = 'faqConfig';
   private JSON_FILE_PATH = './assets/contact/faq.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleFAQConfig> {
     // Try to load from local storage first

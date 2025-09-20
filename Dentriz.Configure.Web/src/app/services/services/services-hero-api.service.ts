@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { SERVICES_HERO_CONSTANTS } from '../constants/services-hero.constants';
 import { IDataService } from '../../core/interfaces/data-service.interface';
+import { ApiConfigService } from '../../core/services/api-config.service';
 
 export interface SimpleServicesHeroConfig {
   // Section Content
@@ -23,11 +24,17 @@ export interface SimpleServicesHeroConfig {
   providedIn: 'root'
 })
 export class ServicesHeroApiService implements IDataService<SimpleServicesHeroConfig> {
-  private configUrl = 'http://localhost:5208/api/ServicesHero';
   private localStorageKey = 'servicesHeroConfig';
   private JSON_FILE_PATH = './assets/services/services-hero.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
+
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('ServicesHero');
+  }
 
   loadConfig(): Observable<SimpleServicesHeroConfig> {
     // Try to load from local storage first

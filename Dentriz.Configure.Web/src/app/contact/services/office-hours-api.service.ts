@@ -44,10 +44,15 @@ export interface SimpleOfficeHoursConfig {
   providedIn: 'root'
 })
 export class OfficeHoursApiService {
-  private configUrl = 'http://localhost:5208/api/ContactOfficeHours';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('ContactOfficeHours');
+  }
   private localStorageKey = 'officeHoursConfig';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleOfficeHoursConfig> {
     // Try to load from local storage first
