@@ -79,6 +79,11 @@ jobs:
           }
           EOF
 
+      - name: Install Express dependency
+        run: |
+          cd Dentriz.Configure.Web/dist/DentrizWeb/browser
+          npm install express --production
+
       - name: Upload dynamic build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -128,7 +133,8 @@ jobs:
               NODE_ENV=production \
               WEBSITE_NODE_DEFAULT_VERSION=20.17.0 \
               WEBSITE_RUN_FROM_PACKAGE=1 \
-              SCM_DO_BUILD_DURING_DEPLOYMENT=false
+              SCM_DO_BUILD_DURING_DEPLOYMENT=false \
+              WEBSITE_SKIP_CONTENTSHARE_VALIDATION=1
 
       - name: Configure startup command
         run: |
