@@ -258,6 +258,14 @@ jobs:
           APP_SERVICE: ${{ steps.set-target.outputs.app-service-name }}
         run: |
           echo "🔍 Deploying to: $APP_SERVICE"
+          echo "🔍 Branch name from step: ${{ steps.set-target.outputs.branch-suffix }}"
+          echo "🔍 Deployment type: ${{ steps.set-target.outputs.deployment-type }}"
+          
+          # TEMPORARY OVERRIDE FOR TESTING - Remove this after fixing branch detection
+          if [ "$APP_SERVICE" == "dentriz-configure-web" ] && [ -n "${{ steps.set-target.outputs.branch-suffix }}" ]; then
+            echo "🔧 TEMPORARY OVERRIDE: Forcing App Service to dentriz-configure-web-${{ steps.set-target.outputs.branch-suffix }}"
+            APP_SERVICE="dentriz-configure-web-${{ steps.set-target.outputs.branch-suffix }}"
+          fi
           
           # Convert hyphens to underscores for secret name
           SECRET_NAME="AZURE_WEBAPP_PUBLISH_PROFILE_${APP_SERVICE//-/_}"
