@@ -450,6 +450,19 @@ jobs:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ./dynamic-build
+          slot-name: production
+
+      - name: Alternative deployment using Azure CLI (if publish profile fails)
+        if: failure()
+        run: |
+          echo "Publish profile deployment failed, trying Azure CLI deployment..."
+          # Install Azure CLI
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+          # Login using service principal
+          az login --service-principal --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+          # Deploy using Azure CLI
+          az webapp deployment source config-zip --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_WEBAPP_NAME }} --src ./dynamic-build.zip
+          echo "Azure CLI deployment completed"
 
   configure-app-settings:
     needs: deploy-app-service
