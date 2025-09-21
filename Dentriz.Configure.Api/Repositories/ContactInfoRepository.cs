@@ -1,5 +1,6 @@
 using Microsoft.Azure.Cosmos;
 using Dentriz.Configure.Api.Models;
+using Dentriz.Configure.Api.Services;
 
 namespace Dentriz.Configure.Api.Repositories
 {
@@ -12,24 +13,25 @@ namespace Dentriz.Configure.Api.Repositories
 
     public class ContactInfoRepository : BaseRepository<dynamic>, IContactInfoRepository
     {
-        private const string DOCUMENT_ID = "contact-info";
-        private const string PARTITION_KEY = "contact-info";
+        private readonly ICosmosDbConfigurationService _configService;
 
-        public ContactInfoRepository(Container container, ILogger<ContactInfoRepository> logger) 
+        public ContactInfoRepository(Container container, ILogger<ContactInfoRepository> logger, ICosmosDbConfigurationService configService) 
             : base(container, logger)
         {
+            _configService = configService;
         }
 
         public async Task<ContactInfo?> GetContactInfoAsync()
         {
             try
             {
-                var doc = await GetByIdAsync(DOCUMENT_ID, PARTITION_KEY);
+                var config = _configService.GetContactInfoDocumentConfig();
+                var doc = await GetByIdAsync(config.DocumentId, config.PartitionKey);
                 if (doc == null) return null;
 
                 return new ContactInfo
                 {
-                    Id = doc.id ?? DOCUMENT_ID,
+                    Id = doc.id ?? config.DocumentId,
                     PhoneTitle = doc.phoneTitle ?? "Phone",
                     PhoneNote = doc.phoneNote ?? "Call us for any enquiry",
                     PhoneButtonText = doc.phoneButtonText ?? "📞 Inquiries",
@@ -87,7 +89,8 @@ namespace Dentriz.Configure.Api.Repositories
             try
             {
                 config.LastUpdated = DateTime.UtcNow;
-                config.Id = DOCUMENT_ID;
+                var docConfig = _configService.GetContactInfoDocumentConfig();
+                config.Id = docConfig.DocumentId;
 
                 var document = new
                 {
@@ -137,7 +140,7 @@ namespace Dentriz.Configure.Api.Repositories
                     version = config.Version
                 };
 
-                await CreateOrUpdateAsync(document, DOCUMENT_ID, PARTITION_KEY);
+                await CreateOrUpdateAsync(document, docConfig.DocumentId, docConfig.PartitionKey);
                 return config;
             }
             catch (Exception ex)
@@ -149,7 +152,8 @@ namespace Dentriz.Configure.Api.Repositories
 
         public async Task<bool> DeleteContactInfoAsync()
         {
-            return await DeleteAsync(DOCUMENT_ID, PARTITION_KEY);
+            var config = _configService.GetContactInfoDocumentConfig();
+            return await DeleteAsync(config.DocumentId, config.PartitionKey);
         }
     }
 }

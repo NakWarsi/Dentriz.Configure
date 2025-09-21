@@ -1,4 +1,5 @@
 using Dentriz.Configure.Api.Models;
+using Dentriz.Configure.Api.Services;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
@@ -14,24 +15,25 @@ namespace Dentriz.Configure.Api.Repositories
 
     public class HomeReasonsRepository : BaseRepository<dynamic>, IHomeReasonsRepository
     {
-        private const string DOCUMENT_ID = "home-reasons";
-        private const string PARTITION_KEY = "home-reasons";
+        private readonly ICosmosDbConfigurationService _configService;
 
-        public HomeReasonsRepository(Container container, ILogger<HomeReasonsRepository> logger)
+        public HomeReasonsRepository(Container container, ILogger<HomeReasonsRepository> logger, ICosmosDbConfigurationService configService)
             : base(container, logger)
         {
+            _configService = configService;
         }
 
         public async Task<HomeReasons?> GetHomeReasonsAsync()
         {
             try
             {
-                var doc = await GetByIdAsync(DOCUMENT_ID, PARTITION_KEY);
+                var config = _configService.GetHomeReasonsDocumentConfig();
+                var doc = await GetByIdAsync(config.DocumentId, config.PartitionKey);
                 if (doc == null) return null;
 
                 return new HomeReasons
                 {
-                    Id = doc.id ?? DOCUMENT_ID,
+                    Id = doc.id ?? config.DocumentId,
                     SectionTitle = doc.sectionTitle ?? "Why Choose DentRiz Dental Clinic in Pune",
                     SectionIntro = doc.sectionIntro ?? "At <strong>DentRiz Dental Clinic</strong>, we believe every patient deserves a healthy, confident smile. Here's why families in Wakad, Hinjewadi, and across Pune trust us for their dental care:",
                     Reason1Icon = doc.reason1Icon ?? "🦷",
@@ -94,7 +96,8 @@ namespace Dentriz.Configure.Api.Repositories
         {
             try
             {
-                reasons.Id = DOCUMENT_ID;
+                var docConfig = _configService.GetHomeReasonsDocumentConfig();
+                reasons.Id = docConfig.DocumentId;
 
                 var document = new
                 {
@@ -150,7 +153,7 @@ namespace Dentriz.Configure.Api.Repositories
                     reason6ItemsFontFamily = reasons.Reason6ItemsFontFamily
                 };
 
-                await CreateOrUpdateAsync(document, DOCUMENT_ID, PARTITION_KEY);
+                await CreateOrUpdateAsync(document, docConfig.DocumentId, docConfig.PartitionKey);
                 return reasons;
             }
             catch (Exception ex)
@@ -162,7 +165,8 @@ namespace Dentriz.Configure.Api.Repositories
 
         public async Task<bool> DeleteHomeReasonsAsync()
         {
-            return await DeleteAsync(DOCUMENT_ID, PARTITION_KEY);
+            var config = _configService.GetHomeReasonsDocumentConfig();
+            return await DeleteAsync(config.DocumentId, config.PartitionKey);
         }
 
         private List<string> ParseStringList(dynamic list)

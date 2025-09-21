@@ -1,5 +1,6 @@
 using Microsoft.Azure.Cosmos;
 using Dentriz.Configure.Api.Models;
+using Dentriz.Configure.Api.Services;
 
 namespace Dentriz.Configure.Api.Repositories
 {
@@ -12,24 +13,25 @@ namespace Dentriz.Configure.Api.Repositories
 
     public class AboutTestimonialsRepository : BaseRepository<dynamic>, IAboutTestimonialsRepository
     {
-        private const string DOCUMENT_ID = "about-testimonials";
-        private const string PARTITION_KEY = "about-testimonials";
+        private readonly ICosmosDbConfigurationService _configService;
 
-        public AboutTestimonialsRepository(Container container, ILogger<AboutTestimonialsRepository> logger) 
+        public AboutTestimonialsRepository(Container container, ILogger<AboutTestimonialsRepository> logger, ICosmosDbConfigurationService configService) 
             : base(container, logger)
         {
+            _configService = configService;
         }
 
         public async Task<AboutTestimonials?> GetAboutTestimonialsAsync()
         {
             try
             {
-                var doc = await GetByIdAsync(DOCUMENT_ID, PARTITION_KEY);
+                var config = _configService.GetAboutTestimonialsDocumentConfig();
+                var doc = await GetByIdAsync(config.DocumentId, config.PartitionKey);
                 if (doc == null) return null;
 
                 return new AboutTestimonials
                 {
-                    Id = doc.id ?? DOCUMENT_ID,
+                    Id = doc.id ?? config.DocumentId,
                     SectionTitle = doc.sectionTitle ?? "What Our Patients Say",
                     SectionSubtitle = doc.sectionSubtitle ?? "Read some of our amazing patient reviews and then contact us to experience our care for yourself!",
                     Testimonials = ParseTestimonials(doc.testimonials),
@@ -61,7 +63,8 @@ namespace Dentriz.Configure.Api.Repositories
             try
             {
                 config.LastUpdated = DateTime.UtcNow;
-                config.Id = DOCUMENT_ID;
+                var docConfig = _configService.GetAboutTestimonialsDocumentConfig();
+                config.Id = docConfig.DocumentId;
 
                 var document = new
                 {
@@ -85,7 +88,7 @@ namespace Dentriz.Configure.Api.Repositories
                     version = config.Version
                 };
 
-                await CreateOrUpdateAsync(document, DOCUMENT_ID, PARTITION_KEY);
+                await CreateOrUpdateAsync(document, docConfig.DocumentId, docConfig.PartitionKey);
                 return config;
             }
             catch (Exception ex)
@@ -97,7 +100,8 @@ namespace Dentriz.Configure.Api.Repositories
 
         public async Task<bool> DeleteAboutTestimonialsAsync()
         {
-            return await DeleteAsync(DOCUMENT_ID, PARTITION_KEY);
+            var config = _configService.GetAboutTestimonialsDocumentConfig();
+            return await DeleteAsync(config.DocumentId, config.PartitionKey);
         }
 
         private List<Testimonial> ParseTestimonials(dynamic testimonials)

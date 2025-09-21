@@ -1,5 +1,6 @@
 using Microsoft.Azure.Cosmos;
 using Dentriz.Configure.Api.Models;
+using Dentriz.Configure.Api.Services;
 
 namespace Dentriz.Configure.Api.Repositories
 {
@@ -12,24 +13,25 @@ namespace Dentriz.Configure.Api.Repositories
 
     public class ContactOfficeHoursRepository : BaseRepository<dynamic>, IContactOfficeHoursRepository
     {
-        private const string DOCUMENT_ID = "contact-office-hours";
-        private const string PARTITION_KEY = "contact-office-hours";
+        private readonly ICosmosDbConfigurationService _configService;
 
-        public ContactOfficeHoursRepository(Container container, ILogger<ContactOfficeHoursRepository> logger) 
+        public ContactOfficeHoursRepository(Container container, ILogger<ContactOfficeHoursRepository> logger, ICosmosDbConfigurationService configService) 
             : base(container, logger)
         {
+            _configService = configService;
         }
 
         public async Task<ContactOfficeHours?> GetContactOfficeHoursAsync()
         {
             try
             {
-                var doc = await GetByIdAsync(DOCUMENT_ID, PARTITION_KEY);
+                var config = _configService.GetContactOfficeHoursDocumentConfig();
+                var doc = await GetByIdAsync(config.DocumentId, config.PartitionKey);
                 if (doc == null) return null;
 
                 return new ContactOfficeHours
                 {
-                    Id = doc.id ?? DOCUMENT_ID,
+                    Id = doc.id ?? config.DocumentId,
                     SectionTitle = doc.sectionTitle ?? "Office Hours",
                     SectionSubtitle = doc.sectionSubtitle ?? "Convenient hours to fit your busy schedule",
                     MondayTime = doc.mondayTime ?? "10:00 AM - 10:00 PM",
@@ -70,7 +72,8 @@ namespace Dentriz.Configure.Api.Repositories
             try
             {
                 config.LastUpdated = DateTime.UtcNow;
-                config.Id = DOCUMENT_ID;
+                var docConfig = _configService.GetContactOfficeHoursDocumentConfig();
+                config.Id = docConfig.DocumentId;
 
                 var document = new
                 {
@@ -103,7 +106,7 @@ namespace Dentriz.Configure.Api.Repositories
                     version = config.Version
                 };
 
-                await CreateOrUpdateAsync(document, DOCUMENT_ID, PARTITION_KEY);
+                await CreateOrUpdateAsync(document, docConfig.DocumentId, docConfig.PartitionKey);
                 return config;
             }
             catch (Exception ex)
@@ -115,7 +118,8 @@ namespace Dentriz.Configure.Api.Repositories
 
         public async Task<bool> DeleteContactOfficeHoursAsync()
         {
-            return await DeleteAsync(DOCUMENT_ID, PARTITION_KEY);
+            var config = _configService.GetContactOfficeHoursDocumentConfig();
+            return await DeleteAsync(config.DocumentId, config.PartitionKey);
         }
 
         private List<string> ParseNotes(dynamic notes)

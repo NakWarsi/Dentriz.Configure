@@ -1,4 +1,5 @@
 using Dentriz.Configure.Api.Models;
+using Dentriz.Configure.Api.Services;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 
@@ -13,24 +14,25 @@ namespace Dentriz.Configure.Api.Repositories
 
     public class ServicesTechnologySectionRepository : BaseRepository<dynamic>, IServicesTechnologySectionRepository
     {
-        private const string DOCUMENT_ID = "services-technology-section";
-        private const string PARTITION_KEY = "services-technology-section";
+        private readonly ICosmosDbConfigurationService _configService;
 
-        public ServicesTechnologySectionRepository(Container container, ILogger<ServicesTechnologySectionRepository> logger)
+        public ServicesTechnologySectionRepository(Container container, ILogger<ServicesTechnologySectionRepository> logger, ICosmosDbConfigurationService configService)
             : base(container, logger)
         {
+            _configService = configService;
         }
 
         public async Task<ServicesTechnologySection?> GetServicesTechnologySectionAsync()
         {
             try
             {
-                var doc = await GetByIdAsync(DOCUMENT_ID, PARTITION_KEY);
+                var config = _configService.GetServicesTechnologySectionDocumentConfig();
+                var doc = await GetByIdAsync(config.DocumentId, config.PartitionKey);
                 if (doc == null) return null;
 
                 return new ServicesTechnologySection
                 {
-                    Id = doc.id ?? DOCUMENT_ID,
+                    Id = doc.id ?? config.DocumentId,
                     SectionTitle = doc.sectionTitle ?? "Advanced Technology",
                     SectionSubtitle = doc.sectionSubtitle ?? "We invest in the latest dental technology to provide you with the best care possible",
                     Technologies = ParseTechnologies(doc.technologies),
@@ -56,7 +58,8 @@ namespace Dentriz.Configure.Api.Repositories
         {
             try
             {
-                technologySection.Id = DOCUMENT_ID;
+                var docConfig = _configService.GetServicesTechnologySectionDocumentConfig();
+                technologySection.Id = docConfig.DocumentId;
 
                 var document = new
                 {
@@ -75,7 +78,7 @@ namespace Dentriz.Configure.Api.Repositories
                     cardDescriptionFontFamily = technologySection.CardDescriptionFontFamily
                 };
 
-                await CreateOrUpdateAsync(document, DOCUMENT_ID, PARTITION_KEY);
+                await CreateOrUpdateAsync(document, docConfig.DocumentId, docConfig.PartitionKey);
                 return technologySection;
             }
             catch (Exception ex)
@@ -87,7 +90,8 @@ namespace Dentriz.Configure.Api.Repositories
 
         public async Task<bool> DeleteServicesTechnologySectionAsync()
         {
-            return await DeleteAsync(DOCUMENT_ID, PARTITION_KEY);
+            var config = _configService.GetServicesTechnologySectionDocumentConfig();
+            return await DeleteAsync(config.DocumentId, config.PartitionKey);
         }
 
         private List<TechnologyItem> ParseTechnologies(dynamic technologies)

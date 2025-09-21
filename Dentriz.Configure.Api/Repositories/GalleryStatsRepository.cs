@@ -1,5 +1,6 @@
 using Microsoft.Azure.Cosmos;
 using Dentriz.Configure.Api.Models;
+using Dentriz.Configure.Api.Services;
 
 namespace Dentriz.Configure.Api.Repositories
 {
@@ -12,24 +13,25 @@ namespace Dentriz.Configure.Api.Repositories
 
     public class GalleryStatsRepository : BaseRepository<dynamic>, IGalleryStatsRepository
     {
-        private const string DOCUMENT_ID = "gallery-stats";
-        private const string PARTITION_KEY = "gallery-stats";
+        private readonly ICosmosDbConfigurationService _configService;
 
-        public GalleryStatsRepository(Container container, ILogger<GalleryStatsRepository> logger) 
+        public GalleryStatsRepository(Container container, ILogger<GalleryStatsRepository> logger, ICosmosDbConfigurationService configService) 
             : base(container, logger)
         {
+            _configService = configService;
         }
 
         public async Task<GalleryStats?> GetGalleryStatsAsync()
         {
             try
             {
-                var doc = await GetByIdAsync(DOCUMENT_ID, PARTITION_KEY);
+                var config = _configService.GetGalleryStatsDocumentConfig();
+                var doc = await GetByIdAsync(config.DocumentId, config.PartitionKey);
                 if (doc == null) return null;
 
                 return new GalleryStats
                 {
-                    Id = doc.id ?? DOCUMENT_ID,
+                    Id = doc.id ?? config.DocumentId,
                     GalleryStatsList = ParseStatItems(doc.galleryStats),
                     StatNumberColor = doc.statNumberColor ?? "#1e3c72",
                     StatLabelColor = doc.statLabelColor ?? "#666666",
@@ -52,7 +54,8 @@ namespace Dentriz.Configure.Api.Repositories
             try
             {
                 config.LastUpdated = DateTime.UtcNow;
-                config.Id = DOCUMENT_ID;
+                var docConfig = _configService.GetGalleryStatsDocumentConfig();
+                config.Id = docConfig.DocumentId;
 
                 var document = new
                 {
@@ -67,7 +70,7 @@ namespace Dentriz.Configure.Api.Repositories
                     version = config.Version
                 };
 
-                await CreateOrUpdateAsync(document, DOCUMENT_ID, PARTITION_KEY);
+                await CreateOrUpdateAsync(document, docConfig.DocumentId, docConfig.PartitionKey);
                 return config;
             }
             catch (Exception ex)
@@ -79,7 +82,8 @@ namespace Dentriz.Configure.Api.Repositories
 
         public async Task<bool> DeleteGalleryStatsAsync()
         {
-            return await DeleteAsync(DOCUMENT_ID, PARTITION_KEY);
+            var config = _configService.GetGalleryStatsDocumentConfig();
+            return await DeleteAsync(config.DocumentId, config.PartitionKey);
         }
 
         private List<StatItem> ParseStatItems(dynamic statItems)

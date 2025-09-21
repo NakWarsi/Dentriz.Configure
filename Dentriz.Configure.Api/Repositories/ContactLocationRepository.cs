@@ -1,5 +1,6 @@
 using Microsoft.Azure.Cosmos;
 using Dentriz.Configure.Api.Models;
+using Dentriz.Configure.Api.Services;
 
 namespace Dentriz.Configure.Api.Repositories
 {
@@ -12,24 +13,25 @@ namespace Dentriz.Configure.Api.Repositories
 
     public class ContactLocationRepository : BaseRepository<dynamic>, IContactLocationRepository
     {
-        private const string DOCUMENT_ID = "contact-location";
-        private const string PARTITION_KEY = "contact-location";
+        private readonly ICosmosDbConfigurationService _configService;
 
-        public ContactLocationRepository(Container container, ILogger<ContactLocationRepository> logger) 
+        public ContactLocationRepository(Container container, ILogger<ContactLocationRepository> logger, ICosmosDbConfigurationService configService) 
             : base(container, logger)
         {
+            _configService = configService;
         }
 
         public async Task<ContactLocation?> GetContactLocationAsync()
         {
             try
             {
-                var doc = await GetByIdAsync(DOCUMENT_ID, PARTITION_KEY);
+                var config = _configService.GetContactLocationDocumentConfig();
+                var doc = await GetByIdAsync(config.DocumentId, config.PartitionKey);
                 if (doc == null) return null;
 
                 return new ContactLocation
                 {
-                    Id = doc.id ?? DOCUMENT_ID,
+                    Id = doc.id ?? config.DocumentId,
                     SectionTitle = doc.sectionTitle ?? "Find Our Office",
                     SectionDescription = doc.sectionDescription ?? "Our dental office is conveniently located in the heart of the city, with easy access to public transportation and plenty of parking available. We're committed to making your visit as comfortable and convenient as possible.",
                     AddressTitle = doc.addressTitle ?? "📍 Address:",
@@ -77,7 +79,8 @@ namespace Dentriz.Configure.Api.Repositories
             try
             {
                 config.LastUpdated = DateTime.UtcNow;
-                config.Id = DOCUMENT_ID;
+                var docConfig = _configService.GetContactLocationDocumentConfig();
+                config.Id = docConfig.DocumentId;
 
                 var document = new
                 {
@@ -117,7 +120,7 @@ namespace Dentriz.Configure.Api.Repositories
                     version = config.Version
                 };
 
-                await CreateOrUpdateAsync(document, DOCUMENT_ID, PARTITION_KEY);
+                await CreateOrUpdateAsync(document, docConfig.DocumentId, docConfig.PartitionKey);
                 return config;
             }
             catch (Exception ex)
@@ -129,7 +132,8 @@ namespace Dentriz.Configure.Api.Repositories
 
         public async Task<bool> DeleteContactLocationAsync()
         {
-            return await DeleteAsync(DOCUMENT_ID, PARTITION_KEY);
+            var config = _configService.GetContactLocationDocumentConfig();
+            return await DeleteAsync(config.DocumentId, config.PartitionKey);
         }
     }
 }

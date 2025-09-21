@@ -1,5 +1,6 @@
 using Microsoft.Azure.Cosmos;
 using Dentriz.Configure.Api.Models;
+using Dentriz.Configure.Api.Services;
 
 namespace Dentriz.Configure.Api.Repositories
 {
@@ -12,24 +13,25 @@ namespace Dentriz.Configure.Api.Repositories
 
     public class HeaderRepository : BaseRepository<dynamic>, IHeaderRepository
     {
-        private const string DOCUMENT_ID = "header-config";
-        private const string PARTITION_KEY = "header-config";
+        private readonly ICosmosDbConfigurationService _configService;
 
-        public HeaderRepository(Container container, ILogger<HeaderRepository> logger) 
+        public HeaderRepository(Container container, ILogger<HeaderRepository> logger, ICosmosDbConfigurationService configService) 
             : base(container, logger)
         {
+            _configService = configService;
         }
 
         public async Task<HeaderConfig?> GetHeaderConfigAsync()
         {
             try
             {
-                var doc = await GetByIdAsync(DOCUMENT_ID, PARTITION_KEY);
+                var config = _configService.GetHeaderDocumentConfig();
+                var doc = await GetByIdAsync(config.DocumentId, config.PartitionKey);
                 if (doc == null) return null;
 
                 return new HeaderConfig
                 {
-                    Id = doc.id ?? DOCUMENT_ID,
+                    Id = doc.id ?? config.DocumentId,
                     LogoAlt = doc.logoAlt ?? "DentRiz Dental Clinic Logo",
                     LogoImage = doc.logoImage ?? "/images/clinic/logo.png",
                     ClinicName = doc.clinicName ?? "DentRiz Dental Clinic",
@@ -64,7 +66,8 @@ namespace Dentriz.Configure.Api.Repositories
             {
                 // Set metadata
                 config.LastUpdated = DateTime.UtcNow;
-                config.Id = DOCUMENT_ID;
+                var docConfig = _configService.GetHeaderDocumentConfig();
+                config.Id = docConfig.DocumentId;
 
                 // Create document structure
                 var document = new
@@ -91,7 +94,7 @@ namespace Dentriz.Configure.Api.Repositories
                     version = config.Version
                 };
 
-                await CreateOrUpdateAsync(document, DOCUMENT_ID, PARTITION_KEY);
+                await CreateOrUpdateAsync(document, docConfig.DocumentId, docConfig.PartitionKey);
                 return config;
             }
             catch (Exception ex)
@@ -103,7 +106,8 @@ namespace Dentriz.Configure.Api.Repositories
 
         public async Task<bool> DeleteHeaderConfigAsync()
         {
-            return await DeleteAsync(DOCUMENT_ID, PARTITION_KEY);
+            var config = _configService.GetHeaderDocumentConfig();
+            return await DeleteAsync(config.DocumentId, config.PartitionKey);
         }
 
         private List<NavItem> ParseNavItems(dynamic navItems)

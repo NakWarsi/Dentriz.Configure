@@ -1,4 +1,5 @@
 using Dentriz.Configure.Api.Models;
+using Dentriz.Configure.Api.Services;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
@@ -14,24 +15,25 @@ namespace Dentriz.Configure.Api.Repositories
 
     public class HomeFounderRepository : BaseRepository<dynamic>, IHomeFounderRepository
     {
-        private const string DOCUMENT_ID = "home-founder";
-        private const string PARTITION_KEY = "home-founder";
+        private readonly ICosmosDbConfigurationService _configService;
 
-        public HomeFounderRepository(Container container, ILogger<HomeFounderRepository> logger)
+        public HomeFounderRepository(Container container, ILogger<HomeFounderRepository> logger, ICosmosDbConfigurationService configService)
             : base(container, logger)
         {
+            _configService = configService;
         }
 
         public async Task<HomeFounder?> GetHomeFounderAsync()
         {
             try
             {
-                var doc = await GetByIdAsync(DOCUMENT_ID, PARTITION_KEY);
+                var config = _configService.GetHomeFounderDocumentConfig();
+                var doc = await GetByIdAsync(config.DocumentId, config.PartitionKey);
                 if (doc == null) return null;
 
                 return new HomeFounder
                 {
-                    Id = doc.id ?? DOCUMENT_ID,
+                    Id = doc.id ?? config.DocumentId,
                     Subtitle = doc.subtitle ?? "Know your Doctor",
                     DoctorName = doc.doctorName ?? "Dr. Rizwana Khan",
                     Title = doc.title ?? "Founder & Chief Dentist",
@@ -74,7 +76,8 @@ namespace Dentriz.Configure.Api.Repositories
         {
             try
             {
-                founder.Id = DOCUMENT_ID;
+                var docConfig = _configService.GetHomeFounderDocumentConfig();
+                founder.Id = docConfig.DocumentId;
 
                 var document = new
                 {
@@ -110,7 +113,7 @@ namespace Dentriz.Configure.Api.Repositories
                     credentialsFontFamily = founder.CredentialsFontFamily
                 };
 
-                await CreateOrUpdateAsync(document, DOCUMENT_ID, PARTITION_KEY);
+                await CreateOrUpdateAsync(document, docConfig.DocumentId, docConfig.PartitionKey);
                 return founder;
             }
             catch (Exception ex)
@@ -122,7 +125,8 @@ namespace Dentriz.Configure.Api.Repositories
 
         public async Task<bool> DeleteHomeFounderAsync()
         {
-            return await DeleteAsync(DOCUMENT_ID, PARTITION_KEY);
+            var config = _configService.GetHomeFounderDocumentConfig();
+            return await DeleteAsync(config.DocumentId, config.PartitionKey);
         }
 
         private List<string> ParseStringList(dynamic list)

@@ -1,5 +1,6 @@
 using Microsoft.Azure.Cosmos;
 using Dentriz.Configure.Api.Models;
+using Dentriz.Configure.Api.Services;
 
 namespace Dentriz.Configure.Api.Repositories
 {
@@ -12,24 +13,25 @@ namespace Dentriz.Configure.Api.Repositories
 
     public class AboutValuesRepository : BaseRepository<dynamic>, IAboutValuesRepository
     {
-        private const string DOCUMENT_ID = "about-values";
-        private const string PARTITION_KEY = "about-values";
+        private readonly ICosmosDbConfigurationService _configService;
 
-        public AboutValuesRepository(Container container, ILogger<AboutValuesRepository> logger) 
+        public AboutValuesRepository(Container container, ILogger<AboutValuesRepository> logger, ICosmosDbConfigurationService configService) 
             : base(container, logger)
         {
+            _configService = configService;
         }
 
         public async Task<AboutValues?> GetAboutValuesAsync()
         {
             try
             {
-                var doc = await GetByIdAsync(DOCUMENT_ID, PARTITION_KEY);
+                var config = _configService.GetAboutValuesDocumentConfig();
+                var doc = await GetByIdAsync(config.DocumentId, config.PartitionKey);
                 if (doc == null) return null;
 
                 return new AboutValues
                 {
-                    Id = doc.id ?? DOCUMENT_ID,
+                    Id = doc.id ?? config.DocumentId,
                     SectionTitle = doc.sectionTitle ?? "Our Core Values",
                     Values = ParseValues(doc.values),
                     SectionTitleColor = doc.sectionTitleColor ?? "#2c5aa0",
@@ -55,7 +57,8 @@ namespace Dentriz.Configure.Api.Repositories
             try
             {
                 config.LastUpdated = DateTime.UtcNow;
-                config.Id = DOCUMENT_ID;
+                var docConfig = _configService.GetAboutValuesDocumentConfig();
+                config.Id = docConfig.DocumentId;
 
                 var document = new
                 {
@@ -73,7 +76,7 @@ namespace Dentriz.Configure.Api.Repositories
                     version = config.Version
                 };
 
-                await CreateOrUpdateAsync(document, DOCUMENT_ID, PARTITION_KEY);
+                await CreateOrUpdateAsync(document, docConfig.DocumentId, docConfig.PartitionKey);
                 return config;
             }
             catch (Exception ex)
@@ -85,7 +88,8 @@ namespace Dentriz.Configure.Api.Repositories
 
         public async Task<bool> DeleteAboutValuesAsync()
         {
-            return await DeleteAsync(DOCUMENT_ID, PARTITION_KEY);
+            var config = _configService.GetAboutValuesDocumentConfig();
+            return await DeleteAsync(config.DocumentId, config.PartitionKey);
         }
 
         private List<Value> ParseValues(dynamic values)

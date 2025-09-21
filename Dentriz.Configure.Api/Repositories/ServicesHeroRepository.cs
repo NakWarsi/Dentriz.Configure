@@ -1,4 +1,5 @@
 using Dentriz.Configure.Api.Models;
+using Dentriz.Configure.Api.Services;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 
@@ -13,24 +14,25 @@ namespace Dentriz.Configure.Api.Repositories
 
     public class ServicesHeroRepository : BaseRepository<dynamic>, IServicesHeroRepository
     {
-        private const string DOCUMENT_ID = "services-hero";
-        private const string PARTITION_KEY = "services-hero";
+        private readonly ICosmosDbConfigurationService _configService;
 
-        public ServicesHeroRepository(Container container, ILogger<ServicesHeroRepository> logger)
+        public ServicesHeroRepository(Container container, ILogger<ServicesHeroRepository> logger, ICosmosDbConfigurationService configService)
             : base(container, logger)
         {
+            _configService = configService;
         }
 
         public async Task<ServicesHero?> GetServicesHeroAsync()
         {
             try
             {
-                var doc = await GetByIdAsync(DOCUMENT_ID, PARTITION_KEY);
+                var config = _configService.GetServicesHeroDocumentConfig();
+                var doc = await GetByIdAsync(config.DocumentId, config.PartitionKey);
                 if (doc == null) return null;
 
                 return new ServicesHero
                 {
-                    Id = doc.id ?? DOCUMENT_ID,
+                    Id = doc.id ?? config.DocumentId,
                     Title = doc.title ?? "Complete Dental Care Under One Roof",
                     Subtitle = doc.subtitle ?? "Comprehensive dental care including cosmetic dentistry, dental implants, and family dentistry in Wakad and Hinjewadi",
                     TitleColor = doc.titleColor ?? "#1e3c72",
@@ -51,7 +53,8 @@ namespace Dentriz.Configure.Api.Repositories
         {
             try
             {
-                hero.Id = DOCUMENT_ID;
+                var config = _configService.GetServicesHeroDocumentConfig();
+                hero.Id = config.DocumentId;
 
                 var document = new
                 {
@@ -65,7 +68,7 @@ namespace Dentriz.Configure.Api.Repositories
                     subtitleFontFamily = hero.SubtitleFontFamily
                 };
 
-                await CreateOrUpdateAsync(document, DOCUMENT_ID, PARTITION_KEY);
+                await CreateOrUpdateAsync(document, config.DocumentId, config.PartitionKey);
                 return hero;
             }
             catch (Exception ex)
@@ -77,7 +80,8 @@ namespace Dentriz.Configure.Api.Repositories
 
         public async Task<bool> DeleteServicesHeroAsync()
         {
-            return await DeleteAsync(DOCUMENT_ID, PARTITION_KEY);
+            var config = _configService.GetServicesHeroDocumentConfig();
+            return await DeleteAsync(config.DocumentId, config.PartitionKey);
         }
     }
 }

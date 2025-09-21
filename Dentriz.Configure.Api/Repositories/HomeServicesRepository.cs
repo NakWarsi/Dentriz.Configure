@@ -1,4 +1,5 @@
 using Dentriz.Configure.Api.Models;
+using Dentriz.Configure.Api.Services;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
@@ -14,24 +15,25 @@ namespace Dentriz.Configure.Api.Repositories
 
     public class HomeServicesRepository : BaseRepository<dynamic>, IHomeServicesRepository
     {
-        private const string DOCUMENT_ID = "home-services";
-        private const string PARTITION_KEY = "home-services";
+        private readonly ICosmosDbConfigurationService _configService;
 
-        public HomeServicesRepository(Container container, ILogger<HomeServicesRepository> logger)
+        public HomeServicesRepository(Container container, ILogger<HomeServicesRepository> logger, ICosmosDbConfigurationService configService)
             : base(container, logger)
         {
+            _configService = configService;
         }
 
         public async Task<HomeServices?> GetHomeServicesAsync()
         {
             try
             {
-                var doc = await GetByIdAsync(DOCUMENT_ID, PARTITION_KEY);
+                var config = _configService.GetHomeServicesDocumentConfig();
+                var doc = await GetByIdAsync(config.DocumentId, config.PartitionKey);
                 if (doc == null) return null;
 
                 return new HomeServices
                 {
-                    Id = doc.id ?? DOCUMENT_ID,
+                    Id = doc.id ?? config.DocumentId,
                     SectionTitle = doc.sectionTitle ?? "Comprehensive Dental Services in Wakad & Hinjewadi",
                     Service1Title = doc.service1Title ?? "🦷 Preventive Care & Dental Cleaning in Wakad",
                     Service1Items = ParseStringList(doc.service1Items),
@@ -130,7 +132,8 @@ namespace Dentriz.Configure.Api.Repositories
         {
             try
             {
-                services.Id = DOCUMENT_ID;
+                var docConfig = _configService.GetHomeServicesDocumentConfig();
+                services.Id = docConfig.DocumentId;
 
                 var document = new
                 {
@@ -222,7 +225,7 @@ namespace Dentriz.Configure.Api.Repositories
                     service9ButtonFontFamily = services.Service9ButtonFontFamily
                 };
 
-                await CreateOrUpdateAsync(document, DOCUMENT_ID, PARTITION_KEY);
+                await CreateOrUpdateAsync(document, docConfig.DocumentId, docConfig.PartitionKey);
                 return services;
             }
             catch (Exception ex)
@@ -234,7 +237,8 @@ namespace Dentriz.Configure.Api.Repositories
 
         public async Task<bool> DeleteHomeServicesAsync()
         {
-            return await DeleteAsync(DOCUMENT_ID, PARTITION_KEY);
+            var config = _configService.GetHomeServicesDocumentConfig();
+            return await DeleteAsync(config.DocumentId, config.PartitionKey);
         }
 
         private List<string> ParseStringList(dynamic list)

@@ -1,4 +1,5 @@
 using Dentriz.Configure.Api.Models;
+using Dentriz.Configure.Api.Services;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 
@@ -13,24 +14,25 @@ namespace Dentriz.Configure.Api.Repositories
 
     public class HomeNewPatientRepository : BaseRepository<dynamic>, IHomeNewPatientRepository
     {
-        private const string DOCUMENT_ID = "home-new-patient";
-        private const string PARTITION_KEY = "home-new-patient";
+        private readonly ICosmosDbConfigurationService _configService;
 
-        public HomeNewPatientRepository(Container container, ILogger<HomeNewPatientRepository> logger)
+        public HomeNewPatientRepository(Container container, ILogger<HomeNewPatientRepository> logger, ICosmosDbConfigurationService configService)
             : base(container, logger)
         {
+            _configService = configService;
         }
 
         public async Task<HomeNewPatient?> GetHomeNewPatientAsync()
         {
             try
             {
-                var doc = await GetByIdAsync(DOCUMENT_ID, PARTITION_KEY);
+                var config = _configService.GetHomeNewPatientDocumentConfig();
+                var doc = await GetByIdAsync(config.DocumentId, config.PartitionKey);
                 if (doc == null) return null;
 
                 return new HomeNewPatient
                 {
-                    Id = doc.id ?? DOCUMENT_ID,
+                    Id = doc.id ?? config.DocumentId,
                     MainTitle = doc.mainTitle ?? "Clinic Accessibility & Nearby Convenience",
                     AddressTitle = doc.addressTitle ?? "📍 Address",
                     AddressContent = doc.addressContent ?? "Dentriz Dental Clinic <br>Rohan Tarang, Wakad Chowk <br>Opposite Alamgir Masjid <br><em>Landmark:</em> Close to Mahavir Medical & Hinjewadi Bridge",
@@ -105,7 +107,8 @@ namespace Dentriz.Configure.Api.Repositories
         {
             try
             {
-                newPatient.Id = DOCUMENT_ID;
+                var docConfig = _configService.GetHomeNewPatientDocumentConfig();
+                newPatient.Id = docConfig.DocumentId;
 
                 var document = new
                 {
@@ -173,7 +176,7 @@ namespace Dentriz.Configure.Api.Repositories
                     directionsTextFontFamily = newPatient.DirectionsTextFontFamily
                 };
 
-                await CreateOrUpdateAsync(document, DOCUMENT_ID, PARTITION_KEY);
+                await CreateOrUpdateAsync(document, docConfig.DocumentId, docConfig.PartitionKey);
                 return newPatient;
             }
             catch (Exception ex)
@@ -185,7 +188,8 @@ namespace Dentriz.Configure.Api.Repositories
 
         public async Task<bool> DeleteHomeNewPatientAsync()
         {
-            return await DeleteAsync(DOCUMENT_ID, PARTITION_KEY);
+            var config = _configService.GetHomeNewPatientDocumentConfig();
+            return await DeleteAsync(config.DocumentId, config.PartitionKey);
         }
     }
 }

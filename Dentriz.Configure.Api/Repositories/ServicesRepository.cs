@@ -1,4 +1,5 @@
 using Dentriz.Configure.Api.Models;
+using Dentriz.Configure.Api.Services;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Logging;
 
@@ -13,24 +14,25 @@ namespace Dentriz.Configure.Api.Repositories
 
     public class ServicesRepository : BaseRepository<dynamic>, IServicesRepository
     {
-        private const string DOCUMENT_ID = "services";
-        private const string PARTITION_KEY = "services";
+        private readonly ICosmosDbConfigurationService _configService;
 
-        public ServicesRepository(Container container, ILogger<ServicesRepository> logger)
+        public ServicesRepository(Container container, ILogger<ServicesRepository> logger, ICosmosDbConfigurationService configService)
             : base(container, logger)
         {
+            _configService = configService;
         }
 
         public async Task<ServicesConfig?> GetServicesAsync()
         {
             try
             {
-                var doc = await GetByIdAsync(DOCUMENT_ID, PARTITION_KEY);
+                var config = _configService.GetServicesDocumentConfig();
+                var doc = await GetByIdAsync(config.DocumentId, config.PartitionKey);
                 if (doc == null) return null;
 
                 return new ServicesConfig
                 {
-                    Id = doc.id ?? DOCUMENT_ID,
+                    Id = doc.id ?? config.DocumentId,
                     ServiceList = ParseServiceList(doc.serviceList)
                 };
             }
@@ -45,7 +47,8 @@ namespace Dentriz.Configure.Api.Repositories
         {
             try
             {
-                services.Id = DOCUMENT_ID;
+                var docConfig = _configService.GetServicesDocumentConfig();
+                services.Id = docConfig.DocumentId;
 
                 var document = new
                 {
@@ -53,7 +56,7 @@ namespace Dentriz.Configure.Api.Repositories
                     serviceList = services.ServiceList
                 };
 
-                await CreateOrUpdateAsync(document, DOCUMENT_ID, PARTITION_KEY);
+                await CreateOrUpdateAsync(document, docConfig.DocumentId, docConfig.PartitionKey);
                 return services;
             }
             catch (Exception ex)
@@ -65,7 +68,8 @@ namespace Dentriz.Configure.Api.Repositories
 
         public async Task<bool> DeleteServicesAsync()
         {
-            return await DeleteAsync(DOCUMENT_ID, PARTITION_KEY);
+            var config = _configService.GetServicesDocumentConfig();
+            return await DeleteAsync(config.DocumentId, config.PartitionKey);
         }
 
         private List<Service> ParseServiceList(dynamic serviceList)

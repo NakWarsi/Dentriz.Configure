@@ -12,24 +12,25 @@ namespace Dentriz.Configure.Api.Repositories
 
     public class AboutDoctorsRepository : BaseRepository<dynamic>, IAboutDoctorsRepository
     {
-        private const string DOCUMENT_ID = "about-doctors";
-        private const string PARTITION_KEY = "about-doctors";
+        private readonly ICosmosDbConfigurationService _configService;
 
-        public AboutDoctorsRepository(Container container, ILogger<AboutDoctorsRepository> logger) 
+        public AboutDoctorsRepository(Container container, ILogger<AboutDoctorsRepository> logger, ICosmosDbConfigurationService configService) 
             : base(container, logger)
         {
+            _configService = configService;
         }
 
         public async Task<AboutDoctors?> GetAboutDoctorsAsync()
         {
             try
             {
-                var doc = await GetByIdAsync(DOCUMENT_ID, PARTITION_KEY);
+                var config = _configService.GetAboutDoctorsDocumentConfig();
+                var doc = await GetByIdAsync(config.DocumentId, config.PartitionKey);
                 if (doc == null) return null;
 
                 return new AboutDoctors
                 {
-                    Id = doc.id ?? DOCUMENT_ID,
+                    Id = doc.id ?? config.DocumentId,
                     SectionTitle = doc.sectionTitle ?? "Meet the Top Dentists in Wakad & Hinjewadi",
                     SectionSubtitle = doc.sectionSubtitle ?? "At DentRiz Dental Clinic, we believe every smile deserves to shine! Our expert dentists in Pune provide complete preventive, restorative, and cosmetic care - from dental implants in Wakad and cosmetic dentistry to trusted family dentistry - all under one roof with comfort and care you can trust.",
                     Doctors = ParseDoctors(doc.doctors),
@@ -62,7 +63,8 @@ namespace Dentriz.Configure.Api.Repositories
             try
             {
                 config.LastUpdated = DateTime.UtcNow;
-                config.Id = DOCUMENT_ID;
+                var docConfig = _configService.GetAboutDoctorsDocumentConfig();
+                config.Id = docConfig.DocumentId;
 
                 var document = new
                 {
@@ -87,7 +89,7 @@ namespace Dentriz.Configure.Api.Repositories
                     version = config.Version
                 };
 
-                await CreateOrUpdateAsync(document, DOCUMENT_ID, PARTITION_KEY);
+                await CreateOrUpdateAsync(document, docConfig.DocumentId, docConfig.PartitionKey);
                 return config;
             }
             catch (Exception ex)
@@ -99,7 +101,8 @@ namespace Dentriz.Configure.Api.Repositories
 
         public async Task<bool> DeleteAboutDoctorsAsync()
         {
-            return await DeleteAsync(DOCUMENT_ID, PARTITION_KEY);
+            var config = _configService.GetAboutDoctorsDocumentConfig();
+            return await DeleteAsync(config.DocumentId, config.PartitionKey);
         }
 
         private List<Doctor> ParseDoctors(dynamic doctors)

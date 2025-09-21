@@ -1,5 +1,6 @@
 using Microsoft.Azure.Cosmos;
 using Dentriz.Configure.Api.Models;
+using Dentriz.Configure.Api.Services;
 
 namespace Dentriz.Configure.Api.Repositories
 {
@@ -12,24 +13,25 @@ namespace Dentriz.Configure.Api.Repositories
 
     public class ContactHeroRepository : BaseRepository<dynamic>, IContactHeroRepository
     {
-        private const string DOCUMENT_ID = "contact-hero";
-        private const string PARTITION_KEY = "contact-hero";
+        private readonly ICosmosDbConfigurationService _configService;
 
-        public ContactHeroRepository(Container container, ILogger<ContactHeroRepository> logger) 
+        public ContactHeroRepository(Container container, ILogger<ContactHeroRepository> logger, ICosmosDbConfigurationService configService) 
             : base(container, logger)
         {
+            _configService = configService;
         }
 
         public async Task<ContactHero?> GetContactHeroAsync()
         {
             try
             {
-                var doc = await GetByIdAsync(DOCUMENT_ID, PARTITION_KEY);
+                var config = _configService.GetContactHeroDocumentConfig();
+                var doc = await GetByIdAsync(config.DocumentId, config.PartitionKey);
                 if (doc == null) return null;
 
                 return new ContactHero
                 {
-                    Id = doc.id ?? DOCUMENT_ID,
+                    Id = doc.id ?? config.DocumentId,
                     HeroTitle = doc.heroTitle ?? "Contact the Best Dentists in Pune",
                     HeroSubtitle = doc.heroSubtitle ?? "Get in touch with DentRiz Dental Clinic and it's associated Doctors",
                     HeroTitleColor = doc.heroTitleColor ?? "#2c5aa0",
@@ -53,7 +55,8 @@ namespace Dentriz.Configure.Api.Repositories
             try
             {
                 config.LastUpdated = DateTime.UtcNow;
-                config.Id = DOCUMENT_ID;
+                var docConfig = _configService.GetContactHeroDocumentConfig();
+                config.Id = docConfig.DocumentId;
 
                 var document = new
                 {
@@ -69,7 +72,7 @@ namespace Dentriz.Configure.Api.Repositories
                     version = config.Version
                 };
 
-                await CreateOrUpdateAsync(document, DOCUMENT_ID, PARTITION_KEY);
+                await CreateOrUpdateAsync(document, docConfig.DocumentId, docConfig.PartitionKey);
                 return config;
             }
             catch (Exception ex)
@@ -81,7 +84,8 @@ namespace Dentriz.Configure.Api.Repositories
 
         public async Task<bool> DeleteContactHeroAsync()
         {
-            return await DeleteAsync(DOCUMENT_ID, PARTITION_KEY);
+            var config = _configService.GetContactHeroDocumentConfig();
+            return await DeleteAsync(config.DocumentId, config.PartitionKey);
         }
     }
 }

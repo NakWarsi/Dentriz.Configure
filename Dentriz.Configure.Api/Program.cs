@@ -18,28 +18,28 @@ builder.Services.AddScoped<IHeaderRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<HeaderRepository>>();
-    return new HeaderRepository(configService.GetHeaderContainer(), logger);
+    return new HeaderRepository(configService.GetHeaderContainer(), logger, configService);
 });
 
 builder.Services.AddScoped<IGalleryContentRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<GalleryContentRepository>>();
-    return new GalleryContentRepository(configService.GetGalleryContentContainer(), logger);
+    return new GalleryContentRepository(configService.GetGalleryContentContainer(), logger, configService);
 });
 
 builder.Services.AddScoped<IGalleryHeroRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<GalleryHeroRepository>>();
-    return new GalleryHeroRepository(configService.GetGalleryHeroContainer(), logger);
+    return new GalleryHeroRepository(configService.GetGalleryHeroContainer(), logger, configService);
 });
 
 builder.Services.AddScoped<IGalleryStatsRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<GalleryStatsRepository>>();
-    return new GalleryStatsRepository(configService.GetGalleryStatsContainer(), logger);
+    return new GalleryStatsRepository(configService.GetGalleryStatsContainer(), logger, configService);
 });
 
 // Add About Repositories
@@ -47,28 +47,28 @@ builder.Services.AddScoped<IAboutDoctorsRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<AboutDoctorsRepository>>();
-    return new AboutDoctorsRepository(configService.GetAboutDoctorsContainer(), logger);
+    return new AboutDoctorsRepository(configService.GetAboutDoctorsContainer(), logger, configService);
 });
 
 builder.Services.AddScoped<IAboutValuesRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<AboutValuesRepository>>();
-    return new AboutValuesRepository(configService.GetAboutValuesContainer(), logger);
+    return new AboutValuesRepository(configService.GetAboutValuesContainer(), logger, configService);
 });
 
 builder.Services.AddScoped<IAboutTestimonialsRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<AboutTestimonialsRepository>>();
-    return new AboutTestimonialsRepository(configService.GetAboutTestimonialsContainer(), logger);
+    return new AboutTestimonialsRepository(configService.GetAboutTestimonialsContainer(), logger, configService);
 });
 
 builder.Services.AddScoped<IAboutTechnologyRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<AboutTechnologyRepository>>();
-    return new AboutTechnologyRepository(configService.GetAboutTechnologyContainer(), logger);
+    return new AboutTechnologyRepository(configService.GetAboutTechnologyContainer(), logger, configService);
 });
 
 // Add Contact Repositories
@@ -76,42 +76,42 @@ builder.Services.AddScoped<IContactFaqRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<ContactFaqRepository>>();
-    return new ContactFaqRepository(configService.GetContactFaqContainer(), logger);
+    return new ContactFaqRepository(configService.GetContactFaqContainer(), logger, configService);
 });
 
 builder.Services.AddScoped<IContactHeroRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<ContactHeroRepository>>();
-    return new ContactHeroRepository(configService.GetContactHeroContainer(), logger);
+    return new ContactHeroRepository(configService.GetContactHeroContainer(), logger, configService);
 });
 
 builder.Services.AddScoped<IContactInfoRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<ContactInfoRepository>>();
-    return new ContactInfoRepository(configService.GetContactInfoContainer(), logger);
+    return new ContactInfoRepository(configService.GetContactInfoContainer(), logger, configService);
 });
 
 builder.Services.AddScoped<IContactLocationRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<ContactLocationRepository>>();
-    return new ContactLocationRepository(configService.GetContactLocationContainer(), logger);
+    return new ContactLocationRepository(configService.GetContactLocationContainer(), logger, configService);
 });
 
 builder.Services.AddScoped<IContactOfficeHoursRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<ContactOfficeHoursRepository>>();
-    return new ContactOfficeHoursRepository(configService.GetContactOfficeHoursContainer(), logger);
+    return new ContactOfficeHoursRepository(configService.GetContactOfficeHoursContainer(), logger, configService);
 });
 
 builder.Services.AddScoped<IContactPaymentsRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<ContactPaymentsRepository>>();
-    return new ContactPaymentsRepository(configService.GetContactPaymentsContainer(), logger);
+    return new ContactPaymentsRepository(configService.GetContactPaymentsContainer(), logger, configService);
 });
 
 // Add Services Repositories
@@ -119,21 +119,21 @@ builder.Services.AddScoped<IServicesHeroRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<ServicesHeroRepository>>();
-    return new ServicesHeroRepository(configService.GetServicesHeroContainer(), logger);
+    return new ServicesHeroRepository(configService.GetServicesHeroContainer(), logger, configService);
 });
 
 builder.Services.AddScoped<IServicesTechnologySectionRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<ServicesTechnologySectionRepository>>();
-    return new ServicesTechnologySectionRepository(configService.GetServicesTechnologySectionContainer(), logger);
+    return new ServicesTechnologySectionRepository(configService.GetServicesTechnologySectionContainer(), logger, configService);
 });
 
 builder.Services.AddScoped<IServicesRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<ServicesRepository>>();
-    return new ServicesRepository(configService.GetServicesContainer(), logger);
+    return new ServicesRepository(configService.GetServicesContainer(), logger, configService);
 });
 
 // Add Home Repositories
@@ -141,28 +141,28 @@ builder.Services.AddScoped<IHomeFounderRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<HomeFounderRepository>>();
-    return new HomeFounderRepository(configService.GetHomeFounderContainer(), logger);
+    return new HomeFounderRepository(configService.GetHomeFounderContainer(), logger, configService);
 });
 
 builder.Services.AddScoped<IHomeNewPatientRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<HomeNewPatientRepository>>();
-    return new HomeNewPatientRepository(configService.GetHomeNewPatientContainer(), logger);
+    return new HomeNewPatientRepository(configService.GetHomeNewPatientContainer(), logger, configService);
 });
 
 builder.Services.AddScoped<IHomeReasonsRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<HomeReasonsRepository>>();
-    return new HomeReasonsRepository(configService.GetHomeReasonsContainer(), logger);
+    return new HomeReasonsRepository(configService.GetHomeReasonsContainer(), logger, configService);
 });
 
 builder.Services.AddScoped<IHomeServicesRepository>(provider =>
 {
     var configService = provider.GetRequiredService<ICosmosDbConfigurationService>();
     var logger = provider.GetRequiredService<ILogger<HomeServicesRepository>>();
-    return new HomeServicesRepository(configService.GetHomeServicesContainer(), logger);
+    return new HomeServicesRepository(configService.GetHomeServicesContainer(), logger, configService);
 });
 
 // Add Services
