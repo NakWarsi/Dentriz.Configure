@@ -47,6 +47,13 @@ jobs:
             // Set the API base URL from environment variable
             if (typeof window !== 'undefined') {
               window.API_BASE_URL = 'https://dentriz-configure-api.azurewebsites.net/api';
+              // Override environment settings for runtime
+              if (window.ENVIRONMENT) {
+                window.ENVIRONMENT.dataSource = 'api';
+                window.ENVIRONMENT.apiBaseUrl = 'https://dentriz-configure-api.azurewebsites.net/api';
+                window.ENVIRONMENT.enableEditing = true;
+                window.ENVIRONMENT.enableApiCalls = true;
+              }
             }
           })();
           EOF
