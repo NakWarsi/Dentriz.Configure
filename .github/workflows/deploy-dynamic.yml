@@ -41,19 +41,26 @@ jobs:
       - name: Inject API URL into environment
         run: |
           cd Dentriz.Configure.Web/dist/DentrizWeb/browser
-          # Create a script to inject API URL at runtime
+          # Create a script to inject API URL and enable editing at runtime
           cat > inject-api-url.js << 'EOF'
           (function() {
-            // Set the API base URL from environment variable
+            // Override environment settings for runtime
             if (typeof window !== 'undefined') {
+              // Set global environment overrides
+              window.ENVIRONMENT_OVERRIDE = {
+                dataSource: 'api',
+                apiBaseUrl: 'https://dentriz-configure-api.azurewebsites.net/api',
+                enableEditing: true,
+                enableApiCalls: true,
+                production: true
+              };
+              
+              // Also set individual variables for backward compatibility
               window.API_BASE_URL = 'https://dentriz-configure-api.azurewebsites.net/api';
-              // Override environment settings for runtime
-              if (window.ENVIRONMENT) {
-                window.ENVIRONMENT.dataSource = 'api';
-                window.ENVIRONMENT.apiBaseUrl = 'https://dentriz-configure-api.azurewebsites.net/api';
-                window.ENVIRONMENT.enableEditing = true;
-                window.ENVIRONMENT.enableApiCalls = true;
-              }
+              window.ENABLE_EDITING = true;
+              window.ENABLE_API_CALLS = true;
+              
+              console.log('🔧 Runtime environment override applied:', window.ENVIRONMENT_OVERRIDE);
             }
           })();
           EOF

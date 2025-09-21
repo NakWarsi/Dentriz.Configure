@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environment';
+import { RuntimeEnvironmentService } from '../core/services/runtime-environment.service';
 import { HeaderApiService, SimpleHeaderConfig, NavItem } from './services/header-api.service';
 
 @Component({
@@ -14,7 +15,7 @@ import { HeaderApiService, SimpleHeaderConfig, NavItem } from './services/header
 })
 export class HeaderComponent implements OnInit {
   // Environment configuration
-  isEditingEnabled = environment.enableEditing;
+  isEditingEnabled = false; // Will be set in constructor
   
   // Header Configuration
   headerConfig: SimpleHeaderConfig | null = null;
@@ -28,7 +29,14 @@ export class HeaderComponent implements OnInit {
   isMenuOpen = false;
   isServicesOpen = false;
 
-  constructor(private headerApiService: HeaderApiService) {}
+  constructor(
+    private headerApiService: HeaderApiService,
+    private runtimeEnv: RuntimeEnvironmentService
+  ) {
+    // Set editing enabled from runtime environment
+    this.isEditingEnabled = this.runtimeEnv.enableEditing;
+    console.log('🔝 Header component - Editing enabled:', this.isEditingEnabled);
+  }
 
   ngOnInit() {
     this.loadHeaderConfig();

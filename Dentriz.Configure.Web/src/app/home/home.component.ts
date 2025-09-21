@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { RuntimeEnvironmentService } from '../core/services/runtime-environment.service';
 import { FounderSectionApiService, SimpleFounderConfig } from './services/founder-section-api.service';
 import { NewPatientSectionApiService, SimpleNewPatientConfig } from './services/new-patient-section-api.service';
 import { ReasonsSectionApiService, SimpleReasonsConfig } from './services/reasons-section-api.service';
@@ -17,7 +18,7 @@ import { ServicesSectionApiService, SimpleServicesConfig } from './services/serv
 })
 export class HomeComponent implements OnInit, OnDestroy {
   // Environment configuration
-  isEditingEnabled = environment.enableEditing;
+  isEditingEnabled = false; // Will be set in constructor
   
   // Founder section properties (following reference project pattern)
   @ViewChild('subtitleInput') subtitleInput!: ElementRef<HTMLInputElement>;
@@ -88,8 +89,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     private founderSectionApiService: FounderSectionApiService,
     private newPatientSectionApiService: NewPatientSectionApiService,
     private reasonsSectionApiService: ReasonsSectionApiService,
-    private servicesSectionApiService: ServicesSectionApiService
-  ) {}
+    private servicesSectionApiService: ServicesSectionApiService,
+    private runtimeEnv: RuntimeEnvironmentService
+  ) {
+    // Set editing enabled from runtime environment
+    this.isEditingEnabled = this.runtimeEnv.enableEditing;
+    console.log('🏠 Home component - Editing enabled:', this.isEditingEnabled);
+  }
 
   // Clinic images carousel
   clinicImages = [

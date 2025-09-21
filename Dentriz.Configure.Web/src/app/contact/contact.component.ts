@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from '../../environments/environment';
+import { RuntimeEnvironmentService } from '../core/services/runtime-environment.service';
 import { ContactHeroApiService, SimpleContactHeroConfig } from './services/contact-hero-api.service';
 import { ContactInfoApiService, SimpleContactInfoConfig } from './services/contact-info-api.service';
 import { OfficeHoursApiService, SimpleOfficeHoursConfig } from './services/office-hours-api.service';
@@ -19,7 +20,13 @@ import { FAQApiService, SimpleFAQConfig } from './services/faq-api.service';
 })
 export class ContactComponent implements OnInit {
   // Environment configuration
-  isEditingEnabled = environment.enableEditing;
+  isEditingEnabled = false; // Will be set in constructor
+  
+  constructor(private runtimeEnv: RuntimeEnvironmentService) {
+    // Set editing enabled from runtime environment
+    this.isEditingEnabled = this.runtimeEnv.enableEditing;
+    console.log('📞 Contact component - Editing enabled:', this.isEditingEnabled);
+  }
   
   // Contact Hero Configuration
   contactHeroConfig: SimpleContactHeroConfig | null = null;

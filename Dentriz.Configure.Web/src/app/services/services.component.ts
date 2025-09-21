@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environment';
+import { RuntimeEnvironmentService } from '../core/services/runtime-environment.service';
 import { ServicesHeroApiService, SimpleServicesHeroConfig } from './services/services-hero-api.service';
 import { TechnologySectionApiService, SimpleTechnologySectionConfig } from './services/technology-section-api.service';
 import { ServicesApiService, SimpleServicesConfig, Service } from './services/services-api.service';
@@ -15,7 +16,7 @@ import { ServicesApiService, SimpleServicesConfig, Service } from './services/se
 })
 export class ServicesComponent implements OnInit {
   // Environment configuration
-  isEditingEnabled = environment.enableEditing;
+  isEditingEnabled = false; // Will be set in constructor
   
   // Services Hero Configuration
   servicesHeroConfig: SimpleServicesHeroConfig | null = null;
@@ -67,8 +68,13 @@ export class ServicesComponent implements OnInit {
   constructor(
     private servicesHeroApiService: ServicesHeroApiService,
     private technologySectionApiService: TechnologySectionApiService,
-    private servicesApiService: ServicesApiService
-  ) {}
+    private servicesApiService: ServicesApiService,
+    private runtimeEnv: RuntimeEnvironmentService
+  ) {
+    // Set editing enabled from runtime environment
+    this.isEditingEnabled = this.runtimeEnv.enableEditing;
+    console.log('🔧 Services component - Editing enabled:', this.isEditingEnabled);
+  }
 
   ngOnInit() {
     this.loadServicesHeroConfig();

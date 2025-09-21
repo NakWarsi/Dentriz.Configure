@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environment';
+import { RuntimeEnvironmentService } from '../core/services/runtime-environment.service';
 import { GalleryHeroApiService, SimpleGalleryHeroConfig } from './services/gallery-hero-api.service';
 import { GalleryContentApiService, SimpleGalleryContentConfig, GallerySection } from './services/gallery-content-api.service';
 import { GalleryStatsApiService, SimpleGalleryStatsConfig, GalleryStat } from './services/gallery-stats-api.service';
@@ -16,7 +17,13 @@ import { GalleryStatsApiService, SimpleGalleryStatsConfig, GalleryStat } from '.
 })
 export class SmileGalleryComponent implements OnInit {
   // Environment configuration
-  isEditingEnabled = environment.enableEditing;
+  isEditingEnabled = false; // Will be set in constructor
+  
+  constructor(private runtimeEnv: RuntimeEnvironmentService) {
+    // Set editing enabled from runtime environment
+    this.isEditingEnabled = this.runtimeEnv.enableEditing;
+    console.log('🖼️ Smile Gallery component - Editing enabled:', this.isEditingEnabled);
+  }
   
   // Gallery Hero Configuration
   galleryHeroConfig: SimpleGalleryHeroConfig | null = null;

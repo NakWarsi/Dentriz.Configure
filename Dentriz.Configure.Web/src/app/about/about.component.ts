@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environment';
+import { RuntimeEnvironmentService } from '../core/services/runtime-environment.service';
 import { DoctorsApiService, SimpleDoctorsConfig } from './services/doctors-api.service';
 import { ValuesApiService, SimpleValuesConfig } from './services/values-api.service';
 import { TechnologyApiService, SimpleTechnologyConfig } from './services/technology-api.service';
@@ -16,7 +17,7 @@ import { TestimonialsApiService, SimpleTestimonialsConfig } from './services/tes
 })
 export class AboutComponent implements OnInit {
   // Environment configuration
-  isEditingEnabled = environment.enableEditing;
+  isEditingEnabled = false; // Will be set in constructor
   
   // Doctors Configuration
   doctorsConfig: SimpleDoctorsConfig | null = null;
@@ -108,8 +109,13 @@ export class AboutComponent implements OnInit {
     private doctorsApiService: DoctorsApiService,
     private valuesApiService: ValuesApiService,
     private technologyApiService: TechnologyApiService,
-    private testimonialsApiService: TestimonialsApiService
-  ) {}
+    private testimonialsApiService: TestimonialsApiService,
+    private runtimeEnv: RuntimeEnvironmentService
+  ) {
+    // Set editing enabled from runtime environment
+    this.isEditingEnabled = this.runtimeEnv.enableEditing;
+    console.log('ℹ️ About component - Editing enabled:', this.isEditingEnabled);
+  }
 
   // Navigation methods
   nextDoctor() {
