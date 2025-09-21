@@ -267,10 +267,13 @@ jobs:
           BRANCH_NAME="${{ github.ref_name }}"
           echo "🔍 Final branch name: $BRANCH_NAME"
           
-          if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z0-9-]+)$ ]]; then
+          if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z0-9.-]+)$ ]]; then
             SUFFIX="${BASH_REMATCH[1]}"
-            APP_SERVICE="dentriz-configure-web-$SUFFIX"
+            # Convert dots to hyphens for App Service name (Azure doesn't allow dots)
+            CLEAN_SUFFIX="${SUFFIX//./-}"
+            APP_SERVICE="dentriz-configure-web-$CLEAN_SUFFIX"
             echo "✅ Detected suffix: $SUFFIX"
+            echo "✅ Clean suffix: $CLEAN_SUFFIX"
             echo "✅ Final App Service: $APP_SERVICE"
           elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]]; then
             APP_SERVICE="dentriz-configure-web"
@@ -292,6 +295,9 @@ jobs:
             "dentriz-configure-web-akaash")
               PUBLISH_PROFILE="${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web_akaash }}"
               ;;
+            "dentriz-configure-web-akaash-1-01")
+              PUBLISH_PROFILE="${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web_akaash_1_01 }}"
+              ;;
             "dentriz-configure-web-test")
               PUBLISH_PROFILE="${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web_test }}"
               ;;
@@ -300,7 +306,8 @@ jobs:
               ;;
             *)
               echo "❌ Error: Unknown App Service: $APP_SERVICE"
-              echo "   Please add a case for this App Service in the workflow"
+              echo "   Expected secret: AZURE_WEBAPP_PUBLISH_PROFILE_${APP_SERVICE//-/_}"
+              echo "   Please add this secret to your repository"
               exit 1
               ;;
           esac
