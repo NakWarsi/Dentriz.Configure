@@ -2,9 +2,15 @@ name: Deploy Dynamic Version
 
 on:
   push:
-    branches: ['release-dynamic-*']
+    branches: ['release-dynamic*']
   workflow_dispatch:
     inputs:
+      app_service_name:
+        description: 'App Service Name (optional - leave empty for default)'
+        required: false
+        default: ''
+        type: string
+        placeholder: 'e.g., dentriz-configure-web-akaash'
       environment:
         description: 'Deployment environment'
         required: true
@@ -20,6 +26,87 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set deployment target
+        id: set-target
+        run: |
+          # Check if this is a manual trigger with explicit App Service name
+          if [ -n "${{ github.event.inputs.app_service_name }}" ]; then
+            APP_SERVICE="${{ github.event.inputs.app_service_name }}"
+            # Validate app service name format
+            if [[ ! "$APP_SERVICE" =~ ^[a-zA-Z0-9-]+$ ]]; then
+              echo "❌ Error: Invalid App Service name format"
+              echo "   Use only letters, numbers, and hyphens"
+              echo "   Example: dentriz-configure-web-akaash"
+              exit 1
+            fi
+            echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+            echo "deployment-type=manual" >> $GITHUB_OUTPUT
+            echo "trigger-source=manual" >> $GITHUB_OUTPUT
+          else
+            # Auto-detect from branch name
+            BRANCH_NAME="${{ github.ref_name }}"
+            echo "🔍 Branch name: $BRANCH_NAME"
+            
+            if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z0-9-]+)$ ]]; then
+              # Pattern: release-dynamic-akaash -> dentriz-configure-web-akaash
+              SUFFIX="${BASH_REMATCH[1]}"
+              APP_SERVICE="dentriz-configure-web-$SUFFIX"
+              echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+              echo "deployment-type=branch-pattern" >> $GITHUB_OUTPUT
+              echo "trigger-source=branch" >> $GITHUB_OUTPUT
+              echo "branch-suffix=$SUFFIX" >> $GITHUB_OUTPUT
+            elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]]; then
+              # Pattern: release-dynamic -> dentriz-configure-web (default)
+              APP_SERVICE="dentriz-configure-web"
+              echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+              echo "deployment-type=default" >> $GITHUB_OUTPUT
+              echo "trigger-source=branch" >> $GITHUB_OUTPUT
+              echo "branch-suffix=" >> $GITHUB_OUTPUT
+            else
+              # Fallback to default for any other release-dynamic* branches
+              APP_SERVICE="dentriz-configure-web"
+              echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+              echo "deployment-type=default" >> $GITHUB_OUTPUT
+              echo "trigger-source=branch" >> $GITHUB_OUTPUT
+              echo "branch-suffix=" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Pre-deployment validation
+        run: |
+          APP_SERVICE="${{ steps.set-target.outputs.app-service-name }}"
+          DEPLOYMENT_TYPE="${{ steps.set-target.outputs.deployment-type }}"
+          TRIGGER_SOURCE="${{ steps.set-target.outputs.trigger-source }}"
+          BRANCH_SUFFIX="${{ steps.set-target.outputs.branch-suffix }}"
+          
+          echo "🔍 Pre-deployment validation for: $APP_SERVICE"
+          echo "📋 Deployment type: $DEPLOYMENT_TYPE"
+          echo "🎯 Trigger source: $TRIGGER_SOURCE"
+          if [ -n "$BRANCH_SUFFIX" ]; then
+            echo "🌿 Branch suffix: $BRANCH_SUFFIX"
+          fi
+          
+          # Convert hyphens to underscores for secret name
+          SECRET_NAME="AZURE_WEBAPP_PUBLISH_PROFILE_${APP_SERVICE//-/_}"
+          echo "🔍 Looking for secret: $SECRET_NAME"
+          
+          # Check if publish profile exists
+          if [ -z "${{ secrets[format('AZURE_WEBAPP_PUBLISH_PROFILE_{0}', replace(steps.set-target.outputs.app-service-name, '-', '_'))] }}" ]; then
+            echo "❌ Error: Deployment target validation failed"
+            echo "   App Service: $APP_SERVICE"
+            echo "   Missing secret: $SECRET_NAME"
+            echo "   Please add this secret to your repository"
+            echo "   Or create the App Service: $APP_SERVICE"
+            if [ "$TRIGGER_SOURCE" == "branch" ]; then
+              echo "   Branch pattern detected: release-dynamic-$BRANCH_SUFFIX"
+            fi
+            exit 1
+          fi
+          
+          echo "✅ Pre-deployment validation passed"
+          echo "   App Service: $APP_SERVICE"
+          echo "   Secret found: $SECRET_NAME"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -38,15 +125,37 @@ jobs:
           cd Dentriz.Configure.Web
           npm run build:dynamic
 
+      - name: Set API URL based on deployment target
+        id: set-api-url
+        run: |
+          APP_SERVICE="${{ steps.set-target.outputs.app-service-name }}"
+          BRANCH_SUFFIX="${{ steps.set-target.outputs.branch-suffix }}"
+          
+          if [ -n "$BRANCH_SUFFIX" ]; then
+            # Custom deployment with suffix
+            API_URL="https://dentriz-configure-api-$BRANCH_SUFFIX.azurewebsites.net/api"
+            echo "api-url=$API_URL" >> $GITHUB_OUTPUT
+            echo "api-type=custom" >> $GITHUB_OUTPUT
+          else
+            # Default deployment
+            API_URL="https://dentriz-configure-api.azurewebsites.net/api"
+            echo "api-url=$API_URL" >> $GITHUB_OUTPUT
+            echo "api-type=default" >> $GITHUB_OUTPUT
+          fi
+          
+          echo "🔗 API URL: $API_URL"
+
       - name: Inject API URL into environment
         run: |
           cd Dentriz.Configure.Web/dist/DentrizWeb/browser
+          API_URL="${{ steps.set-api-url.outputs.api-url }}"
+          
           # Create a script to inject API URL at runtime
-          cat > inject-api-url.js << 'EOF'
+          cat > inject-api-url.js << EOF
           (function() {
             // Set the API base URL from environment variable
             if (typeof window !== 'undefined') {
-              window.API_BASE_URL = 'https://dentriz-configure-api.azurewebsites.net/api';
+              window.API_BASE_URL = '$API_URL';
             }
           })();
           EOF
@@ -105,11 +214,50 @@ jobs:
           name: dynamic-build
           path: ./dynamic-build
 
+      - name: Set deployment target
+        id: set-target
+        run: |
+          # Check if this is a manual trigger with explicit App Service name
+          if [ -n "${{ github.event.inputs.app_service_name }}" ]; then
+            APP_SERVICE="${{ github.event.inputs.app_service_name }}"
+            echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+            echo "deployment-type=manual" >> $GITHUB_OUTPUT
+            echo "trigger-source=manual" >> $GITHUB_OUTPUT
+          else
+            # Auto-detect from branch name
+            BRANCH_NAME="${{ github.ref_name }}"
+            echo "🔍 Branch name: $BRANCH_NAME"
+            
+            if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z0-9-]+)$ ]]; then
+              # Pattern: release-dynamic-akaash -> dentriz-configure-web-akaash
+              SUFFIX="${BASH_REMATCH[1]}"
+              APP_SERVICE="dentriz-configure-web-$SUFFIX"
+              echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+              echo "deployment-type=branch-pattern" >> $GITHUB_OUTPUT
+              echo "trigger-source=branch" >> $GITHUB_OUTPUT
+              echo "branch-suffix=$SUFFIX" >> $GITHUB_OUTPUT
+            elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]]; then
+              # Pattern: release-dynamic -> dentriz-configure-web (default)
+              APP_SERVICE="dentriz-configure-web"
+              echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+              echo "deployment-type=default" >> $GITHUB_OUTPUT
+              echo "trigger-source=branch" >> $GITHUB_OUTPUT
+              echo "branch-suffix=" >> $GITHUB_OUTPUT
+            else
+              # Fallback to default for any other release-dynamic* branches
+              APP_SERVICE="dentriz-configure-web"
+              echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+              echo "deployment-type=default" >> $GITHUB_OUTPUT
+              echo "trigger-source=branch" >> $GITHUB_OUTPUT
+              echo "branch-suffix=" >> $GITHUB_OUTPUT
+            fi
+          fi
+
       - name: Deploy to Azure App Service
         uses: Azure/webapps-deploy@v2
         with:
-          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          app-name: ${{ steps.set-target.outputs.app-service-name }}
+          publish-profile: ${{ secrets[format('AZURE_WEBAPP_PUBLISH_PROFILE_{0}', replace(steps.set-target.outputs.app-service-name, '-', '_'))] }}
           package: ./dynamic-build
 
   configure-app-settings:
@@ -122,14 +270,73 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Set deployment target
+        id: set-target
+        run: |
+          # Check if this is a manual trigger with explicit App Service name
+          if [ -n "${{ github.event.inputs.app_service_name }}" ]; then
+            APP_SERVICE="${{ github.event.inputs.app_service_name }}"
+            echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+            echo "deployment-type=manual" >> $GITHUB_OUTPUT
+            echo "trigger-source=manual" >> $GITHUB_OUTPUT
+          else
+            # Auto-detect from branch name
+            BRANCH_NAME="${{ github.ref_name }}"
+            echo "🔍 Branch name: $BRANCH_NAME"
+            
+            if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z0-9-]+)$ ]]; then
+              # Pattern: release-dynamic-akaash -> dentriz-configure-web-akaash
+              SUFFIX="${BASH_REMATCH[1]}"
+              APP_SERVICE="dentriz-configure-web-$SUFFIX"
+              echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+              echo "deployment-type=branch-pattern" >> $GITHUB_OUTPUT
+              echo "trigger-source=branch" >> $GITHUB_OUTPUT
+              echo "branch-suffix=$SUFFIX" >> $GITHUB_OUTPUT
+            elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]]; then
+              # Pattern: release-dynamic -> dentriz-configure-web (default)
+              APP_SERVICE="dentriz-configure-web"
+              echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+              echo "deployment-type=default" >> $GITHUB_OUTPUT
+              echo "trigger-source=branch" >> $GITHUB_OUTPUT
+              echo "branch-suffix=" >> $GITHUB_OUTPUT
+            else
+              # Fallback to default for any other release-dynamic* branches
+              APP_SERVICE="dentriz-configure-web"
+              echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+              echo "deployment-type=default" >> $GITHUB_OUTPUT
+              echo "trigger-source=branch" >> $GITHUB_OUTPUT
+              echo "branch-suffix=" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Set API URL for App Service configuration
+        id: set-api-url-config
+        run: |
+          APP_SERVICE="${{ steps.set-target.outputs.app-service-name }}"
+          BRANCH_SUFFIX="${{ steps.set-target.outputs.branch-suffix }}"
+          
+          if [ -n "$BRANCH_SUFFIX" ]; then
+            # Custom deployment with suffix
+            API_URL="https://dentriz-configure-api-$BRANCH_SUFFIX.azurewebsites.net/api"
+            echo "api-url=$API_URL" >> $GITHUB_OUTPUT
+            echo "api-type=custom" >> $GITHUB_OUTPUT
+          else
+            # Default deployment
+            API_URL="https://dentriz-configure-api.azurewebsites.net/api"
+            echo "api-url=$API_URL" >> $GITHUB_OUTPUT
+            echo "api-type=default" >> $GITHUB_OUTPUT
+          fi
+          
+          echo "🔗 App Service API URL: $API_URL"
+
       - name: Configure App Service settings
         run: |
           az webapp config appsettings set \
-            --name ${{ secrets.AZURE_WEBAPP_NAME }} \
+            --name ${{ steps.set-target.outputs.app-service-name }} \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --settings \
               ASPNETCORE_ENVIRONMENT=Production \
-              API_BASE_URL=https://dentriz-configure-api.azurewebsites.net/api \
+              API_BASE_URL=${{ steps.set-api-url-config.outputs.api-url }} \
               NODE_ENV=production \
               WEBSITE_NODE_DEFAULT_VERSION=20.17.0 \
               WEBSITE_RUN_FROM_PACKAGE=1 \
@@ -139,7 +346,7 @@ jobs:
       - name: Configure startup command
         run: |
           az webapp config set \
-            --name ${{ secrets.AZURE_WEBAPP_NAME }} \
+            --name ${{ steps.set-target.outputs.app-service-name }} \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --startup-file "node server.js"
 
@@ -148,12 +355,80 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
+      - name: Set deployment target
+        id: set-target
+        run: |
+          # Check if this is a manual trigger with explicit App Service name
+          if [ -n "${{ github.event.inputs.app_service_name }}" ]; then
+            APP_SERVICE="${{ github.event.inputs.app_service_name }}"
+            echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+            echo "deployment-type=manual" >> $GITHUB_OUTPUT
+            echo "trigger-source=manual" >> $GITHUB_OUTPUT
+          else
+            # Auto-detect from branch name
+            BRANCH_NAME="${{ github.ref_name }}"
+            echo "🔍 Branch name: $BRANCH_NAME"
+            
+            if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z0-9-]+)$ ]]; then
+              # Pattern: release-dynamic-akaash -> dentriz-configure-web-akaash
+              SUFFIX="${BASH_REMATCH[1]}"
+              APP_SERVICE="dentriz-configure-web-$SUFFIX"
+              echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+              echo "deployment-type=branch-pattern" >> $GITHUB_OUTPUT
+              echo "trigger-source=branch" >> $GITHUB_OUTPUT
+              echo "branch-suffix=$SUFFIX" >> $GITHUB_OUTPUT
+            elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]]; then
+              # Pattern: release-dynamic -> dentriz-configure-web (default)
+              APP_SERVICE="dentriz-configure-web"
+              echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+              echo "deployment-type=default" >> $GITHUB_OUTPUT
+              echo "trigger-source=branch" >> $GITHUB_OUTPUT
+              echo "branch-suffix=" >> $GITHUB_OUTPUT
+            else
+              # Fallback to default for any other release-dynamic* branches
+              APP_SERVICE="dentriz-configure-web"
+              echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+              echo "deployment-type=default" >> $GITHUB_OUTPUT
+              echo "trigger-source=branch" >> $GITHUB_OUTPUT
+              echo "branch-suffix=" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Set API URL for notification
+        id: set-api-url-notify
+        run: |
+          APP_SERVICE="${{ steps.set-target.outputs.app-service-name }}"
+          BRANCH_SUFFIX="${{ steps.set-target.outputs.branch-suffix }}"
+          
+          if [ -n "$BRANCH_SUFFIX" ]; then
+            # Custom deployment with suffix
+            API_URL="https://dentriz-configure-api-$BRANCH_SUFFIX.azurewebsites.net/api"
+            echo "api-url=$API_URL" >> $GITHUB_OUTPUT
+            echo "api-type=custom" >> $GITHUB_OUTPUT
+          else
+            # Default deployment
+            API_URL="https://dentriz-configure-api.azurewebsites.net/api"
+            echo "api-url=$API_URL" >> $GITHUB_OUTPUT
+            echo "api-type=default" >> $GITHUB_OUTPUT
+          fi
+
       - name: Notify deployment status
         run: |
           if [ "${{ needs.deploy-app-service.result }}" == "success" ] && [ "${{ needs.configure-app-settings.result }}" == "success" ]; then
             echo "✅ Dynamic deployment successful!"
-            echo "🌐 App Service URL: ${{ secrets.AZURE_WEBAPP_URL }}"
+            echo "🎯 Deployed to: ${{ steps.set-target.outputs.app-service-name }}"
+            echo "📋 Deployment type: ${{ steps.set-target.outputs.deployment-type }}"
+            echo "🌿 Trigger source: ${{ steps.set-target.outputs.trigger-source }}"
+            if [ -n "${{ steps.set-target.outputs.branch-suffix }}" ]; then
+              echo "🌿 Branch suffix: ${{ steps.set-target.outputs.branch-suffix }}"
+            fi
+            echo "🔗 API URL: ${{ steps.set-api-url-notify.outputs.api-url }}"
+            echo "🌐 App Service URL: https://${{ steps.set-target.outputs.app-service-name }}.azurewebsites.net"
           else
             echo "❌ Dynamic deployment failed!"
+            echo "🎯 Target was: ${{ steps.set-target.outputs.app-service-name }}"
+            echo "📋 Deployment type: ${{ steps.set-target.outputs.deployment-type }}"
+            echo "🌿 Trigger source: ${{ steps.set-target.outputs.trigger-source }}"
+            echo "🔗 API URL: ${{ steps.set-api-url-notify.outputs.api-url }}"
             exit 1
           fi
