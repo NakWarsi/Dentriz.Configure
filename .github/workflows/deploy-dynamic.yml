@@ -263,12 +263,21 @@ jobs:
           echo "🔍 Branch name from step: ${{ steps.set-target.outputs.branch-suffix }}"
           echo "🔍 Deployment type: ${{ steps.set-target.outputs.deployment-type }}"
           
-          # Use branch suffix to fix App Service name if detection failed
-          BRANCH_SUFFIX="${{ steps.set-target.outputs.branch-suffix }}"
-          if [ "$APP_SERVICE" == "dentriz-configure-web" ] && [ -n "$BRANCH_SUFFIX" ]; then
-            echo "🔧 FIXING: Using detected branch suffix '$BRANCH_SUFFIX' to set correct App Service"
-            APP_SERVICE="dentriz-configure-web-$BRANCH_SUFFIX"
-            echo "✅ Fixed App Service: $APP_SERVICE"
+          # FIXED: Properly detect App Service from branch name
+          BRANCH_NAME="${{ github.ref_name }}"
+          echo "🔍 Final branch name: $BRANCH_NAME"
+          
+          if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z0-9-]+)$ ]]; then
+            SUFFIX="${BASH_REMATCH[1]}"
+            APP_SERVICE="dentriz-configure-web-$SUFFIX"
+            echo "✅ Detected suffix: $SUFFIX"
+            echo "✅ Final App Service: $APP_SERVICE"
+          elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]]; then
+            APP_SERVICE="dentriz-configure-web"
+            echo "✅ Default App Service: $APP_SERVICE"
+          else
+            echo "⚠️  Unknown branch pattern, using default"
+            APP_SERVICE="dentriz-configure-web"
           fi
           
           # Convert hyphens to underscores for secret name
