@@ -49,6 +49,8 @@ jobs:
             echo "🔍 Branch name: $BRANCH_NAME"
             echo "🔍 GitHub ref: ${{ github.ref }}"
             echo "🔍 GitHub head ref: ${{ github.head_ref }}"
+            echo "🔍 GitHub event name: ${{ github.event_name }}"
+            echo "🔍 GitHub workflow ref: ${{ github.workflow_ref }}"
             
             if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z0-9-]+)$ ]]; then
               # Pattern: release-dynamic-akaash -> dentriz-configure-web-akaash
@@ -261,10 +263,12 @@ jobs:
           echo "🔍 Branch name from step: ${{ steps.set-target.outputs.branch-suffix }}"
           echo "🔍 Deployment type: ${{ steps.set-target.outputs.deployment-type }}"
           
-          # TEMPORARY OVERRIDE FOR TESTING - Remove this after fixing branch detection
-          if [ "$APP_SERVICE" == "dentriz-configure-web" ] && [ -n "${{ steps.set-target.outputs.branch-suffix }}" ]; then
-            echo "🔧 TEMPORARY OVERRIDE: Forcing App Service to dentriz-configure-web-${{ steps.set-target.outputs.branch-suffix }}"
-            APP_SERVICE="dentriz-configure-web-${{ steps.set-target.outputs.branch-suffix }}"
+          # Use branch suffix to fix App Service name if detection failed
+          BRANCH_SUFFIX="${{ steps.set-target.outputs.branch-suffix }}"
+          if [ "$APP_SERVICE" == "dentriz-configure-web" ] && [ -n "$BRANCH_SUFFIX" ]; then
+            echo "🔧 FIXING: Using detected branch suffix '$BRANCH_SUFFIX' to set correct App Service"
+            APP_SERVICE="dentriz-configure-web-$BRANCH_SUFFIX"
+            echo "✅ Fixed App Service: $APP_SERVICE"
           fi
           
           # Convert hyphens to underscores for secret name
