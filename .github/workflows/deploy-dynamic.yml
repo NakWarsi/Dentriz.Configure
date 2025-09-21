@@ -47,11 +47,16 @@ jobs:
             # Auto-detect from branch name
             BRANCH_NAME="${{ github.ref_name }}"
             echo "🔍 Branch name: $BRANCH_NAME"
+            echo "🔍 GitHub ref: ${{ github.ref }}"
+            echo "🔍 GitHub head ref: ${{ github.head_ref }}"
             
             if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z0-9-]+)$ ]]; then
               # Pattern: release-dynamic-akaash -> dentriz-configure-web-akaash
               SUFFIX="${BASH_REMATCH[1]}"
               APP_SERVICE="dentriz-configure-web-$SUFFIX"
+              echo "✅ Matched pattern: release-dynamic-([a-zA-Z0-9-]+)"
+              echo "✅ Extracted suffix: $SUFFIX"
+              echo "✅ App Service: $APP_SERVICE"
               echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
               echo "deployment-type=branch-pattern" >> $GITHUB_OUTPUT
               echo "trigger-source=branch" >> $GITHUB_OUTPUT
@@ -59,6 +64,8 @@ jobs:
             elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]]; then
               # Pattern: release-dynamic -> dentriz-configure-web (default)
               APP_SERVICE="dentriz-configure-web"
+              echo "✅ Matched pattern: release-dynamic (exact)"
+              echo "✅ App Service: $APP_SERVICE"
               echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
               echo "deployment-type=default" >> $GITHUB_OUTPUT
               echo "trigger-source=branch" >> $GITHUB_OUTPUT
@@ -66,6 +73,9 @@ jobs:
             else
               # Fallback to default for any other release-dynamic* branches
               APP_SERVICE="dentriz-configure-web"
+              echo "⚠️  No pattern matched, using fallback"
+              echo "⚠️  Branch name: $BRANCH_NAME"
+              echo "⚠️  App Service: $APP_SERVICE"
               echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
               echo "deployment-type=default" >> $GITHUB_OUTPUT
               echo "trigger-source=branch" >> $GITHUB_OUTPUT
