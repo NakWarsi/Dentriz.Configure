@@ -22,12 +22,6 @@ export class ContactComponent implements OnInit {
   // Environment configuration
   isEditingEnabled = false; // Will be set in constructor
   
-  constructor(private runtimeEnv: RuntimeEnvironmentService) {
-    // Set editing enabled from runtime environment
-    this.isEditingEnabled = this.runtimeEnv.enableEditing;
-    console.log('📞 Contact component - Editing enabled:', this.isEditingEnabled);
-  }
-  
   // Contact Hero Configuration
   contactHeroConfig: SimpleContactHeroConfig | null = null;
   originalContactHeroConfig: SimpleContactHeroConfig | null = null;
@@ -92,8 +86,13 @@ export class ContactComponent implements OnInit {
     private locationMapApiService: LocationMapApiService,
     private insurancePaymentApiService: InsurancePaymentApiService,
     private faqApiService: FAQApiService,
-    private sanitizer: DomSanitizer
-  ) {}
+    private sanitizer: DomSanitizer,
+    private runtimeEnv: RuntimeEnvironmentService
+  ) {
+    // Set editing enabled from runtime environment
+    this.isEditingEnabled = this.runtimeEnv.enableEditing;
+    console.log('📞 Contact component - Editing enabled:', this.isEditingEnabled);
+  }
 
   ngOnInit() {
     this.loadContactHeroConfig();

@@ -19,12 +19,6 @@ export class SmileGalleryComponent implements OnInit {
   // Environment configuration
   isEditingEnabled = false; // Will be set in constructor
   
-  constructor(private runtimeEnv: RuntimeEnvironmentService) {
-    // Set editing enabled from runtime environment
-    this.isEditingEnabled = this.runtimeEnv.enableEditing;
-    console.log('🖼️ Smile Gallery component - Editing enabled:', this.isEditingEnabled);
-  }
-  
   // Gallery Hero Configuration
   galleryHeroConfig: SimpleGalleryHeroConfig | null = null;
   originalGalleryHeroConfig: SimpleGalleryHeroConfig | null = null;
@@ -52,8 +46,13 @@ export class SmileGalleryComponent implements OnInit {
   constructor(
     private galleryHeroApiService: GalleryHeroApiService,
     private galleryContentApiService: GalleryContentApiService,
-    private galleryStatsApiService: GalleryStatsApiService
-  ) {}
+    private galleryStatsApiService: GalleryStatsApiService,
+    private runtimeEnv: RuntimeEnvironmentService
+  ) {
+    // Set editing enabled from runtime environment
+    this.isEditingEnabled = this.runtimeEnv.enableEditing;
+    console.log('🖼️ Smile Gallery component - Editing enabled:', this.isEditingEnabled);
+  }
 
   ngOnInit() {
     this.loadGalleryHeroConfig();
