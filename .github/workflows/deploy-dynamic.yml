@@ -102,6 +102,238 @@ jobs:
           echo "Express version:"
           node -e "try { console.log(require('./node_modules/express/package.json').version); } catch(e) { console.log('Express not found:', e.message); }"
 
+      - name: Create standalone Express bundle
+        run: |
+          cd Dentriz.Configure.Web/dist/DentrizWeb/browser
+          echo "Creating standalone Express bundle..."
+          
+          # Create a bundled server.js that includes Express inline
+          cat > server-bundled.js << 'EOF'
+          // Bundled Express server - no external dependencies
+          const express = require('express');
+          const path = require('path');
+          const fs = require('fs');
+          
+          console.log('🚀 Starting bundled server...');
+          console.log('Current working directory:', process.cwd());
+          console.log('__dirname:', __dirname);
+          console.log('Node.js version:', process.version);
+          console.log('NODE_ENV:', process.env.NODE_ENV);
+          
+          // Check if node_modules exists
+          console.log('📁 Files in current directory:');
+          try {
+            const files = fs.readdirSync(__dirname);
+            files.forEach(file => {
+              const stat = fs.statSync(path.join(__dirname, file));
+              console.log(`  ${stat.isDirectory() ? '📁' : '📄'} ${file}`);
+            });
+          } catch (error) {
+            console.error('❌ Error reading directory:', error.message);
+          }
+          
+          // Check if node_modules exists
+          const nodeModulesPath = path.join(__dirname, 'node_modules');
+          console.log('📁 Checking for node_modules:', nodeModulesPath);
+          if (fs.existsSync(nodeModulesPath)) {
+            console.log('✅ node_modules directory exists');
+            try {
+              const nodeModulesContents = fs.readdirSync(nodeModulesPath);
+              console.log('📦 node_modules contents:', nodeModulesContents.slice(0, 10).join(', '));
+            } catch (error) {
+              console.error('❌ Error reading node_modules:', error.message);
+            }
+          } else {
+            console.error('❌ node_modules directory not found!');
+          }
+          
+          // Check if Express exists
+          const expressPath = path.join(__dirname, 'node_modules', 'express');
+          console.log('📦 Checking for Express:', expressPath);
+          if (fs.existsSync(expressPath)) {
+            console.log('✅ Express directory exists');
+            try {
+              const expressContents = fs.readdirSync(expressPath);
+              console.log('📦 Express contents:', expressContents.slice(0, 5).join(', '));
+            } catch (error) {
+              console.error('❌ Error reading Express directory:', error.message);
+            }
+          } else {
+            console.error('❌ Express directory not found!');
+          }
+          
+          try {
+            console.log('✅ Express module loaded successfully');
+            
+            const app = express();
+            
+            // Security headers
+            app.use((req, res, next) => {
+              res.setHeader('X-Content-Type-Options', 'nosniff');
+              res.setHeader('X-Frame-Options', 'DENY');
+              res.setHeader('X-XSS-Protection', '1; mode=block');
+              res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+              next();
+            });
+            
+            // Serve static files from the dist directory with caching
+            app.use(express.static(path.join(__dirname), {
+              maxAge: '1y',
+              etag: true,
+              lastModified: true
+            }));
+            
+            // Handle every other route by returning Angular's index.html
+            app.get('*', (req, res) => {
+              res.sendFile(path.join(__dirname, 'index.html'));
+            });
+            
+            // Error handling
+            app.use((err, req, res, next) => {
+              console.error(err.stack);
+              res.status(500).send('Something broke!');
+            });
+            
+            // Start the app
+            const port = process.env.PORT || 8080;
+            app.listen(port, () => {
+              console.log(`Server started on port ${port}`);
+              console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+            });
+            
+          } catch (error) {
+            console.error('Failed to start server:');
+            console.error('Error:', error.message);
+            console.error('Stack:', error.stack);
+            
+            // Check if it's a module not found error
+            if (error.code === 'MODULE_NOT_FOUND') {
+              console.error('Missing module:', error.message.split("'")[1]);
+              console.error('Please ensure all dependencies are installed.');
+              console.error('Run: npm install');
+            }
+            
+            process.exit(1);
+          }
+          EOF
+          
+          # Replace the original server.js with the bundled version
+          mv server-bundled.js server.js
+          echo "✅ Created bundled server.js with inline Express"
+          
+          # Create a fallback server that doesn't require Express
+          cat > server-fallback.js << 'EOF'
+          // Fallback server using only Node.js built-in modules
+          const http = require('http');
+          const fs = require('fs');
+          const path = require('path');
+          const url = require('url');
+          
+          console.log('🚀 Starting fallback server (no Express required)...');
+          console.log('Current working directory:', process.cwd());
+          console.log('__dirname:', __dirname);
+          console.log('Node.js version:', process.version);
+          
+          // MIME types for common file extensions
+          const mimeTypes = {
+            '.html': 'text/html',
+            '.js': 'text/javascript',
+            '.css': 'text/css',
+            '.json': 'application/json',
+            '.png': 'image/png',
+            '.jpg': 'image/jpeg',
+            '.gif': 'image/gif',
+            '.svg': 'image/svg+xml',
+            '.ico': 'image/x-icon'
+          };
+          
+          const server = http.createServer((req, res) => {
+            const parsedUrl = url.parse(req.url);
+            let pathname = parsedUrl.pathname;
+            
+            // Default to index.html for root or if no extension
+            if (pathname === '/' || !path.extname(pathname)) {
+              pathname = '/index.html';
+            }
+            
+            const filePath = path.join(__dirname, pathname);
+            const ext = path.extname(filePath).toLowerCase();
+            const contentType = mimeTypes[ext] || 'application/octet-stream';
+            
+            // Security headers
+            res.setHeader('X-Content-Type-Options', 'nosniff');
+            res.setHeader('X-Frame-Options', 'DENY');
+            res.setHeader('X-XSS-Protection', '1; mode=block');
+            res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+            
+            fs.readFile(filePath, (err, data) => {
+              if (err) {
+                if (err.code === 'ENOENT') {
+                  // File not found, serve index.html for SPA routing
+                  fs.readFile(path.join(__dirname, 'index.html'), (err2, data2) => {
+                    if (err2) {
+                      res.writeHead(404, { 'Content-Type': 'text/html' });
+                      res.end('<h1>404 - File Not Found</h1>');
+                    } else {
+                      res.writeHead(200, { 'Content-Type': 'text/html' });
+                      res.end(data2);
+                    }
+                  });
+                } else {
+                  res.writeHead(500, { 'Content-Type': 'text/html' });
+                  res.end('<h1>500 - Internal Server Error</h1>');
+                }
+              } else {
+                res.writeHead(200, { 'Content-Type': contentType });
+                res.end(data);
+              }
+            });
+          });
+          
+          const port = process.env.PORT || 8080;
+          server.listen(port, () => {
+            console.log(`Fallback server started on port ${port}`);
+            console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+          });
+          EOF
+          
+          echo "✅ Created fallback server.js (no Express required)"
+          
+          # Create a smart startup script that tries Express first, then falls back
+          cat > start-server.js << 'EOF'
+          // Smart startup script - tries Express first, then falls back
+          const fs = require('fs');
+          const path = require('path');
+          
+          console.log('🚀 Starting smart server...');
+          console.log('Current working directory:', process.cwd());
+          console.log('__dirname:', __dirname);
+          
+          // Check if node_modules/express exists
+          const expressPath = path.join(__dirname, 'node_modules', 'express');
+          const hasExpress = fs.existsSync(expressPath);
+          
+          console.log('📦 Express available:', hasExpress);
+          
+          if (hasExpress) {
+            console.log('✅ Using Express server...');
+            try {
+              require('./server.js');
+            } catch (error) {
+              console.error('❌ Express server failed:', error.message);
+              console.log('🔄 Falling back to built-in server...');
+              require('./server-fallback.js');
+            }
+          } else {
+            console.log('🔄 Express not available, using built-in server...');
+            require('./server-fallback.js');
+          }
+          EOF
+          
+          # Replace server.js with the smart startup script
+          mv start-server.js server.js
+          echo "✅ Created smart startup script"
+
       - name: Ensure node_modules is included in artifact
         run: |
           cd Dentriz.Configure.Web/dist/DentrizWeb/browser
