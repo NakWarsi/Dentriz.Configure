@@ -1,15 +1,58 @@
 // Enhanced error handling for missing dependencies
+console.log('🚀 Starting server...');
+console.log('Current working directory:', process.cwd());
+console.log('__dirname:', __dirname);
+console.log('Node.js version:', process.version);
+console.log('NODE_ENV:', process.env.NODE_ENV);
+
+// Check if node_modules exists
+const fs = require('fs');
+const path = require('path');
+
+console.log('📁 Files in current directory:');
+try {
+  const files = fs.readdirSync(__dirname);
+  files.forEach(file => {
+    const stat = fs.statSync(path.join(__dirname, file));
+    console.log(`  ${stat.isDirectory() ? '📁' : '📄'} ${file}`);
+  });
+} catch (error) {
+  console.error('❌ Error reading directory:', error.message);
+}
+
+// Check if node_modules exists
+const nodeModulesPath = path.join(__dirname, 'node_modules');
+console.log('📁 Checking for node_modules:', nodeModulesPath);
+if (fs.existsSync(nodeModulesPath)) {
+  console.log('✅ node_modules directory exists');
+  try {
+    const nodeModulesContents = fs.readdirSync(nodeModulesPath);
+    console.log('📦 node_modules contents:', nodeModulesContents.slice(0, 10).join(', '));
+  } catch (error) {
+    console.error('❌ Error reading node_modules:', error.message);
+  }
+} else {
+  console.error('❌ node_modules directory not found!');
+}
+
+// Check if Express exists
+const expressPath = path.join(__dirname, 'node_modules', 'express');
+console.log('📦 Checking for Express:', expressPath);
+if (fs.existsSync(expressPath)) {
+  console.log('✅ Express directory exists');
+  try {
+    const expressContents = fs.readdirSync(expressPath);
+    console.log('📦 Express contents:', expressContents.slice(0, 5).join(', '));
+  } catch (error) {
+    console.error('❌ Error reading Express directory:', error.message);
+  }
+} else {
+  console.error('❌ Express directory not found!');
+}
+
 try {
   const express = require('express');
-  const path = require('path');
-  
-  console.log('Express module loaded successfully');
-  console.log('Current working directory:', process.cwd());
-  console.log('__dirname:', __dirname);
-  console.log('Files in current directory:');
-  require('fs').readdirSync(__dirname).forEach(file => {
-    console.log('  -', file);
-  });
+  console.log('✅ Express module loaded successfully');
   
   const app = express();
 

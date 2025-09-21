@@ -83,6 +83,7 @@ jobs:
         run: |
           cd Dentriz.Configure.Web/dist/DentrizWeb/browser
           npm install express --production
+          echo "Express installation completed"
 
       - name: Verify Express installation
         run: |
@@ -93,6 +94,22 @@ jobs:
           ls -la node_modules/express/ || echo "Express not found"
           echo "Express version:"
           node -e "try { console.log(require('./node_modules/express/package.json').version); } catch(e) { console.log('Express not found:', e.message); }"
+
+      - name: Ensure node_modules is included in artifact
+        run: |
+          cd Dentriz.Configure.Web/dist/DentrizWeb/browser
+          echo "Creating .npmrc to ensure production dependencies"
+          echo "production=true" > .npmrc
+          echo "Creating .gitignore to ensure node_modules is not excluded"
+          echo "!node_modules/" > .gitignore
+          echo "Installing all dependencies to ensure completeness"
+          npm install --production --no-optional
+          echo "Final verification of node_modules:"
+          ls -la node_modules/ | head -10
+          echo "Express directory contents:"
+          ls -la node_modules/express/ || echo "Express directory not found"
+          echo "Total size of node_modules:"
+          du -sh node_modules/ || echo "Could not calculate size"
 
       - name: Show directory structure before verification
         run: |
@@ -182,6 +199,11 @@ jobs:
           ls -la ./dynamic-build/node_modules/express/ || echo "Express not found in package"
           echo "Checking for server.js:"
           ls -la ./dynamic-build/server.js || echo "server.js not found"
+          echo "Checking package.json:"
+          cat ./dynamic-build/package.json || echo "package.json not found"
+          echo "Testing Express module in deployment package:"
+          cd ./dynamic-build
+          node -e "try { const express = require('express'); console.log('✅ Express loaded successfully, version:', require('./node_modules/express/package.json').version); } catch(e) { console.error('❌ Express failed to load:', e.message); }"
 
       - name: Deploy to Azure App Service
         uses: Azure/webapps-deploy@v2
