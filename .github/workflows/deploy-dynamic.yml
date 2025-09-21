@@ -280,51 +280,12 @@ jobs:
           
           echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
 
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
       - name: Deploy to Azure App Service
-        run: |
-          APP_SERVICE="${{ steps.set-final-app-service.outputs.app-service-name }}"
-          echo "🔍 Deploying to: $APP_SERVICE"
-          
-          # Get the publish profile content based on the App Service name
-          case "$APP_SERVICE" in
-            "dentriz-configure-web")
-              PUBLISH_PROFILE="${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web }}"
-              ;;
-            "dentriz-configure-web-akaash")
-              PUBLISH_PROFILE="${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web_akaash }}"
-              ;;
-            "dentriz-configure-web-test")
-              PUBLISH_PROFILE="${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web_test }}"
-              ;;
-            "dentriz-configure-web-staging")
-              PUBLISH_PROFILE="${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web_staging }}"
-              ;;
-            *)
-              echo "❌ Error: Unknown App Service: $APP_SERVICE"
-              echo "   Please add a case for this App Service in the workflow"
-              exit 1
-              ;;
-          esac
-          
-          if [ -z "$PUBLISH_PROFILE" ]; then
-            echo "❌ Error: Publish profile not found for $APP_SERVICE"
-            echo "   Please add this secret to your repository"
-            exit 1
-          fi
-          
-          # Save publish profile to file
-          echo "$PUBLISH_PROFILE" > publish-profile.xml
-          
-          # Deploy using Azure CLI
-          az webapp deployment source config-zip \
-            --name "$APP_SERVICE" \
-            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
-            --src "./dynamic-build.zip"
+        uses: Azure/webapps-deploy@v2
+        with:
+          app-name: ${{ steps.set-final-app-service.outputs.app-service-name }}
+          publish-profile: ${{ steps.set-final-app-service.outputs.app-service-name == 'dentriz-configure-web-akaash' && secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web_akaash || secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web }}
+          package: ./dynamic-build
 
   configure-app-settings:
     needs: deploy-app-service
