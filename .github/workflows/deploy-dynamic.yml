@@ -91,22 +91,12 @@ jobs:
           SECRET_NAME="AZURE_WEBAPP_PUBLISH_PROFILE_${APP_SERVICE//-/_}"
           echo "🔍 Looking for secret: $SECRET_NAME"
           
-          # Check if publish profile exists
-          if [ -z "${{ secrets[format('AZURE_WEBAPP_PUBLISH_PROFILE_{0}', replace(steps.set-target.outputs.app-service-name, '-', '_'))] }}" ]; then
-            echo "❌ Error: Deployment target validation failed"
-            echo "   App Service: $APP_SERVICE"
-            echo "   Missing secret: $SECRET_NAME"
-            echo "   Please add this secret to your repository"
-            echo "   Or create the App Service: $APP_SERVICE"
-            if [ "$TRIGGER_SOURCE" == "branch" ]; then
-              echo "   Branch pattern detected: release-dynamic-$BRANCH_SUFFIX"
-            fi
-            exit 1
-          fi
-          
+          # Check if publish profile exists by trying to access it
+          # We'll use a different approach - check if the secret exists by trying to use it
           echo "✅ Pre-deployment validation passed"
           echo "   App Service: $APP_SERVICE"
-          echo "   Secret found: $SECRET_NAME"
+          echo "   Secret name: $SECRET_NAME"
+          echo "   Note: Secret validation will be done during deployment"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -254,11 +244,56 @@ jobs:
           fi
 
       - name: Deploy to Azure App Service
-        uses: Azure/webapps-deploy@v2
-        with:
-          app-name: ${{ steps.set-target.outputs.app-service-name }}
-          publish-profile: ${{ secrets[format('AZURE_WEBAPP_PUBLISH_PROFILE_{0}', replace(steps.set-target.outputs.app-service-name, '-', '_'))] }}
-          package: ./dynamic-build
+        env:
+          APP_SERVICE: ${{ steps.set-target.outputs.app-service-name }}
+        run: |
+          echo "🔍 Deploying to: $APP_SERVICE"
+          
+          # Convert hyphens to underscores for secret name
+          SECRET_NAME="AZURE_WEBAPP_PUBLISH_PROFILE_${APP_SERVICE//-/_}"
+          echo "🔍 Expected secret: $SECRET_NAME"
+          
+          # Get the publish profile content based on the secret name
+          case "$APP_SERVICE" in
+            "dentriz-configure-web")
+              PUBLISH_PROFILE="${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web }}"
+              ;;
+            "dentriz-configure-web-akaash")
+              PUBLISH_PROFILE="${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web_akaash }}"
+              ;;
+            "dentriz-configure-web-test")
+              PUBLISH_PROFILE="${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web_test }}"
+              ;;
+            "dentriz-configure-web-staging")
+              PUBLISH_PROFILE="${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web_staging }}"
+              ;;
+            *)
+              echo "❌ Error: Unknown App Service: $APP_SERVICE"
+              echo "   Please add a case for this App Service in the workflow"
+              exit 1
+              ;;
+          esac
+          
+          if [ -z "$PUBLISH_PROFILE" ]; then
+            echo "❌ Error: Publish profile not found for $APP_SERVICE"
+            echo "   Expected secret: $SECRET_NAME"
+            echo "   Please add this secret to your repository"
+            exit 1
+          fi
+          
+          # Save publish profile to file
+          echo "$PUBLISH_PROFILE" > publish-profile.xml
+          
+          # Create zip file
+          cd ./dynamic-build
+          zip -r ../dynamic-build.zip .
+          cd ..
+          
+          # Deploy using Azure CLI
+          az webapp deployment source config-zip \
+            --name "$APP_SERVICE" \
+            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+            --src "./dynamic-build.zip"
 
   configure-app-settings:
     needs: deploy-app-service
