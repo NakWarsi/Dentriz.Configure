@@ -269,11 +269,11 @@ jobs:
           
           if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z0-9.-]+)$ ]]; then
             SUFFIX="${BASH_REMATCH[1]}"
-            # Convert dots to hyphens for App Service name (Azure doesn't allow dots)
-            CLEAN_SUFFIX="${SUFFIX//./-}"
-            APP_SERVICE="dentriz-configure-web-$CLEAN_SUFFIX"
+            # Extract only the first part before any version numbers (e.g., "akaash" from "akaash-1.01")
+            APP_NAME=$(echo "$SUFFIX" | cut -d'-' -f1)
+            APP_SERVICE="dentriz-configure-web-$APP_NAME"
             echo "✅ Detected suffix: $SUFFIX"
-            echo "✅ Clean suffix: $CLEAN_SUFFIX"
+            echo "✅ App name: $APP_NAME"
             echo "✅ Final App Service: $APP_SERVICE"
           elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]]; then
             APP_SERVICE="dentriz-configure-web"
@@ -294,9 +294,6 @@ jobs:
               ;;
             "dentriz-configure-web-akaash")
               PUBLISH_PROFILE="${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web_akaash }}"
-              ;;
-            "dentriz-configure-web-akaash-1-01")
-              PUBLISH_PROFILE="${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web_akaash_1_01 }}"
               ;;
             "dentriz-configure-web-test")
               PUBLISH_PROFILE="${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web_test }}"
