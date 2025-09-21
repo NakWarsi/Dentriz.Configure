@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { COSMETIC_SERVICES_CONSTANTS } from '../constants/cosmetic-services.constants';
+import { ApiConfigService } from '../../core/services/api-config.service';
 
 export interface ServiceCard {
   icon: string;
@@ -37,11 +38,16 @@ export interface SimpleCosmeticServicesConfig {
   providedIn: 'root'
 })
 export class CosmeticServicesApiService {
-  private configUrl = 'http://localhost:5000/api/config/cosmetic-services';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('cosmetic-services');
+  }
   private localStorageKey = 'cosmeticServicesConfig';
   private JSON_FILE_PATH = './assets/services/cosmetic-services.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleCosmeticServicesConfig> {
     // Try to load from local storage first

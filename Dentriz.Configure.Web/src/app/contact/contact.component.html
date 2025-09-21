@@ -14,7 +14,7 @@
          [style.background-color]="contactHeroConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingContactHero">
+    <div class="floating-edit-btn" *ngIf="!isEditingContactHero && isEditingEnabled">
       <button class="edit-btn-floating" (click)="startEditingContactHero()" title="Edit Contact Hero Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -29,9 +29,9 @@
           <h1 *ngIf="!isEditingContactHero || editingElement !== 'heroTitle'"
               [style.color]="contactHeroConfig.heroTitleColor"
               [style.font-family]="contactHeroConfig.heroTitleFontFamily"
-              (click)="startInlineEdit('heroTitle')">
+              (click)="isEditingEnabled ? startInlineEdit('heroTitle') : null">
             {{ contactHeroConfig.heroTitle }}
-            <span class="edit-icon" *ngIf="isEditingContactHero">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingContactHero && isEditingEnabled">✏️</span>
           </h1>
           <input *ngIf="isEditingContactHero && editingElement === 'heroTitle'"
                  [(ngModel)]="contactHeroConfig.heroTitle"
@@ -66,9 +66,9 @@
           <p *ngIf="!isEditingContactHero || editingElement !== 'heroSubtitle'"
              [style.color]="contactHeroConfig.heroSubtitleColor"
              [style.font-family]="contactHeroConfig.heroSubtitleFontFamily"
-             (click)="startInlineEdit('heroSubtitle')">
+             (click)="isEditingEnabled ? startInlineEdit('heroSubtitle') : null">
             {{ contactHeroConfig.heroSubtitle }}
-            <span class="edit-icon" *ngIf="isEditingContactHero">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingContactHero && isEditingEnabled">✏️</span>
           </p>
           <textarea *ngIf="isEditingContactHero && editingElement === 'heroSubtitle'"
                     [(ngModel)]="contactHeroConfig.heroSubtitle"
@@ -101,7 +101,7 @@
     </div>
     
     <!-- Global Styling Controls (only when editing) -->
-    <div class="global-styling-controls" *ngIf="isEditingContactHero">
+    <div class="global-styling-controls" *ngIf="isEditingContactHero && isEditingEnabled">
       <h4>Section Background</h4>
       <div class="styling-row">
         <div class="styling-item">
@@ -112,7 +112,7 @@
     </div>
     
     <!-- Edit Actions -->
-    <div class="edit-actions" *ngIf="isEditingContactHero">
+    <div class="edit-actions" *ngIf="isEditingContactHero && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingContactHero()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingContactHero()">Cancel</button>
       <button class="reset-btn" (click)="resetContactHeroToOriginal()">Reset to Original</button>
@@ -136,7 +136,7 @@
          [style.background-color]="contactInfoConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingContactInfo">
+    <div class="floating-edit-btn" *ngIf="!isEditingContactInfo && isEditingEnabled">
       <button class="edit-btn-floating" (click)="startEditingContactInfo()" title="Edit Contact Information Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -152,9 +152,9 @@
           <h3 *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'phoneTitle'"
               [style.color]="contactInfoConfig.phoneTitleColor"
               [style.font-family]="contactInfoConfig.phoneTitleFontFamily"
-              (click)="startInlineEditContactInfo('phoneTitle')">
+              (click)="isEditingEnabled ? startInlineEditContactInfo('phoneTitle') : null">
             {{ contactInfoConfig.phoneTitle }}
-            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingContactInfo && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'phoneTitle'"
                  [(ngModel)]="contactInfoConfig.phoneTitle"
@@ -190,9 +190,9 @@
              *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'phoneNote'"
              [style.color]="contactInfoConfig.phoneNoteColor"
              [style.font-family]="contactInfoConfig.phoneNoteFontFamily"
-             (click)="startInlineEditContactInfo('phoneNote')">
+             (click)="isEditingEnabled ? startInlineEditContactInfo('phoneNote') : null">
             {{ contactInfoConfig.phoneNote }}
-            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingContactInfo && isEditingEnabled">✏️</span>
           </p>
           <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'phoneNote'"
                  [(ngModel)]="contactInfoConfig.phoneNote"
@@ -241,9 +241,9 @@
           <h3 *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'emailTitle'"
               [style.color]="contactInfoConfig.emailTitleColor"
               [style.font-family]="contactInfoConfig.emailTitleFontFamily"
-              (click)="startInlineEditContactInfo('emailTitle')">
+              (click)="isEditingEnabled ? startInlineEditContactInfo('emailTitle') : null">
             {{ contactInfoConfig.emailTitle }}
-            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingContactInfo && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'emailTitle'"
                  [(ngModel)]="contactInfoConfig.emailTitle"
@@ -279,9 +279,9 @@
              *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'emailNote'"
              [style.color]="contactInfoConfig.emailNoteColor"
              [style.font-family]="contactInfoConfig.emailNoteFontFamily"
-             (click)="startInlineEditContactInfo('emailNote')">
+             (click)="isEditingEnabled ? startInlineEditContactInfo('emailNote') : null">
             {{ contactInfoConfig.emailNote }}
-            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingContactInfo && isEditingEnabled">✏️</span>
           </p>
           <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'emailNote'"
                  [(ngModel)]="contactInfoConfig.emailNote"
@@ -330,9 +330,9 @@
           <h3 *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'addressTitle'"
               [style.color]="contactInfoConfig.addressTitleColor"
               [style.font-family]="contactInfoConfig.addressTitleFontFamily"
-              (click)="startInlineEditContactInfo('addressTitle')">
+              (click)="isEditingEnabled ? startInlineEditContactInfo('addressTitle') : null">
             {{ contactInfoConfig.addressTitle }}
-            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingContactInfo && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'addressTitle'"
                  [(ngModel)]="contactInfoConfig.addressTitle"
@@ -368,9 +368,9 @@
              *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'addressNote'"
              [style.color]="contactInfoConfig.addressNoteColor"
              [style.font-family]="contactInfoConfig.addressNoteFontFamily"
-             (click)="startInlineEditContactInfo('addressNote')">
+             (click)="isEditingEnabled ? startInlineEditContactInfo('addressNote') : null">
             {{ contactInfoConfig.addressNote }}
-            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingContactInfo && isEditingEnabled">✏️</span>
           </p>
           <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'addressNote'"
                  [(ngModel)]="contactInfoConfig.addressNote"
@@ -420,9 +420,9 @@
           <h3 *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'emergencyTitle'"
               [style.color]="contactInfoConfig.emergencyTitleColor"
               [style.font-family]="contactInfoConfig.emergencyTitleFontFamily"
-              (click)="startInlineEditContactInfo('emergencyTitle')">
+              (click)="isEditingEnabled ? startInlineEditContactInfo('emergencyTitle') : null">
             {{ contactInfoConfig.emergencyTitle }}
-            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingContactInfo && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'emergencyTitle'"
                  [(ngModel)]="contactInfoConfig.emergencyTitle"
@@ -458,9 +458,9 @@
              *ngIf="!isEditingContactInfo || editingContactInfoElement !== 'emergencyNote'"
              [style.color]="contactInfoConfig.emergencyNoteColor"
              [style.font-family]="contactInfoConfig.emergencyNoteFontFamily"
-             (click)="startInlineEditContactInfo('emergencyNote')">
+             (click)="isEditingEnabled ? startInlineEditContactInfo('emergencyNote') : null">
             {{ contactInfoConfig.emergencyNote }}
-            <span class="edit-icon" *ngIf="isEditingContactInfo">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingContactInfo && isEditingEnabled">✏️</span>
           </p>
           <input *ngIf="isEditingContactInfo && editingContactInfoElement === 'emergencyNote'"
                  [(ngModel)]="contactInfoConfig.emergencyNote"
@@ -502,7 +502,7 @@
     </div>
     
     <!-- Global Styling Controls (only when editing) -->
-    <div class="global-styling-controls" *ngIf="isEditingContactInfo">
+    <div class="global-styling-controls" *ngIf="isEditingContactInfo && isEditingEnabled">
       <h4>Section Background</h4>
       <div class="styling-row">
         <div class="styling-item">
@@ -513,7 +513,7 @@
     </div>
     
     <!-- Edit Actions -->
-    <div class="edit-actions" *ngIf="isEditingContactInfo">
+    <div class="edit-actions" *ngIf="isEditingContactInfo && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingContactInfo()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingContactInfo()">Cancel</button>
       <button class="reset-btn" (click)="resetContactInfoToOriginal()">Reset to Original</button>
@@ -537,7 +537,7 @@
          [style.background-color]="officeHoursConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingOfficeHours">
+    <div class="floating-edit-btn" *ngIf="!isEditingOfficeHours && isEditingEnabled">
       <button class="edit-btn-floating" (click)="startEditingOfficeHours()" title="Edit Office Hours Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -549,9 +549,9 @@
           *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'sectionTitle'"
           [style.color]="officeHoursConfig.sectionTitleColor"
           [style.font-family]="officeHoursConfig.sectionTitleFontFamily"
-          (click)="startInlineEditOfficeHours('sectionTitle')">
+          (click)="isEditingEnabled ? startInlineEditOfficeHours('sectionTitle') : null">
         {{ officeHoursConfig.sectionTitle }}
-        <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+        <span class="edit-icon" *ngIf="isEditingOfficeHours && isEditingEnabled">✏️</span>
       </h2>
       <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'sectionTitle'"
              [(ngModel)]="officeHoursConfig.sectionTitle"
@@ -587,9 +587,9 @@
          *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'sectionSubtitle'"
          [style.color]="officeHoursConfig.sectionSubtitleColor"
          [style.font-family]="officeHoursConfig.sectionSubtitleFontFamily"
-         (click)="startInlineEditOfficeHours('sectionSubtitle')">
+         (click)="isEditingEnabled ? startInlineEditOfficeHours('sectionSubtitle') : null">
         {{ officeHoursConfig.sectionSubtitle }}
-        <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+        <span class="edit-icon" *ngIf="isEditingOfficeHours && isEditingEnabled">✏️</span>
       </p>
       <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'sectionSubtitle'"
              [(ngModel)]="officeHoursConfig.sectionSubtitle"
@@ -630,9 +630,9 @@
                    *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'mondayTime'"
                    [style.color]="officeHoursConfig.timeTextColor"
                    [style.font-family]="officeHoursConfig.timeTextFontFamily"
-                   (click)="startInlineEditOfficeHours('mondayTime')">
+                   (click)="isEditingEnabled ? startInlineEditOfficeHours('mondayTime') : null">
                 {{ officeHoursConfig.mondayTime }}
-                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingOfficeHours && isEditingEnabled">✏️</span>
               </div>
               <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'mondayTime'"
                      [(ngModel)]="officeHoursConfig.mondayTime"
@@ -673,9 +673,9 @@
                    *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'tuesdayTime'"
                    [style.color]="officeHoursConfig.timeTextColor"
                    [style.font-family]="officeHoursConfig.timeTextFontFamily"
-                   (click)="startInlineEditOfficeHours('tuesdayTime')">
+                   (click)="isEditingEnabled ? startInlineEditOfficeHours('tuesdayTime') : null">
                 {{ officeHoursConfig.tuesdayTime }}
-                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingOfficeHours && isEditingEnabled">✏️</span>
               </div>
               <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'tuesdayTime'"
                      [(ngModel)]="officeHoursConfig.tuesdayTime"
@@ -716,9 +716,9 @@
                    *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'wednesdayTime'"
                    [style.color]="officeHoursConfig.timeTextColor"
                    [style.font-family]="officeHoursConfig.timeTextFontFamily"
-                   (click)="startInlineEditOfficeHours('wednesdayTime')">
+                   (click)="isEditingEnabled ? startInlineEditOfficeHours('wednesdayTime') : null">
                 {{ officeHoursConfig.wednesdayTime }}
-                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingOfficeHours && isEditingEnabled">✏️</span>
               </div>
               <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'wednesdayTime'"
                      [(ngModel)]="officeHoursConfig.wednesdayTime"
@@ -759,9 +759,9 @@
                    *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'thursdayTime'"
                    [style.color]="officeHoursConfig.timeTextColor"
                    [style.font-family]="officeHoursConfig.timeTextFontFamily"
-                   (click)="startInlineEditOfficeHours('thursdayTime')">
+                   (click)="isEditingEnabled ? startInlineEditOfficeHours('thursdayTime') : null">
                 {{ officeHoursConfig.thursdayTime }}
-                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingOfficeHours && isEditingEnabled">✏️</span>
               </div>
               <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'thursdayTime'"
                      [(ngModel)]="officeHoursConfig.thursdayTime"
@@ -802,9 +802,9 @@
                    *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'fridayTime'"
                    [style.color]="officeHoursConfig.timeTextColor"
                    [style.font-family]="officeHoursConfig.timeTextFontFamily"
-                   (click)="startInlineEditOfficeHours('fridayTime')">
+                   (click)="isEditingEnabled ? startInlineEditOfficeHours('fridayTime') : null">
                 {{ officeHoursConfig.fridayTime }}
-                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingOfficeHours && isEditingEnabled">✏️</span>
               </div>
               <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'fridayTime'"
                      [(ngModel)]="officeHoursConfig.fridayTime"
@@ -845,9 +845,9 @@
                    *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'saturdayTime'"
                    [style.color]="officeHoursConfig.timeTextColor"
                    [style.font-family]="officeHoursConfig.timeTextFontFamily"
-                   (click)="startInlineEditOfficeHours('saturdayTime')">
+                   (click)="isEditingEnabled ? startInlineEditOfficeHours('saturdayTime') : null">
                 {{ officeHoursConfig.saturdayTime }}
-                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingOfficeHours && isEditingEnabled">✏️</span>
               </div>
               <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'saturdayTime'"
                      [(ngModel)]="officeHoursConfig.saturdayTime"
@@ -888,9 +888,9 @@
                    *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'sundayTime'"
                    [style.color]="officeHoursConfig.timeTextColor"
                    [style.font-family]="officeHoursConfig.timeTextFontFamily"
-                   (click)="startInlineEditOfficeHours('sundayTime')">
+                   (click)="isEditingEnabled ? startInlineEditOfficeHours('sundayTime') : null">
                 {{ officeHoursConfig.sundayTime }}
-                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingOfficeHours && isEditingEnabled">✏️</span>
               </div>
               <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'sundayTime'"
                      [(ngModel)]="officeHoursConfig.sundayTime"
@@ -929,9 +929,9 @@
           <h3 *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'notesTitle'"
               [style.color]="officeHoursConfig.notesTitleColor"
               [style.font-family]="officeHoursConfig.notesTitleFontFamily"
-              (click)="startInlineEditOfficeHours('notesTitle')">
+              (click)="isEditingEnabled ? startInlineEditOfficeHours('notesTitle') : null">
             {{ officeHoursConfig.notesTitle }}
-            <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingOfficeHours && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'notesTitle'"
                  [(ngModel)]="officeHoursConfig.notesTitle"
@@ -968,9 +968,9 @@
                    *ngIf="!isEditingOfficeHours || editingOfficeHoursElement !== 'note_' + i"
                    [style.color]="officeHoursConfig.notesTextColor"
                    [style.font-family]="officeHoursConfig.notesTextFontFamily"
-                   (click)="startInlineEditOfficeHours('note_' + i)">
+                   (click)="isEditingEnabled ? startInlineEditOfficeHours('note_' + i) : null">
                 {{ note }}
-                <span class="edit-icon" *ngIf="isEditingOfficeHours">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingOfficeHours && isEditingEnabled">✏️</span>
               </div>
               <input *ngIf="isEditingOfficeHours && editingOfficeHoursElement === 'note_' + i"
                      [(ngModel)]="officeHoursConfig.notes[i]"
@@ -1018,7 +1018,7 @@
     </div>
     
     <!-- Global Styling Controls (only when editing) -->
-    <div class="global-styling-controls" *ngIf="isEditingOfficeHours">
+    <div class="global-styling-controls" *ngIf="isEditingOfficeHours && isEditingEnabled">
       <h4>Section Background</h4>
       <div class="styling-row">
         <div class="styling-item">
@@ -1029,7 +1029,7 @@
     </div>
     
     <!-- Edit Actions -->
-    <div class="edit-actions" *ngIf="isEditingOfficeHours">
+    <div class="edit-actions" *ngIf="isEditingOfficeHours && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingOfficeHours()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingOfficeHours()">Cancel</button>
       <button class="reset-btn" (click)="resetOfficeHoursToOriginal()">Reset to Original</button>
@@ -1043,7 +1043,7 @@
          [style.background-color]="locationMapConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingLocationMap">
+    <div class="floating-edit-btn" *ngIf="!isEditingLocationMap && isEditingEnabled">
       <button class="edit-btn-floating" (click)="startEditingLocationMap()" title="Edit Location & Map Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -1056,9 +1056,9 @@
           <h2 *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'sectionTitle'"
               [style.color]="locationMapConfig.sectionTitleColor"
               [style.font-family]="locationMapConfig.sectionTitleFontFamily"
-              (click)="startInlineEditLocationMap('sectionTitle')">
+              (click)="isEditingEnabled ? startInlineEditLocationMap('sectionTitle') : null">
             {{ locationMapConfig.sectionTitle }}
-            <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingLocationMap && isEditingEnabled">✏️</span>
           </h2>
           <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'sectionTitle'"
                  [(ngModel)]="locationMapConfig.sectionTitle"
@@ -1093,9 +1093,9 @@
           <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'sectionDescription'"
              [style.color]="locationMapConfig.sectionDescriptionColor"
              [style.font-family]="locationMapConfig.sectionDescriptionFontFamily"
-             (click)="startInlineEditLocationMap('sectionDescription')">
+             (click)="isEditingEnabled ? startInlineEditLocationMap('sectionDescription') : null">
             {{ locationMapConfig.sectionDescription }}
-            <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingLocationMap && isEditingEnabled">✏️</span>
           </p>
           <textarea *ngIf="isEditingLocationMap && editingLocationMapElement === 'sectionDescription'"
                     [(ngModel)]="locationMapConfig.sectionDescription"
@@ -1132,9 +1132,9 @@
               <strong *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'addressTitle'"
                      [style.color]="locationMapConfig.detailTitleColor"
                      [style.font-family]="locationMapConfig.detailTitleFontFamily"
-                     (click)="startInlineEditLocationMap('addressTitle')">
+                     (click)="isEditingEnabled ? startInlineEditLocationMap('addressTitle') : null">
                 {{ locationMapConfig.addressTitle }}
-                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingLocationMap && isEditingEnabled">✏️</span>
               </strong>
               <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'addressTitle'"
                      [(ngModel)]="locationMapConfig.addressTitle"
@@ -1150,9 +1150,9 @@
               <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'addressContent'"
                  [style.color]="locationMapConfig.detailContentColor"
                  [style.font-family]="locationMapConfig.detailContentFontFamily"
-                 (click)="startInlineEditLocationMap('addressContent')"
+                 (click)="isEditingEnabled ? startInlineEditLocationMap('addressContent') : null"
                  [innerHTML]="locationMapConfig.addressContent">
-                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingLocationMap && isEditingEnabled">✏️</span>
               </p>
               <textarea *ngIf="isEditingLocationMap && editingLocationMapElement === 'addressContent'"
                         [(ngModel)]="locationMapConfig.addressContent"
@@ -1172,9 +1172,9 @@
               <strong *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'parkingTitle'"
                      [style.color]="locationMapConfig.detailTitleColor"
                      [style.font-family]="locationMapConfig.detailTitleFontFamily"
-                     (click)="startInlineEditLocationMap('parkingTitle')">
+                     (click)="isEditingEnabled ? startInlineEditLocationMap('parkingTitle') : null">
                 {{ locationMapConfig.parkingTitle }}
-                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingLocationMap && isEditingEnabled">✏️</span>
               </strong>
               <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'parkingTitle'"
                      [(ngModel)]="locationMapConfig.parkingTitle"
@@ -1190,9 +1190,9 @@
               <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'parkingContent'"
                  [style.color]="locationMapConfig.detailContentColor"
                  [style.font-family]="locationMapConfig.detailContentFontFamily"
-                 (click)="startInlineEditLocationMap('parkingContent')">
+                 (click)="isEditingEnabled ? startInlineEditLocationMap('parkingContent') : null">
                 {{ locationMapConfig.parkingContent }}
-                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingLocationMap && isEditingEnabled">✏️</span>
               </p>
               <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'parkingContent'"
                      [(ngModel)]="locationMapConfig.parkingContent"
@@ -1212,9 +1212,9 @@
               <strong *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'transitTitle'"
                      [style.color]="locationMapConfig.detailTitleColor"
                      [style.font-family]="locationMapConfig.detailTitleFontFamily"
-                     (click)="startInlineEditLocationMap('transitTitle')">
+                     (click)="isEditingEnabled ? startInlineEditLocationMap('transitTitle') : null">
                 {{ locationMapConfig.transitTitle }}
-                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingLocationMap && isEditingEnabled">✏️</span>
               </strong>
               <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'transitTitle'"
                      [(ngModel)]="locationMapConfig.transitTitle"
@@ -1230,9 +1230,9 @@
               <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'transitContent'"
                  [style.color]="locationMapConfig.detailContentColor"
                  [style.font-family]="locationMapConfig.detailContentFontFamily"
-                 (click)="startInlineEditLocationMap('transitContent')"
+                 (click)="isEditingEnabled ? startInlineEditLocationMap('transitContent') : null"
                  [innerHTML]="locationMapConfig.transitContent">
-                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingLocationMap && isEditingEnabled">✏️</span>
               </p>
               <textarea *ngIf="isEditingLocationMap && editingLocationMapElement === 'transitContent'"
                         [(ngModel)]="locationMapConfig.transitContent"
@@ -1252,9 +1252,9 @@
               <strong *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'metroTitle'"
                      [style.color]="locationMapConfig.detailTitleColor"
                      [style.font-family]="locationMapConfig.detailTitleFontFamily"
-                     (click)="startInlineEditLocationMap('metroTitle')">
+                     (click)="isEditingEnabled ? startInlineEditLocationMap('metroTitle') : null">
                 {{ locationMapConfig.metroTitle }}
-                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingLocationMap && isEditingEnabled">✏️</span>
               </strong>
               <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'metroTitle'"
                      [(ngModel)]="locationMapConfig.metroTitle"
@@ -1270,9 +1270,9 @@
               <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'metroContent'"
                  [style.color]="locationMapConfig.detailContentColor"
                  [style.font-family]="locationMapConfig.detailContentFontFamily"
-                 (click)="startInlineEditLocationMap('metroContent')">
+                 (click)="isEditingEnabled ? startInlineEditLocationMap('metroContent') : null">
                 {{ locationMapConfig.metroContent }}
-                <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingLocationMap && isEditingEnabled">✏️</span>
               </p>
               <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'metroContent'"
                      [(ngModel)]="locationMapConfig.metroContent"
@@ -1294,9 +1294,9 @@
           <h3 *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'mapTitle'"
               [style.color]="locationMapConfig.mapTitleColor"
               [style.font-family]="locationMapConfig.mapTitleFontFamily"
-              (click)="startInlineEditLocationMap('mapTitle')">
+              (click)="isEditingEnabled ? startInlineEditLocationMap('mapTitle') : null">
             {{ locationMapConfig.mapTitle }}
-            <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingLocationMap && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'mapTitle'"
                  [(ngModel)]="locationMapConfig.mapTitle"
@@ -1345,9 +1345,9 @@
             <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'mapLocation'"
                [style.color]="locationMapConfig.mapInfoColor"
                [style.font-family]="locationMapConfig.mapInfoFontFamily"
-               (click)="startInlineEditLocationMap('mapLocation')">
+               (click)="isEditingEnabled ? startInlineEditLocationMap('mapLocation') : null">
               {{ locationMapConfig.mapLocation }}
-              <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingLocationMap && isEditingEnabled">✏️</span>
             </p>
             <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'mapLocation'"
                    [(ngModel)]="locationMapConfig.mapLocation"
@@ -1365,9 +1365,9 @@
             <p *ngIf="!isEditingLocationMap || editingLocationMapElement !== 'mapHours'"
                [style.color]="locationMapConfig.mapInfoColor"
                [style.font-family]="locationMapConfig.mapInfoFontFamily"
-               (click)="startInlineEditLocationMap('mapHours')">
+               (click)="isEditingEnabled ? startInlineEditLocationMap('mapHours') : null">
               {{ locationMapConfig.mapHours }}
-              <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingLocationMap && isEditingEnabled">✏️</span>
             </p>
             <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'mapHours'"
                    [(ngModel)]="locationMapConfig.mapHours"
@@ -1388,9 +1388,9 @@
                class="btn-outline"
                [style.color]="locationMapConfig.mapLinkColor"
                [style.font-family]="locationMapConfig.mapLinkFontFamily"
-               (click)="startInlineEditLocationMap('directionsText')">
+               (click)="isEditingEnabled ? startInlineEditLocationMap('directionsText') : null">
               {{ locationMapConfig.directionsText }}
-              <span class="edit-icon" *ngIf="isEditingLocationMap">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingLocationMap && isEditingEnabled">✏️</span>
             </a>
             <input *ngIf="isEditingLocationMap && editingLocationMapElement === 'directionsText'"
                    [(ngModel)]="locationMapConfig.directionsText"
@@ -1424,7 +1424,7 @@
     </div>
 
     <!-- Global Styling Controls (only when editing) -->
-    <div class="global-styling-controls" *ngIf="isEditingLocationMap">
+    <div class="global-styling-controls" *ngIf="isEditingLocationMap && isEditingEnabled">
       <h4>Section Background</h4>
       <div class="styling-row">
         <div class="styling-item">
@@ -1439,7 +1439,7 @@
     </div>
 
     <!-- Edit Actions (only when editing) -->
-    <div class="edit-actions" *ngIf="isEditingLocationMap">
+    <div class="edit-actions" *ngIf="isEditingLocationMap && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingLocationMap()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingLocationMap()">Cancel</button>
       <button class="reset-btn" (click)="resetLocationMapToOriginal()">Reset to Original</button>
@@ -1463,7 +1463,7 @@
          [style.background-color]="insurancePaymentConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingInsurancePayment">
+    <div class="floating-edit-btn" *ngIf="!isEditingInsurancePayment && isEditingEnabled">
       <button class="edit-btn-floating" (click)="startEditingInsurancePayment()" title="Edit Insurance & Payment Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -1475,9 +1475,9 @@
           *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'sectionTitle'"
           [style.color]="insurancePaymentConfig.sectionTitleColor"
           [style.font-family]="insurancePaymentConfig.sectionTitleFontFamily"
-          (click)="startInlineEditInsurancePayment('sectionTitle')">
+          (click)="isEditingEnabled ? startInlineEditInsurancePayment('sectionTitle') : null">
         {{ insurancePaymentConfig.sectionTitle }}
-        <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+        <span class="edit-icon" *ngIf="isEditingInsurancePayment && isEditingEnabled">✏️</span>
       </h2>
       <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'sectionTitle'"
              [(ngModel)]="insurancePaymentConfig.sectionTitle"
@@ -1513,9 +1513,9 @@
          *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'sectionSubtitle'"
          [style.color]="insurancePaymentConfig.sectionSubtitleColor"
          [style.font-family]="insurancePaymentConfig.sectionSubtitleFontFamily"
-         (click)="startInlineEditInsurancePayment('sectionSubtitle')">
+         (click)="isEditingEnabled ? startInlineEditInsurancePayment('sectionSubtitle') : null">
         {{ insurancePaymentConfig.sectionSubtitle }}
-        <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+        <span class="edit-icon" *ngIf="isEditingInsurancePayment && isEditingEnabled">✏️</span>
       </p>
       <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'sectionSubtitle'"
              [(ngModel)]="insurancePaymentConfig.sectionSubtitle"
@@ -1551,9 +1551,9 @@
         <div class="editable-element">
           <div class="insurance-icon" 
                *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'insuranceIcon'"
-               (click)="startInlineEditInsurancePayment('insuranceIcon')">
+               (click)="isEditingEnabled ? startInlineEditInsurancePayment('insuranceIcon') : null">
             {{ insurancePaymentConfig.insuranceIcon }}
-            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment && isEditingEnabled">✏️</span>
           </div>
           <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'insuranceIcon'"
                  [(ngModel)]="insurancePaymentConfig.insuranceIcon"
@@ -1568,9 +1568,9 @@
           <h3 *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'insuranceTitle'"
               [style.color]="insurancePaymentConfig.cardTitleColor"
               [style.font-family]="insurancePaymentConfig.cardTitleFontFamily"
-              (click)="startInlineEditInsurancePayment('insuranceTitle')">
+              (click)="isEditingEnabled ? startInlineEditInsurancePayment('insuranceTitle') : null">
             {{ insurancePaymentConfig.insuranceTitle }}
-            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'insuranceTitle'"
                  [(ngModel)]="insurancePaymentConfig.insuranceTitle"
@@ -1587,9 +1587,9 @@
           <p *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'insuranceDescription'"
              [style.color]="insurancePaymentConfig.cardDescriptionColor"
              [style.font-family]="insurancePaymentConfig.cardDescriptionFontFamily"
-             (click)="startInlineEditInsurancePayment('insuranceDescription')">
+             (click)="isEditingEnabled ? startInlineEditInsurancePayment('insuranceDescription') : null">
             {{ insurancePaymentConfig.insuranceDescription }}
-            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment && isEditingEnabled">✏️</span>
           </p>
           <textarea *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'insuranceDescription'"
                     [(ngModel)]="insurancePaymentConfig.insuranceDescription"
@@ -1608,9 +1608,9 @@
               <span *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'insuranceItem_' + i"
                     [style.color]="insurancePaymentConfig.cardItemColor"
                     [style.font-family]="insurancePaymentConfig.cardItemFontFamily"
-                    (click)="startInlineEditInsurancePayment('insuranceItem_' + i)">
+                    (click)="isEditingEnabled ? startInlineEditInsurancePayment('insuranceItem_' + i) : null">
                 {{ item }}
-                <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingInsurancePayment && isEditingEnabled">✏️</span>
               </span>
               <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'insuranceItem_' + i"
                      [(ngModel)]="insurancePaymentConfig.insuranceItems[i]"
@@ -1646,9 +1646,9 @@
         <div class="editable-element">
           <div class="insurance-icon" 
                *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'paymentIcon'"
-               (click)="startInlineEditInsurancePayment('paymentIcon')">
+               (click)="isEditingEnabled ? startInlineEditInsurancePayment('paymentIcon') : null">
             {{ insurancePaymentConfig.paymentIcon }}
-            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment && isEditingEnabled">✏️</span>
           </div>
           <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'paymentIcon'"
                  [(ngModel)]="insurancePaymentConfig.paymentIcon"
@@ -1663,9 +1663,9 @@
           <h3 *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'paymentTitle'"
               [style.color]="insurancePaymentConfig.cardTitleColor"
               [style.font-family]="insurancePaymentConfig.cardTitleFontFamily"
-              (click)="startInlineEditInsurancePayment('paymentTitle')">
+              (click)="isEditingEnabled ? startInlineEditInsurancePayment('paymentTitle') : null">
             {{ insurancePaymentConfig.paymentTitle }}
-            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'paymentTitle'"
                  [(ngModel)]="insurancePaymentConfig.paymentTitle"
@@ -1682,9 +1682,9 @@
           <p *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'paymentDescription'"
              [style.color]="insurancePaymentConfig.cardDescriptionColor"
              [style.font-family]="insurancePaymentConfig.cardDescriptionFontFamily"
-             (click)="startInlineEditInsurancePayment('paymentDescription')">
+             (click)="isEditingEnabled ? startInlineEditInsurancePayment('paymentDescription') : null">
             {{ insurancePaymentConfig.paymentDescription }}
-            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment && isEditingEnabled">✏️</span>
           </p>
           <textarea *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'paymentDescription'"
                     [(ngModel)]="insurancePaymentConfig.paymentDescription"
@@ -1703,9 +1703,9 @@
               <span *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'paymentItem_' + i"
                     [style.color]="insurancePaymentConfig.cardItemColor"
                     [style.font-family]="insurancePaymentConfig.cardItemFontFamily"
-                    (click)="startInlineEditInsurancePayment('paymentItem_' + i)">
+                    (click)="isEditingEnabled ? startInlineEditInsurancePayment('paymentItem_' + i) : null">
                 {{ item }}
-                <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingInsurancePayment && isEditingEnabled">✏️</span>
               </span>
               <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'paymentItem_' + i"
                      [(ngModel)]="insurancePaymentConfig.paymentItems[i]"
@@ -1741,9 +1741,9 @@
         <div class="editable-element">
           <div class="insurance-icon" 
                *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'specialIcon'"
-               (click)="startInlineEditInsurancePayment('specialIcon')">
+               (click)="isEditingEnabled ? startInlineEditInsurancePayment('specialIcon') : null">
             {{ insurancePaymentConfig.specialIcon }}
-            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment && isEditingEnabled">✏️</span>
           </div>
           <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'specialIcon'"
                  [(ngModel)]="insurancePaymentConfig.specialIcon"
@@ -1758,9 +1758,9 @@
           <h3 *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'specialTitle'"
               [style.color]="insurancePaymentConfig.cardTitleColor"
               [style.font-family]="insurancePaymentConfig.cardTitleFontFamily"
-              (click)="startInlineEditInsurancePayment('specialTitle')">
+              (click)="isEditingEnabled ? startInlineEditInsurancePayment('specialTitle') : null">
             {{ insurancePaymentConfig.specialTitle }}
-            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'specialTitle'"
                  [(ngModel)]="insurancePaymentConfig.specialTitle"
@@ -1777,9 +1777,9 @@
           <p *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'specialDescription'"
              [style.color]="insurancePaymentConfig.cardDescriptionColor"
              [style.font-family]="insurancePaymentConfig.cardDescriptionFontFamily"
-             (click)="startInlineEditInsurancePayment('specialDescription')">
+             (click)="isEditingEnabled ? startInlineEditInsurancePayment('specialDescription') : null">
             {{ insurancePaymentConfig.specialDescription }}
-            <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingInsurancePayment && isEditingEnabled">✏️</span>
           </p>
           <textarea *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'specialDescription'"
                     [(ngModel)]="insurancePaymentConfig.specialDescription"
@@ -1798,9 +1798,9 @@
               <span *ngIf="!isEditingInsurancePayment || editingInsurancePaymentElement !== 'specialItem_' + i"
                     [style.color]="insurancePaymentConfig.cardItemColor"
                     [style.font-family]="insurancePaymentConfig.cardItemFontFamily"
-                    (click)="startInlineEditInsurancePayment('specialItem_' + i)">
+                    (click)="isEditingEnabled ? startInlineEditInsurancePayment('specialItem_' + i) : null">
                 {{ item }}
-                <span class="edit-icon" *ngIf="isEditingInsurancePayment">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingInsurancePayment && isEditingEnabled">✏️</span>
               </span>
               <input *ngIf="isEditingInsurancePayment && editingInsurancePaymentElement === 'specialItem_' + i"
                      [(ngModel)]="insurancePaymentConfig.specialItems[i]"
@@ -1833,7 +1833,7 @@
     </div>
 
     <!-- Global Styling Controls (only when editing) -->
-    <div class="global-styling-controls" *ngIf="isEditingInsurancePayment">
+    <div class="global-styling-controls" *ngIf="isEditingInsurancePayment && isEditingEnabled">
       <h4>Section Background</h4>
       <div class="styling-row">
         <div class="styling-item">
@@ -1848,7 +1848,7 @@
     </div>
 
     <!-- Edit Actions (only when editing) -->
-    <div class="edit-actions" *ngIf="isEditingInsurancePayment">
+    <div class="edit-actions" *ngIf="isEditingInsurancePayment && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingInsurancePayment()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingInsurancePayment()">Cancel</button>
       <button class="reset-btn" (click)="resetInsurancePaymentToOriginal()">Reset to Original</button>
@@ -1872,7 +1872,7 @@
          [style.background-color]="faqConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingFAQ">
+    <div class="floating-edit-btn" *ngIf="!isEditingFAQ && isEditingEnabled">
       <button class="edit-btn-floating" (click)="startEditingFAQ()" title="Edit FAQ Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -1884,9 +1884,9 @@
           *ngIf="!isEditingFAQ || editingFAQElement !== 'sectionTitle'"
           [style.color]="faqConfig.sectionTitleColor"
           [style.font-family]="faqConfig.sectionTitleFontFamily"
-          (click)="startInlineEditFAQ('sectionTitle')">
+          (click)="isEditingEnabled ? startInlineEditFAQ('sectionTitle') : null">
         {{ faqConfig.sectionTitle }}
-        <span class="edit-icon" *ngIf="isEditingFAQ">✏️</span>
+        <span class="edit-icon" *ngIf="isEditingFAQ && isEditingEnabled">✏️</span>
       </h2>
       <input *ngIf="isEditingFAQ && editingFAQElement === 'sectionTitle'"
              [(ngModel)]="faqConfig.sectionTitle"
@@ -1922,9 +1922,9 @@
          *ngIf="!isEditingFAQ || editingFAQElement !== 'sectionSubtitle'"
          [style.color]="faqConfig.sectionSubtitleColor"
          [style.font-family]="faqConfig.sectionSubtitleFontFamily"
-         (click)="startInlineEditFAQ('sectionSubtitle')">
+         (click)="isEditingEnabled ? startInlineEditFAQ('sectionSubtitle') : null">
         {{ faqConfig.sectionSubtitle }}
-        <span class="edit-icon" *ngIf="isEditingFAQ">✏️</span>
+        <span class="edit-icon" *ngIf="isEditingFAQ && isEditingEnabled">✏️</span>
       </p>
       <input *ngIf="isEditingFAQ && editingFAQElement === 'sectionSubtitle'"
              [(ngModel)]="faqConfig.sectionSubtitle"
@@ -1961,9 +1961,9 @@
           <h3 *ngIf="!isEditingFAQ || editingFAQElement !== 'question_' + i"
               [style.color]="faqConfig.questionColor"
               [style.font-family]="faqConfig.questionFontFamily"
-              (click)="startInlineEditFAQ('question_' + i)">
+              (click)="isEditingEnabled ? startInlineEditFAQ('question_' + i) : null">
             {{ faqItem.question }}
-            <span class="edit-icon" *ngIf="isEditingFAQ">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingFAQ && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingFAQ && editingFAQElement === 'question_' + i"
                  [(ngModel)]="faqItem.question"
@@ -1989,9 +1989,9 @@
           <p *ngIf="!isEditingFAQ || editingFAQElement !== 'answer_' + i"
              [style.color]="faqConfig.answerColor"
              [style.font-family]="faqConfig.answerFontFamily"
-             (click)="startInlineEditFAQ('answer_' + i)">
+             (click)="isEditingEnabled ? startInlineEditFAQ('answer_' + i) : null">
             {{ faqItem.answer }}
-            <span class="edit-icon" *ngIf="isEditingFAQ">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingFAQ && isEditingEnabled">✏️</span>
           </p>
           <textarea *ngIf="isEditingFAQ && editingFAQElement === 'answer_' + i"
                     [(ngModel)]="faqItem.answer"
@@ -2014,7 +2014,7 @@
     </div>
 
     <!-- Global Styling Controls (only when editing) -->
-    <div class="global-styling-controls" *ngIf="isEditingFAQ">
+    <div class="global-styling-controls" *ngIf="isEditingFAQ && isEditingEnabled">
       <h4>Section Background</h4>
       <div class="styling-row">
         <div class="styling-item">
@@ -2029,7 +2029,7 @@
     </div>
 
     <!-- Edit Actions (only when editing) -->
-    <div class="edit-actions" *ngIf="isEditingFAQ">
+    <div class="edit-actions" *ngIf="isEditingFAQ && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingFAQ()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingFAQ()">Cancel</button>
       <button class="reset-btn" (click)="resetFAQToOriginal()">Reset to Original</button>

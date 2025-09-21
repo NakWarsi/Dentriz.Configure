@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { TESTIMONIALS_CONSTANTS } from '../constants/testimonials.constants';
+import { ApiConfigService } from '../../core/services/api-config.service';
 
 export interface Testimonial {
   stars: string;
@@ -37,11 +38,16 @@ export interface SimpleTestimonialsConfig {
   providedIn: 'root'
 })
 export class TestimonialsApiService {
-  private configUrl = 'http://localhost:5000/api/config/testimonials';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('AboutTestimonials');
+  }
   private localStorageKey = 'testimonialsConfig';
   private JSON_FILE_PATH = './assets/about/testimonials.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleTestimonialsConfig> {
     // Try to load from local storage first
@@ -50,19 +56,60 @@ export class TestimonialsApiService {
       return of(localConfig);
     }
 
-    // For now, directly use constants data instead of trying API
-    console.log('Loading testimonials config from constants');
-    const defaultConfig = this.getDefaultConfig();
-    this.saveConfigToLocalStorage(defaultConfig);
-    return of(defaultConfig);
+    // Try to load from API
+    console.log('Loading testimonials config from API:', this.configUrl);
+    return this.http.get(this.configUrl, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      map((apiConfig: any) => {
+        console.log('Received API config:', apiConfig);
+        return this.mapApiConfigToSimpleConfig(apiConfig);
+      }),
+      tap(config => {
+        console.log('Mapped config:', config);
+        this.saveConfigToLocalStorage(config);
+      }),
+      catchError(error => {
+        console.error('Error loading config from API, falling back to default constants:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        const defaultConfig = this.getDefaultConfig();
+        this.saveConfigToLocalStorage(defaultConfig);
+        return of(defaultConfig);
+      })
+    );
   }
 
   saveConfig(config: SimpleTestimonialsConfig): Observable<any> {
     this.saveConfigToLocalStorage(config);
-    return this.http.post(this.configUrl, config).pipe(
+    const apiConfig = this.mapSimpleConfigToApiConfig(config);
+    
+    console.log('Saving testimonials config to API:', apiConfig);
+    
+    return this.http.post(this.configUrl, apiConfig, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      tap((response) => {
+        console.log('Configuration saved successfully to API:', response);
+        alert('Configuration saved successfully to server!');
+      }),
       catchError(error => {
         console.error('Error saving config to API, local storage updated:', error);
-        alert('Configuration saved locally, but failed to save to server. Please check the API.');
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        alert(`Configuration saved locally, but failed to save to server. Error: ${error.status} - ${error.statusText}`);
         return of(null);
       })
     );
@@ -118,5 +165,49 @@ export class TestimonialsApiService {
 
   private getDefaultConfig(): SimpleTestimonialsConfig {
     return this.mapToSimpleConfig({});
+  }
+
+  private mapApiConfigToSimpleConfig(apiConfig: any): SimpleTestimonialsConfig {
+    return {
+      // Section Content
+      sectionTitle: apiConfig.sectionTitle || TESTIMONIALS_CONSTANTS.DEFAULT_SECTION_TITLE,
+      sectionSubtitle: apiConfig.sectionSubtitle || TESTIMONIALS_CONSTANTS.DEFAULT_SECTION_SUBTITLE,
+      testimonials: apiConfig.testimonials || [...TESTIMONIALS_CONSTANTS.DEFAULT_TESTIMONIALS],
+
+      // Styling
+      sectionTitleColor: apiConfig.sectionTitleColor || TESTIMONIALS_CONSTANTS.DEFAULT_COLORS.SECTION_TITLE,
+      sectionSubtitleColor: apiConfig.sectionSubtitleColor || TESTIMONIALS_CONSTANTS.DEFAULT_COLORS.SECTION_SUBTITLE,
+      testimonialTextColor: apiConfig.testimonialTextColor || TESTIMONIALS_CONSTANTS.DEFAULT_COLORS.TESTIMONIAL_TEXT,
+      testimonialAuthorNameColor: apiConfig.testimonialAuthorNameColor || TESTIMONIALS_CONSTANTS.DEFAULT_COLORS.TESTIMONIAL_AUTHOR_NAME,
+      testimonialAuthorTitleColor: apiConfig.testimonialAuthorTitleColor || TESTIMONIALS_CONSTANTS.DEFAULT_COLORS.TESTIMONIAL_AUTHOR_TITLE,
+      testimonialStarsColor: apiConfig.testimonialStarsColor || TESTIMONIALS_CONSTANTS.DEFAULT_COLORS.TESTIMONIAL_STARS,
+      backgroundColor: apiConfig.backgroundColor || TESTIMONIALS_CONSTANTS.DEFAULT_COLORS.BACKGROUND,
+
+      sectionTitleFontFamily: apiConfig.sectionTitleFontFamily || TESTIMONIALS_CONSTANTS.DEFAULT_FONTS.SECTION_TITLE,
+      sectionSubtitleFontFamily: apiConfig.sectionSubtitleFontFamily || TESTIMONIALS_CONSTANTS.DEFAULT_FONTS.SECTION_SUBTITLE,
+      testimonialTextFontFamily: apiConfig.testimonialTextFontFamily || TESTIMONIALS_CONSTANTS.DEFAULT_FONTS.TESTIMONIAL_TEXT,
+      testimonialAuthorNameFontFamily: apiConfig.testimonialAuthorNameFontFamily || TESTIMONIALS_CONSTANTS.DEFAULT_FONTS.TESTIMONIAL_AUTHOR_NAME,
+      testimonialAuthorTitleFontFamily: apiConfig.testimonialAuthorTitleFontFamily || TESTIMONIALS_CONSTANTS.DEFAULT_FONTS.TESTIMONIAL_AUTHOR_TITLE
+    };
+  }
+
+  private mapSimpleConfigToApiConfig(simpleConfig: SimpleTestimonialsConfig): any {
+    return {
+      sectionTitle: simpleConfig.sectionTitle,
+      sectionSubtitle: simpleConfig.sectionSubtitle,
+      testimonials: simpleConfig.testimonials,
+      sectionTitleColor: simpleConfig.sectionTitleColor,
+      sectionSubtitleColor: simpleConfig.sectionSubtitleColor,
+      testimonialTextColor: simpleConfig.testimonialTextColor,
+      testimonialAuthorNameColor: simpleConfig.testimonialAuthorNameColor,
+      testimonialAuthorTitleColor: simpleConfig.testimonialAuthorTitleColor,
+      testimonialStarsColor: simpleConfig.testimonialStarsColor,
+      backgroundColor: simpleConfig.backgroundColor,
+      sectionTitleFontFamily: simpleConfig.sectionTitleFontFamily,
+      sectionSubtitleFontFamily: simpleConfig.sectionSubtitleFontFamily,
+      testimonialTextFontFamily: simpleConfig.testimonialTextFontFamily,
+      testimonialAuthorNameFontFamily: simpleConfig.testimonialAuthorNameFontFamily,
+      testimonialAuthorTitleFontFamily: simpleConfig.testimonialAuthorTitleFontFamily
+    };
   }
 }

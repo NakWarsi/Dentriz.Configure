@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { GALLERY_STATS_CONSTANTS } from '../constants/gallery-stats.constants';
+import { ApiConfigService } from '../../core/services/api-config.service';
 
 export interface GalleryStat {
   number: string;
@@ -26,11 +27,16 @@ export interface SimpleGalleryStatsConfig {
   providedIn: 'root'
 })
 export class GalleryStatsApiService {
-  private configUrl = 'http://localhost:5000/api/config/gallery-stats';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('GalleryStats');
+  }
   private localStorageKey = 'galleryStatsConfig';
   private JSON_FILE_PATH = './assets/smile-gallery/gallery-stats.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleGalleryStatsConfig> {
     // Try to load from local storage first
@@ -39,19 +45,44 @@ export class GalleryStatsApiService {
       return of(localConfig);
     }
 
-    // For now, directly use constants data instead of trying API
-    console.log('Loading gallery stats config from constants');
-    const defaultConfig = this.getDefaultConfig();
-    this.saveConfigToLocalStorage(defaultConfig);
-    return of(defaultConfig);
+    // Try to load from API
+    console.log('Loading gallery stats config from API');
+    return this.http.get(this.configUrl).pipe(
+      map((apiConfig: any) => this.mapApiConfigToSimpleConfig(apiConfig)),
+      tap(config => this.saveConfigToLocalStorage(config)),
+      catchError(error => {
+        console.error('Error loading config from API, falling back to default constants:', error);
+        const defaultConfig = this.getDefaultConfig();
+        this.saveConfigToLocalStorage(defaultConfig);
+        return of(defaultConfig);
+      })
+    );
   }
 
   saveConfig(config: SimpleGalleryStatsConfig): Observable<any> {
     this.saveConfigToLocalStorage(config);
-    return this.http.post(this.configUrl, config).pipe(
+    const apiConfig = this.mapSimpleConfigToApiConfig(config);
+    
+    console.log('Saving gallery stats config to API:', apiConfig);
+    
+    return this.http.post(this.configUrl, apiConfig, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      tap((response) => {
+        console.log('Configuration saved successfully to API:', response);
+        alert('Configuration saved successfully to server!');
+      }),
       catchError(error => {
         console.error('Error saving config to API, local storage updated:', error);
-        alert('Configuration saved locally, but failed to save to server. Please check the API.');
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        alert(`Configuration saved locally, but failed to save to server. Error: ${error.status} - ${error.statusText}`);
         return of(null);
       })
     );
@@ -98,5 +129,34 @@ export class GalleryStatsApiService {
 
   private getDefaultConfig(): SimpleGalleryStatsConfig {
     return this.mapToSimpleConfig({});
+  }
+
+  private mapApiConfigToSimpleConfig(apiConfig: any): SimpleGalleryStatsConfig {
+    return {
+      // Gallery Stats Section
+      galleryStats: apiConfig.galleryStats || GALLERY_STATS_CONSTANTS.DEFAULT_GALLERY_STATS,
+
+      // Styling
+      statNumberColor: apiConfig.statNumberColor || GALLERY_STATS_CONSTANTS.DEFAULT_COLORS.STAT_NUMBER,
+      statLabelColor: apiConfig.statLabelColor || GALLERY_STATS_CONSTANTS.DEFAULT_COLORS.STAT_LABEL,
+      backgroundColor: apiConfig.backgroundColor || GALLERY_STATS_CONSTANTS.DEFAULT_COLORS.BACKGROUND,
+
+      statNumberFontFamily: apiConfig.statNumberFontFamily || GALLERY_STATS_CONSTANTS.DEFAULT_FONTS.STAT_NUMBER,
+      statLabelFontFamily: apiConfig.statLabelFontFamily || GALLERY_STATS_CONSTANTS.DEFAULT_FONTS.STAT_LABEL
+    };
+  }
+
+  private mapSimpleConfigToApiConfig(simpleConfig: SimpleGalleryStatsConfig): any {
+    return {
+      id: 'gallery-stats',
+      galleryStats: simpleConfig.galleryStats,
+      statNumberColor: simpleConfig.statNumberColor,
+      statLabelColor: simpleConfig.statLabelColor,
+      backgroundColor: simpleConfig.backgroundColor,
+      statNumberFontFamily: simpleConfig.statNumberFontFamily,
+      statLabelFontFamily: simpleConfig.statLabelFontFamily,
+      lastUpdated: new Date().toISOString(),
+      version: '1.0'
+    };
   }
 }

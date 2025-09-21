@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { SERVICES_HERO_CONSTANTS } from '../constants/services-hero.constants';
+import { IDataService } from '../../core/interfaces/data-service.interface';
+import { ApiConfigService } from '../../core/services/api-config.service';
 
 export interface SimpleServicesHeroConfig {
   // Section Content
@@ -21,12 +23,18 @@ export interface SimpleServicesHeroConfig {
 @Injectable({
   providedIn: 'root'
 })
-export class ServicesHeroApiService {
-  private configUrl = 'http://localhost:5000/api/config/services-hero';
+export class ServicesHeroApiService implements IDataService<SimpleServicesHeroConfig> {
   private localStorageKey = 'servicesHeroConfig';
   private JSON_FILE_PATH = './assets/services/services-hero.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
+
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('ServicesHero');
+  }
 
   loadConfig(): Observable<SimpleServicesHeroConfig> {
     // Try to load from local storage first
@@ -35,19 +43,60 @@ export class ServicesHeroApiService {
       return of(localConfig);
     }
 
-    // For now, directly use constants data instead of trying API
-    console.log('Loading services hero config from constants');
-    const defaultConfig = this.getDefaultConfig();
-    this.saveConfigToLocalStorage(defaultConfig);
-    return of(defaultConfig);
+    // Try to load from API
+    console.log('Loading services hero config from API:', this.configUrl);
+    return this.http.get(this.configUrl, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      map((apiConfig: any) => {
+        console.log('Received API config:', apiConfig);
+        return this.mapApiConfigToSimpleConfig(apiConfig);
+      }),
+      tap(config => {
+        console.log('Mapped config:', config);
+        this.saveConfigToLocalStorage(config);
+      }),
+      catchError(error => {
+        console.error('Error loading config from API, falling back to default constants:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        const defaultConfig = this.getDefaultConfig();
+        this.saveConfigToLocalStorage(defaultConfig);
+        return of(defaultConfig);
+      })
+    );
   }
 
   saveConfig(config: SimpleServicesHeroConfig): Observable<any> {
     this.saveConfigToLocalStorage(config);
-    return this.http.post(this.configUrl, config).pipe(
+    const apiConfig = this.mapSimpleConfigToApiConfig(config);
+    
+    console.log('Saving services hero config to API:', apiConfig);
+    
+    return this.http.post(this.configUrl, apiConfig, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      tap((response) => {
+        console.log('Configuration saved successfully to API:', response);
+        alert('Configuration saved successfully to server!');
+      }),
       catchError(error => {
         console.error('Error saving config to API, local storage updated:', error);
-        alert('Configuration saved locally, but failed to save to server. Please check the API.');
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        alert(`Configuration saved locally, but failed to save to server. Error: ${error.status} - ${error.statusText}`);
         return of(null);
       })
     );
@@ -95,5 +144,35 @@ export class ServicesHeroApiService {
 
   private getDefaultConfig(): SimpleServicesHeroConfig {
     return this.mapToSimpleConfig({});
+  }
+
+  private mapApiConfigToSimpleConfig(apiConfig: any): SimpleServicesHeroConfig {
+    const constants = SERVICES_HERO_CONSTANTS;
+    
+    return {
+      title: apiConfig.title || constants.DEFAULT_TITLE,
+      subtitle: apiConfig.subtitle || constants.DEFAULT_SUBTITLE,
+      titleColor: apiConfig.titleColor || constants.DEFAULT_COLORS.TITLE,
+      subtitleColor: apiConfig.subtitleColor || constants.DEFAULT_COLORS.SUBTITLE,
+      backgroundColor: apiConfig.backgroundColor || constants.DEFAULT_COLORS.BACKGROUND,
+      titleFontFamily: apiConfig.titleFontFamily || constants.DEFAULT_FONTS.TITLE,
+      subtitleFontFamily: apiConfig.subtitleFontFamily || constants.DEFAULT_FONTS.SUBTITLE
+    };
+  }
+
+  private mapSimpleConfigToApiConfig(simpleConfig: SimpleServicesHeroConfig): any {
+    return {
+      title: simpleConfig.title,
+      subtitle: simpleConfig.subtitle,
+      titleColor: simpleConfig.titleColor,
+      subtitleColor: simpleConfig.subtitleColor,
+      backgroundColor: simpleConfig.backgroundColor,
+      titleFontFamily: simpleConfig.titleFontFamily,
+      subtitleFontFamily: simpleConfig.subtitleFontFamily
+    };
+  }
+
+  isEditingEnabled(): boolean {
+    return true; // API mode supports editing
   }
 }

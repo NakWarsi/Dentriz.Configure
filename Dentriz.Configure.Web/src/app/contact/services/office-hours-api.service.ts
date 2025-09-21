@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { OFFICE_HOURS_CONSTANTS } from '../constants/office-hours.constants';
+import { ApiConfigService } from '../../core/services/api-config.service';
 
 export interface SimpleOfficeHoursConfig {
   // Section Content
@@ -44,10 +45,15 @@ export interface SimpleOfficeHoursConfig {
   providedIn: 'root'
 })
 export class OfficeHoursApiService {
-  private configUrl = 'http://localhost:5000/api/config/office-hours';
+  private get configUrl(): string {
+    return this.apiConfig.getEndpointUrl('ContactOfficeHours');
+  }
   private localStorageKey = 'officeHoursConfig';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) { }
 
   loadConfig(): Observable<SimpleOfficeHoursConfig> {
     // Try to load from local storage first
@@ -56,19 +62,60 @@ export class OfficeHoursApiService {
       return of(localConfig);
     }
 
-    // For now, directly use constants data instead of trying API
-    console.log('Loading office hours config from constants');
-    const defaultConfig = this.getDefaultConfig();
-    this.saveConfigToLocalStorage(defaultConfig);
-    return of(defaultConfig);
+    // Try to load from API
+    console.log('Loading office hours config from API:', this.configUrl);
+    return this.http.get(this.configUrl, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      map((apiConfig: any) => {
+        console.log('Received API config:', apiConfig);
+        return this.mapApiConfigToSimpleConfig(apiConfig);
+      }),
+      tap(config => {
+        console.log('Mapped config:', config);
+        this.saveConfigToLocalStorage(config);
+      }),
+      catchError(error => {
+        console.error('Error loading config from API, falling back to default constants:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        const defaultConfig = this.getDefaultConfig();
+        this.saveConfigToLocalStorage(defaultConfig);
+        return of(defaultConfig);
+      })
+    );
   }
 
   saveConfig(config: SimpleOfficeHoursConfig): Observable<any> {
     this.saveConfigToLocalStorage(config);
-    return this.http.post(this.configUrl, config).pipe(
+    const apiConfig = this.mapSimpleConfigToApiConfig(config);
+    
+    console.log('Saving office hours config to API:', apiConfig);
+    
+    return this.http.post(this.configUrl, apiConfig, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      tap((response) => {
+        console.log('Configuration saved successfully to API:', response);
+        alert('Configuration saved successfully to server!');
+      }),
       catchError(error => {
         console.error('Error saving config to API, local storage updated:', error);
-        alert('Configuration saved locally, but failed to save to server. Please check the API.');
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url
+        });
+        alert(`Configuration saved locally, but failed to save to server. Error: ${error.status} - ${error.statusText}`);
         return of(null);
       })
     );
@@ -140,5 +187,74 @@ export class OfficeHoursApiService {
 
   private getDefaultConfig(): SimpleOfficeHoursConfig {
     return this.mapToSimpleConfig({});
+  }
+
+  private mapApiConfigToSimpleConfig(apiConfig: any): SimpleOfficeHoursConfig {
+    const constants = OFFICE_HOURS_CONSTANTS;
+    
+    return {
+      // Section Content
+      sectionTitle: apiConfig.sectionTitle || constants.DEFAULT_SECTION_TITLE,
+      sectionSubtitle: apiConfig.sectionSubtitle || constants.DEFAULT_SECTION_SUBTITLE,
+
+      // Days and Times
+      mondayTime: apiConfig.mondayTime || constants.DEFAULT_MONDAY_TIME,
+      tuesdayTime: apiConfig.tuesdayTime || constants.DEFAULT_TUESDAY_TIME,
+      wednesdayTime: apiConfig.wednesdayTime || constants.DEFAULT_WEDNESDAY_TIME,
+      thursdayTime: apiConfig.thursdayTime || constants.DEFAULT_THURSDAY_TIME,
+      fridayTime: apiConfig.fridayTime || constants.DEFAULT_FRIDAY_TIME,
+      saturdayTime: apiConfig.saturdayTime || constants.DEFAULT_SATURDAY_TIME,
+      sundayTime: apiConfig.sundayTime || constants.DEFAULT_SUNDAY_TIME,
+
+      // Important Notes
+      notesTitle: apiConfig.notesTitle || constants.DEFAULT_NOTES_TITLE,
+      notes: apiConfig.notes || constants.DEFAULT_NOTES,
+
+      // Colors
+      sectionTitleColor: apiConfig.sectionTitleColor || constants.DEFAULT_COLORS.SECTION_TITLE,
+      sectionSubtitleColor: apiConfig.sectionSubtitleColor || constants.DEFAULT_COLORS.SECTION_SUBTITLE,
+      dayTextColor: apiConfig.dayTextColor || constants.DEFAULT_COLORS.DAY_TEXT,
+      timeTextColor: apiConfig.timeTextColor || constants.DEFAULT_COLORS.TIME_TEXT,
+      notesTitleColor: apiConfig.notesTitleColor || constants.DEFAULT_COLORS.NOTES_TITLE,
+      notesTextColor: apiConfig.notesTextColor || constants.DEFAULT_COLORS.NOTES_TEXT,
+      backgroundColor: apiConfig.backgroundColor || constants.DEFAULT_COLORS.BACKGROUND,
+
+      // Fonts
+      sectionTitleFontFamily: apiConfig.sectionTitleFontFamily || constants.DEFAULT_FONTS.SECTION_TITLE,
+      sectionSubtitleFontFamily: apiConfig.sectionSubtitleFontFamily || constants.DEFAULT_FONTS.SECTION_SUBTITLE,
+      dayTextFontFamily: apiConfig.dayTextFontFamily || constants.DEFAULT_FONTS.DAY_TEXT,
+      timeTextFontFamily: apiConfig.timeTextFontFamily || constants.DEFAULT_FONTS.TIME_TEXT,
+      notesTitleFontFamily: apiConfig.notesTitleFontFamily || constants.DEFAULT_FONTS.NOTES_TITLE,
+      notesTextFontFamily: apiConfig.notesTextFontFamily || constants.DEFAULT_FONTS.NOTES_TEXT
+    };
+  }
+
+  private mapSimpleConfigToApiConfig(simpleConfig: SimpleOfficeHoursConfig): any {
+    return {
+      sectionTitle: simpleConfig.sectionTitle,
+      sectionSubtitle: simpleConfig.sectionSubtitle,
+      mondayTime: simpleConfig.mondayTime,
+      tuesdayTime: simpleConfig.tuesdayTime,
+      wednesdayTime: simpleConfig.wednesdayTime,
+      thursdayTime: simpleConfig.thursdayTime,
+      fridayTime: simpleConfig.fridayTime,
+      saturdayTime: simpleConfig.saturdayTime,
+      sundayTime: simpleConfig.sundayTime,
+      notesTitle: simpleConfig.notesTitle,
+      notes: simpleConfig.notes,
+      sectionTitleColor: simpleConfig.sectionTitleColor,
+      sectionSubtitleColor: simpleConfig.sectionSubtitleColor,
+      dayTextColor: simpleConfig.dayTextColor,
+      timeTextColor: simpleConfig.timeTextColor,
+      notesTitleColor: simpleConfig.notesTitleColor,
+      notesTextColor: simpleConfig.notesTextColor,
+      backgroundColor: simpleConfig.backgroundColor,
+      sectionTitleFontFamily: simpleConfig.sectionTitleFontFamily,
+      sectionSubtitleFontFamily: simpleConfig.sectionSubtitleFontFamily,
+      dayTextFontFamily: simpleConfig.dayTextFontFamily,
+      timeTextFontFamily: simpleConfig.timeTextFontFamily,
+      notesTitleFontFamily: simpleConfig.notesTitleFontFamily,
+      notesTextFontFamily: simpleConfig.notesTextFontFamily
+    };
   }
 }

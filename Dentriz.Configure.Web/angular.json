@@ -50,6 +50,24 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "static": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.static.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "dynamic": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.production.ts"
+                }
+              ],
+              "outputHashing": "all"
             }
           },
           "defaultConfiguration": "production"
@@ -62,6 +80,12 @@
             },
             "development": {
               "buildTarget": "DentrizWeb:build:development"
+            },
+            "static": {
+              "buildTarget": "DentrizWeb:build:static"
+            },
+            "dynamic": {
+              "buildTarget": "DentrizWeb:build:dynamic"
             }
           },
           "defaultConfiguration": "development"

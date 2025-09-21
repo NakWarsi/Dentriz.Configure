@@ -4,7 +4,7 @@
          [style.background-color]="servicesHeroConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingServicesHero">
+    <div class="floating-edit-btn" *ngIf="!isEditingServicesHero && isEditingEnabled">
       <button class="edit-btn-floating" (click)="startEditingServicesHero()" title="Edit Services Hero Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -15,9 +15,9 @@
       <h1 *ngIf="!isEditingServicesHero || editingServicesHeroElement !== 'title'"
           [style.color]="servicesHeroConfig.titleColor"
           [style.font-family]="servicesHeroConfig.titleFontFamily"
-          (click)="startInlineEditServicesHero('title')">
+          (click)="isEditingEnabled ? startInlineEditServicesHero('title') : null">
         <span>{{ servicesHeroConfig.title }}</span>
-        <span class="edit-icon" *ngIf="isEditingServicesHero">✏️</span>
+        <span class="edit-icon" *ngIf="isEditingServicesHero && isEditingEnabled">✏️</span>
       </h1>
       <input *ngIf="isEditingServicesHero && editingServicesHeroElement === 'title'"
              [(ngModel)]="servicesHeroConfig.title"
@@ -52,19 +52,18 @@
       <p *ngIf="!isEditingServicesHero || editingServicesHeroElement !== 'subtitle'"
          [style.color]="servicesHeroConfig.subtitleColor"
          [style.font-family]="servicesHeroConfig.subtitleFontFamily"
-         (click)="startInlineEditServicesHero('subtitle')">
+         (click)="isEditingEnabled ? startInlineEditServicesHero('subtitle') : null">
         <span>{{ servicesHeroConfig.subtitle }}</span>
-        <span class="edit-icon" *ngIf="isEditingServicesHero">✏️</span>
+        <span class="edit-icon" *ngIf="isEditingServicesHero && isEditingEnabled">✏️</span>
       </p>
-      <input *ngIf="isEditingServicesHero && editingServicesHeroElement === 'subtitle'"
-             [(ngModel)]="servicesHeroConfig.subtitle"
-             (blur)="stopInlineEditServicesHero()"
-             (keyup.enter)="stopInlineEditServicesHero()"
-             class="inline-edit-input"
-             [style.color]="servicesHeroConfig.subtitleColor"
-             [style.font-family]="servicesHeroConfig.subtitleFontFamily"
-             placeholder="Enter subtitle"
-             title="Edit subtitle">
+      <textarea *ngIf="isEditingServicesHero && editingServicesHeroElement === 'subtitle'"
+                [(ngModel)]="servicesHeroConfig.subtitle"
+                (blur)="stopInlineEditServicesHero()"
+                class="inline-edit-textarea"
+                [style.color]="servicesHeroConfig.subtitleColor"
+                [style.font-family]="servicesHeroConfig.subtitleFontFamily"
+                placeholder="Enter subtitle"
+                title="Edit subtitle"></textarea>
       <div *ngIf="isEditingServicesHero && editingServicesHeroElement === 'subtitle'" class="inline-controls">
         <select [(ngModel)]="servicesHeroConfig.subtitleFontFamily" (change)="onServicesHeroFontChange()" class="font-select-inline" title="Font Family">
           <option value="Arial, sans-serif">Arial</option>
@@ -85,8 +84,8 @@
     </div>
 
     <!-- Global Styling Controls (only when editing) -->
-    <div class="global-styling-controls" *ngIf="isEditingServicesHero">
-      <h4>Section Background</h4>
+    <div class="global-styling-controls" *ngIf="isEditingServicesHero && isEditingEnabled">
+      <h4>Section Styling</h4>
       <div class="styling-row">
         <div class="styling-item">
           <label>Background Color:</label>
@@ -100,7 +99,7 @@
     </div>
 
     <!-- Edit Actions (only when editing) -->
-    <div class="edit-actions" *ngIf="isEditingServicesHero">
+    <div class="edit-actions" *ngIf="isEditingServicesHero && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingServicesHero()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingServicesHero()">Cancel</button>
       <button class="reset-btn" (click)="resetServicesHeroToOriginal()">Reset to Original</button>
@@ -118,160 +117,41 @@
   <p>Error loading services hero information. Please try again later.</p>
 </div>
 
-<!-- Services Overview -->
-<!-- <section class="services-overview">
-  <div class="container">
-    <div class="services-intro">
-      <h2> - Top Dentist in Pune</h2>
-      <p>
-        At DentRiz Dental, the best dental clinic in Wakad and Hinjewadi, we offer a comprehensive range of dental services to meet all your oral health needs. From routine teeth cleaning in Wakad to advanced cosmetic dentistry in Wakad, dental implants in Wakad, and family dentist in Wakad services, our experienced team of dentists in Pune uses the latest technology and techniques to ensure the best possible outcomes for every patient. As the top dentist in Pune, we provide everything from pediatric dentistry in Pune to advanced cosmetic dentistry in Pune.
-      </p>
-    </div>
-  </div>
-</section> -->
-
-<!-- Preventive Care -->
-<section id="preventive" class="service-section" 
-         *ngIf="!preventiveCareLoading && !preventiveCareError && preventiveCareConfig"
-         [style.background-color]="preventiveCareConfig.backgroundColor">
-  <div class="container">
-    <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingPreventiveCare">
-      <button class="edit-btn-floating" (click)="startEditingPreventiveCare()" title="Edit Preventive Care Section">
-        <span class="edit-icon-floating">✏️</span>
-      </button>
-    </div>
-
-    <div class="service-header">
-      <!-- Section Icon -->
-      <div class="editable-element">
-        <div class="service-icon" *ngIf="!isEditingPreventiveCare || editingPreventiveCareElement !== 'sectionIcon'"
-             (click)="startInlineEditPreventiveCare('sectionIcon')">
-          <span>{{ preventiveCareConfig.sectionIcon }}</span>
-          <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
-        </div>
-        <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'sectionIcon'"
-               [(ngModel)]="preventiveCareConfig.sectionIcon"
-               (blur)="stopInlineEditPreventiveCare()"
-               (keyup.enter)="stopInlineEditPreventiveCare()"
-               class="inline-edit-input"
-               placeholder="Enter icon"
-               title="Edit section icon">
+<!-- Services Sections (Dynamic) -->
+<ng-container *ngIf="!servicesLoading && !servicesError && servicesConfig">
+  <section *ngFor="let service of servicesConfig.serviceList; let serviceIndex = index" 
+           [id]="service.sectionTitle.toLowerCase().replace(' ', '-')" 
+           class="service-section"
+           [style.background-color]="service.backgroundColor">
+    <div class="container">
+      <!-- Floating Edit Button -->
+      <div class="floating-edit-btn" *ngIf="!isEditingServices && isEditingEnabled">
+        <button class="edit-btn-floating" (click)="startEditingServices()" [title]="'Edit ' + service.sectionTitle + ' Section'">
+          <span class="edit-icon-floating">✏️</span>
+        </button>
       </div>
 
-      <!-- Section Title -->
-      <div class="editable-element">
-        <h2 *ngIf="!isEditingPreventiveCare || editingPreventiveCareElement !== 'sectionTitle'"
-            [style.color]="preventiveCareConfig.sectionTitleColor"
-            [style.font-family]="preventiveCareConfig.sectionTitleFontFamily"
-            (click)="startInlineEditPreventiveCare('sectionTitle')">
-          <span>{{ preventiveCareConfig.sectionTitle }}</span>
-          <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
-        </h2>
-        <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'sectionTitle'"
-               [(ngModel)]="preventiveCareConfig.sectionTitle"
-               (blur)="stopInlineEditPreventiveCare()"
-               (keyup.enter)="stopInlineEditPreventiveCare()"
-               class="inline-edit-input"
-               [style.color]="preventiveCareConfig.sectionTitleColor"
-               [style.font-family]="preventiveCareConfig.sectionTitleFontFamily"
-               placeholder="Enter section title"
-               title="Edit section title">
-        <div *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'sectionTitle'" class="inline-controls">
-          <select [(ngModel)]="preventiveCareConfig.sectionTitleFontFamily" (change)="onPreventiveCareFontChange()" class="font-select-inline" title="Font Family">
-            <option value="Arial, sans-serif">Arial</option>
-            <option value="Georgia, serif">Georgia</option>
-            <option value="Times New Roman, serif">Times New Roman</option>
-            <option value="Helvetica, sans-serif">Helvetica</option>
-            <option value="Verdana, sans-serif">Verdana</option>
-            <option value="Courier New, monospace">Courier New</option>
-            <option value="Impact, sans-serif">Impact</option>
-            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
-          </select>
-          <input type="color" 
-                 [(ngModel)]="preventiveCareConfig.sectionTitleColor"
-                 (change)="onPreventiveCareColorChange()"
-                 class="color-picker-inline"
-                 title="Color">
-        </div>
-      </div>
-
-      <!-- Section Subtitle -->
-      <div class="editable-element">
-        <p *ngIf="!isEditingPreventiveCare || editingPreventiveCareElement !== 'sectionSubtitle'"
-           [style.color]="preventiveCareConfig.sectionSubtitleColor"
-           [style.font-family]="preventiveCareConfig.sectionSubtitleFontFamily"
-           (click)="startInlineEditPreventiveCare('sectionSubtitle')">
-          <span>{{ preventiveCareConfig.sectionSubtitle }}</span>
-          <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
-        </p>
-        <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'sectionSubtitle'"
-               [(ngModel)]="preventiveCareConfig.sectionSubtitle"
-               (blur)="stopInlineEditPreventiveCare()"
-               (keyup.enter)="stopInlineEditPreventiveCare()"
-               class="inline-edit-input"
-               [style.color]="preventiveCareConfig.sectionSubtitleColor"
-               [style.font-family]="preventiveCareConfig.sectionSubtitleFontFamily"
-               placeholder="Enter section subtitle"
-               title="Edit section subtitle">
-        <div *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'sectionSubtitle'" class="inline-controls">
-          <select [(ngModel)]="preventiveCareConfig.sectionSubtitleFontFamily" (change)="onPreventiveCareFontChange()" class="font-select-inline" title="Font Family">
-            <option value="Arial, sans-serif">Arial</option>
-            <option value="Georgia, serif">Georgia</option>
-            <option value="Times New Roman, serif">Times New Roman</option>
-            <option value="Helvetica, sans-serif">Helvetica</option>
-            <option value="Verdana, sans-serif">Verdana</option>
-            <option value="Courier New, monospace">Courier New</option>
-            <option value="Impact, sans-serif">Impact</option>
-            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
-          </select>
-          <input type="color" 
-                 [(ngModel)]="preventiveCareConfig.sectionSubtitleColor"
-                 (change)="onPreventiveCareColorChange()"
-                 class="color-picker-inline"
-                 title="Color">
-        </div>
-      </div>
-    </div>
-    
-    <div class="services-grid">
-      <div class="service-card" *ngFor="let service of preventiveCareConfig.services; let i = index">
-        <!-- Service Icon -->
+      <div class="service-header">
+        <!-- Section Title -->
         <div class="editable-element">
-          <div class="service-icon-small" *ngIf="!isEditingPreventiveCare || editingPreventiveCareElement !== 'serviceIcon_' + i"
-               (click)="startInlineEditPreventiveCare('serviceIcon_' + i)">
-            <span>{{ service.icon }}</span>
-            <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
-          </div>
-          <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceIcon_' + i"
-                 [(ngModel)]="service.icon"
-                 (blur)="stopInlineEditPreventiveCare()"
-                 (keyup.enter)="stopInlineEditPreventiveCare()"
+          <h2 *ngIf="!isEditingServices || editingServicesElement !== 'sectionTitle_' + serviceIndex"
+              [style.color]="service.sectionTitleColor"
+              [style.font-family]="service.sectionTitleFontFamily"
+              (click)="isEditingEnabled ? startInlineEditServices('sectionTitle_' + serviceIndex) : null">
+            <span>{{ service.sectionTitle }}</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
+          </h2>
+          <input *ngIf="isEditingServices && editingServicesElement === 'sectionTitle_' + serviceIndex"
+                 [(ngModel)]="service.sectionTitle"
+                 (blur)="stopInlineEditServices()"
+                 (keyup.enter)="stopInlineEditServices()"
                  class="inline-edit-input"
-                 placeholder="Enter icon"
-                 title="Edit service icon">
-        </div>
-
-        <!-- Service Title -->
-        <div class="editable-element">
-          <h3 *ngIf="!isEditingPreventiveCare || editingPreventiveCareElement !== 'serviceTitle_' + i"
-              [style.color]="preventiveCareConfig.cardTitleColor"
-              [style.font-family]="preventiveCareConfig.cardTitleFontFamily"
-              (click)="startInlineEditPreventiveCare('serviceTitle_' + i)">
-            <span>{{ service.title }}</span>
-            <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
-          </h3>
-          <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceTitle_' + i"
-                 [(ngModel)]="service.title"
-                 (blur)="stopInlineEditPreventiveCare()"
-                 (keyup.enter)="stopInlineEditPreventiveCare()"
-                 class="inline-edit-input"
-                 [style.color]="preventiveCareConfig.cardTitleColor"
-                 [style.font-family]="preventiveCareConfig.cardTitleFontFamily"
-                 placeholder="Enter service title"
-                 title="Edit service title">
-          <div *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceTitle_' + i" class="inline-controls">
-            <select [(ngModel)]="preventiveCareConfig.cardTitleFontFamily" (change)="onPreventiveCareFontChange()" class="font-select-inline" title="Font Family">
+                 [style.color]="service.sectionTitleColor"
+                 [style.font-family]="service.sectionTitleFontFamily"
+                 placeholder="Enter section title"
+                 title="Edit section title">
+          <div *ngIf="isEditingServices && editingServicesElement === 'sectionTitle_' + serviceIndex" class="inline-controls">
+            <select [(ngModel)]="service.sectionTitleFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
               <option value="Arial, sans-serif">Arial</option>
               <option value="Georgia, serif">Georgia</option>
               <option value="Times New Roman, serif">Times New Roman</option>
@@ -282,32 +162,32 @@
               <option value="Comic Sans MS, cursive">Comic Sans MS</option>
             </select>
             <input type="color" 
-                   [(ngModel)]="preventiveCareConfig.cardTitleColor"
-                   (change)="onPreventiveCareColorChange()"
+                   [(ngModel)]="service.sectionTitleColor"
+                   (change)="onServicesColorChange()"
                    class="color-picker-inline"
                    title="Color">
           </div>
         </div>
 
-        <!-- Service Description -->
+        <!-- Section Subtitle -->
         <div class="editable-element">
-          <p *ngIf="!isEditingPreventiveCare || editingPreventiveCareElement !== 'serviceDescription_' + i"
-             [style.color]="preventiveCareConfig.cardDescriptionColor"
-             [style.font-family]="preventiveCareConfig.cardDescriptionFontFamily"
-             (click)="startInlineEditPreventiveCare('serviceDescription_' + i)">
-            <span>{{ service.description }}</span>
-            <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
+          <p *ngIf="!isEditingServices || editingServicesElement !== 'sectionSubtitle_' + serviceIndex"
+             [style.color]="service.sectionSubtitleColor"
+             [style.font-family]="service.sectionSubtitleFontFamily"
+             (click)="isEditingEnabled ? startInlineEditServices('sectionSubtitle_' + serviceIndex) : null">
+            <span>{{ service.sectionSubtitle }}</span>
+            <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
           </p>
-          <textarea *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceDescription_' + i"
-                    [(ngModel)]="service.description"
-                    (blur)="stopInlineEditPreventiveCare()"
+          <textarea *ngIf="isEditingServices && editingServicesElement === 'sectionSubtitle_' + serviceIndex"
+                    [(ngModel)]="service.sectionSubtitle"
+                    (blur)="stopInlineEditServices()"
                     class="inline-edit-textarea"
-                    [style.color]="preventiveCareConfig.cardDescriptionColor"
-                    [style.font-family]="preventiveCareConfig.cardDescriptionFontFamily"
-                    placeholder="Enter service description"
-                    title="Edit service description"></textarea>
-          <div *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceDescription_' + i" class="inline-controls">
-            <select [(ngModel)]="preventiveCareConfig.cardDescriptionFontFamily" (change)="onPreventiveCareFontChange()" class="font-select-inline" title="Font Family">
+                    [style.color]="service.sectionSubtitleColor"
+                    [style.font-family]="service.sectionSubtitleFontFamily"
+                    placeholder="Enter section subtitle"
+                    title="Edit section subtitle"></textarea>
+          <div *ngIf="isEditingServices && editingServicesElement === 'sectionSubtitle_' + serviceIndex" class="inline-controls">
+            <select [(ngModel)]="service.sectionSubtitleFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
               <option value="Arial, sans-serif">Arial</option>
               <option value="Georgia, serif">Georgia</option>
               <option value="Times New Roman, serif">Times New Roman</option>
@@ -318,34 +198,52 @@
               <option value="Comic Sans MS, cursive">Comic Sans MS</option>
             </select>
             <input type="color" 
-                   [(ngModel)]="preventiveCareConfig.cardDescriptionColor"
-                   (change)="onPreventiveCareColorChange()"
+                   [(ngModel)]="service.sectionSubtitleColor"
+                   (change)="onServicesColorChange()"
                    class="color-picker-inline"
                    title="Color">
           </div>
         </div>
-
-        <!-- Service Features -->
-        <ul>
-          <li *ngFor="let feature of service.features; let j = index" class="editable-element">
-            <span *ngIf="!isEditingPreventiveCare || editingPreventiveCareElement !== 'serviceFeature_' + i + '_' + j"
-                  [style.color]="preventiveCareConfig.cardFeaturesColor"
-                  [style.font-family]="preventiveCareConfig.cardFeaturesFontFamily"
-                  (click)="startInlineEditPreventiveCare('serviceFeature_' + i + '_' + j)">
-              {{ feature }}
-              <span class="edit-icon" *ngIf="isEditingPreventiveCare">✏️</span>
-            </span>
-            <input *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceFeature_' + i + '_' + j"
-                   [(ngModel)]="service.features[j]"
-                   (blur)="stopInlineEditPreventiveCare()"
-                   (keyup.enter)="stopInlineEditPreventiveCare()"
+      </div>
+      
+      <div class="services-grid">
+        <div class="service-card" *ngFor="let serviceItem of service.services; let i = index">
+          <!-- Service Icon -->
+          <div class="editable-element">
+            <div class="service-icon-small" *ngIf="!isEditingServices || editingServicesElement !== 'serviceIcon_' + serviceIndex + '_' + i"
+                 (click)="isEditingEnabled ? startInlineEditServices('serviceIcon_' + serviceIndex + '_' + i) : null">
+              <span>{{ serviceItem.icon }}</span>
+              <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
+            </div>
+            <input *ngIf="isEditingServices && editingServicesElement === 'serviceIcon_' + serviceIndex + '_' + i"
+                   [(ngModel)]="serviceItem.icon"
+                   (blur)="stopInlineEditServices()"
+                   (keyup.enter)="stopInlineEditServices()"
                    class="inline-edit-input"
-                   [style.color]="preventiveCareConfig.cardFeaturesColor"
-                   [style.font-family]="preventiveCareConfig.cardFeaturesFontFamily"
-                   placeholder="Enter feature"
-                   title="Edit feature">
-            <div *ngIf="isEditingPreventiveCare && editingPreventiveCareElement === 'serviceFeature_' + i + '_' + j" class="inline-controls">
-              <select [(ngModel)]="preventiveCareConfig.cardFeaturesFontFamily" (change)="onPreventiveCareFontChange()" class="font-select-inline" title="Font Family">
+                   placeholder="Enter icon"
+                   title="Edit service icon">
+          </div>
+
+          <!-- Service Title -->
+          <div class="editable-element">
+            <h3 *ngIf="!isEditingServices || editingServicesElement !== 'serviceTitle_' + serviceIndex + '_' + i"
+                [style.color]="service.cardTitleColor"
+                [style.font-family]="service.cardTitleFontFamily"
+                (click)="isEditingEnabled ? startInlineEditServices('serviceTitle_' + serviceIndex + '_' + i) : null">
+              <span>{{ serviceItem.title }}</span>
+              <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
+            </h3>
+            <input *ngIf="isEditingServices && editingServicesElement === 'serviceTitle_' + serviceIndex + '_' + i"
+                   [(ngModel)]="serviceItem.title"
+                   (blur)="stopInlineEditServices()"
+                   (keyup.enter)="stopInlineEditServices()"
+                   class="inline-edit-input"
+                   [style.color]="service.cardTitleColor"
+                   [style.font-family]="service.cardTitleFontFamily"
+                   placeholder="Enter service title"
+                   title="Edit service title">
+            <div *ngIf="isEditingServices && editingServicesElement === 'serviceTitle_' + serviceIndex + '_' + i" class="inline-controls">
+              <select [(ngModel)]="service.cardTitleFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
                 <option value="Arial, sans-serif">Arial</option>
                 <option value="Georgia, serif">Georgia</option>
                 <option value="Times New Roman, serif">Times New Roman</option>
@@ -356,283 +254,32 @@
                 <option value="Comic Sans MS, cursive">Comic Sans MS</option>
               </select>
               <input type="color" 
-                     [(ngModel)]="preventiveCareConfig.cardFeaturesColor"
-                     (change)="onPreventiveCareColorChange()"
+                     [(ngModel)]="service.cardTitleColor"
+                     (change)="onServicesColorChange()"
                      class="color-picker-inline"
                      title="Color">
-              <button type="button" class="remove-item-btn" (click)="removePreventiveCareFeature(i, j)" title="Remove Feature">🗑️</button>
             </div>
-          </li>
-          <li *ngIf="isEditingPreventiveCare" class="add-feature-item">
-            <button type="button" class="add-item-btn" (click)="addPreventiveCareFeature(i)" title="Add Feature">+ Add Feature</button>
-          </li>
-        </ul>
-
-        <!-- Remove Service Button -->
-        <button *ngIf="isEditingPreventiveCare && preventiveCareConfig.services.length > 1" 
-                type="button" class="remove-service-btn" (click)="removePreventiveCareService(i)" title="Remove Service">
-          🗑️ Remove Service
-        </button>
-      </div>
-
-      <!-- Add Service Button -->
-      <div *ngIf="isEditingPreventiveCare" class="add-service-card">
-        <button type="button" class="add-service-btn" (click)="addPreventiveCareService()" title="Add Service">
-          + Add New Service
-        </button>
-      </div>
-    </div>
-
-    <!-- Global Styling Controls (only when editing) -->
-    <div class="global-styling-controls" *ngIf="isEditingPreventiveCare">
-      <h4>Section Styling</h4>
-      <div class="styling-row">
-        <div class="styling-item">
-          <label>Background Color:</label>
-          <input type="color" 
-                 [(ngModel)]="preventiveCareConfig.backgroundColor"
-                 (change)="onPreventiveCareColorChange()"
-                 class="color-picker"
-                 title="Background Color">
-        </div>
-      </div>
-    </div>
-
-    <!-- Edit Actions (only when editing) -->
-    <div class="edit-actions" *ngIf="isEditingPreventiveCare">
-      <button class="save-btn" (click)="stopEditingPreventiveCare()">Save Changes</button>
-      <button class="cancel-btn" (click)="cancelEditingPreventiveCare()">Cancel</button>
-      <button class="reset-btn" (click)="resetPreventiveCareToOriginal()">Reset to Original</button>
-    </div>
-  </div>
-</section>
-
-<!-- Loading State -->
-<div class="loading-container" *ngIf="preventiveCareLoading">
-  <p>Loading preventive care information...</p>
-</div>
-
-<!-- Error State -->
-<div class="error-container" *ngIf="preventiveCareError">
-  <p>Error loading preventive care information. Please try again later.</p>
-</div>
-
-<!-- Restorative Care -->
-<section id="restorative" class="service-section" 
-         *ngIf="!restorativeCareLoading && !restorativeCareError && restorativeCareConfig"
-         [style.background-color]="restorativeCareConfig.backgroundColor">
-  <div class="container">
-    <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingRestorativeCare">
-      <button class="edit-btn-floating" (click)="startEditingRestorativeCare()" title="Edit Restorative Care Section">
-        <span class="edit-icon-floating">✏️</span>
-      </button>
-    </div>
-
-    <div class="service-header">
-      <!-- Section Icon -->
-      <div class="editable-element">
-        <div class="service-icon" *ngIf="!isEditingRestorativeCare || editingRestorativeCareElement !== 'sectionIcon'"
-             (click)="startInlineEditRestorativeCare('sectionIcon')">
-          <span>{{ restorativeCareConfig.sectionIcon }}</span>
-          <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
-        </div>
-        <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'sectionIcon'"
-               [(ngModel)]="restorativeCareConfig.sectionIcon"
-               (blur)="stopInlineEditRestorativeCare()"
-               (keyup.enter)="stopInlineEditRestorativeCare()"
-               class="inline-edit-input"
-               placeholder="Enter icon"
-               title="Edit section icon">
-      </div>
-
-      <!-- Section Title -->
-      <div class="editable-element">
-        <h2 *ngIf="!isEditingRestorativeCare || editingRestorativeCareElement !== 'sectionTitle'"
-            [style.color]="restorativeCareConfig.sectionTitleColor"
-            [style.font-family]="restorativeCareConfig.sectionTitleFontFamily"
-            (click)="startInlineEditRestorativeCare('sectionTitle')">
-          <span>{{ restorativeCareConfig.sectionTitle }}</span>
-          <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
-        </h2>
-        <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'sectionTitle'"
-               [(ngModel)]="restorativeCareConfig.sectionTitle"
-               (blur)="stopInlineEditRestorativeCare()"
-               (keyup.enter)="stopInlineEditRestorativeCare()"
-               class="inline-edit-input"
-               [style.color]="restorativeCareConfig.sectionTitleColor"
-               [style.font-family]="restorativeCareConfig.sectionTitleFontFamily"
-               placeholder="Enter section title"
-               title="Edit section title">
-        <div *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'sectionTitle'" class="inline-controls">
-          <select [(ngModel)]="restorativeCareConfig.sectionTitleFontFamily" (change)="onRestorativeCareFontChange()" class="font-select-inline" title="Font Family">
-            <option value="Arial, sans-serif">Arial</option>
-            <option value="Georgia, serif">Georgia</option>
-            <option value="Times New Roman, serif">Times New Roman</option>
-            <option value="Helvetica, sans-serif">Helvetica</option>
-            <option value="Verdana, sans-serif">Verdana</option>
-            <option value="Courier New, monospace">Courier New</option>
-            <option value="Impact, sans-serif">Impact</option>
-            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
-          </select>
-          <input type="color" 
-                 [(ngModel)]="restorativeCareConfig.sectionTitleColor"
-                 (change)="onRestorativeCareColorChange()"
-                 class="color-picker-inline"
-                 title="Color">
-        </div>
-      </div>
-
-      <!-- Section Subtitle -->
-      <div class="editable-element">
-        <p *ngIf="!isEditingRestorativeCare || editingRestorativeCareElement !== 'sectionSubtitle'"
-           [style.color]="restorativeCareConfig.sectionSubtitleColor"
-           [style.font-family]="restorativeCareConfig.sectionSubtitleFontFamily"
-           (click)="startInlineEditRestorativeCare('sectionSubtitle')">
-          <span>{{ restorativeCareConfig.sectionSubtitle }}</span>
-          <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
-        </p>
-        <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'sectionSubtitle'"
-               [(ngModel)]="restorativeCareConfig.sectionSubtitle"
-               (blur)="stopInlineEditRestorativeCare()"
-               (keyup.enter)="stopInlineEditRestorativeCare()"
-               class="inline-edit-input"
-               [style.color]="restorativeCareConfig.sectionSubtitleColor"
-               [style.font-family]="restorativeCareConfig.sectionSubtitleFontFamily"
-               placeholder="Enter section subtitle"
-               title="Edit section subtitle">
-        <div *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'sectionSubtitle'" class="inline-controls">
-          <select [(ngModel)]="restorativeCareConfig.sectionSubtitleFontFamily" (change)="onRestorativeCareFontChange()" class="font-select-inline" title="Font Family">
-            <option value="Arial, sans-serif">Arial</option>
-            <option value="Georgia, serif">Georgia</option>
-            <option value="Times New Roman, serif">Times New Roman</option>
-            <option value="Helvetica, sans-serif">Helvetica</option>
-            <option value="Verdana, sans-serif">Verdana</option>
-            <option value="Courier New, monospace">Courier New</option>
-            <option value="Impact, sans-serif">Impact</option>
-            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
-          </select>
-          <input type="color" 
-                 [(ngModel)]="restorativeCareConfig.sectionSubtitleColor"
-                 (change)="onRestorativeCareColorChange()"
-                 class="color-picker-inline"
-                 title="Color">
-        </div>
-      </div>
-    </div>
-    
-    <div class="services-grid">
-      <div class="service-card" *ngFor="let service of restorativeCareConfig.services; let i = index">
-        <!-- Service Icon -->
-        <div class="editable-element">
-          <div class="service-icon-small" *ngIf="!isEditingRestorativeCare || editingRestorativeCareElement !== 'serviceIcon_' + i"
-               (click)="startInlineEditRestorativeCare('serviceIcon_' + i)">
-            <span>{{ service.icon }}</span>
-            <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
           </div>
-          <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceIcon_' + i"
-                 [(ngModel)]="service.icon"
-                 (blur)="stopInlineEditRestorativeCare()"
-                 (keyup.enter)="stopInlineEditRestorativeCare()"
-                 class="inline-edit-input"
-                 placeholder="Enter icon"
-                 title="Edit service icon">
-        </div>
 
-        <!-- Service Title -->
-        <div class="editable-element">
-          <h3 *ngIf="!isEditingRestorativeCare || editingRestorativeCareElement !== 'serviceTitle_' + i"
-              [style.color]="restorativeCareConfig.cardTitleColor"
-              [style.font-family]="restorativeCareConfig.cardTitleFontFamily"
-              (click)="startInlineEditRestorativeCare('serviceTitle_' + i)">
-            <span>{{ service.title }}</span>
-            <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
-          </h3>
-          <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceTitle_' + i"
-                 [(ngModel)]="service.title"
-                 (blur)="stopInlineEditRestorativeCare()"
-                 (keyup.enter)="stopInlineEditRestorativeCare()"
-                 class="inline-edit-input"
-                 [style.color]="restorativeCareConfig.cardTitleColor"
-                 [style.font-family]="restorativeCareConfig.cardTitleFontFamily"
-                 placeholder="Enter service title"
-                 title="Edit service title">
-          <div *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceTitle_' + i" class="inline-controls">
-            <select [(ngModel)]="restorativeCareConfig.cardTitleFontFamily" (change)="onRestorativeCareFontChange()" class="font-select-inline" title="Font Family">
-              <option value="Arial, sans-serif">Arial</option>
-              <option value="Georgia, serif">Georgia</option>
-              <option value="Times New Roman, serif">Times New Roman</option>
-              <option value="Helvetica, sans-serif">Helvetica</option>
-              <option value="Verdana, sans-serif">Verdana</option>
-              <option value="Courier New, monospace">Courier New</option>
-              <option value="Impact, sans-serif">Impact</option>
-              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
-            </select>
-            <input type="color" 
-                   [(ngModel)]="restorativeCareConfig.cardTitleColor"
-                   (change)="onRestorativeCareColorChange()"
-                   class="color-picker-inline"
-                   title="Color">
-          </div>
-        </div>
-
-        <!-- Service Description -->
-        <div class="editable-element">
-          <p *ngIf="!isEditingRestorativeCare || editingRestorativeCareElement !== 'serviceDescription_' + i"
-             [style.color]="restorativeCareConfig.cardDescriptionColor"
-             [style.font-family]="restorativeCareConfig.cardDescriptionFontFamily"
-             (click)="startInlineEditRestorativeCare('serviceDescription_' + i)">
-            <span>{{ service.description }}</span>
-            <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
-          </p>
-          <textarea *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceDescription_' + i"
-                    [(ngModel)]="service.description"
-                    (blur)="stopInlineEditRestorativeCare()"
-                    class="inline-edit-textarea"
-                    [style.color]="restorativeCareConfig.cardDescriptionColor"
-                    [style.font-family]="restorativeCareConfig.cardDescriptionFontFamily"
-                    placeholder="Enter service description"
-                    title="Edit service description"></textarea>
-          <div *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceDescription_' + i" class="inline-controls">
-            <select [(ngModel)]="restorativeCareConfig.cardDescriptionFontFamily" (change)="onRestorativeCareFontChange()" class="font-select-inline" title="Font Family">
-              <option value="Arial, sans-serif">Arial</option>
-              <option value="Georgia, serif">Georgia</option>
-              <option value="Times New Roman, serif">Times New Roman</option>
-              <option value="Helvetica, sans-serif">Helvetica</option>
-              <option value="Verdana, sans-serif">Verdana</option>
-              <option value="Courier New, monospace">Courier New</option>
-              <option value="Impact, sans-serif">Impact</option>
-              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
-            </select>
-            <input type="color" 
-                   [(ngModel)]="restorativeCareConfig.cardDescriptionColor"
-                   (change)="onRestorativeCareColorChange()"
-                   class="color-picker-inline"
-                   title="Color">
-          </div>
-        </div>
-
-        <!-- Service Features -->
-        <ul>
-          <li *ngFor="let feature of service.features; let j = index" class="editable-element">
-            <span *ngIf="!isEditingRestorativeCare || editingRestorativeCareElement !== 'serviceFeature_' + i + '_' + j"
-                  [style.color]="restorativeCareConfig.cardFeaturesColor"
-                  [style.font-family]="restorativeCareConfig.cardFeaturesFontFamily"
-                  (click)="startInlineEditRestorativeCare('serviceFeature_' + i + '_' + j)">
-              {{ feature }}
-              <span class="edit-icon" *ngIf="isEditingRestorativeCare">✏️</span>
-            </span>
-            <input *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceFeature_' + i + '_' + j"
-                   [(ngModel)]="service.features[j]"
-                   (blur)="stopInlineEditRestorativeCare()"
-                   (keyup.enter)="stopInlineEditRestorativeCare()"
-                   class="inline-edit-input"
-                   [style.color]="restorativeCareConfig.cardFeaturesColor"
-                   [style.font-family]="restorativeCareConfig.cardFeaturesFontFamily"
-                   placeholder="Enter feature"
-                   title="Edit feature">
-            <div *ngIf="isEditingRestorativeCare && editingRestorativeCareElement === 'serviceFeature_' + i + '_' + j" class="inline-controls">
-              <select [(ngModel)]="restorativeCareConfig.cardFeaturesFontFamily" (change)="onRestorativeCareFontChange()" class="font-select-inline" title="Font Family">
+          <!-- Service Description -->
+          <div class="editable-element">
+            <p *ngIf="!isEditingServices || editingServicesElement !== 'serviceDescription_' + serviceIndex + '_' + i"
+               [style.color]="service.cardDescriptionColor"
+               [style.font-family]="service.cardDescriptionFontFamily"
+               (click)="isEditingEnabled ? startInlineEditServices('serviceDescription_' + serviceIndex + '_' + i) : null">
+              <span>{{ serviceItem.description }}</span>
+              <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
+            </p>
+            <textarea *ngIf="isEditingServices && editingServicesElement === 'serviceDescription_' + serviceIndex + '_' + i"
+                      [(ngModel)]="serviceItem.description"
+                      (blur)="stopInlineEditServices()"
+                      class="inline-edit-textarea"
+                      [style.color]="service.cardDescriptionColor"
+                      [style.font-family]="service.cardDescriptionFontFamily"
+                      placeholder="Enter service description"
+                      title="Edit service description"></textarea>
+            <div *ngIf="isEditingServices && editingServicesElement === 'serviceDescription_' + serviceIndex + '_' + i" class="inline-controls">
+              <select [(ngModel)]="service.cardDescriptionFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
                 <option value="Arial, sans-serif">Arial</option>
                 <option value="Georgia, serif">Georgia</option>
                 <option value="Times New Roman, serif">Times New Roman</option>
@@ -643,450 +290,203 @@
                 <option value="Comic Sans MS, cursive">Comic Sans MS</option>
               </select>
               <input type="color" 
-                     [(ngModel)]="restorativeCareConfig.cardFeaturesColor"
-                     (change)="onRestorativeCareColorChange()"
+                     [(ngModel)]="service.cardDescriptionColor"
+                     (change)="onServicesColorChange()"
                      class="color-picker-inline"
                      title="Color">
-              <button type="button" class="remove-item-btn" (click)="removeRestorativeCareFeature(i, j)" title="Remove Feature">🗑️</button>
             </div>
-          </li>
-          <li *ngIf="isEditingRestorativeCare" class="add-feature-item">
-            <button type="button" class="add-item-btn" (click)="addRestorativeCareFeature(i)" title="Add Feature">+ Add Feature</button>
-          </li>
-        </ul>
+          </div>
 
-        <!-- Remove Service Button -->
-        <button *ngIf="isEditingRestorativeCare && restorativeCareConfig.services.length > 1" 
-                type="button" class="remove-service-btn" (click)="removeRestorativeCareService(i)" title="Remove Service">
-          🗑️ Remove Service
-        </button>
-      </div>
+          <!-- Service Features -->
+          <ul>
+            <li *ngFor="let feature of serviceItem.features; let j = index" class="editable-element">
+              <span *ngIf="!isEditingServices || editingServicesElement !== 'serviceFeature_' + serviceIndex + '_' + i + '_' + j"
+                    [style.color]="service.cardFeaturesColor"
+                    [style.font-family]="service.cardFeaturesFontFamily"
+                    (click)="isEditingEnabled ? startInlineEditServices('serviceFeature_' + serviceIndex + '_' + i + '_' + j) : null">
+                {{ feature }}
+                <span class="edit-icon" *ngIf="isEditingServices && isEditingEnabled">✏️</span>
+              </span>
+              <input *ngIf="isEditingServices && editingServicesElement === 'serviceFeature_' + serviceIndex + '_' + i + '_' + j"
+                     [(ngModel)]="serviceItem.features[j]"
+                     (blur)="stopInlineEditServices()"
+                     (keyup.enter)="stopInlineEditServices()"
+                     class="inline-edit-input"
+                     [style.color]="service.cardFeaturesColor"
+                     [style.font-family]="service.cardFeaturesFontFamily"
+                     placeholder="Enter feature"
+                     title="Edit feature">
+              <div *ngIf="isEditingServices && editingServicesElement === 'serviceFeature_' + serviceIndex + '_' + i + '_' + j" class="inline-controls">
+                <select [(ngModel)]="service.cardFeaturesFontFamily" (change)="onServicesFontChange()" class="font-select-inline" title="Font Family">
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Times New Roman, serif">Times New Roman</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Impact, sans-serif">Impact</option>
+                  <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+                </select>
+                <input type="color" 
+                       [(ngModel)]="service.cardFeaturesColor"
+                       (change)="onServicesColorChange()"
+                       class="color-picker-inline"
+                       title="Color">
+                <button type="button" class="remove-item-btn" (click)="removeServiceFeature(service.sectionTitle, i, j)" title="Remove Feature">🗑️</button>
+              </div>
+            </li>
+            <li *ngIf="isEditingServices" class="add-feature-item">
+              <button type="button" class="add-item-btn" (click)="addServiceFeature(service.sectionTitle, i)" title="Add Feature">+ Add Feature</button>
+            </li>
+          </ul>
 
-      <!-- Add Service Button -->
-      <div *ngIf="isEditingRestorativeCare" class="add-service-card">
-        <button type="button" class="add-service-btn" (click)="addRestorativeCareService()" title="Add Service">
-          + Add New Service
-        </button>
-      </div>
-    </div>
+          <!-- Remove Service Button -->
+          <button *ngIf="isEditingServices && service.services.length > 1" 
+                  type="button" class="remove-service-btn" (click)="removeServiceItem(service.sectionTitle, i)" title="Remove Service">
+            🗑️ Remove Service
+          </button>
+        </div>
 
-    <!-- Global Styling Controls (only when editing) -->
-    <div class="global-styling-controls" *ngIf="isEditingRestorativeCare">
-      <h4>Section Styling</h4>
-      <div class="styling-row">
-        <div class="styling-item">
-          <label>Background Color:</label>
-          <input type="color" 
-                 [(ngModel)]="restorativeCareConfig.backgroundColor"
-                 (change)="onRestorativeCareColorChange()"
-                 class="color-picker"
-                 title="Background Color">
+        <!-- Add Service Button -->
+        <div *ngIf="isEditingServices" class="add-service-card">
+          <button type="button" class="add-service-btn" (click)="addServiceItem(service.sectionTitle)" title="Add Service">
+            + Add New Service
+          </button>
         </div>
       </div>
-    </div>
 
-    <!-- Edit Actions (only when editing) -->
-    <div class="edit-actions" *ngIf="isEditingRestorativeCare">
-      <button class="save-btn" (click)="stopEditingRestorativeCare()">Save Changes</button>
-      <button class="cancel-btn" (click)="cancelEditingRestorativeCare()">Cancel</button>
-      <button class="reset-btn" (click)="resetRestorativeCareToOriginal()">Reset to Original</button>
+      <!-- Global Styling Controls (only when editing) -->
+      <div class="global-styling-controls" *ngIf="isEditingServices && isEditingEnabled">
+        <h4>Section Styling</h4>
+        <div class="styling-row">
+          <div class="styling-item">
+            <label>Background Color:</label>
+            <input type="color" 
+                   [(ngModel)]="service.backgroundColor"
+                   (change)="onServicesColorChange()"
+                   class="color-picker"
+                   title="Background Color">
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Actions (only when editing) -->
+      <div class="edit-actions" *ngIf="isEditingServices && isEditingEnabled">
+        <button class="save-btn" (click)="stopEditingServices()">Save Changes</button>
+        <button class="cancel-btn" (click)="cancelEditingServices()">Cancel</button>
+        <button class="reset-btn" (click)="resetServicesToOriginal()">Reset to Original</button>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+</ng-container>
 
 <!-- Loading State -->
-<div class="loading-container" *ngIf="restorativeCareLoading">
-  <p>Loading restorative care information...</p>
+<div class="loading-container" *ngIf="servicesLoading">
+  <p>Loading services information...</p>
 </div>
 
 <!-- Error State -->
-<div class="error-container" *ngIf="restorativeCareError">
-  <p>Error loading restorative care information. Please try again later.</p>
-</div>
-
-<!-- Cosmetic Services -->
-<section id="cosmetic" class="service-section" 
-         *ngIf="!cosmeticServicesLoading && !cosmeticServicesError && cosmeticServicesConfig"
-         [style.background-color]="cosmeticServicesConfig.backgroundColor">
-  <div class="container">
-    <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingCosmeticServices">
-      <button class="edit-btn-floating" (click)="startEditingCosmeticServices()" title="Edit Cosmetic Services Section">
-        <span class="edit-icon-floating">✏️</span>
-      </button>
-    </div>
-
-    <div class="service-header">
-      <!-- Section Icon -->
-      <div class="editable-element">
-        <div class="service-icon" *ngIf="!isEditingCosmeticServices || editingCosmeticServicesElement !== 'sectionIcon'"
-             (click)="startInlineEditCosmeticServices('sectionIcon')">
-          <span>{{ cosmeticServicesConfig.sectionIcon }}</span>
-          <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
-        </div>
-        <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'sectionIcon'"
-               [(ngModel)]="cosmeticServicesConfig.sectionIcon"
-               (blur)="stopInlineEditCosmeticServices()"
-               (keyup.enter)="stopInlineEditCosmeticServices()"
-               class="inline-edit-input"
-               placeholder="Enter icon"
-               title="Edit section icon">
-      </div>
-
-      <!-- Section Title -->
-      <div class="editable-element">
-        <h2 *ngIf="!isEditingCosmeticServices || editingCosmeticServicesElement !== 'sectionTitle'"
-            [style.color]="cosmeticServicesConfig.sectionTitleColor"
-            [style.font-family]="cosmeticServicesConfig.sectionTitleFontFamily"
-            (click)="startInlineEditCosmeticServices('sectionTitle')">
-          <span>{{ cosmeticServicesConfig.sectionTitle }}</span>
-          <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
-        </h2>
-        <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'sectionTitle'"
-               [(ngModel)]="cosmeticServicesConfig.sectionTitle"
-               (blur)="stopInlineEditCosmeticServices()"
-               (keyup.enter)="stopInlineEditCosmeticServices()"
-               class="inline-edit-input"
-               [style.color]="cosmeticServicesConfig.sectionTitleColor"
-               [style.font-family]="cosmeticServicesConfig.sectionTitleFontFamily"
-               placeholder="Enter section title"
-               title="Edit section title">
-        <div *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'sectionTitle'" class="inline-controls">
-          <select [(ngModel)]="cosmeticServicesConfig.sectionTitleFontFamily" (change)="onCosmeticServicesFontChange()" class="font-select-inline" title="Font Family">
-            <option value="Arial, sans-serif">Arial</option>
-            <option value="Georgia, serif">Georgia</option>
-            <option value="Times New Roman, serif">Times New Roman</option>
-            <option value="Helvetica, sans-serif">Helvetica</option>
-            <option value="Verdana, sans-serif">Verdana</option>
-            <option value="Courier New, monospace">Courier New</option>
-            <option value="Impact, sans-serif">Impact</option>
-            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
-          </select>
-          <input type="color" 
-                 [(ngModel)]="cosmeticServicesConfig.sectionTitleColor"
-                 (change)="onCosmeticServicesColorChange()"
-                 class="color-picker-inline"
-                 title="Color">
-        </div>
-      </div>
-
-      <!-- Section Subtitle -->
-      <div class="editable-element">
-        <p *ngIf="!isEditingCosmeticServices || editingCosmeticServicesElement !== 'sectionSubtitle'"
-           [style.color]="cosmeticServicesConfig.sectionSubtitleColor"
-           [style.font-family]="cosmeticServicesConfig.sectionSubtitleFontFamily"
-           (click)="startInlineEditCosmeticServices('sectionSubtitle')">
-          <span>{{ cosmeticServicesConfig.sectionSubtitle }}</span>
-          <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
-        </p>
-        <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'sectionSubtitle'"
-               [(ngModel)]="cosmeticServicesConfig.sectionSubtitle"
-               (blur)="stopInlineEditCosmeticServices()"
-               (keyup.enter)="stopInlineEditCosmeticServices()"
-               class="inline-edit-input"
-               [style.color]="cosmeticServicesConfig.sectionSubtitleColor"
-               [style.font-family]="cosmeticServicesConfig.sectionSubtitleFontFamily"
-               placeholder="Enter section subtitle"
-               title="Edit section subtitle">
-        <div *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'sectionSubtitle'" class="inline-controls">
-          <select [(ngModel)]="cosmeticServicesConfig.sectionSubtitleFontFamily" (change)="onCosmeticServicesFontChange()" class="font-select-inline" title="Font Family">
-            <option value="Arial, sans-serif">Arial</option>
-            <option value="Georgia, serif">Georgia</option>
-            <option value="Times New Roman, serif">Times New Roman</option>
-            <option value="Helvetica, sans-serif">Helvetica</option>
-            <option value="Verdana, sans-serif">Verdana</option>
-            <option value="Courier New, monospace">Courier New</option>
-            <option value="Impact, sans-serif">Impact</option>
-            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
-          </select>
-          <input type="color" 
-                 [(ngModel)]="cosmeticServicesConfig.sectionSubtitleColor"
-                 (change)="onCosmeticServicesColorChange()"
-                 class="color-picker-inline"
-                 title="Color">
-        </div>
-      </div>
-    </div>
-    
-    <div class="services-grid">
-      <div class="service-card" *ngFor="let service of cosmeticServicesConfig.services; let i = index">
-        <!-- Service Icon -->
-        <div class="editable-element">
-          <div class="service-icon-small" *ngIf="!isEditingCosmeticServices || editingCosmeticServicesElement !== 'serviceIcon_' + i"
-               (click)="startInlineEditCosmeticServices('serviceIcon_' + i)">
-            <span>{{ service.icon }}</span>
-            <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
-          </div>
-          <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceIcon_' + i"
-                 [(ngModel)]="service.icon"
-                 (blur)="stopInlineEditCosmeticServices()"
-                 (keyup.enter)="stopInlineEditCosmeticServices()"
-                 class="inline-edit-input"
-                 placeholder="Enter icon"
-                 title="Edit service icon">
-        </div>
-
-        <!-- Service Title -->
-        <div class="editable-element">
-          <h3 *ngIf="!isEditingCosmeticServices || editingCosmeticServicesElement !== 'serviceTitle_' + i"
-              [style.color]="cosmeticServicesConfig.cardTitleColor"
-              [style.font-family]="cosmeticServicesConfig.cardTitleFontFamily"
-              (click)="startInlineEditCosmeticServices('serviceTitle_' + i)">
-            <span>{{ service.title }}</span>
-            <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
-          </h3>
-          <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceTitle_' + i"
-                 [(ngModel)]="service.title"
-                 (blur)="stopInlineEditCosmeticServices()"
-                 (keyup.enter)="stopInlineEditCosmeticServices()"
-                 class="inline-edit-input"
-                 [style.color]="cosmeticServicesConfig.cardTitleColor"
-                 [style.font-family]="cosmeticServicesConfig.cardTitleFontFamily"
-                 placeholder="Enter service title"
-                 title="Edit service title">
-          <div *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceTitle_' + i" class="inline-controls">
-            <select [(ngModel)]="cosmeticServicesConfig.cardTitleFontFamily" (change)="onCosmeticServicesFontChange()" class="font-select-inline" title="Font Family">
-              <option value="Arial, sans-serif">Arial</option>
-              <option value="Georgia, serif">Georgia</option>
-              <option value="Times New Roman, serif">Times New Roman</option>
-              <option value="Helvetica, sans-serif">Helvetica</option>
-              <option value="Verdana, sans-serif">Verdana</option>
-              <option value="Courier New, monospace">Courier New</option>
-              <option value="Impact, sans-serif">Impact</option>
-              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
-            </select>
-            <input type="color" 
-                   [(ngModel)]="cosmeticServicesConfig.cardTitleColor"
-                   (change)="onCosmeticServicesColorChange()"
-                   class="color-picker-inline"
-                   title="Color">
-          </div>
-        </div>
-
-        <!-- Service Description -->
-        <div class="editable-element">
-          <p *ngIf="!isEditingCosmeticServices || editingCosmeticServicesElement !== 'serviceDescription_' + i"
-             [style.color]="cosmeticServicesConfig.cardDescriptionColor"
-             [style.font-family]="cosmeticServicesConfig.cardDescriptionFontFamily"
-             (click)="startInlineEditCosmeticServices('serviceDescription_' + i)">
-            <span>{{ service.description }}</span>
-            <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
-          </p>
-          <textarea *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceDescription_' + i"
-                    [(ngModel)]="service.description"
-                    (blur)="stopInlineEditCosmeticServices()"
-                    class="inline-edit-textarea"
-                    [style.color]="cosmeticServicesConfig.cardDescriptionColor"
-                    [style.font-family]="cosmeticServicesConfig.cardDescriptionFontFamily"
-                    placeholder="Enter service description"
-                    title="Edit service description"></textarea>
-          <div *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceDescription_' + i" class="inline-controls">
-            <select [(ngModel)]="cosmeticServicesConfig.cardDescriptionFontFamily" (change)="onCosmeticServicesFontChange()" class="font-select-inline" title="Font Family">
-              <option value="Arial, sans-serif">Arial</option>
-              <option value="Georgia, serif">Georgia</option>
-              <option value="Times New Roman, serif">Times New Roman</option>
-              <option value="Helvetica, sans-serif">Helvetica</option>
-              <option value="Verdana, sans-serif">Verdana</option>
-              <option value="Courier New, monospace">Courier New</option>
-              <option value="Impact, sans-serif">Impact</option>
-              <option value="Comic Sans MS, cursive">Comic Sans MS</option>
-            </select>
-            <input type="color" 
-                   [(ngModel)]="cosmeticServicesConfig.cardDescriptionColor"
-                   (change)="onCosmeticServicesColorChange()"
-                   class="color-picker-inline"
-                   title="Color">
-          </div>
-        </div>
-
-        <!-- Service Features -->
-        <ul>
-          <li *ngFor="let feature of service.features; let j = index" class="editable-element">
-            <span *ngIf="!isEditingCosmeticServices || editingCosmeticServicesElement !== 'serviceFeature_' + i + '_' + j"
-                  [style.color]="cosmeticServicesConfig.cardFeaturesColor"
-                  [style.font-family]="cosmeticServicesConfig.cardFeaturesFontFamily"
-                  (click)="startInlineEditCosmeticServices('serviceFeature_' + i + '_' + j)">
-              {{ feature }}
-              <span class="edit-icon" *ngIf="isEditingCosmeticServices">✏️</span>
-            </span>
-            <input *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceFeature_' + i + '_' + j"
-                   [(ngModel)]="service.features[j]"
-                   (blur)="stopInlineEditCosmeticServices()"
-                   (keyup.enter)="stopInlineEditCosmeticServices()"
-                   class="inline-edit-input"
-                   [style.color]="cosmeticServicesConfig.cardFeaturesColor"
-                   [style.font-family]="cosmeticServicesConfig.cardFeaturesFontFamily"
-                   placeholder="Enter feature"
-                   title="Edit feature">
-            <div *ngIf="isEditingCosmeticServices && editingCosmeticServicesElement === 'serviceFeature_' + i + '_' + j" class="inline-controls">
-              <select [(ngModel)]="cosmeticServicesConfig.cardFeaturesFontFamily" (change)="onCosmeticServicesFontChange()" class="font-select-inline" title="Font Family">
-                <option value="Arial, sans-serif">Arial</option>
-                <option value="Georgia, serif">Georgia</option>
-                <option value="Times New Roman, serif">Times New Roman</option>
-                <option value="Helvetica, sans-serif">Helvetica</option>
-                <option value="Verdana, sans-serif">Verdana</option>
-                <option value="Courier New, monospace">Courier New</option>
-                <option value="Impact, sans-serif">Impact</option>
-                <option value="Comic Sans MS, cursive">Comic Sans MS</option>
-              </select>
-              <input type="color" 
-                     [(ngModel)]="cosmeticServicesConfig.cardFeaturesColor"
-                     (change)="onCosmeticServicesColorChange()"
-                     class="color-picker-inline"
-                     title="Color">
-              <button type="button" class="remove-item-btn" (click)="removeCosmeticServicesFeature(i, j)" title="Remove Feature">🗑️</button>
-            </div>
-          </li>
-          <li *ngIf="isEditingCosmeticServices" class="add-feature-item">
-            <button type="button" class="add-item-btn" (click)="addCosmeticServicesFeature(i)" title="Add Feature">+ Add Feature</button>
-          </li>
-        </ul>
-
-        <!-- Remove Service Button -->
-        <button *ngIf="isEditingCosmeticServices && cosmeticServicesConfig.services.length > 1" 
-                type="button" class="remove-service-btn" (click)="removeCosmeticServicesService(i)" title="Remove Service">
-          🗑️ Remove Service
-        </button>
-      </div>
-
-      <!-- Add Service Button -->
-      <div *ngIf="isEditingCosmeticServices" class="add-service-card">
-        <button type="button" class="add-service-btn" (click)="addCosmeticServicesService()" title="Add Service">
-          + Add New Service
-        </button>
-      </div>
-    </div>
-
-    <!-- Global Styling Controls (only when editing) -->
-    <div class="global-styling-controls" *ngIf="isEditingCosmeticServices">
-      <h4>Section Styling</h4>
-      <div class="styling-row">
-        <div class="styling-item">
-          <label>Background Color:</label>
-          <input type="color" 
-                 [(ngModel)]="cosmeticServicesConfig.backgroundColor"
-                 (change)="onCosmeticServicesColorChange()"
-                 class="color-picker"
-                 title="Background Color">
-        </div>
-      </div>
-    </div>
-
-    <!-- Edit Actions (only when editing) -->
-    <div class="edit-actions" *ngIf="isEditingCosmeticServices">
-      <button class="save-btn" (click)="stopEditingCosmeticServices()">Save Changes</button>
-      <button class="cancel-btn" (click)="cancelEditingCosmeticServices()">Cancel</button>
-      <button class="reset-btn" (click)="resetCosmeticServicesToOriginal()">Reset to Original</button>
-    </div>
-  </div>
-</section>
-
-<!-- Loading State -->
-<div class="loading-container" *ngIf="cosmeticServicesLoading">
-  <p>Loading cosmetic services information...</p>
-</div>
-
-<!-- Error State -->
-<div class="error-container" *ngIf="cosmeticServicesError">
-  <p>Error loading cosmetic services information. Please try again later.</p>
+<div class="error-container" *ngIf="servicesError">
+  <p>Error loading services information. Please try again later.</p>
 </div>
 
 <!-- Technology Section -->
-<section class="technology-section" 
+<section id="technology" class="service-section" 
          *ngIf="!technologySectionLoading && !technologySectionError && technologySectionConfig"
-         [style.background]="technologySectionConfig.backgroundColor">
+         [style.background-color]="technologySectionConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingTechnologySection">
+    <div class="floating-edit-btn" *ngIf="!isEditingTechnologySection && isEditingEnabled">
       <button class="edit-btn-floating" (click)="startEditingTechnologySection()" title="Edit Technology Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
     </div>
 
-    <!-- Section Title -->
-    <div class="editable-element">
-      <h2 *ngIf="!isEditingTechnologySection || editingTechnologySectionElement !== 'sectionTitle'"
-          [style.color]="technologySectionConfig.sectionTitleColor"
-          [style.font-family]="technologySectionConfig.sectionTitleFontFamily"
-          (click)="startInlineEditTechnologySection('sectionTitle')">
-        <span>{{ technologySectionConfig.sectionTitle }}</span>
-        <span class="edit-icon" *ngIf="isEditingTechnologySection">✏️</span>
-      </h2>
-      <input *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'sectionTitle'"
-             [(ngModel)]="technologySectionConfig.sectionTitle"
-             (blur)="stopInlineEditTechnologySection()"
-             (keyup.enter)="stopInlineEditTechnologySection()"
-             class="inline-edit-input"
-             [style.color]="technologySectionConfig.sectionTitleColor"
-             [style.font-family]="technologySectionConfig.sectionTitleFontFamily"
-             placeholder="Enter section title"
-             title="Edit section title">
-      <div *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'sectionTitle'" class="inline-controls">
-        <select [(ngModel)]="technologySectionConfig.sectionTitleFontFamily" (change)="onTechnologySectionFontChange()" class="font-select-inline" title="Font Family">
-          <option value="Arial, sans-serif">Arial</option>
-          <option value="Georgia, serif">Georgia</option>
-          <option value="Times New Roman, serif">Times New Roman</option>
-          <option value="Helvetica, sans-serif">Helvetica</option>
-          <option value="Verdana, sans-serif">Verdana</option>
-          <option value="Courier New, monospace">Courier New</option>
-          <option value="Impact, sans-serif">Impact</option>
-          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
-        </select>
-        <input type="color" 
-               [(ngModel)]="technologySectionConfig.sectionTitleColor"
-               (change)="onTechnologySectionColorChange()"
-               class="color-picker-inline"
-               title="Color">
+    <div class="service-header">
+      <!-- Section Title -->
+      <div class="editable-element">
+        <h2 *ngIf="!isEditingTechnologySection || editingTechnologySectionElement !== 'sectionTitle'"
+            [style.color]="technologySectionConfig.sectionTitleColor"
+            [style.font-family]="technologySectionConfig.sectionTitleFontFamily"
+            (click)="isEditingEnabled ? startInlineEditTechnologySection('sectionTitle') : null">
+          <span>{{ technologySectionConfig.sectionTitle }}</span>
+          <span class="edit-icon" *ngIf="isEditingTechnologySection && isEditingEnabled">✏️</span>
+        </h2>
+        <input *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'sectionTitle'"
+               [(ngModel)]="technologySectionConfig.sectionTitle"
+               (blur)="stopInlineEditTechnologySection()"
+               (keyup.enter)="stopInlineEditTechnologySection()"
+               class="inline-edit-input"
+               [style.color]="technologySectionConfig.sectionTitleColor"
+               [style.font-family]="technologySectionConfig.sectionTitleFontFamily"
+               placeholder="Enter section title"
+               title="Edit section title">
+        <div *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'sectionTitle'" class="inline-controls">
+          <select [(ngModel)]="technologySectionConfig.sectionTitleFontFamily" (change)="onTechnologySectionFontChange()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color" 
+                 [(ngModel)]="technologySectionConfig.sectionTitleColor"
+                 (change)="onTechnologySectionColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
       </div>
-    </div>
 
-    <!-- Section Subtitle -->
-    <div class="editable-element">
-      <p *ngIf="!isEditingTechnologySection || editingTechnologySectionElement !== 'sectionSubtitle'"
-         [style.color]="technologySectionConfig.sectionSubtitleColor"
-         [style.font-family]="technologySectionConfig.sectionSubtitleFontFamily"
-         (click)="startInlineEditTechnologySection('sectionSubtitle')">
-        <span>{{ technologySectionConfig.sectionSubtitle }}</span>
-        <span class="edit-icon" *ngIf="isEditingTechnologySection">✏️</span>
-      </p>
-      <input *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'sectionSubtitle'"
-             [(ngModel)]="technologySectionConfig.sectionSubtitle"
-             (blur)="stopInlineEditTechnologySection()"
-             (keyup.enter)="stopInlineEditTechnologySection()"
-             class="inline-edit-input"
-             [style.color]="technologySectionConfig.sectionSubtitleColor"
-             [style.font-family]="technologySectionConfig.sectionSubtitleFontFamily"
-             placeholder="Enter section subtitle"
-             title="Edit section subtitle">
-      <div *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'sectionSubtitle'" class="inline-controls">
-        <select [(ngModel)]="technologySectionConfig.sectionSubtitleFontFamily" (change)="onTechnologySectionFontChange()" class="font-select-inline" title="Font Family">
-          <option value="Arial, sans-serif">Arial</option>
-          <option value="Georgia, serif">Georgia</option>
-          <option value="Times New Roman, serif">Times New Roman</option>
-          <option value="Helvetica, sans-serif">Helvetica</option>
-          <option value="Verdana, sans-serif">Verdana</option>
-          <option value="Courier New, monospace">Courier New</option>
-          <option value="Impact, sans-serif">Impact</option>
-          <option value="Comic Sans MS, cursive">Comic Sans MS</option>
-        </select>
-        <input type="color" 
-               [(ngModel)]="technologySectionConfig.sectionSubtitleColor"
-               (change)="onTechnologySectionColorChange()"
-               class="color-picker-inline"
-               title="Color">
+      <!-- Section Subtitle -->
+      <div class="editable-element">
+        <p *ngIf="!isEditingTechnologySection || editingTechnologySectionElement !== 'sectionSubtitle'"
+           [style.color]="technologySectionConfig.sectionSubtitleColor"
+           [style.font-family]="technologySectionConfig.sectionSubtitleFontFamily"
+           (click)="isEditingEnabled ? startInlineEditTechnologySection('sectionSubtitle') : null">
+          <span>{{ technologySectionConfig.sectionSubtitle }}</span>
+          <span class="edit-icon" *ngIf="isEditingTechnologySection && isEditingEnabled">✏️</span>
+        </p>
+        <textarea *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'sectionSubtitle'"
+                  [(ngModel)]="technologySectionConfig.sectionSubtitle"
+                  (blur)="stopInlineEditTechnologySection()"
+                  class="inline-edit-textarea"
+                  [style.color]="technologySectionConfig.sectionSubtitleColor"
+                  [style.font-family]="technologySectionConfig.sectionSubtitleFontFamily"
+                  placeholder="Enter section subtitle"
+                  title="Edit section subtitle"></textarea>
+        <div *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'sectionSubtitle'" class="inline-controls">
+          <select [(ngModel)]="technologySectionConfig.sectionSubtitleFontFamily" (change)="onTechnologySectionFontChange()" class="font-select-inline" title="Font Family">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Helvetica, sans-serif">Helvetica</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Impact, sans-serif">Impact</option>
+            <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+          </select>
+          <input type="color" 
+                 [(ngModel)]="technologySectionConfig.sectionSubtitleColor"
+                 (change)="onTechnologySectionColorChange()"
+                 class="color-picker-inline"
+                 title="Color">
+        </div>
       </div>
     </div>
     
-    <div class="technology-grid">
-      <div class="tech-card" *ngFor="let technology of technologySectionConfig.technologies; let i = index">
+    <div class="technologies-grid">
+      <div class="technology-card" *ngFor="let technology of technologySectionConfig.technologies; let i = index">
         <!-- Technology Icon -->
         <div class="editable-element">
-          <div class="tech-icon" *ngIf="!isEditingTechnologySection || editingTechnologySectionElement !== 'techIcon_' + i"
-               (click)="startInlineEditTechnologySection('techIcon_' + i)">
+          <div class="technology-icon" *ngIf="!isEditingTechnologySection || editingTechnologySectionElement !== 'technologyIcon_' + i"
+               (click)="isEditingEnabled ? startInlineEditTechnologySection('technologyIcon_' + i) : null">
             <span>{{ technology.icon }}</span>
-            <span class="edit-icon" *ngIf="isEditingTechnologySection">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingTechnologySection && isEditingEnabled">✏️</span>
           </div>
-          <input *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'techIcon_' + i"
+          <input *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'technologyIcon_' + i"
                  [(ngModel)]="technology.icon"
                  (blur)="stopInlineEditTechnologySection()"
                  (keyup.enter)="stopInlineEditTechnologySection()"
@@ -1097,14 +497,14 @@
 
         <!-- Technology Title -->
         <div class="editable-element">
-          <h3 *ngIf="!isEditingTechnologySection || editingTechnologySectionElement !== 'techTitle_' + i"
+          <h3 *ngIf="!isEditingTechnologySection || editingTechnologySectionElement !== 'technologyTitle_' + i"
               [style.color]="technologySectionConfig.cardTitleColor"
               [style.font-family]="technologySectionConfig.cardTitleFontFamily"
-              (click)="startInlineEditTechnologySection('techTitle_' + i)">
+              (click)="isEditingEnabled ? startInlineEditTechnologySection('technologyTitle_' + i) : null">
             <span>{{ technology.title }}</span>
-            <span class="edit-icon" *ngIf="isEditingTechnologySection">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingTechnologySection && isEditingEnabled">✏️</span>
           </h3>
-          <input *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'techTitle_' + i"
+          <input *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'technologyTitle_' + i"
                  [(ngModel)]="technology.title"
                  (blur)="stopInlineEditTechnologySection()"
                  (keyup.enter)="stopInlineEditTechnologySection()"
@@ -1113,7 +513,7 @@
                  [style.font-family]="technologySectionConfig.cardTitleFontFamily"
                  placeholder="Enter technology title"
                  title="Edit technology title">
-          <div *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'techTitle_' + i" class="inline-controls">
+          <div *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'technologyTitle_' + i" class="inline-controls">
             <select [(ngModel)]="technologySectionConfig.cardTitleFontFamily" (change)="onTechnologySectionFontChange()" class="font-select-inline" title="Font Family">
               <option value="Arial, sans-serif">Arial</option>
               <option value="Georgia, serif">Georgia</option>
@@ -1134,14 +534,14 @@
 
         <!-- Technology Description -->
         <div class="editable-element">
-          <p *ngIf="!isEditingTechnologySection || editingTechnologySectionElement !== 'techDescription_' + i"
+          <p *ngIf="!isEditingTechnologySection || editingTechnologySectionElement !== 'technologyDescription_' + i"
              [style.color]="technologySectionConfig.cardDescriptionColor"
              [style.font-family]="technologySectionConfig.cardDescriptionFontFamily"
-             (click)="startInlineEditTechnologySection('techDescription_' + i)">
+             (click)="isEditingEnabled ? startInlineEditTechnologySection('technologyDescription_' + i) : null">
             <span>{{ technology.description }}</span>
-            <span class="edit-icon" *ngIf="isEditingTechnologySection">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingTechnologySection && isEditingEnabled">✏️</span>
           </p>
-          <textarea *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'techDescription_' + i"
+          <textarea *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'technologyDescription_' + i"
                     [(ngModel)]="technology.description"
                     (blur)="stopInlineEditTechnologySection()"
                     class="inline-edit-textarea"
@@ -1149,7 +549,7 @@
                     [style.font-family]="technologySectionConfig.cardDescriptionFontFamily"
                     placeholder="Enter technology description"
                     title="Edit technology description"></textarea>
-          <div *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'techDescription_' + i" class="inline-controls">
+          <div *ngIf="isEditingTechnologySection && editingTechnologySectionElement === 'technologyDescription_' + i" class="inline-controls">
             <select [(ngModel)]="technologySectionConfig.cardDescriptionFontFamily" (change)="onTechnologySectionFontChange()" class="font-select-inline" title="Font Family">
               <option value="Arial, sans-serif">Arial</option>
               <option value="Georgia, serif">Georgia</option>
@@ -1165,26 +565,21 @@
                    (change)="onTechnologySectionColorChange()"
                    class="color-picker-inline"
                    title="Color">
+            <button type="button" class="remove-item-btn" (click)="removeTechnologySectionTechnology(i)" title="Remove Technology">🗑️</button>
           </div>
         </div>
-
-        <!-- Remove Technology Button -->
-        <button *ngIf="isEditingTechnologySection && technologySectionConfig.technologies.length > 1" 
-                type="button" class="remove-service-btn" (click)="removeTechnologySectionTechnology(i)" title="Remove Technology">
-          🗑️ Remove Technology
-        </button>
       </div>
 
       <!-- Add Technology Button -->
-      <div *ngIf="isEditingTechnologySection" class="add-service-card">
-        <button type="button" class="add-service-btn" (click)="addTechnologySectionTechnology()" title="Add Technology">
+      <div *ngIf="isEditingTechnologySection" class="add-technology-card">
+        <button type="button" class="add-technology-btn" (click)="addTechnologySectionTechnology()" title="Add Technology">
           + Add New Technology
         </button>
       </div>
     </div>
 
     <!-- Global Styling Controls (only when editing) -->
-    <div class="global-styling-controls" *ngIf="isEditingTechnologySection">
+    <div class="global-styling-controls" *ngIf="isEditingTechnologySection && isEditingEnabled">
       <h4>Section Styling</h4>
       <div class="styling-row">
         <div class="styling-item">
@@ -1199,7 +594,7 @@
     </div>
 
     <!-- Edit Actions (only when editing) -->
-    <div class="edit-actions" *ngIf="isEditingTechnologySection">
+    <div class="edit-actions" *ngIf="isEditingTechnologySection && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingTechnologySection()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingTechnologySection()">Cancel</button>
       <button class="reset-btn" (click)="resetTechnologySectionToOriginal()">Reset to Original</button>

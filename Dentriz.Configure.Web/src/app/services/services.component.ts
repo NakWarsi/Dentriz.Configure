@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../environments/environment';
 import { ServicesHeroApiService, SimpleServicesHeroConfig } from './services/services-hero-api.service';
-import { PreventiveCareApiService, SimplePreventiveCareConfig } from './services/preventive-care-api.service';
-import { RestorativeCareApiService, SimpleRestorativeCareConfig } from './services/restorative-care-api.service';
-import { CosmeticServicesApiService, SimpleCosmeticServicesConfig } from './services/cosmetic-services-api.service';
 import { TechnologySectionApiService, SimpleTechnologySectionConfig } from './services/technology-section-api.service';
+import { ServicesApiService, SimpleServicesConfig, Service } from './services/services-api.service';
 
 @Component({
   selector: 'app-services',
@@ -15,6 +14,9 @@ import { TechnologySectionApiService, SimpleTechnologySectionConfig } from './se
   styleUrl: './services.component.css'
 })
 export class ServicesComponent implements OnInit {
+  // Environment configuration
+  isEditingEnabled = environment.enableEditing;
+  
   // Services Hero Configuration
   servicesHeroConfig: SimpleServicesHeroConfig | null = null;
   originalServicesHeroConfig: SimpleServicesHeroConfig | null = null;
@@ -23,29 +25,14 @@ export class ServicesComponent implements OnInit {
   isEditingServicesHero = false;
   editingServicesHeroElement: string | null = null;
 
-  // Preventive Care Configuration
-  preventiveCareConfig: SimplePreventiveCareConfig | null = null;
-  originalPreventiveCareConfig: SimplePreventiveCareConfig | null = null;
-  preventiveCareLoading = false;
-  preventiveCareError = false;
-  isEditingPreventiveCare = false;
-  editingPreventiveCareElement: string | null = null;
-
-  // Restorative Care Configuration
-  restorativeCareConfig: SimpleRestorativeCareConfig | null = null;
-  originalRestorativeCareConfig: SimpleRestorativeCareConfig | null = null;
-  restorativeCareLoading = false;
-  restorativeCareError = false;
-  isEditingRestorativeCare = false;
-  editingRestorativeCareElement: string | null = null;
-
-  // Cosmetic Services Configuration
-  cosmeticServicesConfig: SimpleCosmeticServicesConfig | null = null;
-  originalCosmeticServicesConfig: SimpleCosmeticServicesConfig | null = null;
-  cosmeticServicesLoading = false;
-  cosmeticServicesError = false;
-  isEditingCosmeticServices = false;
-  editingCosmeticServicesElement: string | null = null;
+  // Services Configuration (Unified)
+  servicesConfig: SimpleServicesConfig | null = null;
+  originalServicesConfig: SimpleServicesConfig | null = null;
+  servicesLoading = false;
+  servicesError = false;
+  isEditingServices = false;
+  editingServicesElement: string | null = null;
+  currentEditingService: Service | null = null;
 
   // Technology Section Configuration
   technologySectionConfig: SimpleTechnologySectionConfig | null = null;
@@ -79,17 +66,13 @@ export class ServicesComponent implements OnInit {
 
   constructor(
     private servicesHeroApiService: ServicesHeroApiService,
-    private preventiveCareApiService: PreventiveCareApiService,
-    private restorativeCareApiService: RestorativeCareApiService,
-    private cosmeticServicesApiService: CosmeticServicesApiService,
-    private technologySectionApiService: TechnologySectionApiService
+    private technologySectionApiService: TechnologySectionApiService,
+    private servicesApiService: ServicesApiService
   ) {}
 
   ngOnInit() {
     this.loadServicesHeroConfig();
-    this.loadPreventiveCareConfig();
-    this.loadRestorativeCareConfig();
-    this.loadCosmeticServicesConfig();
+    this.loadServicesConfig();
     this.loadTechnologySectionConfig();
   }
 
@@ -164,80 +147,90 @@ export class ServicesComponent implements OnInit {
     // The actual saving happens when the user clicks "Save Changes"
   }
 
-  // Preventive Care Configuration Methods
-  loadPreventiveCareConfig() {
-    this.preventiveCareLoading = true;
-    this.preventiveCareError = false;
+  // Services Configuration Methods (Unified)
+  loadServicesConfig() {
+    this.servicesLoading = true;
+    this.servicesError = false;
 
-    this.preventiveCareApiService.loadConfig().subscribe({
+    this.servicesApiService.loadConfig().subscribe({
       next: (config) => {
-        this.preventiveCareConfig = config;
-        this.originalPreventiveCareConfig = JSON.parse(JSON.stringify(config));
-        this.preventiveCareLoading = false;
+        this.servicesConfig = config;
+        this.originalServicesConfig = JSON.parse(JSON.stringify(config));
+        this.servicesLoading = false;
       },
       error: (error) => {
-        console.error('Error loading preventive care config:', error);
-        this.preventiveCareError = true;
-        this.preventiveCareLoading = false;
+        console.error('Error loading services config:', error);
+        this.servicesError = true;
+        this.servicesLoading = false;
       }
     });
   }
 
-  startEditingPreventiveCare() {
-    this.isEditingPreventiveCare = true;
+  startEditingServices() {
+    this.isEditingServices = true;
   }
 
-  stopEditingPreventiveCare() {
-    if (this.preventiveCareConfig) {
-      this.preventiveCareApiService.saveConfig(this.preventiveCareConfig).subscribe({
+  stopEditingServices() {
+    if (this.servicesConfig) {
+      this.servicesApiService.saveConfig(this.servicesConfig).subscribe({
         next: () => {
-          this.originalPreventiveCareConfig = JSON.parse(JSON.stringify(this.preventiveCareConfig!));
-          this.isEditingPreventiveCare = false;
-          this.editingPreventiveCareElement = null;
+          this.originalServicesConfig = JSON.parse(JSON.stringify(this.servicesConfig!));
+          this.isEditingServices = false;
+          this.editingServicesElement = null;
+          this.currentEditingService = null;
         },
         error: (error) => {
-          console.error('Error saving preventive care config:', error);
+          console.error('Error saving services config:', error);
           alert('Error saving changes. Please try again.');
         }
       });
     }
   }
 
-  cancelEditingPreventiveCare() {
-    if (this.originalPreventiveCareConfig) {
-      this.preventiveCareConfig = JSON.parse(JSON.stringify(this.originalPreventiveCareConfig));
+  cancelEditingServices() {
+    if (this.originalServicesConfig) {
+      this.servicesConfig = JSON.parse(JSON.stringify(this.originalServicesConfig));
     }
-    this.isEditingPreventiveCare = false;
-    this.editingPreventiveCareElement = null;
+    this.isEditingServices = false;
+    this.editingServicesElement = null;
+    this.currentEditingService = null;
   }
 
-  resetPreventiveCareToOriginal() {
-    if (this.originalPreventiveCareConfig) {
-      this.preventiveCareConfig = JSON.parse(JSON.stringify(this.originalPreventiveCareConfig));
+  resetServicesToOriginal() {
+    if (this.originalServicesConfig) {
+      this.servicesConfig = JSON.parse(JSON.stringify(this.originalServicesConfig));
     }
   }
 
-  startInlineEditPreventiveCare(element: string) {
-    this.editingPreventiveCareElement = element;
+  startInlineEditServices(element: string) {
+    this.editingServicesElement = element;
   }
 
-  stopInlineEditPreventiveCare() {
-    this.editingPreventiveCareElement = null;
+  stopInlineEditServices() {
+    this.editingServicesElement = null;
   }
 
-  onPreventiveCareColorChange() {
+  onServicesColorChange() {
     // This method is called when any color input changes
     // The actual saving happens when the user clicks "Save Changes"
   }
 
-  onPreventiveCareFontChange() {
+  onServicesFontChange() {
     // This method is called when any font input changes
     // The actual saving happens when the user clicks "Save Changes"
   }
 
-  addPreventiveCareService() {
-    if (this.preventiveCareConfig) {
-      this.preventiveCareConfig.services.push({
+  getServiceByTitle(title: string): Service | null {
+    if (!this.servicesConfig) return null;
+    return this.servicesConfig.serviceList.find(service => 
+      service.sectionTitle.toLowerCase() === title.toLowerCase()
+    ) || null;
+  }
+
+  addServiceItem(serviceTitle: string) {
+    const service = this.getServiceByTitle(serviceTitle);
+    if (service) {
+      service.services.push({
         icon: '🦷',
         title: 'New Service',
         description: 'Service description',
@@ -246,223 +239,27 @@ export class ServicesComponent implements OnInit {
     }
   }
 
-  removePreventiveCareService(index: number) {
-    if (this.preventiveCareConfig && this.preventiveCareConfig.services.length > 1) {
-      this.preventiveCareConfig.services.splice(index, 1);
+  removeServiceItem(serviceTitle: string, index: number) {
+    const service = this.getServiceByTitle(serviceTitle);
+    if (service && service.services.length > 1) {
+      service.services.splice(index, 1);
     }
   }
 
-  addPreventiveCareFeature(serviceIndex: number) {
-    if (this.preventiveCareConfig) {
-      this.preventiveCareConfig.services[serviceIndex].features.push('New Feature');
+  addServiceFeature(serviceTitle: string, serviceIndex: number) {
+    const service = this.getServiceByTitle(serviceTitle);
+    if (service) {
+      service.services[serviceIndex].features.push('New Feature');
     }
   }
 
-  removePreventiveCareFeature(serviceIndex: number, featureIndex: number) {
-    if (this.preventiveCareConfig) {
-      this.preventiveCareConfig.services[serviceIndex].features.splice(featureIndex, 1);
+  removeServiceFeature(serviceTitle: string, serviceIndex: number, featureIndex: number) {
+    const service = this.getServiceByTitle(serviceTitle);
+    if (service) {
+      service.services[serviceIndex].features.splice(featureIndex, 1);
     }
   }
 
-  // Restorative Care Configuration Methods
-  loadRestorativeCareConfig() {
-    this.restorativeCareLoading = true;
-    this.restorativeCareError = false;
-
-    this.restorativeCareApiService.loadConfig().subscribe({
-      next: (config) => {
-        this.restorativeCareConfig = config;
-        this.originalRestorativeCareConfig = JSON.parse(JSON.stringify(config));
-        this.restorativeCareLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading restorative care config:', error);
-        this.restorativeCareError = true;
-        this.restorativeCareLoading = false;
-      }
-    });
-  }
-
-  startEditingRestorativeCare() {
-    this.isEditingRestorativeCare = true;
-  }
-
-  stopEditingRestorativeCare() {
-    if (this.restorativeCareConfig) {
-      this.restorativeCareApiService.saveConfig(this.restorativeCareConfig).subscribe({
-        next: () => {
-          this.originalRestorativeCareConfig = JSON.parse(JSON.stringify(this.restorativeCareConfig!));
-          this.isEditingRestorativeCare = false;
-          this.editingRestorativeCareElement = null;
-        },
-        error: (error) => {
-          console.error('Error saving restorative care config:', error);
-          alert('Error saving changes. Please try again.');
-        }
-      });
-    }
-  }
-
-  cancelEditingRestorativeCare() {
-    if (this.originalRestorativeCareConfig) {
-      this.restorativeCareConfig = JSON.parse(JSON.stringify(this.originalRestorativeCareConfig));
-    }
-    this.isEditingRestorativeCare = false;
-    this.editingRestorativeCareElement = null;
-  }
-
-  resetRestorativeCareToOriginal() {
-    if (this.originalRestorativeCareConfig) {
-      this.restorativeCareConfig = JSON.parse(JSON.stringify(this.originalRestorativeCareConfig));
-    }
-  }
-
-  startInlineEditRestorativeCare(element: string) {
-    this.editingRestorativeCareElement = element;
-  }
-
-  stopInlineEditRestorativeCare() {
-    this.editingRestorativeCareElement = null;
-  }
-
-  onRestorativeCareColorChange() {
-    // This method is called when any color input changes
-    // The actual saving happens when the user clicks "Save Changes"
-  }
-
-  onRestorativeCareFontChange() {
-    // This method is called when any font input changes
-    // The actual saving happens when the user clicks "Save Changes"
-  }
-
-  addRestorativeCareService() {
-    if (this.restorativeCareConfig) {
-      this.restorativeCareConfig.services.push({
-        icon: '🦷',
-        title: 'New Service',
-        description: 'Service description',
-        features: ['Feature 1', 'Feature 2']
-      });
-    }
-  }
-
-  removeRestorativeCareService(index: number) {
-    if (this.restorativeCareConfig && this.restorativeCareConfig.services.length > 1) {
-      this.restorativeCareConfig.services.splice(index, 1);
-    }
-  }
-
-  addRestorativeCareFeature(serviceIndex: number) {
-    if (this.restorativeCareConfig) {
-      this.restorativeCareConfig.services[serviceIndex].features.push('New Feature');
-    }
-  }
-
-  removeRestorativeCareFeature(serviceIndex: number, featureIndex: number) {
-    if (this.restorativeCareConfig) {
-      this.restorativeCareConfig.services[serviceIndex].features.splice(featureIndex, 1);
-    }
-  }
-
-  // Cosmetic Services Configuration Methods
-  loadCosmeticServicesConfig() {
-    this.cosmeticServicesLoading = true;
-    this.cosmeticServicesError = false;
-
-    this.cosmeticServicesApiService.loadConfig().subscribe({
-      next: (config) => {
-        this.cosmeticServicesConfig = config;
-        this.originalCosmeticServicesConfig = JSON.parse(JSON.stringify(config));
-        this.cosmeticServicesLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading cosmetic services config:', error);
-        this.cosmeticServicesError = true;
-        this.cosmeticServicesLoading = false;
-      }
-    });
-  }
-
-  startEditingCosmeticServices() {
-    this.isEditingCosmeticServices = true;
-  }
-
-  stopEditingCosmeticServices() {
-    if (this.cosmeticServicesConfig) {
-      this.cosmeticServicesApiService.saveConfig(this.cosmeticServicesConfig).subscribe({
-        next: () => {
-          this.originalCosmeticServicesConfig = JSON.parse(JSON.stringify(this.cosmeticServicesConfig!));
-          this.isEditingCosmeticServices = false;
-          this.editingCosmeticServicesElement = null;
-        },
-        error: (error) => {
-          console.error('Error saving cosmetic services config:', error);
-          alert('Error saving changes. Please try again.');
-        }
-      });
-    }
-  }
-
-  cancelEditingCosmeticServices() {
-    if (this.originalCosmeticServicesConfig) {
-      this.cosmeticServicesConfig = JSON.parse(JSON.stringify(this.originalCosmeticServicesConfig));
-    }
-    this.isEditingCosmeticServices = false;
-    this.editingCosmeticServicesElement = null;
-  }
-
-  resetCosmeticServicesToOriginal() {
-    if (this.originalCosmeticServicesConfig) {
-      this.cosmeticServicesConfig = JSON.parse(JSON.stringify(this.originalCosmeticServicesConfig));
-    }
-  }
-
-  startInlineEditCosmeticServices(element: string) {
-    this.editingCosmeticServicesElement = element;
-  }
-
-  stopInlineEditCosmeticServices() {
-    this.editingCosmeticServicesElement = null;
-  }
-
-  onCosmeticServicesColorChange() {
-    // This method is called when any color input changes
-    // The actual saving happens when the user clicks "Save Changes"
-  }
-
-  onCosmeticServicesFontChange() {
-    // This method is called when any font input changes
-    // The actual saving happens when the user clicks "Save Changes"
-  }
-
-  addCosmeticServicesService() {
-    if (this.cosmeticServicesConfig) {
-      this.cosmeticServicesConfig.services.push({
-        icon: '🦷',
-        title: 'New Service',
-        description: 'Service description',
-        features: ['Feature 1', 'Feature 2']
-      });
-    }
-  }
-
-  removeCosmeticServicesService(index: number) {
-    if (this.cosmeticServicesConfig && this.cosmeticServicesConfig.services.length > 1) {
-      this.cosmeticServicesConfig.services.splice(index, 1);
-    }
-  }
-
-  addCosmeticServicesFeature(serviceIndex: number) {
-    if (this.cosmeticServicesConfig) {
-      this.cosmeticServicesConfig.services[serviceIndex].features.push('New Feature');
-    }
-  }
-
-  removeCosmeticServicesFeature(serviceIndex: number, featureIndex: number) {
-    if (this.cosmeticServicesConfig) {
-      this.cosmeticServicesConfig.services[serviceIndex].features.splice(featureIndex, 1);
-    }
-  }
 
   // Technology Section Configuration Methods
   loadTechnologySectionConfig() {

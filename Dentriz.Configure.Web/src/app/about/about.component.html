@@ -4,7 +4,7 @@
          [style.background-color]="doctorsConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingDoctors">
+    <div class="floating-edit-btn" *ngIf="!isEditingDoctors && isEditingEnabled">
       <button class="edit-btn-floating" (click)="startEditingDoctors()" title="Edit Doctors Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -16,9 +16,9 @@
           *ngIf="!isEditingDoctors || editingDoctorsElement !== 'sectionTitle'"
           [style.color]="doctorsConfig.sectionTitleColor"
           [style.font-family]="doctorsConfig.sectionTitleFontFamily"
-          (click)="startInlineEditDoctors('sectionTitle')">
+          (click)="isEditingEnabled ? startInlineEditDoctors('sectionTitle') : null">
         {{ doctorsConfig.sectionTitle }}
-        <span class="edit-icon" *ngIf="isEditingDoctors">✏️</span>
+        <span class="edit-icon" *ngIf="isEditingDoctors && isEditingEnabled">✏️</span>
       </h2>
       <input *ngIf="isEditingDoctors && editingDoctorsElement === 'sectionTitle'"
              [(ngModel)]="doctorsConfig.sectionTitle"
@@ -54,9 +54,9 @@
          *ngIf="!isEditingDoctors || editingDoctorsElement !== 'sectionSubtitle'"
          [style.color]="doctorsConfig.sectionSubtitleColor"
          [style.font-family]="doctorsConfig.sectionSubtitleFontFamily"
-         (click)="startInlineEditDoctors('sectionSubtitle')">
+         (click)="isEditingEnabled ? startInlineEditDoctors('sectionSubtitle') : null">
         {{ doctorsConfig.sectionSubtitle }}
-        <span class="edit-icon" *ngIf="isEditingDoctors">✏️</span>
+        <span class="edit-icon" *ngIf="isEditingDoctors && isEditingEnabled">✏️</span>
       </p>
       <textarea *ngIf="isEditingDoctors && editingDoctorsElement === 'sectionSubtitle'"
                 [(ngModel)]="doctorsConfig.sectionSubtitle"
@@ -95,9 +95,9 @@
               <h3 *ngIf="!isEditingDoctors || editingDoctorsElement !== 'doctorName_' + currentDoctorIndex"
                   [style.color]="doctorsConfig.doctorNameColor"
                   [style.font-family]="doctorsConfig.doctorNameFontFamily"
-                  (click)="startInlineEditDoctors('doctorName_' + currentDoctorIndex)">
+                  (click)="isEditingEnabled ? startInlineEditDoctors('doctorName_' + currentDoctorIndex) : null">
                 {{ currentDoctors[currentDoctorIndex].name }}
-                <span class="edit-icon" *ngIf="isEditingDoctors">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingDoctors && isEditingEnabled">✏️</span>
               </h3>
               <input *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorName_' + currentDoctorIndex"
                      [(ngModel)]="currentDoctors[currentDoctorIndex].name"
@@ -133,9 +133,9 @@
                  *ngIf="!isEditingDoctors || editingDoctorsElement !== 'doctorTitle_' + currentDoctorIndex"
                  [style.color]="doctorsConfig.doctorTitleColor"
                  [style.font-family]="doctorsConfig.doctorTitleFontFamily"
-                 (click)="startInlineEditDoctors('doctorTitle_' + currentDoctorIndex)">
+                 (click)="isEditingEnabled ? startInlineEditDoctors('doctorTitle_' + currentDoctorIndex) : null">
                 {{ currentDoctors[currentDoctorIndex].title }}
-                <span class="edit-icon" *ngIf="isEditingDoctors">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingDoctors && isEditingEnabled">✏️</span>
               </p>
               <input *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorTitle_' + currentDoctorIndex"
                      [(ngModel)]="currentDoctors[currentDoctorIndex].title"
@@ -171,7 +171,7 @@
                 <p *ngIf="!isEditingDoctors || editingDoctorsElement !== 'doctorBio_' + currentDoctorIndex + '_' + bioIndex"
                    [style.color]="doctorsConfig.doctorBioColor"
                    [style.font-family]="doctorsConfig.doctorBioFontFamily"
-                   (click)="startInlineEditDoctors('doctorBio_' + currentDoctorIndex + '_' + bioIndex)"
+                   (click)="isEditingEnabled ? startInlineEditDoctors('doctorBio_' + currentDoctorIndex + '_' + bioIndex) : null"
                    [innerHTML]="paragraph">
                 </p>
                 <textarea *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorBio_' + currentDoctorIndex + '_' + bioIndex"
@@ -222,9 +222,9 @@
                 <span *ngIf="!isEditingDoctors || editingDoctorsElement !== 'doctorSpecialty_' + currentDoctorIndex + '_' + specialtyIndex"
                       [style.color]="doctorsConfig.specialtyColor"
                       [style.font-family]="doctorsConfig.specialtyFontFamily"
-                      (click)="startInlineEditDoctors('doctorSpecialty_' + currentDoctorIndex + '_' + specialtyIndex)">
+                      (click)="isEditingEnabled ? startInlineEditDoctors('doctorSpecialty_' + currentDoctorIndex + '_' + specialtyIndex) : null">
                   {{ specialty }}
-                  <span class="edit-icon" *ngIf="isEditingDoctors">✏️</span>
+                  <span class="edit-icon" *ngIf="isEditingDoctors && isEditingEnabled">✏️</span>
                 </span>
                 <input *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorSpecialty_' + currentDoctorIndex + '_' + specialtyIndex"
                        [(ngModel)]="currentDoctors[currentDoctorIndex].specialties[specialtyIndex]"
@@ -285,9 +285,9 @@
               <span *ngIf="!isEditingDoctors || editingDoctorsElement !== 'doctorTitle2_' + currentDoctorIndex"
                     [style.color]="doctorsConfig.doctorTitleColor"
                     [style.font-family]="doctorsConfig.doctorTitleFontFamily"
-                    (click)="startInlineEditDoctors('doctorTitle2_' + currentDoctorIndex)">
+                    (click)="isEditingEnabled ? startInlineEditDoctors('doctorTitle2_' + currentDoctorIndex) : null">
                 {{ currentDoctors[currentDoctorIndex].title }}
-                <span class="edit-icon" *ngIf="isEditingDoctors">✏️</span>
+                <span class="edit-icon" *ngIf="isEditingDoctors && isEditingEnabled">✏️</span>
               </span>
               <input *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorTitle2_' + currentDoctorIndex"
                      [(ngModel)]="currentDoctors[currentDoctorIndex].title"
@@ -323,9 +323,9 @@
                 <span *ngIf="!isEditingDoctors || editingDoctorsElement !== 'doctorTitle3_' + currentDoctorIndex"
                       [style.color]="doctorsConfig.doctorTitleColor"
                       [style.font-family]="doctorsConfig.doctorTitleFontFamily"
-                      (click)="startInlineEditDoctors('doctorTitle3_' + currentDoctorIndex)">
+                      (click)="isEditingEnabled ? startInlineEditDoctors('doctorTitle3_' + currentDoctorIndex) : null">
                   {{ currentDoctors[currentDoctorIndex].title2 }}
-                  <span class="edit-icon" *ngIf="isEditingDoctors">✏️</span>
+                  <span class="edit-icon" *ngIf="isEditingDoctors && isEditingEnabled">✏️</span>
                 </span>
                 <input *ngIf="isEditingDoctors && editingDoctorsElement === 'doctorTitle3_' + currentDoctorIndex"
                        [(ngModel)]="currentDoctors[currentDoctorIndex].title2"
@@ -387,7 +387,7 @@
     </div>
 
     <!-- Global Styling Controls (only when editing) -->
-    <div class="global-styling-controls" *ngIf="isEditingDoctors">
+    <div class="global-styling-controls" *ngIf="isEditingDoctors && isEditingEnabled">
       <h4>Section Background</h4>
       <div class="styling-row">
         <div class="styling-item">
@@ -402,7 +402,7 @@
     </div>
 
     <!-- Edit Actions (only when editing) -->
-    <div class="edit-actions" *ngIf="isEditingDoctors">
+    <div class="edit-actions" *ngIf="isEditingDoctors && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingDoctors()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingDoctors()">Cancel</button>
       <button class="reset-btn" (click)="resetDoctorsToOriginal()">Reset to Original</button>
@@ -426,7 +426,7 @@
          [style.background-color]="valuesConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingValues">
+    <div class="floating-edit-btn" *ngIf="!isEditingValues && isEditingEnabled">
       <button class="edit-btn-floating" (click)="startEditingValues()" title="Edit Values Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -438,9 +438,9 @@
           *ngIf="!isEditingValues || editingValuesElement !== 'sectionTitle'"
           [style.color]="valuesConfig.sectionTitleColor"
           [style.font-family]="valuesConfig.sectionTitleFontFamily"
-          (click)="startInlineEditValues('sectionTitle')">
+          (click)="isEditingEnabled ? startInlineEditValues('sectionTitle') : null">
         {{ valuesConfig.sectionTitle }}
-        <span class="edit-icon" *ngIf="isEditingValues">✏️</span>
+        <span class="edit-icon" *ngIf="isEditingValues && isEditingEnabled">✏️</span>
       </h2>
       <input *ngIf="isEditingValues && editingValuesElement === 'sectionTitle'"
              [(ngModel)]="valuesConfig.sectionTitle"
@@ -476,9 +476,9 @@
         <div class="editable-element">
           <div class="value-icon" 
                *ngIf="!isEditingValues || editingValuesElement !== 'valueIcon_' + i"
-               (click)="startInlineEditValues('valueIcon_' + i)">
+               (click)="isEditingEnabled ? startInlineEditValues('valueIcon_' + i) : null">
             {{ value.icon }}
-            <span class="edit-icon" *ngIf="isEditingValues">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingValues && isEditingEnabled">✏️</span>
           </div>
           <input *ngIf="isEditingValues && editingValuesElement === 'valueIcon_' + i"
                  [(ngModel)]="value.icon"
@@ -494,9 +494,9 @@
           <h3 *ngIf="!isEditingValues || editingValuesElement !== 'valueTitle_' + i"
               [style.color]="valuesConfig.valueTitleColor"
               [style.font-family]="valuesConfig.valueTitleFontFamily"
-              (click)="startInlineEditValues('valueTitle_' + i)">
+              (click)="isEditingEnabled ? startInlineEditValues('valueTitle_' + i) : null">
             {{ value.title }}
-            <span class="edit-icon" *ngIf="isEditingValues">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingValues && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingValues && editingValuesElement === 'valueTitle_' + i"
                  [(ngModel)]="value.title"
@@ -537,9 +537,9 @@
           <p *ngIf="!isEditingValues || editingValuesElement !== 'valueDescription_' + i"
              [style.color]="valuesConfig.valueDescriptionColor"
              [style.font-family]="valuesConfig.valueDescriptionFontFamily"
-             (click)="startInlineEditValues('valueDescription_' + i)">
+             (click)="isEditingEnabled ? startInlineEditValues('valueDescription_' + i) : null">
             {{ value.description }}
-            <span class="edit-icon" *ngIf="isEditingValues">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingValues && isEditingEnabled">✏️</span>
           </p>
           <textarea *ngIf="isEditingValues && editingValuesElement === 'valueDescription_' + i"
                     [(ngModel)]="value.description"
@@ -579,7 +579,7 @@
     </div>
 
     <!-- Global Styling Controls (only when editing) -->
-    <div class="global-styling-controls" *ngIf="isEditingValues">
+    <div class="global-styling-controls" *ngIf="isEditingValues && isEditingEnabled">
       <h4>Section Background</h4>
       <div class="styling-row">
         <div class="styling-item">
@@ -594,7 +594,7 @@
     </div>
 
     <!-- Edit Actions (only when editing) -->
-    <div class="edit-actions" *ngIf="isEditingValues">
+    <div class="edit-actions" *ngIf="isEditingValues && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingValues()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingValues()">Cancel</button>
       <button class="reset-btn" (click)="resetValuesToOriginal()">Reset to Original</button>
@@ -618,7 +618,7 @@
          [style.background-color]="technologyConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingTechnology">
+    <div class="floating-edit-btn" *ngIf="!isEditingTechnology && isEditingEnabled">
       <button class="edit-btn-floating" (click)="startEditingTechnology()" title="Edit Technology Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -630,9 +630,9 @@
           *ngIf="!isEditingTechnology || editingTechnologyElement !== 'sectionTitle'"
           [style.color]="technologyConfig.sectionTitleColor"
           [style.font-family]="technologyConfig.sectionTitleFontFamily"
-          (click)="startInlineEditTechnology('sectionTitle')">
+          (click)="isEditingEnabled ? startInlineEditTechnology('sectionTitle') : null">
         {{ technologyConfig.sectionTitle }}
-        <span class="edit-icon" *ngIf="isEditingTechnology">✏️</span>
+        <span class="edit-icon" *ngIf="isEditingTechnology && isEditingEnabled">✏️</span>
       </h2>
       <input *ngIf="isEditingTechnology && editingTechnologyElement === 'sectionTitle'"
              [(ngModel)]="technologyConfig.sectionTitle"
@@ -668,9 +668,9 @@
          *ngIf="!isEditingTechnology || editingTechnologyElement !== 'sectionSubtitle'"
          [style.color]="technologyConfig.sectionSubtitleColor"
          [style.font-family]="technologyConfig.sectionSubtitleFontFamily"
-         (click)="startInlineEditTechnology('sectionSubtitle')">
+         (click)="isEditingEnabled ? startInlineEditTechnology('sectionSubtitle') : null">
         {{ technologyConfig.sectionSubtitle }}
-        <span class="edit-icon" *ngIf="isEditingTechnology">✏️</span>
+        <span class="edit-icon" *ngIf="isEditingTechnology && isEditingEnabled">✏️</span>
       </p>
       <textarea *ngIf="isEditingTechnology && editingTechnologyElement === 'sectionSubtitle'"
                 [(ngModel)]="technologyConfig.sectionSubtitle"
@@ -706,9 +706,9 @@
         <div class="editable-element">
           <div class="tech-icon" 
                *ngIf="!isEditingTechnology || editingTechnologyElement !== 'techIcon_' + i"
-               (click)="startInlineEditTechnology('techIcon_' + i)">
+               (click)="isEditingEnabled ? startInlineEditTechnology('techIcon_' + i) : null">
             {{ tech.icon }}
-            <span class="edit-icon" *ngIf="isEditingTechnology">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingTechnology && isEditingEnabled">✏️</span>
           </div>
           <input *ngIf="isEditingTechnology && editingTechnologyElement === 'techIcon_' + i"
                  [(ngModel)]="tech.icon"
@@ -724,9 +724,9 @@
           <h3 *ngIf="!isEditingTechnology || editingTechnologyElement !== 'techTitle_' + i"
               [style.color]="technologyConfig.techTitleColor"
               [style.font-family]="technologyConfig.techTitleFontFamily"
-              (click)="startInlineEditTechnology('techTitle_' + i)">
+              (click)="isEditingEnabled ? startInlineEditTechnology('techTitle_' + i) : null">
             {{ tech.title }}
-            <span class="edit-icon" *ngIf="isEditingTechnology">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingTechnology && isEditingEnabled">✏️</span>
           </h3>
           <input *ngIf="isEditingTechnology && editingTechnologyElement === 'techTitle_' + i"
                  [(ngModel)]="tech.title"
@@ -767,9 +767,9 @@
           <p *ngIf="!isEditingTechnology || editingTechnologyElement !== 'techDescription_' + i"
              [style.color]="technologyConfig.techDescriptionColor"
              [style.font-family]="technologyConfig.techDescriptionFontFamily"
-             (click)="startInlineEditTechnology('techDescription_' + i)">
+             (click)="isEditingEnabled ? startInlineEditTechnology('techDescription_' + i) : null">
             {{ tech.description }}
-            <span class="edit-icon" *ngIf="isEditingTechnology">✏️</span>
+            <span class="edit-icon" *ngIf="isEditingTechnology && isEditingEnabled">✏️</span>
           </p>
           <textarea *ngIf="isEditingTechnology && editingTechnologyElement === 'techDescription_' + i"
                     [(ngModel)]="tech.description"
@@ -809,7 +809,7 @@
     </div>
 
     <!-- Global Styling Controls (only when editing) -->
-    <div class="global-styling-controls" *ngIf="isEditingTechnology">
+    <div class="global-styling-controls" *ngIf="isEditingTechnology && isEditingEnabled">
       <h4>Section Background</h4>
       <div class="styling-row">
         <div class="styling-item">
@@ -824,7 +824,7 @@
     </div>
 
     <!-- Edit Actions (only when editing) -->
-    <div class="edit-actions" *ngIf="isEditingTechnology">
+    <div class="edit-actions" *ngIf="isEditingTechnology && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingTechnology()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingTechnology()">Cancel</button>
       <button class="reset-btn" (click)="resetTechnologyToOriginal()">Reset to Original</button>
@@ -848,7 +848,7 @@
          [style.background-color]="testimonialsConfig.backgroundColor">
   <div class="container">
     <!-- Floating Edit Button -->
-    <div class="floating-edit-btn" *ngIf="!isEditingTestimonials">
+    <div class="floating-edit-btn" *ngIf="!isEditingTestimonials && isEditingEnabled">
       <button class="edit-btn-floating" (click)="startEditingTestimonials()" title="Edit Testimonials Section">
         <span class="edit-icon-floating">✏️</span>
       </button>
@@ -860,9 +860,9 @@
           *ngIf="!isEditingTestimonials || editingTestimonialsElement !== 'sectionTitle'"
           [style.color]="testimonialsConfig.sectionTitleColor"
           [style.font-family]="testimonialsConfig.sectionTitleFontFamily"
-          (click)="startInlineEditTestimonials('sectionTitle')">
+          (click)="isEditingEnabled ? startInlineEditTestimonials('sectionTitle') : null">
         {{ testimonialsConfig.sectionTitle }}
-        <span class="edit-icon" *ngIf="isEditingTestimonials">✏️</span>
+        <span class="edit-icon" *ngIf="isEditingTestimonials && isEditingEnabled">✏️</span>
       </h2>
       <input *ngIf="isEditingTestimonials && editingTestimonialsElement === 'sectionTitle'"
              [(ngModel)]="testimonialsConfig.sectionTitle"
@@ -898,9 +898,9 @@
          *ngIf="!isEditingTestimonials || editingTestimonialsElement !== 'sectionSubtitle'"
          [style.color]="testimonialsConfig.sectionSubtitleColor"
          [style.font-family]="testimonialsConfig.sectionSubtitleFontFamily"
-         (click)="startInlineEditTestimonials('sectionSubtitle')">
+         (click)="isEditingEnabled ? startInlineEditTestimonials('sectionSubtitle') : null">
         {{ testimonialsConfig.sectionSubtitle }}
-        <span class="edit-icon" *ngIf="isEditingTestimonials">✏️</span>
+        <span class="edit-icon" *ngIf="isEditingTestimonials && isEditingEnabled">✏️</span>
       </p>
       <textarea *ngIf="isEditingTestimonials && editingTestimonialsElement === 'sectionSubtitle'"
                 [(ngModel)]="testimonialsConfig.sectionSubtitle"
@@ -1003,9 +1003,9 @@
             <strong *ngIf="!isEditingTestimonials || editingTestimonialsElement !== 'testimonialAuthorName_' + i"
                     [style.color]="testimonialsConfig.testimonialAuthorNameColor"
                     [style.font-family]="testimonialsConfig.testimonialAuthorNameFontFamily"
-                    (click)="startInlineEditTestimonials('testimonialAuthorName_' + i)">
+                    (click)="isEditingEnabled ? startInlineEditTestimonials('testimonialAuthorName_' + i) : null">
               {{ testimonial.authorName }}
-              <span class="edit-icon" *ngIf="isEditingTestimonials">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingTestimonials && isEditingEnabled">✏️</span>
             </strong>
             <input *ngIf="isEditingTestimonials && editingTestimonialsElement === 'testimonialAuthorName_' + i"
                    [(ngModel)]="testimonial.authorName"
@@ -1046,9 +1046,9 @@
             <span *ngIf="!isEditingTestimonials || editingTestimonialsElement !== 'testimonialAuthorTitle_' + i"
                   [style.color]="testimonialsConfig.testimonialAuthorTitleColor"
                   [style.font-family]="testimonialsConfig.testimonialAuthorTitleFontFamily"
-                  (click)="startInlineEditTestimonials('testimonialAuthorTitle_' + i)">
+                  (click)="isEditingEnabled ? startInlineEditTestimonials('testimonialAuthorTitle_' + i) : null">
               {{ testimonial.authorTitle }}
-              <span class="edit-icon" *ngIf="isEditingTestimonials">✏️</span>
+              <span class="edit-icon" *ngIf="isEditingTestimonials && isEditingEnabled">✏️</span>
             </span>
             <input *ngIf="isEditingTestimonials && editingTestimonialsElement === 'testimonialAuthorTitle_' + i"
                    [(ngModel)]="testimonial.authorTitle"
@@ -1089,7 +1089,7 @@
     </div>
 
     <!-- Global Styling Controls (only when editing) -->
-    <div class="global-styling-controls" *ngIf="isEditingTestimonials">
+    <div class="global-styling-controls" *ngIf="isEditingTestimonials && isEditingEnabled">
       <h4>Section Background</h4>
       <div class="styling-row">
         <div class="styling-item">
@@ -1104,7 +1104,7 @@
     </div>
 
     <!-- Edit Actions (only when editing) -->
-    <div class="edit-actions" *ngIf="isEditingTestimonials">
+    <div class="edit-actions" *ngIf="isEditingTestimonials && isEditingEnabled">
       <button class="save-btn" (click)="stopEditingTestimonials()">Save Changes</button>
       <button class="cancel-btn" (click)="cancelEditingTestimonials()">Cancel</button>
       <button class="reset-btn" (click)="resetTestimonialsToOriginal()">Reset to Original</button>

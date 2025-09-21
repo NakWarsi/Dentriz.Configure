@@ -1,0 +1,159 @@
+name: Deploy Dynamic Version
+
+on:
+  push:
+    branches: ['release-dynamic-*']
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+jobs:
+  build-dynamic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: 'Dentriz.Configure.Web/package-lock.json'
+
+      - name: Install dependencies
+        run: |
+          cd Dentriz.Configure.Web
+          npm ci
+
+      - name: Build dynamic version
+        run: |
+          cd Dentriz.Configure.Web
+          npm run build:dynamic
+
+      - name: Inject API URL into environment
+        run: |
+          cd Dentriz.Configure.Web/dist/DentrizWeb/browser
+          # Create a script to inject API URL at runtime
+          cat > inject-api-url.js << 'EOF'
+          (function() {
+            // Set the API base URL from environment variable
+            if (typeof window !== 'undefined') {
+              window.API_BASE_URL = 'https://dentriz-configure-api.azurewebsites.net/api';
+            }
+          })();
+          EOF
+          
+          # Inject the script into index.html
+          sed -i 's|</head>|  <script src="inject-api-url.js"></script>\n</head>|' index.html
+
+      - name: Copy server.js to build output
+        run: |
+          cp Dentriz.Configure.Web/server.js Dentriz.Configure.Web/dist/DentrizWeb/browser/
+
+      - name: Create package.json for deployment
+        run: |
+          cd Dentriz.Configure.Web/dist/DentrizWeb/browser
+          cat > package.json << 'EOF'
+          {
+            "name": "dentriz-web-app",
+            "version": "1.0.0",
+            "description": "DentRiz Web Application",
+            "main": "server.js",
+            "scripts": {
+              "start": "node server.js"
+            },
+            "dependencies": {
+              "express": "^4.18.2"
+            },
+            "engines": {
+              "node": ">=18.0.0"
+            }
+          }
+          EOF
+
+      - name: Install Express dependency
+        run: |
+          cd Dentriz.Configure.Web/dist/DentrizWeb/browser
+          npm install express --production
+
+      - name: Upload dynamic build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dynamic-build
+          path: Dentriz.Configure.Web/dist/DentrizWeb/browser/
+          retention-days: 7
+
+  deploy-app-service:
+    needs: build-dynamic
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download dynamic build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dynamic-build
+          path: ./dynamic-build
+
+      - name: Deploy to Azure App Service
+        uses: Azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./dynamic-build
+
+  configure-app-settings:
+    needs: deploy-app-service
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Configure App Service settings
+        run: |
+          az webapp config appsettings set \
+            --name ${{ secrets.AZURE_WEBAPP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --settings \
+              ASPNETCORE_ENVIRONMENT=Production \
+              API_BASE_URL=https://dentriz-configure-api.azurewebsites.net/api \
+              NODE_ENV=production \
+              WEBSITE_NODE_DEFAULT_VERSION=20.17.0 \
+              WEBSITE_RUN_FROM_PACKAGE=1 \
+              SCM_DO_BUILD_DURING_DEPLOYMENT=false \
+              WEBSITE_SKIP_CONTENTSHARE_VALIDATION=1
+
+      - name: Configure startup command
+        run: |
+          az webapp config set \
+            --name ${{ secrets.AZURE_WEBAPP_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --startup-file "node server.js"
+
+  notify-deployment:
+    needs: [deploy-app-service, configure-app-settings]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Notify deployment status
+        run: |
+          if [ "${{ needs.deploy-app-service.result }}" == "success" ] && [ "${{ needs.configure-app-settings.result }}" == "success" ]; then
+            echo "✅ Dynamic deployment successful!"
+            echo "🌐 App Service URL: ${{ secrets.AZURE_WEBAPP_URL }}"
+          else
+            echo "❌ Dynamic deployment failed!"
+            exit 1
+          fi
