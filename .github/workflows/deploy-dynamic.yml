@@ -360,11 +360,42 @@ jobs:
           echo "app-service-name=${{ steps.set-target.outputs.app-service-name }}" >> $GITHUB_OUTPUT
           echo "branch-suffix=${{ steps.set-target.outputs.branch-suffix }}" >> $GITHUB_OUTPUT
 
-      - name: Deploy to Azure App Service (Clean)
+      - name: Verify Publish Profile Secret
+        run: |
+          APP_SERVICE="${{ steps.set-final-app-service.outputs.app-service-name }}"
+          echo "🔍 App Service: $APP_SERVICE"
+          
+          if [ "$APP_SERVICE" = "dentriz-configure-web-akaash" ]; then
+            echo "🔍 Using akaash publish profile"
+            if [ -z "${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web_akaash }}" ]; then
+              echo "❌ Error: AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web_akaash is empty or not set"
+              exit 1
+            else
+              echo "✅ Akaash publish profile is available"
+            fi
+          else
+            echo "🔍 Using default publish profile"
+            if [ -z "${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web }}" ]; then
+              echo "❌ Error: AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web is empty or not set"
+              exit 1
+            else
+              echo "✅ Default publish profile is available"
+            fi
+          fi
+
+      - name: Deploy to Azure App Service (Final Fix)
         uses: Azure/webapps-deploy@v2
         with:
           app-name: ${{ steps.set-final-app-service.outputs.app-service-name }}
           publish-profile: ${{ steps.set-final-app-service.outputs.app-service-name == 'dentriz-configure-web-akaash' && secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web_akaash || secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web }}
+          package: ./dynamic-build
+
+      - name: Fallback Deployment (if main fails)
+        if: failure()
+        uses: Azure/webapps-deploy@v2
+        with:
+          app-name: dentriz-configure-web
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_dentriz_configure_web }}
           package: ./dynamic-build
 
   configure-app-settings:
