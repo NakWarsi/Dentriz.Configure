@@ -360,7 +360,7 @@ jobs:
           echo "app-service-name=${{ steps.set-target.outputs.app-service-name }}" >> $GITHUB_OUTPUT
           echo "branch-suffix=${{ steps.set-target.outputs.branch-suffix }}" >> $GITHUB_OUTPUT
 
-      - name: Deploy to Azure App Service
+      - name: Deploy to Azure App Service (Clean)
         uses: Azure/webapps-deploy@v2
         with:
           app-name: ${{ steps.set-final-app-service.outputs.app-service-name }}
