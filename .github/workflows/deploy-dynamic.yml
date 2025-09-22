@@ -52,21 +52,22 @@ jobs:
             echo "🔍 GitHub event name: ${{ github.event_name }}"
             echo "🔍 GitHub workflow ref: ${{ github.workflow_ref }}"
             
-            if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z0-9-]+)$ ]]; then
+            if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z][a-zA-Z0-9-]*)$ ]]; then
               # Pattern: release-dynamic-akaash -> dentriz-configure-web-akaash
+              # Only match if suffix starts with a letter (not numbers like 0.01)
               SUFFIX="${BASH_REMATCH[1]}"
               APP_SERVICE="dentriz-configure-web-$SUFFIX"
-              echo "✅ Matched pattern: release-dynamic-([a-zA-Z0-9-]+)"
+              echo "✅ Matched pattern: release-dynamic-([a-zA-Z][a-zA-Z0-9-]*)"
               echo "✅ Extracted suffix: $SUFFIX"
               echo "✅ App Service: $APP_SERVICE"
               echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
               echo "deployment-type=branch-pattern" >> $GITHUB_OUTPUT
               echo "trigger-source=branch" >> $GITHUB_OUTPUT
               echo "branch-suffix=$SUFFIX" >> $GITHUB_OUTPUT
-            elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]]; then
-              # Pattern: release-dynamic -> dentriz-configure-web (default)
+            elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]] || [[ "$BRANCH_NAME" =~ ^release-dynamic-[0-9] ]]; then
+              # Pattern: release-dynamic or release-dynamic-0.01 -> dentriz-configure-web (default)
               APP_SERVICE="dentriz-configure-web"
-              echo "✅ Matched pattern: release-dynamic (exact)"
+              echo "✅ Matched pattern: release-dynamic or release-dynamic-[number] (default)"
               echo "✅ App Service: $APP_SERVICE"
               echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
               echo "deployment-type=default" >> $GITHUB_OUTPUT
@@ -300,16 +301,17 @@ jobs:
             BRANCH_NAME="${{ github.ref_name }}"
             echo "🔍 Branch name: $BRANCH_NAME"
             
-            if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z0-9-]+)$ ]]; then
+            if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z][a-zA-Z0-9-]*)$ ]]; then
               # Pattern: release-dynamic-akaash -> dentriz-configure-web-akaash
+              # Only match if suffix starts with a letter (not numbers like 0.01)
               SUFFIX="${BASH_REMATCH[1]}"
               APP_SERVICE="dentriz-configure-web-$SUFFIX"
               echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
               echo "deployment-type=branch-pattern" >> $GITHUB_OUTPUT
               echo "trigger-source=branch" >> $GITHUB_OUTPUT
               echo "branch-suffix=$SUFFIX" >> $GITHUB_OUTPUT
-            elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]]; then
-              # Pattern: release-dynamic -> dentriz-configure-web (default)
+            elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]] || [[ "$BRANCH_NAME" =~ ^release-dynamic-[0-9] ]]; then
+              # Pattern: release-dynamic or release-dynamic-0.01 -> dentriz-configure-web (default)
               APP_SERVICE="dentriz-configure-web"
               echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
               echo "deployment-type=default" >> $GITHUB_OUTPUT
@@ -332,7 +334,8 @@ jobs:
           BRANCH_NAME="${{ github.ref_name }}"
           echo "🔍 Final branch name: $BRANCH_NAME"
           
-          if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z0-9.-]+)$ ]]; then
+          if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z][a-zA-Z0-9.-]*)$ ]]; then
+            # Only match if suffix starts with a letter (not numbers like 0.01)
             SUFFIX="${BASH_REMATCH[1]}"
             # Extract only the first part before any version numbers (e.g., "akaash" from "akaash-1.01")
             APP_NAME=$(echo "$SUFFIX" | cut -d'-' -f1)
@@ -340,7 +343,8 @@ jobs:
             echo "✅ Detected suffix: $SUFFIX"
             echo "✅ App name: $APP_NAME"
             echo "✅ Final App Service: $APP_SERVICE"
-          elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]]; then
+          elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]] || [[ "$BRANCH_NAME" =~ ^release-dynamic-[0-9] ]]; then
+            # Pattern: release-dynamic or release-dynamic-0.01 -> dentriz-configure-web (default)
             APP_SERVICE="dentriz-configure-web"
             echo "✅ Default App Service: $APP_SERVICE"
           else
@@ -381,16 +385,17 @@ jobs:
             BRANCH_NAME="${{ github.ref_name }}"
             echo "🔍 Branch name: $BRANCH_NAME"
             
-            if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z0-9-]+)$ ]]; then
+            if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z][a-zA-Z0-9-]*)$ ]]; then
               # Pattern: release-dynamic-akaash -> dentriz-configure-web-akaash
+              # Only match if suffix starts with a letter (not numbers like 0.01)
               SUFFIX="${BASH_REMATCH[1]}"
               APP_SERVICE="dentriz-configure-web-$SUFFIX"
               echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
               echo "deployment-type=branch-pattern" >> $GITHUB_OUTPUT
               echo "trigger-source=branch" >> $GITHUB_OUTPUT
               echo "branch-suffix=$SUFFIX" >> $GITHUB_OUTPUT
-            elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]]; then
-              # Pattern: release-dynamic -> dentriz-configure-web (default)
+            elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]] || [[ "$BRANCH_NAME" =~ ^release-dynamic-[0-9] ]]; then
+              # Pattern: release-dynamic or release-dynamic-0.01 -> dentriz-configure-web (default)
               APP_SERVICE="dentriz-configure-web"
               echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
               echo "deployment-type=default" >> $GITHUB_OUTPUT
@@ -466,16 +471,17 @@ jobs:
             BRANCH_NAME="${{ github.ref_name }}"
             echo "🔍 Branch name: $BRANCH_NAME"
             
-            if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z0-9-]+)$ ]]; then
+            if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z][a-zA-Z0-9-]*)$ ]]; then
               # Pattern: release-dynamic-akaash -> dentriz-configure-web-akaash
+              # Only match if suffix starts with a letter (not numbers like 0.01)
               SUFFIX="${BASH_REMATCH[1]}"
               APP_SERVICE="dentriz-configure-web-$SUFFIX"
               echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
               echo "deployment-type=branch-pattern" >> $GITHUB_OUTPUT
               echo "trigger-source=branch" >> $GITHUB_OUTPUT
               echo "branch-suffix=$SUFFIX" >> $GITHUB_OUTPUT
-            elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]]; then
-              # Pattern: release-dynamic -> dentriz-configure-web (default)
+            elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]] || [[ "$BRANCH_NAME" =~ ^release-dynamic-[0-9] ]]; then
+              # Pattern: release-dynamic or release-dynamic-0.01 -> dentriz-configure-web (default)
               APP_SERVICE="dentriz-configure-web"
               echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
               echo "deployment-type=default" >> $GITHUB_OUTPUT
