@@ -413,10 +413,29 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Debug job outputs
+        id: debug-job-outputs
+        run: |
+          echo "🔍 Debug job outputs:"
+          echo "App Service Name: '${{ needs.deploy-app-service.outputs.app-service-name }}'"
+          echo "Branch Suffix: '${{ needs.deploy-app-service.outputs.branch-suffix }}'"
+          echo "Deployment Type: '${{ needs.deploy-app-service.outputs.deployment-type }}'"
+          
+          if [ -z "${{ needs.deploy-app-service.outputs.app-service-name }}" ]; then
+            echo "❌ App Service name is empty!"
+            echo "Using fallback: dentriz-configure-web"
+            APP_SERVICE="dentriz-configure-web"
+          else
+            APP_SERVICE="${{ needs.deploy-app-service.outputs.app-service-name }}"
+          fi
+          
+          echo "Final App Service: $APP_SERVICE"
+          echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
+
       - name: Set API URL for App Service configuration
         id: set-api-url-config
         run: |
-          APP_SERVICE="${{ needs.deploy-app-service.outputs.app-service-name }}"
+          APP_SERVICE="${{ steps.debug-job-outputs.outputs.app-service-name }}"
           BRANCH_SUFFIX="${{ needs.deploy-app-service.outputs.branch-suffix }}"
           
           if [ -n "$BRANCH_SUFFIX" ]; then
@@ -436,7 +455,7 @@ jobs:
       - name: Configure App Service settings
         run: |
           az webapp config appsettings set \
-            --name ${{ steps.set-target.outputs.app-service-name }} \
+            --name ${{ steps.debug-job-outputs.outputs.app-service-name }} \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --settings \
               ASPNETCORE_ENVIRONMENT=Production \
@@ -450,7 +469,7 @@ jobs:
       - name: Configure startup command
         run: |
           az webapp config set \
-            --name ${{ steps.set-target.outputs.app-service-name }} \
+            --name ${{ steps.debug-job-outputs.outputs.app-service-name }} \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --startup-file "node server.js"
 
