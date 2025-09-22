@@ -354,6 +354,12 @@ jobs:
           
           echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
 
+      - name: Set job outputs
+        id: set-job-outputs
+        run: |
+          echo "app-service-name=${{ steps.set-target.outputs.app-service-name }}" >> $GITHUB_OUTPUT
+          echo "branch-suffix=${{ steps.set-target.outputs.branch-suffix }}" >> $GITHUB_OUTPUT
+
       - name: Deploy to Azure App Service
         uses: Azure/webapps-deploy@v2
         with:
@@ -371,51 +377,11 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Set deployment target
-        id: set-target
-        run: |
-          # Check if this is a manual trigger with explicit App Service name
-          if [ -n "${{ github.event.inputs.app_service_name }}" ]; then
-            APP_SERVICE="${{ github.event.inputs.app_service_name }}"
-            echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
-            echo "deployment-type=manual" >> $GITHUB_OUTPUT
-            echo "trigger-source=manual" >> $GITHUB_OUTPUT
-          else
-            # Auto-detect from branch name
-            BRANCH_NAME="${{ github.ref_name }}"
-            echo "🔍 Branch name: $BRANCH_NAME"
-            
-            if [[ "$BRANCH_NAME" =~ ^release-dynamic-([a-zA-Z][a-zA-Z0-9-]*)$ ]]; then
-              # Pattern: release-dynamic-akaash -> dentriz-configure-web-akaash
-              # Only match if suffix starts with a letter (not numbers like 0.01)
-              SUFFIX="${BASH_REMATCH[1]}"
-              APP_SERVICE="dentriz-configure-web-$SUFFIX"
-              echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
-              echo "deployment-type=branch-pattern" >> $GITHUB_OUTPUT
-              echo "trigger-source=branch" >> $GITHUB_OUTPUT
-              echo "branch-suffix=$SUFFIX" >> $GITHUB_OUTPUT
-            elif [[ "$BRANCH_NAME" =~ ^release-dynamic$ ]] || [[ "$BRANCH_NAME" =~ ^release-dynamic-[0-9] ]]; then
-              # Pattern: release-dynamic or release-dynamic-0.01 -> dentriz-configure-web (default)
-              APP_SERVICE="dentriz-configure-web"
-              echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
-              echo "deployment-type=default" >> $GITHUB_OUTPUT
-              echo "trigger-source=branch" >> $GITHUB_OUTPUT
-              echo "branch-suffix=" >> $GITHUB_OUTPUT
-            else
-              # Fallback to default for any other release-dynamic* branches
-              APP_SERVICE="dentriz-configure-web"
-              echo "app-service-name=$APP_SERVICE" >> $GITHUB_OUTPUT
-              echo "deployment-type=default" >> $GITHUB_OUTPUT
-              echo "trigger-source=branch" >> $GITHUB_OUTPUT
-              echo "branch-suffix=" >> $GITHUB_OUTPUT
-            fi
-          fi
-
       - name: Set API URL for App Service configuration
         id: set-api-url-config
         run: |
-          APP_SERVICE="${{ steps.set-target.outputs.app-service-name }}"
-          BRANCH_SUFFIX="${{ steps.set-target.outputs.branch-suffix }}"
+          APP_SERVICE="${{ needs.deploy-app-service.outputs.app-service-name }}"
+          BRANCH_SUFFIX="${{ needs.deploy-app-service.outputs.branch-suffix }}"
           
           if [ -n "$BRANCH_SUFFIX" ]; then
             # Custom deployment with suffix
