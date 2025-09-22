@@ -68,3 +68,5 @@ jobs:
             echo "❌ Static deployment failed!"
             exit 1
           fi
+
+#test
