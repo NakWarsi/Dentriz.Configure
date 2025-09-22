@@ -186,27 +186,84 @@ jobs:
           }
           EOF
 
-      - name: Install Express dependency
+      - name: Create simple HTTP server
         run: |
           cd Dentriz.Configure.Web/dist/DentrizWeb/browser
-          npm install express --production
+          cat > server.js << 'EOF'
+          const http = require('http');
+          const fs = require('fs');
+          const path = require('path');
+          const url = require('url');
 
-      - name: Copy server.js to build output
-        run: |
-          cp Dentriz.Configure.Web/server.js Dentriz.Configure.Web/dist/DentrizWeb/browser/
+          const PORT = process.env.PORT || 8080;
 
-      - name: Verify Express installation
+          const mimeTypes = {
+            '.html': 'text/html',
+            '.js': 'text/javascript',
+            '.css': 'text/css',
+            '.json': 'application/json',
+            '.png': 'image/png',
+            '.jpg': 'image/jpg',
+            '.gif': 'image/gif',
+            '.svg': 'image/svg+xml',
+            '.ico': 'image/x-icon'
+          };
+
+          const server = http.createServer((req, res) => {
+            let filePath = '.' + url.parse(req.url).pathname;
+            if (filePath === './') {
+              filePath = './index.html';
+            }
+
+            const extname = String(path.extname(filePath)).toLowerCase();
+            const mimeType = mimeTypes[extname] || 'application/octet-stream';
+
+            fs.readFile(filePath, (error, content) => {
+              if (error) {
+                if (error.code === 'ENOENT') {
+                  // File not found, serve index.html for SPA routing
+                  fs.readFile('./index.html', (error, content) => {
+                    if (error) {
+                      res.writeHead(500);
+                      res.end('Server Error');
+                    } else {
+                      res.writeHead(200, { 'Content-Type': 'text/html' });
+                      res.end(content, 'utf-8');
+                    }
+                  });
+                } else {
+                  res.writeHead(500);
+                  res.end('Server Error');
+                }
+              } else {
+                res.writeHead(200, { 'Content-Type': mimeType });
+                res.end(content, 'utf-8');
+              }
+            });
+          });
+
+          server.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+          });
+          EOF
+
+      - name: Update package.json to remove Express dependency
         run: |
           cd Dentriz.Configure.Web/dist/DentrizWeb/browser
-          echo "🔍 Checking if Express is installed..."
-          if [ -d "node_modules/express" ]; then
-            echo "✅ Express is installed"
-            ls -la node_modules/express
-          else
-            echo "❌ Express is not installed"
-            echo "📁 Contents of node_modules:"
-            ls -la node_modules/ || echo "node_modules directory not found"
-          fi
+          cat > package.json << 'EOF'
+          {
+            "name": "dentriz-web-app",
+            "version": "1.0.0",
+            "description": "DentRiz Web Application",
+            "main": "server.js",
+            "scripts": {
+              "start": "node server.js"
+            },
+            "engines": {
+              "node": ">=18.0.0"
+            }
+          }
+          EOF
 
       - name: Upload dynamic build artifacts
         uses: actions/upload-artifact@v4
