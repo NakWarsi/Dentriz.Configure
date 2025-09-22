@@ -277,6 +277,10 @@ jobs:
     needs: build-dynamic
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'production' }}
+    outputs:
+      app-service-name: ${{ steps.set-job-outputs.outputs.app-service-name }}
+      branch-suffix: ${{ steps.set-job-outputs.outputs.branch-suffix }}
+      deployment-type: ${{ steps.set-job-outputs.outputs.deployment-type }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -359,6 +363,7 @@ jobs:
         run: |
           echo "app-service-name=${{ steps.set-target.outputs.app-service-name }}" >> $GITHUB_OUTPUT
           echo "branch-suffix=${{ steps.set-target.outputs.branch-suffix }}" >> $GITHUB_OUTPUT
+          echo "deployment-type=${{ steps.set-target.outputs.deployment-type }}" >> $GITHUB_OUTPUT
 
       - name: Verify Publish Profile Secret
         run: |
