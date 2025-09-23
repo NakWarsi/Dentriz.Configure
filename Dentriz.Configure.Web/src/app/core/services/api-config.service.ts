@@ -6,13 +6,17 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class ApiConfigService {
-  private readonly baseUrl: string;
+  private baseUrl: string;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     // Use environment variable if available, otherwise fallback to environment config
     // Check if we're in browser environment to avoid SSR issues
     if (isPlatformBrowser(this.platformId)) {
-      this.baseUrl = (window as any).API_BASE_URL || environment.apiBaseUrl;
+      const runtimeApiUrl = (window as any).API_BASE_URL;
+      console.log('🔍 ApiConfigService - Runtime API URL:', runtimeApiUrl);
+      console.log('🔍 ApiConfigService - Environment API URL:', environment.apiBaseUrl);
+      this.baseUrl = runtimeApiUrl || environment.apiBaseUrl;
+      console.log('🔍 ApiConfigService - Final API URL:', this.baseUrl);
     } else {
       // Server-side rendering: use environment config
       this.baseUrl = environment.apiBaseUrl;
@@ -23,6 +27,14 @@ export class ApiConfigService {
    * Get the base API URL
    */
   getBaseUrl(): string {
+    // Check for runtime API URL on every call (in case it was set after constructor)
+    if (isPlatformBrowser(this.platformId)) {
+      const runtimeApiUrl = (window as any).API_BASE_URL;
+      if (runtimeApiUrl && runtimeApiUrl !== this.baseUrl) {
+        console.log('🔄 ApiConfigService - Runtime API URL detected, updating base URL:', runtimeApiUrl);
+        this.baseUrl = runtimeApiUrl;
+      }
+    }
     return this.baseUrl;
   }
 
@@ -35,7 +47,9 @@ export class ApiConfigService {
     // Ensure baseUrl ends with /api and endpoint doesn't start with /
     const cleanBaseUrl = baseUrl.endsWith('/api') ? baseUrl : `${baseUrl}/api`;
     const cleanEndpoint = endpoint.startsWith('/') ? endpoint.substring(1) : endpoint;
-    return `${cleanBaseUrl}/${cleanEndpoint}`;
+    const finalUrl = `${cleanBaseUrl}/${cleanEndpoint}`;
+    console.log(`🔗 ApiConfigService - getEndpointUrl('${endpoint}') -> ${finalUrl}`);
+    return finalUrl;
   }
 
   /**
