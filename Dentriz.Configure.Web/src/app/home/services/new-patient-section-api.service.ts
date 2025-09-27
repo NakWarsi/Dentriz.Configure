@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { HOME_NEW_PATIENT_SECTION_CONSTANTS } from '../constants/home-new-patient-section.constants';
+import { newPatientData } from '../data/home-new-patient-section.data';
 
 export interface SimpleNewPatientConfig {
   mainTitle: string;
@@ -78,26 +78,15 @@ export interface SimpleNewPatientConfig {
   providedIn: 'root'
 })
 export class NewPatientSectionApiService {
-  private readonly baseUrl = 'https://localhost:7073/api';
-  private readonly httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    })
-  };
-
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
   /**
    * Load configuration from JSON file
    */
   loadConfig(): Observable<SimpleNewPatientConfig> {
-    const configUrl = './home-new-patient-section.json';
+    console.log('📥 Loading new patient config from static data');
     
-    console.log('📥 Loading new patient config from:', configUrl);
-    
-    return this.http.get<any>(configUrl, this.httpOptions)
-      .pipe(
+    return of(newPatientData).pipe(
         map((data: any) => {
           console.log('✅ New patient config loaded successfully:', data);
           // Transform to SimpleNewPatientConfig format
@@ -170,30 +159,7 @@ export class NewPatientSectionApiService {
             // Global styling options with defaults from constants
             backgroundColor: data.backgroundColor || HOME_NEW_PATIENT_SECTION_CONSTANTS.DEFAULT_COLORS.BACKGROUND
           };
-        }),
-        catchError(error => {
-          console.error(`❌ Failed to load new patient config:`, error);
-          return this.handleError(error);
         })
-      );
-  }
-
-  /**
-   * Handle HTTP errors
-   */
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'An unknown error occurred!';
-    
-    if (typeof window !== 'undefined' && typeof ErrorEvent !== 'undefined' && error.error instanceof ErrorEvent) {
-      errorMessage = `Client Error: ${error.error.message}`;
-    } else {
-      errorMessage = `Server Error: ${error.status} - ${error.message}`;
-      if (error.error && error.error.message) {
-        errorMessage += ` - ${error.error.message}`;
-      }
-    }
-    
-    console.error('API Error:', errorMessage);
-    return throwError(() => new Error(errorMessage));
+    );
   }
 }

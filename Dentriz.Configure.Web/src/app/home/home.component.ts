@@ -120,6 +120,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // Auto-advance carousel (optional)
   ngOnInit() {
+    console.log('🚀 Initializing home component...');
+    
     // Subscribe to global configuration changes
     this.configSubscription = this.globalConfigService.config$.subscribe(config => {
       this.globalConfig = config;
@@ -129,10 +131,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
 
+    // Load all configurations from static data (no HTTP calls needed)
+    console.log('📥 Loading all section configs from static data...');
     this.loadFounderSectionConfig();
     this.loadNewPatientSectionConfig();
     this.loadReasonsSectionConfig();
     this.loadServicesSectionConfig();
+    
     // Auto-advance every 5 seconds
     setInterval(() => {
       this.nextImage();
@@ -159,11 +164,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // Founder section methods (following reference project pattern)
   private loadFounderSectionConfig(): void {
+    console.log('🔄 Loading founder section config from static data...');
+    
     this.founderSectionApiService.loadConfig().subscribe({
       next: (config) => {
-        console.log('Founder section config loaded successfully:', config);
+        console.log('✅ Founder section config loaded successfully:', config);
         this.founderConfig = config;
         this.founderLoading = false;
+        this.founderError = false;
         
         // Apply styles immediately after config loads
         this.applyDynamicStyles();
@@ -177,12 +185,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         }, 500);
       },
       error: (error) => {
-        console.error('Error loading founder section configuration:', error);
-        this.founderError = true;
+        console.error('❌ Error loading founder section configuration:', error);
         this.founderLoading = false;
+        this.founderError = true;
       }
     });
   }
+
 
   startEditingFounder(): void {
     if (!this.globalConfig.isEditingEnabled) {
@@ -388,11 +397,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // New Patient Section methods (following same pattern as founder section)
   private loadNewPatientSectionConfig(): void {
+    console.log('🔄 Loading new patient section config from static data...');
+    
     this.newPatientSectionApiService.loadConfig().subscribe({
       next: (config) => {
-        console.log('New patient section config loaded successfully:', config);
+        console.log('✅ New patient section config loaded successfully:', config);
         this.newPatientConfig = config;
         this.newPatientLoading = false;
+        this.newPatientError = false;
         
         // Apply styles immediately after config loads
         this.applyNewPatientDynamicStyles();
@@ -406,12 +418,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         }, 500);
       },
       error: (error) => {
-        console.error('Error loading new patient section configuration:', error);
-        this.newPatientError = true;
+        console.error('❌ Error loading new patient section configuration:', error);
         this.newPatientLoading = false;
+        this.newPatientError = true;
       }
     });
   }
+
 
   startEditingNewPatient(): void {
     if (!this.globalConfig.isEditingEnabled) {
@@ -556,11 +569,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // Reasons Section methods (following same pattern as other sections)
   private loadReasonsSectionConfig(): void {
+    console.log('🔄 Loading reasons section config from static data...');
+    
     this.reasonsSectionApiService.loadConfig().subscribe({
       next: (config) => {
-        console.log('Reasons section config loaded successfully:', config);
+        console.log('✅ Reasons section config loaded successfully:', config);
         this.reasonsConfig = config;
         this.reasonsLoading = false;
+        this.reasonsError = false;
         
         // Apply styles immediately after config loads
         this.applyReasonsDynamicStyles();
@@ -574,12 +590,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         }, 500);
       },
       error: (error) => {
-        console.error('Error loading reasons section configuration:', error);
-        this.reasonsError = true;
+        console.error('❌ Error loading reasons section configuration:', error);
         this.reasonsLoading = false;
+        this.reasonsError = true;
       }
     });
   }
+
 
   startEditingReasons(): void {
     if (!this.globalConfig.isEditingEnabled) {
@@ -753,11 +770,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // Services Section methods (following same pattern as other sections)
   private loadServicesSectionConfig(): void {
+    console.log('🔄 Loading services section config from static data...');
+    
     this.servicesSectionApiService.loadConfig().subscribe({
       next: (config) => {
-        console.log('Services section config loaded successfully:', config);
+        console.log('✅ Services section config loaded successfully:', config);
         this.servicesConfig = config;
         this.servicesLoading = false;
+        this.servicesError = false;
         
         // Apply styles immediately after config loads
         this.applyServicesDynamicStyles();
@@ -771,12 +791,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         }, 500);
       },
       error: (error) => {
-        console.error('Error loading services section configuration:', error);
-        this.servicesError = true;
+        console.error('❌ Error loading services section configuration:', error);
         this.servicesLoading = false;
+        this.servicesError = true;
       }
     });
   }
+
 
   startEditingServices(): void {
     if (!this.globalConfig.isEditingEnabled) {
