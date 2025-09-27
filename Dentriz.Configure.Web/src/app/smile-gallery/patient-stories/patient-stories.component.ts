@@ -28,20 +28,20 @@ export class PatientStoriesComponent {
     {
       id: 1,
       treatment: "Complete Smile Makeover",
-      story: "Dental journey experiences with the best dentist in Wakad. Success stories from cosmetic dentistry in Wakad and dental implants in Pune at DentRiz Dental Clinic. The confidence boost has changed lives both personally and professionally.",
+      story: "Dental journey experiences with the best dentist in Wakad. Success stories from cosmetic dentistry in Wakad and dental implants in Pune at ClinSmile Dental Clinic. The confidence boost has changed lives both personally and professionally.",
       image: "assets/images/gallery/patient-stories/patient1.jpg",
       rating: 5,
       duration: "6 months",
-      seoKeywords: "best dentist in Wakad, cosmetic dentistry in Wakad, dental implants in Pune, DentRiz Dental Clinic"
+      seoKeywords: "best dentist in Wakad, cosmetic dentistry in Wakad, dental implants in Pune, ClinSmile Dental Clinic"
     },
     {
       id: 2,
       treatment: "Dental Implants",
-      story: "Multiple dental implants in Pune to restore missing teeth at DentRiz Dental Clinic. The dental implant procedure was smooth, and now patients can eat anything they want. The implants look and feel completely natural.",
+      story: "Multiple dental implants in Pune to restore missing teeth at ClinSmile Dental Clinic. The dental implant procedure was smooth, and now patients can eat anything they want. The implants look and feel completely natural.",
       image: "assets/images/gallery/patient-stories/patient2.jpg",
       rating: 5,
       duration: "4 months",
-      seoKeywords: "dental implants in Pune, DentRiz Dental Clinic, best dentist in Wakad"
+      seoKeywords: "dental implants in Pune, ClinSmile Dental Clinic, best dentist in Wakad"
     },
     {
       id: 3,
@@ -59,7 +59,7 @@ export class PatientStoriesComponent {
       image: "assets/images/gallery/patient-stories/patient4.jpg",
       rating: 5,
       duration: "1 day",
-      seoKeywords: "emergency dental care in Wakad, best dental clinic in Wakad, DentRiz Dental Clinic"
+      seoKeywords: "emergency dental care in Wakad, best dental clinic in Wakad, ClinSmile Dental Clinic"
     },
     {
       id: 5,
@@ -91,11 +91,11 @@ export class PatientStoriesComponent {
     {
       id: 8,
       treatment: "Full Mouth Reconstruction",
-      story: "Full mouth reconstruction in Pune at DentRiz Dental Clinic. Complete reconstruction including dental implants in Pune and cosmetic work at the top dentist in Pune. Life-changing results with confidence restored.",
+      story: "Full mouth reconstruction in Pune at ClinSmile Dental Clinic. Complete reconstruction including dental implants in Pune and cosmetic work at the top dentist in Pune. Life-changing results with confidence restored.",
       image: "assets/images/gallery/patient-stories/patient8.jpg",
       rating: 5,
       duration: "8 months",
-      seoKeywords: "full mouth reconstruction in Pune, DentRiz Dental Clinic, dental implants in Pune, top dentist in Pune"
+      seoKeywords: "full mouth reconstruction in Pune, ClinSmile Dental Clinic, dental implants in Pune, top dentist in Pune"
     }
   ];
 

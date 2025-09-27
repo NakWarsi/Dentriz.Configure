@@ -1,7 +1,7 @@
 {
-  "logoAlt": "DentRiz Dental Clinic Logo",
+  "logoAlt": "ClinSmile Dental Clinic Logo",
   "logoImage": "/images/clinic/logo.png",
-  "clinicName": "DentRiz Dental Clinic",
+  "clinicName": "ClinSmile Dental Clinic",
   "tagline": "Multi Speciality Dental Clinic & Implant Center",
   "navItems": [
     { "label": "Home", "route": "/", "exact": true },

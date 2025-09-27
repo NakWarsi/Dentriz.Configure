@@ -1,17 +1,17 @@
 export const DOCTORS_CONSTANTS = {
   // Section Content
   DEFAULT_SECTION_TITLE: 'Meet the Top Dentists in Wakad & Hinjewadi',
-  DEFAULT_SECTION_SUBTITLE: 'At DentRiz Dental Clinic, we believe every smile deserves to shine! Our expert dentists in Pune provide complete preventive, restorative, and cosmetic care - from dental implants in Wakad and cosmetic dentistry to trusted family dentistry - all under one roof with comfort and care you can trust.',
+  DEFAULT_SECTION_SUBTITLE: 'At ClinSmile Dental Clinic, we believe every smile deserves to shine! Our expert dentists in Pune provide complete preventive, restorative, and cosmetic care - from dental implants in Wakad and cosmetic dentistry to trusted family dentistry - all under one roof with comfort and care you can trust.',
   
   // Default Doctors Data
   DEFAULT_DOCTORS: [
     {
-      name: 'Dr. Rizwana Khan, BDS',
+      name: 'Dr. Akash Mankar, BDS',
       title: 'Founder and Chief Dentist',
       title2: 'owner',
       image: '/images/home/dr-rizwana-khan-c1.jpg',
       bio: [
-        'Dr. Rizwana Khan is a highly skilled dental professional with a <strong>Bachelor of Dental Surgery (BDS)</strong> degree from <strong>Government Dental College, Mumbai</strong> — one of India\'s premier dental institutions.',
+        'Dr. Akash Mankar is a highly skilled dental professional with a <strong>Bachelor of Dental Surgery (BDS)</strong> degree from <strong>Government Dental College, Mumbai</strong> — one of India\'s premier dental institutions.',
         'She has over <strong>8 years of clinical experience</strong> in dentistry, including <strong>3 years of service as a government dentist at GDC Mumbai</strong>, where she gained extensive expertise in treating a wide range of dental conditions.',
         'Dr. Rizwana specializes in <strong>cosmetic dentistry, Invisalign treatment, and comprehensive family care</strong>. Known for her gentle approach, clear communication, and attention to detail, she ensures that every patient feels comfortable and confident throughout their treatment journey.'
       ],

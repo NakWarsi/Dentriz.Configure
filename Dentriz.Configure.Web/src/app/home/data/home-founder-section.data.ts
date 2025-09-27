@@ -1,8 +1,8 @@
 export const founderData = {
   "subtitle": "Know your Doctor",
-  "doctorName": "Dr. Rizwana Khan",
+  "doctorName": "Dr. Akash Mankar",
   "title": "Founder & Chief Dentist",
-  "description": "A proud graduate of Government Dental College, Mumbai — one of the most prestigious dental institutions in India. With around 10 years of experience, Dr. Khan has honed his expertise in a wide range of specialties including:",
+  "description": "A proud graduate of Government Dental College, Mumbai — one of the most prestigious dental institutions in India. With around 10 years of experience, Dr. Mankar has honed his expertise in a wide range of specialties including:",
   "specialties": [
     "Cosmetic dentistry",
     "Dental implants",
@@ -12,16 +12,16 @@ export const founderData = {
     "Preventive care",
     "Pediatric dentistry"
   ],
-  "mission": "Dr. Khan's mission is not just to treat dental concerns but to help patients achieve lifelong oral health, confidence, and beautiful smiles.",
+  "mission": "Dr. Mankar's mission is not just to treat dental concerns but to help patients achieve lifelong oral health, confidence, and beautiful smiles.",
   "image": {
     "src": "/images/home/dr-rizwana-khan-c1.jpg?v=2",
-    "alt": "Dr. Rizwana Khan - Founder & Chief Dentist",
-    "name": "Dr. Rizwana Khan",
+    "alt": "Dr. Akash Mankar - Founder & Chief Dentist",
+    "name": "Dr. Akash Mankar",
     "credentials": "(BDS. Govt. Dental College, Mumbai)"
   },
   "philosophy": {
     "title": "Our Philosophy:",
-    "content": "\"DentRiz Dental Clinic was built on the belief that dentistry should be modern, compassionate, and patient-focused. Our philosophy is to combine cutting-edge technology with a human touch, ensuring every patient receives the highest standard of care. We strive to create smiles that are not only healthy but also filled with confidence and happiness.\""
+    "content": "\"ClinSmile Dental Clinic was built on the belief that dentistry should be modern, compassionate, and patient-focused. Our philosophy is to combine cutting-edge technology with a human touch, ensuring every patient receives the highest standard of care. We strive to create smiles that are not only healthy but also filled with confidence and happiness.\""
   },
   "subtitleColor": "#2c5aa0",
   "doctorNameColor": "#000000",

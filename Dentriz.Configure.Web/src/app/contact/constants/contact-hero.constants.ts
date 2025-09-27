@@ -1,7 +1,7 @@
 export const CONTACT_HERO_CONSTANTS = {
   // Hero Section
   DEFAULT_HERO_TITLE: 'Contact the Best Dentists in Pune',
-  DEFAULT_HERO_SUBTITLE: 'Get in touch with DentRiz Dental Clinic and it\'s associated Doctors',
+  DEFAULT_HERO_SUBTITLE: 'Get in touch with ClinSmile Dental Clinic and it\'s associated Doctors',
 
   // Default Colors
   DEFAULT_COLORS: {

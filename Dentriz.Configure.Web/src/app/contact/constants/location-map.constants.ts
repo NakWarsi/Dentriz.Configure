@@ -5,7 +5,7 @@ export const LOCATION_MAP_CONSTANTS = {
   
   // Location Details
   DEFAULT_ADDRESS_TITLE: '📍 Address:',
-  DEFAULT_ADDRESS_CONTENT: 'Dentriz Dental Clinic<br>Rohan Tarang, Wakad Chowk<br>opposit Alamgir masjid',
+  DEFAULT_ADDRESS_CONTENT: 'ClinSmile Dental Clinic<br>Rohan Tarang, Wakad Chowk<br>opposit Alamgir masjid',
   
   DEFAULT_PARKING_TITLE: '🚗 Parking:',
   DEFAULT_PARKING_CONTENT: 'Free parking available in our lot',

@@ -356,7 +356,7 @@ export class SmileGalleryComponent implements OnInit, OnDestroy {
     { 
       id: 'our-work', 
       title: 'Our Work', 
-      description: 'Restorative dentistry in Wakad and emergency dental care in Wakad. Expert orthodontist in Wakad and pediatric dentist Pune showcasing dental work at DentRiz Dental Clinic.', 
+      description: 'Restorative dentistry in Wakad and emergency dental care in Wakad. Expert orthodontist in Wakad and pediatric dentist Pune showcasing dental work at ClinSmile Dental Clinic.', 
       imageCount: 15, 
       route: '/smile-gallery/our-work',
       color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
@@ -380,7 +380,7 @@ export class SmileGalleryComponent implements OnInit, OnDestroy {
     { 
       id: 'clinic-photos', 
       title: 'Clinic Photos', 
-      description: 'Modern dental facility in Wakad with advanced technology. State-of-the-art equipment for cosmetic dentistry in Wakad and dental implants in Pune at DentRiz Dental Clinic.', 
+      description: 'Modern dental facility in Wakad with advanced technology. State-of-the-art equipment for cosmetic dentistry in Wakad and dental implants in Pune at ClinSmile Dental Clinic.', 
       imageCount: 10, 
       route: '/smile-gallery/clinic-photos',
       color: 'linear-gradient(135deg, #42a5f5 0%, #1976d2 100%)'
@@ -396,7 +396,7 @@ export class SmileGalleryComponent implements OnInit, OnDestroy {
     { 
       id: 'patient-stories', 
       title: 'Patient Stories', 
-      description: 'Dental journey experiences with the best dentist in Wakad. Success stories from cosmetic dentistry in Wakad and dental implants in Pune at DentRiz Dental Clinic.', 
+      description: 'Dental journey experiences with the best dentist in Wakad. Success stories from cosmetic dentistry in Wakad and dental implants in Pune at ClinSmile Dental Clinic.', 
       imageCount: 8, 
       route: '/smile-gallery/patient-stories',
       color: 'linear-gradient(135deg, #26a69a 0%, #00897b 100%)'
@@ -412,7 +412,7 @@ export class SmileGalleryComponent implements OnInit, OnDestroy {
     { 
       id: 'team-gallery', 
       title: 'Team Gallery', 
-      description: 'Expert dental team in Wakad and skilled professionals in Hinjewadi. Experienced cosmetic dentist Pune and orthodontist in Wakad at DentRiz Dental Clinic.', 
+      description: 'Expert dental team in Wakad and skilled professionals in Hinjewadi. Experienced cosmetic dentist Pune and orthodontist in Wakad at ClinSmile Dental Clinic.', 
       imageCount: 7, 
       route: '/smile-gallery/team-gallery',
       color: 'linear-gradient(135deg, #ff7043 0%, #e64a19 100%)'
@@ -420,7 +420,7 @@ export class SmileGalleryComponent implements OnInit, OnDestroy {
     { 
       id: 'awards-recognition', 
       title: 'Awards & Recognition', 
-      description: 'Professional recognition for the best dental clinic in Wakad. Awards for cosmetic dentistry in Wakad and dental implants in Pune at DentRiz Dental Clinic.', 
+      description: 'Professional recognition for the best dental clinic in Wakad. Awards for cosmetic dentistry in Wakad and dental implants in Pune at ClinSmile Dental Clinic.', 
       imageCount: 4, 
       route: '/smile-gallery/awards-recognition',
       color: 'linear-gradient(135deg, #ffd54f 0%, #ffb300 100%)'

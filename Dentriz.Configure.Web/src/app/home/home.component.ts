@@ -68,28 +68,28 @@ export class HomeComponent implements OnInit, OnDestroy {
   clinicImages = [
     {
       src: '/images/clinic/clinic-exterior.jpg',
-      alt: 'DentRiz Dental Clinic Exterior',
+      alt: 'ClinSmile Dental Clinic Exterior',
       caption: 'Modern Dental Clinic'
     },
     {
       src: '/images/clinic/clinic-interior.jpg',
-      alt: 'DentRiz Dental Clinic Interior',
+      alt: 'ClinSmile Dental Clinic Interior',
       caption: 'State-of-the-Art Equipment'
     },
     // Add PNG images directly
     {
       src: '/images/clinic/1.jpg',
-      alt: 'DentRiz Dental Clinic - Treatment Room',
+      alt: 'ClinSmile Dental Clinic - Treatment Room',
       caption: 'Advanced Treatment Facilities'
     },
     {
       src: '/images/clinic/2.png',
-      alt: 'DentRiz Dental Clinic - Waiting Area',
+      alt: 'ClinSmile Dental Clinic - Waiting Area',
       caption: 'Comfortable Waiting Area'
     },
     {
       src: '/images/clinic/3.png',
-      alt: 'DentRiz Dental Clinic - Modern Dental Chair',
+      alt: 'ClinSmile Dental Clinic - Modern Dental Chair',
       caption: 'State-of-the-Art Dental Equipment'
     }
   ];

@@ -1,7 +1,7 @@
 export const GALLERY_HERO_CONSTANTS = {
   // Gallery Hero Section
-  DEFAULT_GALLERY_TITLE: 'Dentriz Dental Clinic -smile gallery',
-  DEFAULT_GALLERY_SUBTITLE: 'Cosmetic dentistry in Wakad and dental implants in Pune. Professional teeth whitening in Wakad and veneers in Wakad at DentRiz Dental Clinic - the top dentist in Pune.',
+  DEFAULT_GALLERY_TITLE: 'ClinSmile Dental Clinic -smile gallery',
+  DEFAULT_GALLERY_SUBTITLE: 'Cosmetic dentistry in Wakad and dental implants in Pune. Professional teeth whitening in Wakad and veneers in Wakad at ClinSmile Dental Clinic - the top dentist in Pune.',
 
   // Default Colors
   DEFAULT_COLORS: {

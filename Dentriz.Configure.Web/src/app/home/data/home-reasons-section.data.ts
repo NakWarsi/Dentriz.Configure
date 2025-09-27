@@ -1,6 +1,6 @@
 export const reasonsData = {
-  "sectionTitle": "Why Choose DentRiz Dental Clinic in Pune",
-  "sectionIntro": "At <strong>DentRiz Dental Clinic</strong>, we believe every patient deserves a healthy, confident smile. Here's why families in Wakad, Hinjewadi, and across Pune trust us for their dental care:",
+  "sectionTitle": "Why Choose ClinSmile Dental Clinic in Pune",
+  "sectionIntro": "At <strong>ClinSmile Dental Clinic</strong>, we believe every patient deserves a healthy, confident smile. Here's why families in Wakad, Hinjewadi, and across Pune trust us for their dental care:",
   "reason1Icon": "🦷",
   "reason1Title": "Comprehensive Dental Care for Every Smile",
   "reason1Items": [

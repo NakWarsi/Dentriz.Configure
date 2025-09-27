@@ -63,9 +63,9 @@ export class FounderSectionApiService {
         // Transform to SimpleFounderConfig format
         return {
           subtitle: data.subtitle || 'Know your Doctor',
-          doctorName: data.doctorName || 'Dr. Rizwana Khan',
+          doctorName: data.doctorName || 'Dr. Akash Mankar',
           title: data.title || 'Founder & Chief Dentist',
-          description: data.description || 'A proud graduate of Government Dental College, Mumbai — one of the most prestigious dental institutions in India. With around 10 years of experience, Dr. Khan has honed his expertise in a wide range of specialties including:',
+          description: data.description || 'A proud graduate of Government Dental College, Mumbai — one of the most prestigious dental institutions in India. With around 10 years of experience, Dr. Mankar has honed his expertise in a wide range of specialties including:',
           specialties: data.specialties || [
             'Cosmetic dentistry',
             'Dental implants',
@@ -75,13 +75,13 @@ export class FounderSectionApiService {
             'Preventive care',
             'Pediatric dentistry'
           ],
-          mission: data.mission || 'Dr. Khan\'s mission is not just to treat dental concerns but to help patients achieve lifelong oral health, confidence, and beautiful smiles.',
+          mission: data.mission || 'Dr. Mankar\'s mission is not just to treat dental concerns but to help patients achieve lifelong oral health, confidence, and beautiful smiles.',
           imageSrc: data.image?.src || '/images/home/dr-rizwana-khan-c1.jpg?v=2',
-          imageAlt: data.image?.alt || 'Dr. Rizwana Khan - Founder & Chief Dentist',
-          imageName: data.image?.name || 'Dr. Rizwana Khan',
+          imageAlt: data.image?.alt || 'Dr. Akash Mankar - Founder & Chief Dentist',
+          imageName: data.image?.name || 'Dr. Akash Mankar',
           credentials: data.image?.credentials || '(BDS. Govt. Dental College, Mumbai)',
           philosophyTitle: data.philosophy?.title || 'Our Philosophy:',
-          philosophyContent: data.philosophy?.content || '"DentRiz Dental Clinic was built on the belief that dentistry should be modern, compassionate, and patient-focused. Our philosophy is to combine cutting-edge technology with a human touch, ensuring every patient receives the highest standard of care. We strive to create smiles that are not only healthy but also filled with confidence and happiness."',
+          philosophyContent: data.philosophy?.content || '"ClinSmile Dental Clinic was built on the belief that dentistry should be modern, compassionate, and patient-focused. Our philosophy is to combine cutting-edge technology with a human touch, ensuring every patient receives the highest standard of care. We strive to create smiles that are not only healthy but also filled with confidence and happiness."',
           // Individual color options with defaults from constants
           subtitleColor: data.subtitleColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.SUBTITLE,
           doctorNameColor: data.doctorNameColor || HOME_FOUNDER_SECTION_CONSTANTS.DEFAULT_COLORS.DOCTOR_NAME,

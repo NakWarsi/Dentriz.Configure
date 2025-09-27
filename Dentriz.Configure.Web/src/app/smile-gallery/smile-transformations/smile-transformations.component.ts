@@ -52,9 +52,9 @@ export class SmileTransformationsComponent {
       duration: "4 months",
       beforeImage: "assets/images/gallery/smile-transformations/transformation3-before.jpg",
       afterImage: "assets/images/gallery/smile-transformations/transformation3-after.jpg",
-      description: "Multiple dental implants in Pune to restore missing teeth at DentRiz Dental Clinic",
+      description: "Multiple dental implants in Pune to restore missing teeth at ClinSmile Dental Clinic",
       procedures: ["Dental Implants", "Crown Placement"],
-      seoKeywords: "dental implants in Pune, DentRiz Dental Clinic, best dentist in Wakad"
+      seoKeywords: "dental implants in Pune, ClinSmile Dental Clinic, best dentist in Wakad"
     },
     {
       id: 4,
@@ -102,9 +102,9 @@ export class SmileTransformationsComponent {
       duration: "5 months",
       beforeImage: "assets/images/gallery/smile-transformations/transformation8-before.jpg",
       afterImage: "assets/images/gallery/smile-transformations/transformation8-after.jpg",
-      description: "Emergency dental care in Wakad transformed into beautiful smile at DentRiz Dental Clinic",
+      description: "Emergency dental care in Wakad transformed into beautiful smile at ClinSmile Dental Clinic",
       procedures: ["Emergency Treatment", "Implants", "Cosmetic Work"],
-      seoKeywords: "emergency dental care in Wakad, DentRiz Dental Clinic, best dental clinic in Wakad"
+      seoKeywords: "emergency dental care in Wakad, ClinSmile Dental Clinic, best dental clinic in Wakad"
     }
   ];
 

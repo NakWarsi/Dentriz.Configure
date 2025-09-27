@@ -40,8 +40,8 @@ export class BeforeAfterComponent {
       duration: "4 months",
       beforeImage: "assets/images/gallery/before-after/case2-before.jpg",
       afterImage: "assets/images/gallery/before-after/case2-after.jpg",
-      description: "Multiple dental implants in Pune to restore missing teeth at DentRiz Dental Clinic",
-      seoKeywords: "dental implants in Pune, top dentist in Pune, DentRiz Dental Clinic"
+      description: "Multiple dental implants in Pune to restore missing teeth at ClinSmile Dental Clinic",
+      seoKeywords: "dental implants in Pune, top dentist in Pune, ClinSmile Dental Clinic"
     },
     {
       id: 3,

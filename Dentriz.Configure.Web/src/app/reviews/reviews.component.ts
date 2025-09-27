@@ -82,7 +82,7 @@ export class ReviewsComponent {
     {
       name: 'Patient C',
       rating: 5,
-      text: 'Invisalign treatment in Pune was perfect! Professional cosmetic dentist Pune and preventive care in Wakad. DentRiz Dental Clinic is outstanding.',
+      text: 'Invisalign treatment in Pune was perfect! Professional cosmetic dentist Pune and preventive care in Wakad. ClinSmile Dental Clinic is outstanding.',
       platform: 'Yelp',
       date: '2024-01-08'
     },

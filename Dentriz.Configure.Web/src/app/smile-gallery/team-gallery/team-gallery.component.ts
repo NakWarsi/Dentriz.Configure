@@ -53,8 +53,8 @@ export class TeamGalleryComponent {
       experience: "10+ years",
       education: "DDS, Oral Surgery Residency",
       image: "assets/images/gallery/team-gallery/doctor3.jpg",
-      bio: "Oral surgeon in Pune specializing in oral surgery and dental implants in Pune. Extensive experience in complex surgical procedures and implant placement at DentRiz Dental Clinic.",
-      seoKeywords: "oral surgeon in Pune, dental implants in Pune, DentRiz Dental Clinic"
+      bio: "Oral surgeon in Pune specializing in oral surgery and dental implants in Pune. Extensive experience in complex surgical procedures and implant placement at ClinSmile Dental Clinic.",
+      seoKeywords: "oral surgeon in Pune, dental implants in Pune, ClinSmile Dental Clinic"
     },
     {
       id: 4,
@@ -83,8 +83,8 @@ export class TeamGalleryComponent {
       experience: "5+ years",
       education: "Dental Assistant Certification",
       image: "assets/images/gallery/team-gallery/assistant1.jpg",
-      bio: "Experienced dental assistant in Wakad who specializes in surgical procedures. Works closely with oral surgeon in Pune to ensure smooth and efficient treatments at DentRiz Dental Clinic.",
-      seoKeywords: "dental assistant in Wakad, oral surgeon in Pune, DentRiz Dental Clinic"
+      bio: "Experienced dental assistant in Wakad who specializes in surgical procedures. Works closely with oral surgeon in Pune to ensure smooth and efficient treatments at ClinSmile Dental Clinic.",
+      seoKeywords: "dental assistant in Wakad, oral surgeon in Pune, ClinSmile Dental Clinic"
     },
     {
       id: 7,
