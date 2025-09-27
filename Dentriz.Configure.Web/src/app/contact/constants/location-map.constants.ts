@@ -5,7 +5,7 @@ export const LOCATION_MAP_CONSTANTS = {
   
   // Location Details
   DEFAULT_ADDRESS_TITLE: '📍 Address:',
-  DEFAULT_ADDRESS_CONTENT: 'ClinSmile Dental Clinic<br>Rohan Tarang, Wakad Chowk<br>opposit Alamgir masjid',
+  DEFAULT_ADDRESS_CONTENT: 'ClinSmile Dental Clinic\nRohan Tarang, Wakad Chowk\nopposite Alamgir masjid',
   
   DEFAULT_PARKING_TITLE: '🚗 Parking:',
   DEFAULT_PARKING_CONTENT: 'Free parking available in our lot',
@@ -18,10 +18,10 @@ export const LOCATION_MAP_CONSTANTS = {
   
   // Map Section
   DEFAULT_MAP_TITLE: '📍 Visit Our Clinic',
-  DEFAULT_MAP_EMBED_URL: 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d236.35202385690053!2d73.76117365276494!3d18.59060519688083!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2b97dc645a90f%3A0xf370478ecff49ae9!2sDentriz%20dental%20clinic!5e0!3m2!1sen!2sin!4v1755898762059!5m2!1sen!2sin',
+  DEFAULT_MAP_EMBED_URL: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.1234567890!2d73.7611736!3d18.5906052!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2b97dc645a90f%3A0xf370478ecff49ae9!2sClinSmile%20Dental%20Clinic!5e0!3m2!1sen!2sin!4v1755898762059!5m2!1sen!2sin',
   DEFAULT_MAP_LOCATION: '📍 Location: Wakad, Pune, Maharashtra',
   DEFAULT_MAP_HOURS: '🕒 Hours: Mon-Sun: 9:00 AM - 10:00 PM',
-  DEFAULT_DIRECTIONS_LINK: 'https://maps.app.goo.gl/qJdrWXYGJR8ki7BR7',
+  DEFAULT_DIRECTIONS_LINK: 'https://maps.app.goo.gl/aTVoGz2h2NFndZp68',
   DEFAULT_DIRECTIONS_TEXT: '📍 Get Directions',
 
   // Default Colors

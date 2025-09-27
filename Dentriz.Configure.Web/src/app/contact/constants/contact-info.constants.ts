@@ -13,7 +13,7 @@ export const CONTACT_INFO_CONSTANTS = {
   DEFAULT_ADDRESS_TITLE: 'Address',
   DEFAULT_ADDRESS_NOTE: 'Best dental clinic in Pune',
   DEFAULT_ADDRESS_BUTTON_TEXT: '📍 Get Directions',
-  DEFAULT_ADDRESS_LINK: 'https://maps.app.goo.gl/4qYJf5jwSWNNExSQ8',
+  DEFAULT_ADDRESS_LINK: 'https://maps.app.goo.gl/aTVoGz2h2NFndZp68',
 
   DEFAULT_EMERGENCY_TITLE: 'Emergency',
   DEFAULT_EMERGENCY_NOTE: '24/7 emergency care',
