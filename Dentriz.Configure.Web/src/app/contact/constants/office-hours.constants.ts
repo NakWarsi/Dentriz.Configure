@@ -15,11 +15,11 @@ export const OFFICE_HOURS_CONSTANTS = {
   // Important Notes
   DEFAULT_NOTES_TITLE: '📋 Important Notes',
   DEFAULT_NOTES: [
-    'We offer flexible appointment scheduling for our dental clinic in Wakad',
+    'We offer flexible appointment scheduling for our dental clinic in Roadpali',
     'Emergency appointments available outside regular hours',
-    'New patients welcome - call to schedule your first visit at the best dentist in Wakad',
-    'We accept most insurance plans for dental implants in Wakad and cosmetic dentistry in Wakad',
-    'Conveniently located dental clinic in Hinjewadi and Wakad for all your dental needs'
+    'New patients welcome - call to schedule your first visit at the best dentist in Roadpali',
+    'We accept most insurance plans for dental implants in Roadpali and cosmetic dentistry in Roadpali',
+    'Conveniently located dental clinic in Kalamboli and Roadpali for all your dental needs'
   ],
 
   // Default Colors

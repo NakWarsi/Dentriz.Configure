@@ -28,74 +28,74 @@ export class PatientStoriesComponent {
     {
       id: 1,
       treatment: "Complete Smile Makeover",
-      story: "Dental journey experiences with the best dentist in Wakad. Success stories from cosmetic dentistry in Wakad and dental implants in Pune at ClinSmile Dental Clinic. The confidence boost has changed lives both personally and professionally.",
+      story: "Dental journey experiences with the best dentist in Roadpali. Success stories from cosmetic dentistry in Roadpali and dental implants in Navi Mumbai at ClinSmile Dental Clinic. The confidence boost has changed lives both personally and professionally.",
       image: "assets/images/gallery/patient-stories/patient1.jpg",
       rating: 5,
       duration: "6 months",
-      seoKeywords: "best dentist in Wakad, cosmetic dentistry in Wakad, dental implants in Pune, ClinSmile Dental Clinic"
+      seoKeywords: "best dentist in Roadpali, cosmetic dentistry in Roadpali, dental implants in Navi Mumbai, ClinSmile Dental Clinic"
     },
     {
       id: 2,
       treatment: "Dental Implants",
-      story: "Multiple dental implants in Pune to restore missing teeth at ClinSmile Dental Clinic. The dental implant procedure was smooth, and now patients can eat anything they want. The implants look and feel completely natural.",
+      story: "Multiple dental implants in Navi Mumbai to restore missing teeth at ClinSmile Dental Clinic. The dental implant procedure was smooth, and now patients can eat anything they want. The implants look and feel completely natural.",
       image: "assets/images/gallery/patient-stories/patient2.jpg",
       rating: 5,
       duration: "4 months",
-      seoKeywords: "dental implants in Pune, ClinSmile Dental Clinic, best dentist in Wakad"
+      seoKeywords: "dental implants in Navi Mumbai, ClinSmile Dental Clinic, best dentist in Roadpali"
     },
     {
       id: 3,
       treatment: "Invisalign Treatment",
-      story: "Invisalign treatment in Pune at the top dentist in Pune. The treatment was comfortable, discreet, and the results are amazing. Expert orthodontist in Wakad provides exceptional care.",
+      story: "Invisalign treatment in Navi Mumbai at the top dentist in Navi Mumbai. The treatment was comfortable, discreet, and the results are amazing. Expert orthodontist in Roadpali provides exceptional care.",
       image: "assets/images/gallery/patient-stories/patient3.jpg",
       rating: 5,
       duration: "18 months",
-      seoKeywords: "Invisalign treatment in Pune, top dentist in Pune, orthodontist in Wakad"
+      seoKeywords: "Invisalign treatment in Navi Mumbai, top dentist in Navi Mumbai, orthodontist in Roadpali"
     },
     {
       id: 4,
       treatment: "Emergency Dental Care",
-      story: "Emergency dental care in Wakad with the best dental clinic in Wakad. The team was incredibly responsive and caring. They not only fixed immediate problems but also helped prevent future issues.",
+      story: "Emergency dental care in Roadpali with the best dental clinic in Roadpali. The team was incredibly responsive and caring. They not only fixed immediate problems but also helped prevent future issues.",
       image: "assets/images/gallery/patient-stories/patient4.jpg",
       rating: 5,
       duration: "1 day",
-      seoKeywords: "emergency dental care in Wakad, best dental clinic in Wakad, ClinSmile Dental Clinic"
+      seoKeywords: "emergency dental care in Roadpali, best dental clinic in Roadpali, ClinSmile Dental Clinic"
     },
     {
       id: 5,
       treatment: "Teeth Whitening & Veneers",
-      story: "Teeth whitening in Wakad and veneers in Wakad at the best dental clinic in Hinjewadi. The combination of whitening and veneers provides perfect smiles. Experienced cosmetic dentist Pune delivers exceptional results.",
+      story: "Teeth whitening in Roadpali and veneers in Roadpali at the best dental clinic in Kalamboli. The combination of whitening and veneers provides perfect smiles. Experienced cosmetic dentist Navi Mumbai delivers exceptional results.",
       image: "assets/images/gallery/patient-stories/patient5.jpg",
       rating: 5,
       duration: "3 months",
-      seoKeywords: "teeth whitening in Wakad, veneers in Wakad, best dental clinic in Hinjewadi, cosmetic dentist Pune"
+      seoKeywords: "teeth whitening in Roadpali, veneers in Roadpali, best dental clinic in Kalamboli, cosmetic dentist Navi Mumbai"
     },
     {
       id: 6,
       treatment: "Root Canal & Crown",
-      story: "Root canal treatment in Pune and crown placement at the top dentist in Pune. The procedure was painless and the staff was reassuring. The crown looks perfect and patients are back to normal eating.",
+      story: "Root canal treatment in Navi Mumbai and crown placement at the top dentist in Navi Mumbai. The procedure was painless and the staff was reassuring. The crown looks perfect and patients are back to normal eating.",
       image: "assets/images/gallery/patient-stories/patient6.jpg",
       rating: 5,
       duration: "2 weeks",
-      seoKeywords: "root canal treatment in Pune, top dentist in Pune, crown placement"
+      seoKeywords: "root canal treatment in Navi Mumbai, top dentist in Navi Mumbai, crown placement"
     },
     {
       id: 7,
       treatment: "Cosmetic Bonding",
-      story: "Cosmetic bonding in Wakad at the best dental clinic in Wakad. The cosmetic bonding was quick, painless, and provides perfect smiles. Professional cosmetic dentistry in Wakad delivers excellent results.",
+      story: "Cosmetic bonding in Roadpali at the best dental clinic in Roadpali. The cosmetic bonding was quick, painless, and provides perfect smiles. Professional cosmetic dentistry in Roadpali delivers excellent results.",
       image: "assets/images/gallery/patient-stories/patient7.jpg",
       rating: 5,
       duration: "1 hour",
-      seoKeywords: "cosmetic bonding in Wakad, best dental clinic in Wakad, cosmetic dentistry in Wakad"
+      seoKeywords: "cosmetic bonding in Roadpali, best dental clinic in Roadpali, cosmetic dentistry in Roadpali"
     },
     {
       id: 8,
       treatment: "Full Mouth Reconstruction",
-      story: "Full mouth reconstruction in Pune at ClinSmile Dental Clinic. Complete reconstruction including dental implants in Pune and cosmetic work at the top dentist in Pune. Life-changing results with confidence restored.",
+      story: "Full mouth reconstruction in Navi Mumbai at ClinSmile Dental Clinic. Complete reconstruction including dental implants in Navi Mumbai and cosmetic work at the top dentist in Navi Mumbai. Life-changing results with confidence restored.",
       image: "assets/images/gallery/patient-stories/patient8.jpg",
       rating: 5,
       duration: "8 months",
-      seoKeywords: "full mouth reconstruction in Pune, ClinSmile Dental Clinic, dental implants in Pune, top dentist in Pune"
+      seoKeywords: "full mouth reconstruction in Navi Mumbai, ClinSmile Dental Clinic, dental implants in Navi Mumbai, top dentist in Navi Mumbai"
     }
   ];
 

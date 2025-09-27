@@ -68,84 +68,84 @@ export class ReviewsComponent {
     {
       name: 'Patient A',
       rating: 5,
-      text: 'Found the best dentist in Wakad! Amazing cosmetic dentistry in Wakad and dental implants in Pune. The best dental clinic in Wakad with expert orthodontist in Wakad.',
+      text: 'Found the best dentist in Roadpali! Amazing cosmetic dentistry in Roadpali and dental implants in Navi Mumbai. The best dental clinic in Roadpali with expert orthodontist in Roadpali.',
       platform: 'Google',
       date: '2024-01-15'
     },
     {
       name: 'Patient B',
       rating: 5,
-      text: 'Excellent teeth whitening in Wakad and veneers in Wakad. Top dentist in Pune with emergency dental care in Wakad. Best dental clinic in Hinjewadi!',
+      text: 'Excellent teeth whitening in Roadpali and veneers in Roadpali. Top dentist in Navi Mumbai with emergency dental care in Roadpali. Best dental clinic in Kalamboli!',
       platform: 'Facebook',
       date: '2024-01-10'
     },
     {
       name: 'Patient C',
       rating: 5,
-      text: 'Invisalign treatment in Pune was perfect! Professional cosmetic dentist Pune and preventive care in Wakad. ClinSmile Dental Clinic is outstanding.',
+      text: 'Invisalign treatment in Navi Mumbai was perfect! Professional cosmetic dentist Navi Mumbai and preventive care in Roadpali. ClinSmile Dental Clinic is outstanding.',
       platform: 'Yelp',
       date: '2024-01-08'
     },
     {
       name: 'Patient D',
       rating: 5,
-      text: 'Root canal treatment in Pune was painless. Expert orthodontist in Wakad and dental cleaning in Wakad. Best dentist in Wakad!',
+      text: 'Root canal treatment in Navi Mumbai was painless. Expert orthodontist in Roadpali and dental cleaning in Roadpali. Best dentist in Roadpali!',
       platform: 'Healthgrades',
       date: '2024-01-05'
     },
     {
       name: 'Patient E',
       rating: 5,
-      text: 'Pediatric dentist Pune is amazing with kids. Dental implants in Wakad and cosmetic dentistry in Wakad. Top dentist in Pune!',
+      text: 'Pediatric dentist Navi Mumbai is amazing with kids. Dental implants in Roadpali and cosmetic dentistry in Roadpali. Top dentist in Navi Mumbai!',
       platform: 'Zocdoc',
       date: '2024-01-03'
     },
     {
       name: 'Patient F',
       rating: 5,
-      text: 'Oral surgeon in Pune did excellent work. Periodontics in Wakad and restorative dentistry in Wakad. Best dental clinic in Wakad!',
+      text: 'Oral surgeon in Navi Mumbai did excellent work. Periodontics in Roadpali and restorative dentistry in Roadpali. Best dental clinic in Roadpali!',
       platform: 'Vitals',
       date: '2024-01-01'
     },
     {
       name: 'Patient G',
       rating: 5,
-      text: 'Endodontist Pune saved my tooth! Teeth whitening in Wakad and veneers in Wakad. Expert orthodontist in Wakad at DentRiz.',
+      text: 'Endodontist Navi Mumbai saved my tooth! Teeth whitening in Roadpali and veneers in Roadpali. Expert orthodontist in Roadpali at DentRiz.',
       platform: 'Google',
       date: '2023-12-28'
     },
     {
       name: 'Patient H',
       rating: 5,
-      text: 'Dental hygienist in Wakad is thorough. Invisible braces in Pune and emergency dental care in Wakad. Best dentist in Hinjewadi!',
+      text: 'Dental hygienist in Roadpali is thorough. Invisible braces in Navi Mumbai and emergency dental care in Roadpali. Best dentist in Kalamboli!',
       platform: 'Facebook',
       date: '2023-12-25'
     },
     {
       name: 'Patient I',
       rating: 5,
-      text: 'Cosmetic bonding in Wakad looks natural. Dental implants in Pune and preventive care in Wakad. Top dentist in Pune!',
+      text: 'Cosmetic bonding in Roadpali looks natural. Dental implants in Navi Mumbai and preventive care in Roadpali. Top dentist in Navi Mumbai!',
       platform: 'Yelp',
       date: '2023-12-20'
     },
     {
       name: 'Patient J',
       rating: 5,
-      text: 'Periodontal therapy in Wakad was effective. Orthodontist in Wakad and dental cleaning in Wakad. Best dental clinic in Wakad!',
+      text: 'Periodontal therapy in Roadpali was effective. Orthodontist in Roadpali and dental cleaning in Roadpali. Best dental clinic in Roadpali!',
       platform: 'Healthgrades',
       date: '2023-12-15'
     },
     {
       name: 'Patient K',
       rating: 5,
-      text: 'Full mouth reconstruction in Pune changed my life! Cosmetic dentistry in Wakad and teeth whitening in Wakad. Expert dentist!',
+      text: 'Full mouth reconstruction in Navi Mumbai changed my life! Cosmetic dentistry in Roadpali and teeth whitening in Roadpali. Expert dentist!',
       platform: 'Zocdoc',
       date: '2023-12-10'
     },
     {
       name: 'Patient L',
       rating: 5,
-      text: 'Dental assistant in Wakad is very caring. Invisalign treatment in Pune and veneers in Wakad. Best dentist in Pune!',
+      text: 'Dental assistant in Roadpali is very caring. Invisalign treatment in Navi Mumbai and veneers in Roadpali. Best dentist in Navi Mumbai!',
       platform: 'Vitals',
       date: '2023-12-05'
     }

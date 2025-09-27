@@ -1,20 +1,20 @@
 export const HOME_SERVICES_SECTION_CONSTANTS = {
-  DEFAULT_SECTION_TITLE: 'Comprehensive Dental Services in Wakad & Hinjewadi',
+  DEFAULT_SECTION_TITLE: 'Comprehensive Dental Services in Roadpali & Kalamboli',
   
   // Service 1 - Preventive Care
-  DEFAULT_SERVICE1_TITLE: '🦷 Preventive Care & Dental Cleaning in Wakad',
+  DEFAULT_SERVICE1_TITLE: '🦷 Preventive Care & Dental Cleaning in Roadpali',
   DEFAULT_SERVICE1_ITEMS: [
     'Professional teeth cleaning & polishing',
     'Pediatric dentistry for children',
     'Oral health education & cavity prevention',
-    'Family dentistry in Wakad & Hinjewadi'
+    'Family dentistry in Roadpali & Kalamboli'
   ],
   DEFAULT_SERVICE1_BUTTON_TEXT: 'Learn More',
   
   // Service 2 - Restorative Care
-  DEFAULT_SERVICE2_TITLE: '🔧 Restorative Care & Dental Implants in Wakad',
+  DEFAULT_SERVICE2_TITLE: '🔧 Restorative Care & Dental Implants in Roadpali',
   DEFAULT_SERVICE2_ITEMS: [
-    'Advanced dental implants in Pune',
+    'Advanced dental implants in Navi Mumbai',
     'Dental crowns & bridges',
     'Tooth-colored fillings',
     'Emergency dental treatments'
@@ -22,7 +22,7 @@ export const HOME_SERVICES_SECTION_CONSTANTS = {
   DEFAULT_SERVICE2_BUTTON_TEXT: 'Learn More',
   
   // Service 3 - Cosmetic Dentistry
-  DEFAULT_SERVICE3_TITLE: '✨ Cosmetic Dentistry in Wakad',
+  DEFAULT_SERVICE3_TITLE: '✨ Cosmetic Dentistry in Roadpali',
   DEFAULT_SERVICE3_ITEMS: [
     'Teeth whitening & smile makeovers',
     'Invisalign® & clear aligners',

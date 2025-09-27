@@ -31,8 +31,8 @@ export class BeforeAfterComponent {
       duration: "6 months",
       beforeImage: "assets/images/gallery/before-after/case1-before.jpg",
       afterImage: "assets/images/gallery/before-after/case1-after.jpg",
-      description: "Comprehensive treatment including veneers in Wakad, teeth whitening in Wakad, and gum contouring at the best dental clinic in Wakad",
-      seoKeywords: "cosmetic dentistry in Wakad, veneers in Wakad, teeth whitening in Wakad, best dental clinic in Wakad"
+      description: "Comprehensive treatment including veneers in Roadpali, teeth whitening in Roadpali, and gum contouring at the best dental clinic in Roadpali",
+      seoKeywords: "cosmetic dentistry in Roadpali, veneers in Roadpali, teeth whitening in Roadpali, best dental clinic in Roadpali"
     },
     {
       id: 2,
@@ -40,8 +40,8 @@ export class BeforeAfterComponent {
       duration: "4 months",
       beforeImage: "assets/images/gallery/before-after/case2-before.jpg",
       afterImage: "assets/images/gallery/before-after/case2-after.jpg",
-      description: "Multiple dental implants in Pune to restore missing teeth at ClinSmile Dental Clinic",
-      seoKeywords: "dental implants in Pune, top dentist in Pune, ClinSmile Dental Clinic"
+      description: "Multiple dental implants in Navi Mumbai to restore missing teeth at ClinSmile Dental Clinic",
+      seoKeywords: "dental implants in Navi Mumbai, top dentist in Navi Mumbai, ClinSmile Dental Clinic"
     },
     {
       id: 3,
@@ -49,8 +49,8 @@ export class BeforeAfterComponent {
       duration: "18 months",
       beforeImage: "assets/images/gallery/before-after/case3-before.jpg",
       afterImage: "assets/images/gallery/before-after/case3-after.jpg",
-      description: "Invisalign treatment in Pune to straighten teeth and improve alignment with expert orthodontist in Wakad",
-      seoKeywords: "Invisalign treatment in Pune, orthodontist in Wakad, best dentist in Wakad"
+      description: "Invisalign treatment in Navi Mumbai to straighten teeth and improve alignment with expert orthodontist in Roadpali",
+      seoKeywords: "Invisalign treatment in Navi Mumbai, orthodontist in Roadpali, best dentist in Roadpali"
     },
     {
       id: 4,
@@ -58,8 +58,8 @@ export class BeforeAfterComponent {
       duration: "2 weeks",
       beforeImage: "assets/images/gallery/before-after/case4-before.jpg",
       afterImage: "assets/images/gallery/before-after/case4-after.jpg",
-      description: "Professional teeth whitening in Wakad and dental bonding for minor imperfections at the best dental clinic in Hinjewadi",
-      seoKeywords: "teeth whitening in Wakad, best dental clinic in Hinjewadi, cosmetic dentistry in Wakad"
+      description: "Professional teeth whitening in Roadpali and dental bonding for minor imperfections at the best dental clinic in Kalamboli",
+      seoKeywords: "teeth whitening in Roadpali, best dental clinic in Kalamboli, cosmetic dentistry in Roadpali"
     },
     {
       id: 5,
@@ -67,8 +67,8 @@ export class BeforeAfterComponent {
       duration: "3 months",
       beforeImage: "assets/images/gallery/before-after/case5-before.jpg",
       afterImage: "assets/images/gallery/before-after/case5-after.jpg",
-      description: "Porcelain veneers in Wakad to transform smile appearance with experienced cosmetic dentist Pune",
-      seoKeywords: "veneers in Wakad, cosmetic dentist Pune, dental implants in Pune"
+      description: "Porcelain veneers in Roadpali to transform smile appearance with experienced cosmetic dentist Navi Mumbai",
+      seoKeywords: "veneers in Roadpali, cosmetic dentist Navi Mumbai, dental implants in Navi Mumbai"
     },
     {
       id: 6,
@@ -76,8 +76,8 @@ export class BeforeAfterComponent {
       duration: "8 months",
       beforeImage: "assets/images/gallery/before-after/case6-before.jpg",
       afterImage: "assets/images/gallery/before-after/case6-after.jpg",
-      description: "Complete reconstruction including dental implants in Pune, crowns, and cosmetic work at the top dentist in Pune",
-      seoKeywords: "dental implants in Pune, top dentist in Pune, cosmetic dentistry in Wakad"
+      description: "Complete reconstruction including dental implants in Navi Mumbai, crowns, and cosmetic work at the top dentist in Navi Mumbai",
+      seoKeywords: "dental implants in Navi Mumbai, top dentist in Navi Mumbai, cosmetic dentistry in Roadpali"
     }
   ];
 

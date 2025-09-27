@@ -3,19 +3,19 @@ export const GALLERY_STATS_CONSTANTS = {
   DEFAULT_GALLERY_STATS: [
     {
       number: '500+',
-      label: 'Cosmetic Dentistry Cases in Wakad'
+      label: 'Cosmetic Dentistry Cases in Roadpali'
     },
     {
       number: '1000+',
-      label: 'Dental Implants in Pune'
+      label: 'Dental Implants in Navi Mumbai'
     },
     {
       number: '15+',
-      label: 'Years of Dental Care in Wakad'
+      label: 'Years of Dental Care in Roadpali'
     },
     {
       number: '98%',
-      label: 'Satisfaction at Best Dental Clinic in Wakad'
+      label: 'Satisfaction at Best Dental Clinic in Roadpali'
     }
   ],
 

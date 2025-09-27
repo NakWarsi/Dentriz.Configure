@@ -1,7 +1,7 @@
 export const SERVICES_HERO_CONSTANTS = {
   // Section Content
   DEFAULT_TITLE: 'Complete Dental Care Under One Roof',
-  DEFAULT_SUBTITLE: 'Comprehensive dental care including cosmetic dentistry, dental implants, and family dentistry in Wakad and Hinjewadi',
+  DEFAULT_SUBTITLE: 'Comprehensive dental care including cosmetic dentistry, dental implants, and family dentistry in Roadpali and Kalamboli',
   
   // Default Colors
   DEFAULT_COLORS: {

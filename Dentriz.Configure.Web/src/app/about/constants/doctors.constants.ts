@@ -1,7 +1,7 @@
 export const DOCTORS_CONSTANTS = {
   // Section Content
-  DEFAULT_SECTION_TITLE: 'Meet the Top Dentists in Wakad & Hinjewadi',
-  DEFAULT_SECTION_SUBTITLE: 'At ClinSmile Dental Clinic, we believe every smile deserves to shine! Our expert dentists in Pune provide complete preventive, restorative, and cosmetic care - from dental implants in Wakad and cosmetic dentistry to trusted family dentistry - all under one roof with comfort and care you can trust.',
+  DEFAULT_SECTION_TITLE: 'Meet the Top Dentists in Roadpali & Kalamboli',
+  DEFAULT_SECTION_SUBTITLE: 'At ClinSmile Dental Clinic, we believe every smile deserves to shine! Our expert dentists in Navi Mumbai provide complete preventive, restorative, and cosmetic care - from dental implants in Roadpali and cosmetic dentistry to trusted family dentistry - all under one roof with comfort and care you can trust.',
   
   // Default Doctors Data
   DEFAULT_DOCTORS: [

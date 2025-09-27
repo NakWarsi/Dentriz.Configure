@@ -21,7 +21,7 @@ import { GlobalConfigToggleComponent } from './config/global-config-toggle.compo
   styles: []
 })
 export class AppComponent {
-  title = 'DentRiz Dental - Best Dentist in Wakad & Hinjewadi, Pune';
+  title = 'DentRiz Dental - Best Dentist in Roadpali & Kalamboli, Navi Mumbai';
 
   constructor(private meta: Meta) {
     this.setMetaTags();
@@ -29,17 +29,17 @@ export class AppComponent {
 
   private setMetaTags() {
     this.meta.addTags([
-      { name: 'description', content: 'Best dentist in Wakad and Hinjewadi, Pune. Top dental clinic offering cosmetic dentistry, dental implants, family dentistry, teeth cleaning, veneers, and pediatric dentistry services. Call 97682 64663 for appointments.' },
-      { name: 'keywords', content: 'best dentist in hinjewadi, cosmetic dentist in wakad, dental clinic hinjewadi, dentist hinjewadi, dentist near wakad, veneers in wakad, dental clinic wakad, cosmetic dentistry in wakad, dental cleaning in wakad, dentist in wakad, family dentist in wakad, dental clinic in hinjewadi, best dental clinic in wakad, dental crown in wakad, orthodontist in wakad, teeth cleaning in wakad, dental clinic in wakad, good dentist in wakad, dental implants in wakad, cosmetic dentistry in pune, pediatric dentistry in pune, pediatric dentist pune, dental implants in pune, best dental implants in pune, braces in pune, invisible braces in pune, teeth whitening treatment in pune, dentist in pune, best dentist in pune, top 3 dentist in pune, top 10 dentist in pune, dental clinic in pune near me, top dentist in pune, good dentist in pune, pediatric dentist pune' },
+      { name: 'description', content: 'Best dentist in Roadpali and Kalamboli, Navi Mumbai. Top dental clinic offering cosmetic dentistry, dental implants, family dentistry, teeth cleaning, veneers, and pediatric dentistry services. Call 97682 64663 for appointments.' },
+      { name: 'keywords', content: 'best dentist in Kalamboli, cosmetic dentist in Roadpali, dental clinic Kalamboli, dentist Kalamboli, dentist near Roadpali, veneers in Roadpali, dental clinic Roadpali, cosmetic dentistry in Roadpali, dental cleaning in Roadpali, dentist in Roadpali, family dentist in Roadpali, dental clinic in Kalamboli, best dental clinic in Roadpali, dental crown in Roadpali, orthodontist in Roadpali, teeth cleaning in Roadpali, dental clinic in Roadpali, good dentist in Roadpali, dental implants in Roadpali, cosmetic dentistry in Navi Mumbai, pediatric dentistry in Navi Mumbai, pediatric dentist Navi Mumbai, dental implants in Navi Mumbai, best dental implants in Navi Mumbai, braces in Navi Mumbai, invisible braces in Navi Mumbai, teeth whitening treatment in Navi Mumbai, dentist in Navi Mumbai, best dentist in Navi Mumbai, top 3 dentist in Navi Mumbai, top 10 dentist in Navi Mumbai, dental clinic in Navi Mumbai near me, top dentist in Navi Mumbai, good dentist in Navi Mumbai, pediatric dentist Navi Mumbai' },
       { name: 'author', content: 'DentRiz Dental' },
       { name: 'robots', content: 'index, follow' },
-      { property: 'og:title', content: 'DentRiz Dental - Best Dentist in Wakad & Hinjewadi, Pune' },
-      { property: 'og:description', content: 'Leading dental clinic in Wakad and Hinjewadi offering comprehensive dental care including cosmetic dentistry, dental implants, and family dentistry services.' },
+      { property: 'og:title', content: 'DentRiz Dental - Best Dentist in Roadpali & Kalamboli, Navi Mumbai' },
+      { property: 'og:description', content: 'Leading dental clinic in Roadpali and Kalamboli offering comprehensive dental care including cosmetic dentistry, dental implants, and family dentistry services.' },
       { property: 'og:type', content: 'website' },
       { property: 'og:url', content: 'https://dentrizdental.com' },
       { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: 'DentRiz Dental - Best Dentist in Wakad & Hinjewadi, Pune' },
-      { name: 'twitter:description', content: 'Top dental clinic in Pune offering cosmetic dentistry, dental implants, and family dentistry services in Wakad and Hinjewadi.' }
+      { name: 'twitter:title', content: 'DentRiz Dental - Best Dentist in Roadpali & Kalamboli, Navi Mumbai' },
+      { name: 'twitter:description', content: 'Top dental clinic in Navi Mumbai offering cosmetic dentistry, dental implants, and family dentistry services in Roadpali and Kalamboli.' }
     ]);
   }
 }

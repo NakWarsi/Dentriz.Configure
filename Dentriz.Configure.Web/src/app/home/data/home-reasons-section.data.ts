@@ -1,6 +1,6 @@
 export const reasonsData = {
-  "sectionTitle": "Why Choose ClinSmile Dental Clinic in Pune",
-  "sectionIntro": "At <strong>ClinSmile Dental Clinic</strong>, we believe every patient deserves a healthy, confident smile. Here's why families in Wakad, Hinjewadi, and across Pune trust us for their dental care:",
+  "sectionTitle": "Why Choose ClinSmile Dental Clinic in Navi Mumbai",
+  "sectionIntro": "At <strong>ClinSmile Dental Clinic</strong>, we believe every patient deserves a healthy, confident smile. Here's why families in Roadpali, Kalamboli, and across Navi Mumbai trust us for their dental care:",
   "reason1Icon": "🦷",
   "reason1Title": "Comprehensive Dental Care for Every Smile",
   "reason1Items": [
@@ -16,9 +16,9 @@ export const reasonsData = {
     "Orthodontic solutions including Invisalign & invisible braces"
   ],
   "reason3Icon": "❤️",
-  "reason3Title": "Trusted Local Dental Clinic in Wakad & Hinjewadi",
+  "reason3Title": "Trusted Local Dental Clinic in Roadpali & Kalamboli",
   "reason3Items": [
-    "Conveniently located in Wakad & Hinjewadi for easy access",
+    "Conveniently located in Roadpali & Kalamboli for easy access",
     "Flexible appointments to suit your busy schedule",
     "Affordable treatment plans with transparent pricing"
   ],

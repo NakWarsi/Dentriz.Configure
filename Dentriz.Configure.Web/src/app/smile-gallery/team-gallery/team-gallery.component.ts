@@ -33,8 +33,8 @@ export class TeamGalleryComponent {
       experience: "15+ years",
       education: "DDS, University of California",
       image: "assets/images/gallery/team-gallery/doctor1.jpg",
-      bio: "Expert lead dentist in Wakad with over 15 years of experience in general and cosmetic dentistry. Specializes in smile makeovers at the best dental clinic in Wakad and has helped hundreds of patients achieve their dream smiles.",
-      seoKeywords: "lead dentist in Wakad, cosmetic dentistry in Wakad, best dental clinic in Wakad"
+      bio: "Expert lead dentist in Roadpali with over 15 years of experience in general and cosmetic dentistry. Specializes in smile makeovers at the best dental clinic in Roadpali and has helped hundreds of patients achieve their dream smiles.",
+      seoKeywords: "lead dentist in Roadpali, cosmetic dentistry in Roadpali, best dental clinic in Roadpali"
     },
     {
       id: 2,
@@ -43,8 +43,8 @@ export class TeamGalleryComponent {
       experience: "12+ years",
       education: "DDS, Orthodontics Certificate",
       image: "assets/images/gallery/team-gallery/doctor2.jpg",
-      bio: "Specialist orthodontist in Wakad with expertise in traditional braces and Invisalign treatment in Pune. Expert orthodontist in Wakad who has successfully treated patients of all ages with various orthodontic needs.",
-      seoKeywords: "orthodontist in Wakad, Invisalign treatment in Pune, expert orthodontist in Wakad"
+      bio: "Specialist orthodontist in Roadpali with expertise in traditional braces and Invisalign treatment in Navi Mumbai. Expert orthodontist in Roadpali who has successfully treated patients of all ages with various orthodontic needs.",
+      seoKeywords: "orthodontist in Roadpali, Invisalign treatment in Navi Mumbai, expert orthodontist in Roadpali"
     },
     {
       id: 3,
@@ -53,8 +53,8 @@ export class TeamGalleryComponent {
       experience: "10+ years",
       education: "DDS, Oral Surgery Residency",
       image: "assets/images/gallery/team-gallery/doctor3.jpg",
-      bio: "Oral surgeon in Pune specializing in oral surgery and dental implants in Pune. Extensive experience in complex surgical procedures and implant placement at ClinSmile Dental Clinic.",
-      seoKeywords: "oral surgeon in Pune, dental implants in Pune, ClinSmile Dental Clinic"
+      bio: "Oral surgeon in Navi Mumbai specializing in oral surgery and dental implants in Navi Mumbai. Extensive experience in complex surgical procedures and implant placement at ClinSmile Dental Clinic.",
+      seoKeywords: "oral surgeon in Navi Mumbai, dental implants in Navi Mumbai, ClinSmile Dental Clinic"
     },
     {
       id: 4,
@@ -63,8 +63,8 @@ export class TeamGalleryComponent {
       experience: "8+ years",
       education: "Dental Hygiene Degree",
       image: "assets/images/gallery/team-gallery/hygienist1.jpg",
-      bio: "Senior dental hygienist in Wakad who focuses on preventive care in Wakad and patient education. Passionate about helping patients maintain optimal oral health at the best dental clinic in Hinjewadi.",
-      seoKeywords: "dental hygienist in Wakad, preventive care in Wakad, best dental clinic in Hinjewadi"
+      bio: "Senior dental hygienist in Roadpali who focuses on preventive care in Roadpali and patient education. Passionate about helping patients maintain optimal oral health at the best dental clinic in Kalamboli.",
+      seoKeywords: "dental hygienist in Roadpali, preventive care in Roadpali, best dental clinic in Kalamboli"
     },
     {
       id: 5,
@@ -73,8 +73,8 @@ export class TeamGalleryComponent {
       experience: "6+ years",
       education: "Dental Hygiene Degree",
       image: "assets/images/gallery/team-gallery/hygienist2.jpg",
-      bio: "Dental hygienist specializing in periodontal therapy in Wakad and works closely with patients who have gum disease. Known for gentle approach and thorough care at the best dentist in Wakad.",
-      seoKeywords: "dental hygienist in Wakad, periodontal therapy in Wakad, best dentist in Wakad"
+      bio: "Dental hygienist specializing in periodontal therapy in Roadpali and works closely with patients who have gum disease. Known for gentle approach and thorough care at the best dentist in Roadpali.",
+      seoKeywords: "dental hygienist in Roadpali, periodontal therapy in Roadpali, best dentist in Roadpali"
     },
     {
       id: 6,
@@ -83,8 +83,8 @@ export class TeamGalleryComponent {
       experience: "5+ years",
       education: "Dental Assistant Certification",
       image: "assets/images/gallery/team-gallery/assistant1.jpg",
-      bio: "Experienced dental assistant in Wakad who specializes in surgical procedures. Works closely with oral surgeon in Pune to ensure smooth and efficient treatments at ClinSmile Dental Clinic.",
-      seoKeywords: "dental assistant in Wakad, oral surgeon in Pune, ClinSmile Dental Clinic"
+      bio: "Experienced dental assistant in Roadpali who specializes in surgical procedures. Works closely with oral surgeon in Navi Mumbai to ensure smooth and efficient treatments at ClinSmile Dental Clinic.",
+      seoKeywords: "dental assistant in Roadpali, oral surgeon in Navi Mumbai, ClinSmile Dental Clinic"
     },
     {
       id: 7,
@@ -93,8 +93,8 @@ export class TeamGalleryComponent {
       experience: "4+ years",
       education: "Dental Assistant Certification",
       image: "assets/images/gallery/team-gallery/assistant2.jpg",
-      bio: "Dental assistant in Wakad who assists with cosmetic procedures and has a keen eye for detail. Helps ensure cosmetic dentistry in Wakad achieves the best possible results at the top dentist in Pune.",
-      seoKeywords: "dental assistant in Wakad, cosmetic dentistry in Wakad, top dentist in Pune"
+      bio: "Dental assistant in Roadpali who assists with cosmetic procedures and has a keen eye for detail. Helps ensure cosmetic dentistry in Roadpali achieves the best possible results at the top dentist in Navi Mumbai.",
+      seoKeywords: "dental assistant in Roadpali, cosmetic dentistry in Roadpali, top dentist in Navi Mumbai"
     }
   ];
 

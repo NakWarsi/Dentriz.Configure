@@ -348,7 +348,7 @@ export class SmileGalleryComponent implements OnInit, OnDestroy {
     { 
       id: 'before-after', 
       title: 'Before & After', 
-      description: 'Cosmetic dentistry transformations in Wakad and dental implants in Pune. Professional teeth whitening in Wakad and veneers in Wakad showcasing the best dental clinic in Wakad.', 
+      description: 'Cosmetic dentistry transformations in Roadpali and dental implants in Navi Mumbai. Professional teeth whitening in Roadpali and veneers in Roadpali showcasing the best dental clinic in Roadpali.', 
       imageCount: 12, 
       route: '/smile-gallery/before-after',
       color: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)'
@@ -356,7 +356,7 @@ export class SmileGalleryComponent implements OnInit, OnDestroy {
     { 
       id: 'our-work', 
       title: 'Our Work', 
-      description: 'Restorative dentistry in Wakad and emergency dental care in Wakad. Expert orthodontist in Wakad and pediatric dentist Pune showcasing dental work at ClinSmile Dental Clinic.', 
+      description: 'Restorative dentistry in Roadpali and emergency dental care in Roadpali. Expert orthodontist in Roadpali and pediatric dentist Navi Mumbai showcasing dental work at ClinSmile Dental Clinic.', 
       imageCount: 15, 
       route: '/smile-gallery/our-work',
       color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
@@ -364,7 +364,7 @@ export class SmileGalleryComponent implements OnInit, OnDestroy {
     { 
       id: 'smile-transformations', 
       title: 'Smile Transformations', 
-      description: 'Invisalign treatment in Pune and preventive care in Wakad. Complete smile makeovers with cosmetic dentistry in Wakad and dental implants in Pune at the top dentist in Pune.', 
+      description: 'Invisalign treatment in Navi Mumbai and preventive care in Roadpali. Complete smile makeovers with cosmetic dentistry in Roadpali and dental implants in Navi Mumbai at the top dentist in Navi Mumbai.', 
       imageCount: 8, 
       route: '/smile-gallery/smile-transformations',
       color: 'linear-gradient(135deg, #2ed573 0%, #1e90ff 100%)'
@@ -372,7 +372,7 @@ export class SmileGalleryComponent implements OnInit, OnDestroy {
     { 
       id: 'smile-showcase', 
       title: 'Our Smile Showcase', 
-      description: 'Periodontics in Wakad and endodontics in Wakad. Professional oral surgery in Pune and teeth whitening in Wakad showcasing the best dental clinic in Hinjewadi.', 
+      description: 'Periodontics in Roadpali and endodontics in Roadpali. Professional oral surgery in Navi Mumbai and teeth whitening in Roadpali showcasing the best dental clinic in Kalamboli.', 
       imageCount: 20, 
       route: '/smile-gallery/smile-showcase',
       color: 'linear-gradient(135deg, #ffa726 0%, #ff7043 100%)'
@@ -380,7 +380,7 @@ export class SmileGalleryComponent implements OnInit, OnDestroy {
     { 
       id: 'clinic-photos', 
       title: 'Clinic Photos', 
-      description: 'Modern dental facility in Wakad with advanced technology. State-of-the-art equipment for cosmetic dentistry in Wakad and dental implants in Pune at ClinSmile Dental Clinic.', 
+      description: 'Modern dental facility in Roadpali with advanced technology. State-of-the-art equipment for cosmetic dentistry in Roadpali and dental implants in Navi Mumbai at ClinSmile Dental Clinic.', 
       imageCount: 10, 
       route: '/smile-gallery/clinic-photos',
       color: 'linear-gradient(135deg, #42a5f5 0%, #1976d2 100%)'
@@ -388,7 +388,7 @@ export class SmileGalleryComponent implements OnInit, OnDestroy {
     { 
       id: 'events', 
       title: 'Events', 
-      description: 'Dental health awareness programs in Wakad and community events in Hinjewadi. Educational seminars on preventive care in Wakad and emergency dental care in Wakad.', 
+      description: 'Dental health awareness programs in Roadpali and community events in Kalamboli. Educational seminars on preventive care in Roadpali and emergency dental care in Roadpali.', 
       imageCount: 6, 
       route: '/smile-gallery/events',
       color: 'linear-gradient(135deg, #ab47bc 0%, #8e24aa 100%)'
@@ -396,7 +396,7 @@ export class SmileGalleryComponent implements OnInit, OnDestroy {
     { 
       id: 'patient-stories', 
       title: 'Patient Stories', 
-      description: 'Dental journey experiences with the best dentist in Wakad. Success stories from cosmetic dentistry in Wakad and dental implants in Pune at ClinSmile Dental Clinic.', 
+      description: 'Dental journey experiences with the best dentist in Roadpali. Success stories from cosmetic dentistry in Roadpali and dental implants in Navi Mumbai at ClinSmile Dental Clinic.', 
       imageCount: 8, 
       route: '/smile-gallery/patient-stories',
       color: 'linear-gradient(135deg, #26a69a 0%, #00897b 100%)'
@@ -404,7 +404,7 @@ export class SmileGalleryComponent implements OnInit, OnDestroy {
     { 
       id: 'technology-showcase', 
       title: 'Technology Showcase', 
-      description: 'Advanced dental technology in Wakad and modern equipment in Hinjewadi. Latest tools for orthodontics in Wakad and pediatric dentistry in Pune at the top dentist in Pune.', 
+      description: 'Advanced dental technology in Roadpali and modern equipment in Kalamboli. Latest tools for orthodontics in Roadpali and pediatric dentistry in Navi Mumbai at the top dentist in Navi Mumbai.', 
       imageCount: 5, 
       route: '/smile-gallery/technology-showcase',
       color: 'linear-gradient(135deg, #78909c 0%, #546e7a 100%)'
@@ -412,7 +412,7 @@ export class SmileGalleryComponent implements OnInit, OnDestroy {
     { 
       id: 'team-gallery', 
       title: 'Team Gallery', 
-      description: 'Expert dental team in Wakad and skilled professionals in Hinjewadi. Experienced cosmetic dentist Pune and orthodontist in Wakad at ClinSmile Dental Clinic.', 
+      description: 'Expert dental team in Roadpali and skilled professionals in Kalamboli. Experienced cosmetic dentist Navi Mumbai and orthodontist in Roadpali at ClinSmile Dental Clinic.', 
       imageCount: 7, 
       route: '/smile-gallery/team-gallery',
       color: 'linear-gradient(135deg, #ff7043 0%, #e64a19 100%)'
@@ -420,7 +420,7 @@ export class SmileGalleryComponent implements OnInit, OnDestroy {
     { 
       id: 'awards-recognition', 
       title: 'Awards & Recognition', 
-      description: 'Professional recognition for the best dental clinic in Wakad. Awards for cosmetic dentistry in Wakad and dental implants in Pune at ClinSmile Dental Clinic.', 
+      description: 'Professional recognition for the best dental clinic in Roadpali. Awards for cosmetic dentistry in Roadpali and dental implants in Navi Mumbai at ClinSmile Dental Clinic.', 
       imageCount: 4, 
       route: '/smile-gallery/awards-recognition',
       color: 'linear-gradient(135deg, #ffd54f 0%, #ffb300 100%)'
