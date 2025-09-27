@@ -1,6 +1,6 @@
 .smile-gallery {
   min-height: 100vh;
-  background:  rgb(231, 241, 235);
+  background: #f8f9fa;
   position: relative;
 }
 
@@ -37,7 +37,7 @@
 }
 
 .gallery-hero {
-  background: rgb(231, 241, 235);;
+  background: #f8f9fa;
   color: #1e3c72;
   padding: 80px 0;
   text-align: center;

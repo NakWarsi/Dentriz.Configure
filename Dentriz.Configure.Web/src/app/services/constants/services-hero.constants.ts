@@ -7,7 +7,7 @@ export const SERVICES_HERO_CONSTANTS = {
   DEFAULT_COLORS: {
     TITLE: '#1e3c72',
     SUBTITLE: '#666666',
-    BACKGROUND: 'rgb(231, 241, 235)'
+    BACKGROUND: '#f8f9fa'
   },
 
   // Default Fonts

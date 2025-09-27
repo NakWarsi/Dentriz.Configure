@@ -1,7 +1,7 @@
 /* About Hero */
 .about-hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: #f8f9fa;
+  color: #1e3c72;
   padding: 100px 0;
   text-align: center;
 }
@@ -139,7 +139,7 @@
 /* Doctors Section */
 .doctors-section {
   padding: 80px 0;
-  background: rgb(231, 240, 234);
+  background: #f8f9fa;
   /* border-bottom: 1px solid #dee2e6;  #fafafa 0%, #e0e9e6 */
 }
 

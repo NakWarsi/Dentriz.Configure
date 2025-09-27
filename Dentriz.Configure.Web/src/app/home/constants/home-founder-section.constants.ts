@@ -35,7 +35,7 @@ export const HOME_FOUNDER_SECTION_CONSTANTS = {
     PHILOSOPHY_CONTENT: '#333333',
     IMAGE_NAME: '#000000',
     CREDENTIALS: '#666666',
-    BACKGROUND: 'rgb(231,240,234)'
+    BACKGROUND: '#f8f9fa'
   },
   // Font family constants - single source of truth
   DEFAULT_FONTS: {

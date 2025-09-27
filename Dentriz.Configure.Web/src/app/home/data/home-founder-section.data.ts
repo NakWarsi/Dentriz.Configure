@@ -43,5 +43,5 @@ export const founderData = {
   "philosophyContentFontFamily": "Arial, sans-serif",
   "imageNameFontFamily": "Arial, sans-serif",
   "credentialsFontFamily": "Arial, sans-serif",
-  "backgroundColor": "rgb(231,240,234)"
+  "backgroundColor": "#f8f9fa"
 };

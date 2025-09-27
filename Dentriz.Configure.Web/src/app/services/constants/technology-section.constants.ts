@@ -29,11 +29,11 @@ export const TECHNOLOGY_SECTION_CONSTANTS = {
 
   // Default Colors
   DEFAULT_COLORS: {
-    SECTION_TITLE: '#ffffff',
-    SECTION_SUBTITLE: '#ffffff',
-    BACKGROUND: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)',
-    CARD_TITLE: '#ffffff',
-    CARD_DESCRIPTION: '#ffffff'
+    SECTION_TITLE: '#1e3c72',
+    SECTION_SUBTITLE: '#666666',
+    BACKGROUND: '#f8f9fa',
+    CARD_TITLE: '#1e3c72',
+    CARD_DESCRIPTION: '#666666'
   },
 
   // Default Fonts

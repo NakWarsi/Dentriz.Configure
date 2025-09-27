@@ -21,7 +21,7 @@
   },
   "philosophy": {
     "title": "Our Philosophy:",
-    "content": "\"ClinSmile Dental Clinic was built on the belief that dentistry should be modern, compassionate, and patient-focused. Our philosophy is to combine cutting-edge technology with a human touch, ensuring every patient receives the highest standard of care. We strive to create smiles that are not only healthy but also filled with confidence and happiness.\""
+    "content": "\"DentRiz Dental Clinic was built on the belief that dentistry should be modern, compassionate, and patient-focused. Our philosophy is to combine cutting-edge technology with a human touch, ensuring every patient receives the highest standard of care. We strive to create smiles that are not only healthy but also filled with confidence and happiness.\""
   },
   "subtitleColor": "#2c5aa0",
   "doctorNameColor": "#000000",
@@ -43,5 +43,5 @@
   "philosophyContentFontFamily": "Arial, sans-serif",
   "imageNameFontFamily": "Arial, sans-serif",
   "credentialsFontFamily": "Arial, sans-serif",
-  "backgroundColor": "rgb(231,240,234)"
+  "backgroundColor": "#f8f9fa"
 }

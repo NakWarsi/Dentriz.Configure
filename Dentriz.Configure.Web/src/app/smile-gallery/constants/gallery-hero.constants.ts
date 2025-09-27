@@ -7,7 +7,7 @@ export const GALLERY_HERO_CONSTANTS = {
   DEFAULT_COLORS: {
     GALLERY_TITLE: '#1e3c72',
     GALLERY_SUBTITLE: '#666666',
-    BACKGROUND: 'rgb(231, 241, 235)'
+    BACKGROUND: '#f8f9fa'
   },
 
   // Default Fonts
