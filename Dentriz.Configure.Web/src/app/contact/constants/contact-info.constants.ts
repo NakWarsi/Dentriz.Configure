@@ -3,12 +3,12 @@ export const CONTACT_INFO_CONSTANTS = {
   DEFAULT_PHONE_TITLE: 'Phone',
   DEFAULT_PHONE_NOTE: 'Call us for any enquiry',
   DEFAULT_PHONE_BUTTON_TEXT: '📞 Inquiries',
-  DEFAULT_PHONE_NUMBER: '932-144-9313',
+  DEFAULT_PHONE_NUMBER: '976-826-4663',
 
   DEFAULT_EMAIL_TITLE: 'Email',
   DEFAULT_EMAIL_NOTE: 'Send us a message anytime',
   DEFAULT_EMAIL_BUTTON_TEXT: '📧 Send Email',
-  DEFAULT_EMAIL_ADDRESS: 'rzwarsi707@gmail.com',
+  DEFAULT_EMAIL_ADDRESS: 'akashmankare@gmail.com ',
 
   DEFAULT_ADDRESS_TITLE: 'Address',
   DEFAULT_ADDRESS_NOTE: 'Best dental clinic in Pune',

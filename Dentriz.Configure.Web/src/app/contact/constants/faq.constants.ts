@@ -7,7 +7,7 @@ export const FAQ_CONSTANTS = {
   DEFAULT_FAQ_ITEMS: [
     {
       question: 'How do I schedule an appointment?',
-      answer: 'You can schedule an appointment by calling us at (750) 616-8095, or you can request an appointment through our website. We\'ll work with you to find a convenient time.'
+      answer: 'You can schedule an appointment by calling us at 97682 64663S, or you can request an appointment through our website. We\'ll work with you to find a convenient time.'
     },
     {
       question: 'What should I bring to my first appointment?',
