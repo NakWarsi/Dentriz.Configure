@@ -13,7 +13,7 @@ export const CONTACT_INFO_CONSTANTS = {
   DEFAULT_ADDRESS_TITLE: 'Address',
   DEFAULT_ADDRESS_NOTE: 'Best dental clinic in Navi Mumbai',
   DEFAULT_ADDRESS_BUTTON_TEXT: '📍 Get Directions',
-  DEFAULT_ADDRESS_LINK: 'https://maps.app.goo.gl/aTVoGz2h2NFndZp68',
+  DEFAULT_ADDRESS_LINK: 'https://maps.app.goo.gl/3hJWtVrGJUz2YhF8A',
 
   DEFAULT_EMERGENCY_TITLE: 'Emergency',
   DEFAULT_EMERGENCY_NOTE: '24/7 emergency care',

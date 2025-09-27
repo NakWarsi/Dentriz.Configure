@@ -1151,7 +1151,8 @@
                  [style.color]="locationMapConfig.detailContentColor"
                  [style.font-family]="locationMapConfig.detailContentFontFamily"
                  (click)="startInlineEditLocationMap('addressContent')"
-                 [innerHTML]="locationMapConfig.addressContent">
+                 style="white-space: pre-wrap;">
+                {{ locationMapConfig.addressContent }}
                 <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingLocationMap">✏️</span>
               </p>
               <textarea *ngIf="isEditingLocationMap && editingLocationMapElement === 'addressContent'"
@@ -1231,7 +1232,8 @@
                  [style.color]="locationMapConfig.detailContentColor"
                  [style.font-family]="locationMapConfig.detailContentFontFamily"
                  (click)="startInlineEditLocationMap('transitContent')"
-                 [innerHTML]="locationMapConfig.transitContent">
+                 style="white-space: pre-wrap;">
+                {{ locationMapConfig.transitContent }}
                 <span class="edit-icon" *ngIf="globalConfig.showEditButtons && isEditingLocationMap">✏️</span>
               </p>
               <textarea *ngIf="isEditingLocationMap && editingLocationMapElement === 'transitContent'"

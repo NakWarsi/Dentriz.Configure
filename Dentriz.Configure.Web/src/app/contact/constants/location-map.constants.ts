@@ -18,10 +18,10 @@ export const LOCATION_MAP_CONSTANTS = {
   
   // Map Section
   DEFAULT_MAP_TITLE: '📍 Visit Our Clinic',
-  DEFAULT_MAP_EMBED_URL: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.1234567890!2d73.7611736!3d18.5906052!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2b97dc645a90f%3A0xf370478ecff49ae9!2sClinSmile%20Dental%20Clinic!5e0!3m2!1sen!2sin!4v1755898762059!5m2!1sen!2sin',
+  DEFAULT_MAP_EMBED_URL: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.1234567890!2d73.09223198683424!3d19.035771541658708!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c9c123456789%3A0x123456789abcdef0!2sClinSmile%20Dental%20Clinic%2C%20Shop%20No.%2011%2C%20Ronak%20Residency%2C%20Plot%20No.%2029%2C%20Sector-20%2C%20Roadpali%2C%20Kalamboli%2C%20Navi%20Mumbai%2C%20Maharashtra%20410218!5e0!3m2!1sen!2sin!4v1755898762059!5m2!1sen!2sin',
   DEFAULT_MAP_LOCATION: '📍 Location: Kalamboli, Navi Mumbai, Maharashtra',
   DEFAULT_MAP_HOURS: '🕒 Hours: Mon-Sun: 9:00 AM - 10:00 PM',
-  DEFAULT_DIRECTIONS_LINK: 'https://maps.app.goo.gl/aTVoGz2h2NFndZp68',
+  DEFAULT_DIRECTIONS_LINK: 'https://maps.app.goo.gl/3hJWtVrGJUz2YhF8A',
   DEFAULT_DIRECTIONS_TEXT: '📍 Get Directions',
 
   // Default Colors
