@@ -5,7 +5,6 @@
     "start": "node server.js",
     "build": "ng build --configuration production",
     "build:static": "ng build --configuration production --output-path=dist/DentrizWeb/browser",
-    "build:github-pages": "ng build --configuration production --base-href=/Dentriz.Configure/ --output-path=dist/DentrizWeb/browser",
     "postinstall": "npm run build:static"
   },
   "prettier": {
